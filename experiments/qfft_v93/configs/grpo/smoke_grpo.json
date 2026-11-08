@@ -1,0 +1,9 @@
+{
+  "base": "_defaults.json",
+  "run_name": "smoke_grpo_v93",
+  "init_model": "base",
+  "max_steps": 2,
+  "max_completion_length": 1024,
+  "save_steps": 1,
+  "note": "GPU smoke for TRL + colocated vLLM + LoRA + reward + checkpoint mirror; starts from the base model."
+}

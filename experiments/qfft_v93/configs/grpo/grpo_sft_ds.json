@@ -1,0 +1,7 @@
+{
+  "base": "_defaults.json",
+  "run_name": "grpo_sft_ds_v93",
+  "init_model": "run:sft_ds_v93",
+  "max_completion_length": 12288,
+  "note": "SFT-initialized policies write longer answers; the larger budget keeps the truncation rate comparable."
+}
