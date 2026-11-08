@@ -1,4 +1,4 @@
-# 项目一历史状态记录（v1…v92）
+# 项目一历史状态记录（v1…v93）
 
 > 本文件是原 `AGENTS.md` 开头「本次对话后续更新」整块的历史条目迁移（2026-11-08 目录重构 v2）。条目按时间倒序**保留原文、日期与结论**，未删改事实。
 >
@@ -10,6 +10,8 @@
 > - 当前状态不要从这里读，见 `docs/status/current_status.md` 与根目录 `AGENTS.md`。
 
 ---
+
+- 2026-11-08 v93用户批准按审查结论推进：修P0、写方案与面试材料、完善脚本并能用Colab CLI一键运行；硬件按G4（RTX PRO 6000 Blackwell 96GB）/H100 80GB、主机约167GB规划；1000题为硬标准，API费用不设限；询问是否用LLaMA-Factory。决定：主线不用LLaMA-Factory（只能替代约300行训练脚本，依赖风险大，QFFT核心是数据格式，自实现并与官方S1_QFFT逐字一致1000/1000更能说明问题）；SFT/QFFT全参、GRPO用LoRA；训练窗口16K→32K不截断（R1最长26,835 token全部容纳，官方16K截断会切掉90条轨迹的答案）；优化配方与QFFT官方yaml一致（LR1e-5/6epoch/cosine/warmup10%/wd1e-4/AdamW默认betas），只改有效batch16（官方8）与32K不截断；DeepSeek按时间顺序取第一次可用尝试（v66→v86→v91→v93），缺口由新入口teacher.py重采样补齐；准入不按对错，另设可选ds_verified变体。新增experiments/qfft_v93（formats/grading/metrics/decontam/fetch_benchmarks/data_build/teacher/train_sft/checkpointing/telemetry/models/generate/score/analyze/grpo/merge_lora/colab/*/configs/envs）。去污：13-gram+相似度≥0.6对MATH-500/AIME24/AIME25/AMC23/GSM8K检查s1K-1.1，17对全部人工复核，新发现s1k11/row/0918（AIME 2002 I #12）与MATH-500 test/intermediate_algebra/1063.json同题、轨迹直接算出1+274i，计划中用已批准原题池替换；其余13对为模板句式相似。R1教师在742道可核对题上答对62.7%。修P0：src/training/approved_hf.py与math_reward_v2.py的worker模块路径改为scripts.evaluation.math_verify_v3_strict_worker（重构后旧路径会让approved_hf静默返回全0奖励），approved_hf改为基础设施失败直接报错。新评测口径：原生RoPE、max_model_len 32768、temperature 0.6/top_p 0.95、AIME各16/AMC 8/MATH-500 4/GSM8K 1次、只判最终段最后一个框、主指标不用LLM复核。CPU实测：模板一致性、判分器10例、微型Qwen2全参训练+模拟VM丢失后Drive恢复续跑、假引擎生成续跑与判分、TRL 1.17.1 GRPO+LoRA+恢复+合并、合成数据全流程、调度流程（模拟CLI）均通过；原有pytest结果不变。未运行任何GPU任务或API请求；数据补齐与全部GPU阶段待用户执行。方案docs/blueprints/三周冲刺方案_v93.md，面试材料docs/interview/面试追问与参考答案.md。
 
 - 2026-10-31 v91用户希望按D:/Users/Mr.Z/Desktop/项目一审查_Argon.md补跑不完整题、目标凑1000。已完整读报告并核实原747/164/89未计v86另存27完整；实际剩62=47原high+14有界失败+1stop缺final。官方DeepSeek文档medium映射high，澄清后用户明确选择high＋Argon抗重复提示词，每题一次/2并发。新入口tools/supplement_incomplete_high_v91.pyw、监控watch_incomplete_high_v91.pyw，独立artifacts/qfft_incomplete_high_v91与reports/qfft_incomplete_high_20261031_v91；原1000/v86全部来源SHA核验，已修27不重跑，180完整超长本轮不动。保留关键数学要求，替换重复验算/额外路线两段，精确prompt/分支/新身份/请求完整留存；32K教师/16K学生/Go优先/跨原轮v86v91官方估算累计5美元/门禁不变，每题一次未知留证跳过/熔断暂停不无限重试，不硬截断、不自动替换或入训。60项离线+语法通过；Windows任务Project1-QFFT-IncompleteHigh-v91已启动，0021/0024新high SSE实收，监控句柄非零/响应。状态status.json、run.log、plan.json、startup_validation.json。补齐1000完整与1000正确且双模板16K可入训不同；未承诺一次达成、未批准额外长题处理/GPU训练。Argon的700条足够/medium降档/显存极安全/耗时估算等不作已证事实；释放750硬编码已确认但本轮未改。
 

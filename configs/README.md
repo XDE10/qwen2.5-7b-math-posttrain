@@ -1,6 +1,8 @@
-# configs/ —— 现行工程配置
+# configs/ —— v26 工程配置（历史）
 
-只保留 **1 个现行配置**：`project1_aimo_sft_v26.json`（AIMO SFT 配方 v26）。其余 20 个历史配置已移入 `archive/configs/`。
+v93 的配置随实验包放在 [experiments/qfft_v93/configs/](../experiments/qfft_v93/configs/)：`pipeline.json`（模型 revision、评测口径与套件）、`train/*.json`（全参 SFT/QFFT）、`grpo/*.json`（LoRA-GRPO）、`ds_zero2_offload.json`、`decontam_review_v93.json`。
+
+本目录只保留 `project1_aimo_sft_v26.json`（AIMO LoRA SFT 配方 v26），用于复现 v26 历史结果；其余 20 个历史配置已移入 `archive/configs/`。
 
 ## project1_aimo_sft_v26.json
 

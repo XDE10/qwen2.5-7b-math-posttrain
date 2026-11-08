@@ -4,24 +4,28 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 - **当前状态**：[docs/status/current_status.md](docs/status/current_status.md)
 - **协作约定与阅读入口**：[AGENTS.md](AGENTS.md)
-- **逐版本历史（v1…v92）**：[docs/status/history.md](docs/status/history.md)
+- **逐版本历史（v1…v93）**：[docs/status/history.md](docs/status/history.md)
+- **v93 方案与面试材料**：[docs/blueprints/三周冲刺方案_v93.md](docs/blueprints/三周冲刺方案_v93.md)、[docs/interview/面试追问与参考答案.md](docs/interview/面试追问与参考答案.md)
 
-## 当前主线从哪开始读
+## 当前主线从哪开始读（v93）
 
-1. [训练配置](configs/project1_aimo_sft_v26.json)：模型 revision、数据路径、LoRA/优化器、评测口径。
-2. [数据 manifest](data/aimo_sft_v26/manifest.json)：批准的训练文件、条数、去污与筛选规则。
-3. [实验包](experiments/aimo_sft_v26/)：`train.py`（单 A100 BF16 LoRA SFT）、`evaluate.py`、`export_checkpoint.py`、`run.py`、`telemetry.py`、`install_missing.py`。
-4. [最新启动入口](tools/aimo/start_aimo_sft_v28.py)：Colab 上自动读 SwanLab Key → 准备依赖 → 启动 v26 配方；`v27` 是前置兼容补丁。
+1. [experiments/qfft_v93/README.md](experiments/qfft_v93/README.md)：实验矩阵、本地数据步骤、Colab 一键阶段、断点续跑、评测口径。
+2. [configs/pipeline.json](experiments/qfft_v93/configs/pipeline.json)、[configs/train/_defaults.json](experiments/qfft_v93/configs/train/_defaults.json)、[configs/grpo/_defaults.json](experiments/qfft_v93/configs/grpo/_defaults.json)：模型 revision、评测口径、全参与 GRPO 配方。
+3. [formats.py](experiments/qfft_v93/formats.py) 与 [grading.py](experiments/qfft_v93/grading.py)：唯一的 prompt/response 模板与最终段判分。
+4. 一键入口：[colab/pipeline.sh](experiments/qfft_v93/colab/pipeline.sh)（按阶段）与 [colab/launch.sh](experiments/qfft_v93/colab/launch.sh)（单次 VM），需要 Linux/macOS/WSL2 上的 Colab CLI。
 
-数据本体在 `data/aimo_sft_v26/`（`train.jsonl` 31,991,127 字节，约 2275 条 / 2263 题），评测源在 `data/aimo_sft_v26/{dev,math500,aime2024,aime2025}.jsonl`。
+v93 数据在 `data/qfft1000_v93/`（`r1/`、`ds/`、可选 `ds_verified/` 各 1000 条，含 `manifest.json` 与 `teacher_report.md`），评测集在 `data/benchmarks_v93/`（固定 revision 与 SHA-256），均由本地脚本生成、git 忽略。
+
+v26（LoRA、8K 窗口、静态 YaRN、并发 4 评测）保留为历史：[configs/project1_aimo_sft_v26.json](configs/project1_aimo_sft_v26.json)、[experiments/aimo_sft_v26/](experiments/aimo_sft_v26/)、[tools/aimo/start_aimo_sft_v28.py](tools/aimo/start_aimo_sft_v28.py)，数据在 `data/aimo_sft_v26/`。
 
 ## 目标目录结构（到二级）
 
 ```text
 项目一_7B数学后训练/
 ├── README.md  AGENTS.md  .gitignore  pyproject.toml
-├── configs/                # 现行工程配置（1 个）
-├── experiments/aimo_sft_v26/   # 现行 AIMO SFT 实验包
+├── configs/                # v26 工程配置（历史；v93 配置在 experiments/qfft_v93/configs/）
+├── experiments/qfft_v93/   # 现行：1000 题双教师 × SFT/QFFT 全参 × LoRA-GRPO × 评测 × Colab 一键调度
+├── experiments/aimo_sft_v26/   # 历史：AIMO LoRA SFT 实验包
 ├── scripts/
 │   ├── training/           # train_project1_sft.py / train_project1_rl.py
 │   └── evaluation/         # evaluate_approved_math.py + 两个 Math-Verify worker
@@ -48,8 +52,9 @@ pytest 配置在根目录 `pyproject.toml` 的 `[tool.pytest.ini_options]`（`te
 
 | 路径 | 职责 | 备注 |
 |---|---|---|
-| `configs/` | 现行训练/评测配置 | 只有 `project1_aimo_sft_v26.json`；历史 20 个配置在 `archive/configs/` |
-| `experiments/aimo_sft_v26/` | 现行 AIMO SFT 实验代码 | 训练/评测/导出/遥测/依赖修复 |
+| `configs/` | v26 训练/评测配置 | 只有 `project1_aimo_sft_v26.json`；历史 20 个配置在 `archive/configs/` |
+| `experiments/qfft_v93/` | 现行主线 | 数据构建与 API 补齐、全参 SFT/QFFT、生成/判分/图表、LoRA-GRPO、Colab 调度；见其 README |
+| `experiments/aimo_sft_v26/` | 历史 AIMO SFT 实验代码 | 被 v93 取代，保留可追溯 |
 | `scripts/training/`、`scripts/evaluation/` | 6 个命令行入口与评分 worker | 早期 project1 入口，配套 smoke 配置已归档 |
 | `src/data/`、`src/evaluation/`、`src/losses/`、`src/training/` | 16 个现行库模块 | 批准检查、答案验证、损失参考、HF SFT/GRPO 入口 |
 | `tests/` | 25 个现行测试 | 分组：`data` 5、`evaluation` 4、`losses` 1、`training` 3、`qfft` 12 |
