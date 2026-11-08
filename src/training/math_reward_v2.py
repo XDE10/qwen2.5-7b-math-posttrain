@@ -25,7 +25,8 @@ def category(result):
 
 def check_math(text, answer):
     try:
-        p = subprocess.run([sys.executable, '-m', 'scripts.math_verify_v3_strict_worker'], cwd=ROOT,
+        # Module moved to scripts/evaluation/ by the 2026-11-08 restructure.
+        p = subprocess.run([sys.executable, '-m', 'scripts.evaluation.math_verify_v3_strict_worker'], cwd=ROOT,
                            input=json.dumps({'output': text, 'reference': str(answer)}),
                            text=True, encoding='utf-8', capture_output=True, timeout=20)
         if p.returncode:

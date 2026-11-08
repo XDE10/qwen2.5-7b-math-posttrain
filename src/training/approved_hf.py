@@ -72,11 +72,18 @@ class VisualCompletionCollator:
         batch['labels']=labels;return batch
 
 
+STRICT_WORKER='scripts.evaluation.math_verify_v3_strict_worker'  # moved by the 2026-11-08 restructure
+
+
 def check_math(text,answer):
+    # A worker that cannot start (wrong module path, missing dependency) is an infrastructure failure,
+    # not a wrong answer: before v93 this path silently returned correct=False for every completion.
     try:
-        p=subprocess.run([sys.executable,'-m','scripts.math_verify_v3_strict_worker'],cwd=ROOT,input=json.dumps({'output':text,'reference':str(answer)}),text=True,encoding='utf-8',capture_output=True,timeout=20)
-        return read_json_last(p.stdout)
-    except Exception as e:return {'correct':False,'status':'verifier_error','error_type':type(e).__name__}
+        p=subprocess.run([sys.executable,'-m',STRICT_WORKER],cwd=ROOT,input=json.dumps({'output':text,'reference':str(answer)}),text=True,encoding='utf-8',capture_output=True,timeout=20)
+    except subprocess.TimeoutExpired:return {'correct':False,'status':'timeout'}
+    if p.returncode or not p.stdout.strip():
+        raise RuntimeError('Strict verifier worker failed (exit %s): %s'%(p.returncode,p.stderr.strip()[-300:]))
+    return read_json_last(p.stdout)
 
 
 def read_json_last(text):return json.loads(text.strip().splitlines()[-1])
