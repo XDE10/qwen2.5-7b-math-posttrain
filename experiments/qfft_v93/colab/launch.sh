@@ -10,7 +10,8 @@
 #   --force       start a stage even if Drive says another VM is still running it
 #
 # Examples
-#   launch.sh --gpu cpu --with-data sync-data models:base,qwen_math,qfft_official,sft_repro
+#   launch.sh --gpu cpu ping:30                      # one-minute end-to-end check of CLI, Drive and logs
+#   launch.sh --gpu cpu benchmarks models:base,qwen_math,qfft_official,sft_repro
 #   launch.sh --gpu H100,G4 smoke-train smoke-eval smoke-grpo
 #   launch.sh --gpu H100,G4 --wait-min 120 train:qfft_ds eval:run:qfft_ds_v93:full
 #   launch.sh --gpu cpu score analyze:base,sft_ds_v93,qfft_ds_v93:grpo_qfft_ds_v93
@@ -28,7 +29,7 @@ set -euo pipefail
 
 GPU_LIST="G4"; KEEP=0; FORCE=0; SESSION=""; WITH_DATA=0; WAIT_MIN=0; ATTACH=""
 STAGES=()
-usage() { sed -n '2,26p' "$0"; exit 1; }
+usage() { sed -n '2,27p' "$0"; exit 1; }
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --gpu) GPU_LIST="$2"; shift 2 ;;

@@ -2,11 +2,12 @@
 
 Stages (all idempotent; re-running resumes or skips completed work):
 
+    benchmarks                  fetch the 5 pinned benchmarks on the VM straight to Drive (no local data needed)
     sync-data                   copy the uploaded data bundle to Drive and verify manifest hashes
     models:<a,b,...>            download registry models to Drive once (cheap on a CPU VM)
-    smoke-train                 2 optimizer steps of qfft_ds on the real model: s/step, GPU/host memory
+    smoke-train                 2 full-FT steps on rows that fill the 32K window: s/step, peak GPU/host memory
     smoke-eval                  24 short generations of the base model + scoring
-    smoke-grpo                  2 GRPO steps from the base model (TRL + vLLM + LoRA + reward)
+    smoke-grpo                  2 GRPO steps at the real batch shape with completions forced to 8192 tokens
     train:<config>              full SFT/QFFT run, e.g. train:qfft_ds  (configs/train/<config>.json)
     eval:<model>[:<suite>]      generate + score, e.g. eval:base:full, eval:run:qfft_ds_v93:full
     grpo:<config>               LoRA-GRPO + merge, e.g. grpo:grpo_qfft_ds (configs/grpo/<config>.json)
@@ -299,10 +300,38 @@ class Context:
         return [self.python(env_name), '-m', module, *args]
 
 
+# ZeRO-2 CPU offload keeps fp32 master weights, both Adam moments and fp32 gradients of the 7.6B
+# parameters in host memory: 16 bytes x 7.62e9 = 122 GB, before the Python process and data.
+MIN_HOST_RAM_GIB = 128
+WARN_HOST_RAM_GIB = 150
+
+
+def check_host_ram() -> None:
+    total = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / 2 ** 30
+    if total < MIN_HOST_RAM_GIB:
+        raise RuntimeError(f'Host RAM is {total:.0f} GiB; full-parameter training needs about 122 GB of optimizer '
+                           f'state in CPU memory (ZeRO-2 offload), so at least {MIN_HOST_RAM_GIB} GiB. '
+                           'Use a VM with more RAM (G4 reports ~167 GB) via --gpu.')
+    if total < WARN_HOST_RAM_GIB:
+        say(f'WARNING: host RAM {total:.0f} GiB leaves little headroom above the ~122 GB optimizer state')
+    say(f'Host RAM {total:.0f} GiB (need >= {MIN_HOST_RAM_GIB})')
+
+
+def drive_model_dir(ctx: Context, name: str) -> Path:
+    spec = json.loads((ctx.pkg / 'configs/pipeline.json').read_text(encoding='utf-8'))['models'][name]
+    path = DRIVE / 'models' / spec['drive_dir']
+    if not (path / 'config.json').exists():
+        raise FileNotFoundError(f'{path} is missing: run pipeline.sh 0 (downloads the pinned models to Drive)')
+    return path
+
+
 def gpu_banner() -> None:
-    out = subprocess.run(['nvidia-smi', '--query-gpu=name,memory.total,driver_version', '--format=csv,noheader'],
-                         capture_output=True, text=True)
-    say('GPU:', out.stdout.strip() or 'none')
+    try:
+        out = subprocess.run(['nvidia-smi', '--query-gpu=name,memory.total,driver_version', '--format=csv,noheader'],
+                             capture_output=True, text=True).stdout.strip()
+    except FileNotFoundError:
+        out = ''
+    say('GPU:', out or 'none (nvidia-smi not found: is this a GPU VM?)')
     try:
         import psutil
         say(f'Host RAM: {psutil.virtual_memory().total / 2**30:.0f} GiB, CPUs: {os.cpu_count()}, '
@@ -348,9 +377,10 @@ def stage_sync_data(ctx: Context) -> None:
         if not src.exists():
             continue
         dst = PROJECT / 'data' / sub
-        if dst.exists():
-            shutil.rmtree(dst)
-        shutil.copytree(src, dst)
+        if sub == 'qfft1000_v93' and dst.exists():
+            shutil.rmtree(dst)  # the training sets are replaced as a whole
+        # benchmarks are merged: files fetched on the VM (`benchmarks` stage) are identical pinned copies
+        shutil.copytree(src, dst, dirs_exist_ok=True)
         say(f'Synced {sub} to {dst}')
     manifest = PROJECT / 'data/qfft1000_v93/manifest.json'
     if manifest.exists():
@@ -386,11 +416,21 @@ def _dispatch(ctx: Context, stage: str) -> None:
         # huggingface_hub ships with the Colab image; no venv needed on a CPU VM.
         for name in rest.split(','):
             ctx.run([sys.executable, '-m', 'experiments.qfft_v93.colab.fetch_model', name], f'model_{name}')
+    elif kind == 'benchmarks':
+        # Same pinned revisions and SHA-256 checks as the local fetch, so GPU stages can start before the
+        # local data build is finished; `sync-data` later overwrites these files with identical copies.
+        ctx.run(ctx.py_module('score', m + 'fetch_benchmarks', '--out', str(PROJECT / 'data/benchmarks_v93')),
+                'benchmarks')
     elif kind == 'smoke-train':
         gpu_banner()
+        check_host_ram()
+        # Worst case on purpose: 32 rows that each fill the 32K window (smoke_data.py), not the real data.
+        rows = LOCAL / 'smoke/peak_qfft.jsonl'
+        ctx.run([ctx.python('train'), '-m', m + 'smoke_data', '--tokenizer', str(drive_model_dir(ctx, 'base')),
+                 '--out', str(rows), '--format', 'qfft'], 'smoke_data')
         torchrun = [ctx.python('train'), '-m', 'torch.distributed.run', '--standalone', '--nnodes=1', '--nproc_per_node=1']
-        ctx.run(torchrun + ['-m', m + 'train_sft', '--config', 'train/smoke_qfft_ds.json', '--max-steps', '2',
-                            '--no-export', '--new-run'], 'smoke_train')
+        ctx.run(torchrun + ['-m', m + 'train_sft', '--config', 'train/smoke_peak.json', '--data', str(rows),
+                            '--max-steps', '2', '--no-export', '--new-run'], 'smoke_train')
     elif kind == 'smoke-eval':
         gpu_banner()
         ctx.run(ctx.py_module('infer', m + 'generate', '--model', 'base', '--suite', 'smoke', '--tag', 'smoke_base'),
@@ -400,7 +440,13 @@ def _dispatch(ctx: Context, stage: str) -> None:
         gpu_banner()
         ctx.run(ctx.py_module('rl', m + 'grpo', '--config', 'grpo/smoke_grpo.json', '--no-merge'), 'smoke_grpo')
     elif kind == 'train':
+        from experiments.qfft_v93.common import load_config
+        data = PROJECT / 'data' / load_config(ctx.pkg / 'configs/train' / f'{rest}.json')['data']
+        if not data.exists():
+            raise FileNotFoundError(f'{data} is missing: build the data locally, then run pipeline.sh d '
+                                    '(launch.sh --gpu cpu --with-data sync-data)')
         gpu_banner()
+        check_host_ram()
         torchrun = [ctx.python('train'), '-m', 'torch.distributed.run', '--standalone', '--nnodes=1', '--nproc_per_node=1']
         ctx.run(torchrun + ['-m', m + 'train_sft', '--config', f'train/{rest}.json'], f'train_{rest}')
     elif kind == 'eval':
