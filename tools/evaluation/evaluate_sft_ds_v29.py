@@ -240,7 +240,7 @@ def call_ds(payload, key, model, attempts_path):
 
 
 def review_directory(directory, benchmark, project_root, key, model):
-    sources = read(project_root / 'reports/aimo_sft_20261026_v26/evaluation_sources.json')
+    sources = read(project_root / 'data/aimo_sft_v26/evaluation_sources.json')
     source = project_root / sources[benchmark]['file']
     if file_sha(source) != sources[benchmark]['sha256']:
         raise RuntimeError('Evaluation source changed')

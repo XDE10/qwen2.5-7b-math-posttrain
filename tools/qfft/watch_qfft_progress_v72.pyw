@@ -11,7 +11,7 @@ from tkinter.scrolledtext import ScrolledText
 
 import psutil
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / 'artifacts/qfft_ds_dataset_v66'
 CONTROL = ROOT / 'artifacts/qfft_all_supervisor_v71'
 TITLE = '项目一 | 1000题造数实时监控 v73'

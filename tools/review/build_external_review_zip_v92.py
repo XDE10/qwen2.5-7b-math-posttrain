@@ -5,9 +5,9 @@ import zipfile
 from collections import Counter
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'reports' / 'external_review_20261103_v92'
-OLD = ROOT / 'reports' / 'claude_project1_review_20261031_v90' / '项目一_Claude审查包_v90.zip'
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / 'reports' / 'current' / 'external_review_20261103_v92'
+OLD = ROOT / 'reports' / 'current' / 'claude_project1_review_20261031_v90' / '项目一_Claude审查包_v90.zip'
 RUN = ROOT / 'artifacts' / 'qfft_incomplete_high_v91'
 OUT.mkdir(parents=True, exist_ok=True)
 status = json.loads((RUN / 'status.json').read_text(encoding='utf-8'))
@@ -50,7 +50,7 @@ with zipfile.ZipFile(OLD) as z:
         if name.startswith('证据/'):
             files[name] = z.read(name)
 for src, dst in [
-    (ROOT / 'reports/qfft_incomplete_high_20261031_v91/README.md', 'v91/补跑方案与边界.md'),
+    (ROOT / 'reports/runs/qfft_incomplete_high_20261031_v91/README.md', 'v91/补跑方案与边界.md'),
     (RUN / 'teacher_system_prompt.txt', 'v91/教师system提示词.txt'),
     (RUN / 'status.json', 'v91/原始状态.json'),
 ]:

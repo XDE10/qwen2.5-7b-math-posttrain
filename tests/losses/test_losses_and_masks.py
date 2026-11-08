@@ -51,7 +51,7 @@ def test_ratio_clipping():
 
 @pytest.mark.parametrize('direction',['forward','reverse'])
 def test_large_vocabulary_alignment(direction):
-    report = Path('reports/tokenizer_alignment_report.json')
+    report = Path('archive/reports/_loose/audits/tokenizer_alignment_report.json')
     # First task uses a synthetic support. Final rerun uses actual audited IDs.
     ids = json.loads(report.read_text(encoding='utf-8'))['common_support']['ids'] if report.exists() else list(range(17))
     torch.manual_seed(2)

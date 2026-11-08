@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import pytest
 
-spec=importlib.util.spec_from_file_location('project1_auth_v28',Path(__file__).resolve().parents[1]/'tools/start_aimo_sft_v28.py')
+spec=importlib.util.spec_from_file_location('project1_auth_v28',Path(__file__).resolve().parents[2]/'tools/aimo/start_aimo_sft_v28.py')
 auth=importlib.util.module_from_spec(spec);spec.loader.exec_module(auth)
 
 

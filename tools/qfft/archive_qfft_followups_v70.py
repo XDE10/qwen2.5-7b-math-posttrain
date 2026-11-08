@@ -6,10 +6,10 @@ import json
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'artifacts/qfft_ds_dataset_v66'
-RECIPE = ROOT / 'reports/qfft_ds_dataset_20261029_v66'
-OUT = ROOT / 'reports/qfft_followups_20261029_v70'
+RECIPE = ROOT / 'reports/runs/qfft_ds_dataset_20261029_v66'
+OUT = ROOT / 'reports/runs/qfft_followups_20261029_v70'
 
 
 def read(path):

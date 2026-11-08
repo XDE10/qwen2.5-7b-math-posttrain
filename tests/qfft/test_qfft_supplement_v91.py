@@ -3,8 +3,8 @@ import sys
 import importlib.machinery
 import importlib.util
 import unittest
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
-loader=importlib.machinery.SourceFileLoader('v91',str(Path(__file__).resolve().parents[1]/'tools/supplement_incomplete_high_v91.pyw'))
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools/qfft'))
+loader=importlib.machinery.SourceFileLoader('v91',str(Path(__file__).resolve().parents[2]/'tools/qfft/supplement_incomplete_high_v91.pyw'))
 spec=importlib.util.spec_from_loader(loader.name,loader);m=importlib.util.module_from_spec(spec);loader.exec_module(m)
 
 class Tests(unittest.TestCase):

@@ -11,10 +11,10 @@ from pathlib import Path
 import re
 import sqlite3
 
-ROOT = Path(__file__).resolve().parents[1]
-REPORT = ROOT / 'reports/qfft_ds_dataset_20261029_v66'
+ROOT = Path(__file__).resolve().parents[2]
+REPORT = ROOT / 'reports/runs/qfft_ds_dataset_20261029_v66'
 OUT = ROOT / 'artifacts/qfft_ds_dataset_v66'
-PREPARED = ROOT / 'reports/romescape_reproduction_20261028_v57/train1000_prepared.jsonl'
+PREPARED = ROOT / 'reports/runs/romescape_reproduction_20261028_v57/train1000_prepared.jsonl'
 PREPARED_SHA = '0e8c6c83c5916e64d57247caac68bef70cb0ae41c20e07ed96cf4015f0e26781'
 GO_DB = Path('D:/OpenCode/runtime/data/opencode/opencode.db')
 OFFICIAL_KEY = Path('C:/Users/Mr.Z/.codex/private/project1/deepseek.json')
@@ -162,7 +162,7 @@ def prepare():
     if sha_file(PREPARED) != PREPARED_SHA:
         raise RuntimeError('The existing 1000-question source changed; no new selection is permitted here.')
     frame = pd.read_parquet(ROOT / 'artifacts/research_s1_7b/s1K-1.1.parquet')
-    replacements = {r['new_sample_id']: r for r in read(ROOT / 'reports/romescape_reproduction_20261028_v57/replacement6_checks.json')}
+    replacements = {r['new_sample_id']: r for r in read(ROOT / 'reports/runs/romescape_reproduction_20261028_v57/replacement6_checks.json')}
     selected = []
     with PREPARED.open(encoding='utf-8') as f:
         for i, line in enumerate(f):

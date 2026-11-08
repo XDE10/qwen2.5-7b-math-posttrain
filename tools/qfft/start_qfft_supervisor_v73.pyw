@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 import traceback
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CONTROL = ROOT / 'artifacts/qfft_all_supervisor_v71'
 CONTROL.mkdir(parents=True, exist_ok=True)
 

@@ -1,66 +1,52 @@
-# tools 索引
+# tools/ —— 现行工具
 
-共 60 个离线工具（校验、监控、造数入口）。除注明外均不下载模型、不调用付费 API。
+**23 个现行工具**（另有本 README），按用途分组。历史工具已移入 `archive/tools/`（映射计划 42 个，实际 40 个：`start_aimo_sft_v26.py` 与 `start_aimo_sft_v26_notify.py` 在重构后移回本目录）。
 
-| 文件 | 说明（模块 docstring 首行） |
+## aimo/（6）
+
+| 文件 | 职责 |
 |---|---|
-| [`archive_qfft_followups_v70.py`](archive_qfft_followups_v70.py) | Archive existing QFFT responses for later handling. No API or GPU imports/calls. |
-| [`build_external_review_zip_v92.py`](build_external_review_zip_v92.py) |  |
-| [`build_qfft_ds_dataset_v63.py`](build_qfft_ds_dataset_v63.py) | Prepare by default. --run sends paid/subscription requests only during off-peak. |
-| [`build_qfft_ds_dataset_v66.py`](build_qfft_ds_dataset_v66.py) | Prepare by default. --run sends paid/subscription requests only during off-peak. |
-| [`classify_truncated_dev_v38.py`](classify_truncated_dev_v38.py) | DeepSeek reviews all 122 saved length-truncated responses; no GPU work. |
-| [`colab_release_after_save_v57.py`](colab_release_after_save_v57.py) | Release this Colab VM only after a complete final-export receipt verifies. |
-| [`continue_final_eval_v33.py`](continue_final_eval_v33.py) | Continue AFTER final dev256: CPU/DS review, MATH-500, then hard637 x4. |
-| [`continue_qfft_all_v71.py`](continue_qfft_all_v71.py) | Supervise authorized completion of the frozen 1000 questions, preserving v66 outputs. |
-| [`diagnose_dev_truncation_v36.py`](diagnose_dev_truncation_v36.py) | CPU-only examination of saved dev outputs; no generation or API calls. |
-| [`evaluate_e0_romescape_avg8_v52.py`](evaluate_e0_romescape_avg8_v52.py) | E0 then RomEscape MATH-500, eight samples each, 7936 initial + optional 256 final-answer tokens. |
-| [`evaluate_final_dev256_v32.py`](evaluate_final_dev256_v32.py) | Final SFT dev256 only, 32768 output tokens; same prompt function as AIMO SFT. |
-| [`evaluate_last_e0_protocol_v30.py`](evaluate_last_e0_protocol_v30.py) | Only final SFT MATH-500, matching the historical E0 v15 protocol. |
-| [`evaluate_last_with_hard637_v31.py`](evaluate_last_with_hard637_v31.py) | Run final-model MATH-500 v30, then the existing 637-question E0 0/4 probe. |
-| [`evaluate_math500_final_answer_v41.py`](evaluate_math500_final_answer_v41.py) | Final step429 MATH-500, 7936 reasoning + optional 256 answer tokens. |
-| [`evaluate_public_palign_math500_v47.py`](evaluate_public_palign_math500_v47.py) | Published P-ALIGN 7B LoRA MATH-500, 7936 initial + optional 256 final-answer tokens. |
-| [`evaluate_public_romescape_math500_v51.py`](evaluate_public_romescape_math500_v51.py) | RomEscape public s1.1 SFT MATH-500, 7936 initial + optional 256 final-answer tokens. |
-| [`evaluate_public_romescape_qfft_math500_v58.py`](evaluate_public_romescape_qfft_math500_v58.py) | RomEscape public s1.1 QFFT MATH-500, 7936 initial + optional 256 final-answer tokens. |
-| [`evaluate_public_s11_math500_v43.py`](evaluate_public_s11_math500_v43.py) | Published s1.1-7B MATH-500, 7936 initial + optional 256 final-answer tokens. |
-| [`evaluate_sft_ds_v29.py`](evaluate_sft_ds_v29.py) | MATH-500 main evaluation: native Math-Verify, then DeepSeek failure review. |
-| [`package_aimo_sft_v25.py`](package_aimo_sft_v25.py) | Package frozen 1000 original traces and independent train/eval entrypoints. |
-| [`package_aimo_sft_v26.py`](package_aimo_sft_v26.py) | Package all eligible original traces and independent train/eval entrypoints. |
-| [`package_colab_compat_v27.py`](package_colab_compat_v27.py) | Build a small, explicit source overlay for the already-delivered v26 bundle. |
-| [`package_parallel_bench_v22.py`](package_parallel_bench_v22.py) | Add the parallel benchmark to an unchanged v21 ZIP, verifying every entry. |
-| [`package_projection_pilot_v21.py`](package_projection_pilot_v21.py) | Package only the independent inference pilot and its existing grader deps. |
-| [`package_projection_pilot_v23.py`](package_projection_pilot_v23.py) | Build a self-contained v23 ZIP without changing previous releases. |
-| [`package_projection_pilot_v24.py`](package_projection_pilot_v24.py) | Build a self-contained v24 ZIP without changing previous releases. |
-| [`pilot_qfft_teachers_v60.py`](pilot_qfft_teachers_v60.py) | Bounded blind Flash/Pro teacher pilot: 12 train-pool questions, one call each. |
-| [`prepare_aimo_eval_v25.py`](prepare_aimo_eval_v25.py) | Freeze public AIME 2024/2025 inputs and reuse the existing MATH500 file. |
-| [`prepare_aimo_sft_v25.py`](prepare_aimo_sft_v25.py) | Freeze the first 1000 seeded, complete <=8192-token original AIMO2 traces. |
-| [`prepare_aimo_sft_v26.py`](prepare_aimo_sft_v26.py) | Freeze all complete original AIMO2 traces fitting the Qwen 8192-token window. |
-| [`prepare_projection_pilot_v21.py`](prepare_projection_pilot_v21.py) | Freeze 32 length-stratified, unapproved AIMO2 sampling inputs (CPU only). |
-| [`prepare_romescape_topup6_v57.py`](prepare_romescape_topup6_v57.py) | Replace the six already excluded s1 rows from the existing approved raw pool. |
-| [`prepare_s1_full_probe_v46.py`](prepare_s1_full_probe_v46.py) | Freeze the authorized capacity probe from the existing local s1K-1.1 snapshot. |
-| [`probe_s1_full_sft_v46.py`](probe_s1_full_sft_v46.py) | Eight-update, single-A100 full-SFT capacity probe. Never starts the six-epoch run. |
-| [`qfft_ds_common_v63.py`](qfft_ds_common_v63.py) | Frozen questions and blind teacher contract; importing this module never calls an API. |
-| [`qfft_ds_common_v66.py`](qfft_ds_common_v66.py) | Frozen questions and blind teacher contract; importing this module never calls an API. |
-| [`qfft_stream_transport_v79.py`](qfft_stream_transport_v79.py) | Durable OpenAI-style SSE transport. No retries, no credentials saved. |
-| [`render_projection_prompt_v23.py`](render_projection_prompt_v23.py) | Print full ChatML for empty prefix and a synthetic 256-token continuation. |
-| [`render_projection_prompt_v24.py`](render_projection_prompt_v24.py) | Print full ChatML for empty prefix and a synthetic 256-token continuation. |
-| [`retry_dev_judge_evidence_v35.py`](retry_dev_judge_evidence_v35.py) | Retry only unfinished dev reviews after a judge's non-verbatim evidence. |
-| [`retry_length_max_v86.pyw`](retry_length_max_v86.pyw) | User-authorized bounded max -> high repair; original 1000 stays read-only. |
-| [`retry_truncation_diagnosis_v40.py`](retry_truncation_diagnosis_v40.py) | Retry only unfinished classifier cases with bounded-length evidence quotes. |
-| [`review_e0_best_round_v54.py`](review_e0_best_round_v54.py) | Review only native failures in the highest-scoring E0 v52 round. Local CPU/API only. |
-| [`review_final_local_v34.py`](review_final_local_v34.py) | CPU + DeepSeek review of synced final-model outputs on this Windows PC. |
-| [`review_math500_answer_v42.py`](review_math500_answer_v42.py) | Local DS review of v41 native failures; preserve full original and final output. |
-| [`review_public_palign_math500_v48.py`](review_public_palign_math500_v48.py) | Local DS review of public P-ALIGN 7B v47 native failures; preserve full original and final output. |
-| [`review_public_s11_math500_v44.py`](review_public_s11_math500_v44.py) | Local DS review of public s1.1-7B v43 native failures; preserve full original and final output. |
-| [`review_romescape_first_round_v55.py`](review_romescape_first_round_v55.py) | Review only native failures in RomEscape v52 round zero. Local CPU/API only. |
-| [`review_romescape_qfft_math500_v59.py`](review_romescape_qfft_math500_v59.py) | Review only native failures in RomEscape QFFT v58 single round. Local CPU/API only. |
-| [`run_pilot16_rope_decode_v39.py`](run_pilot16_rope_decode_v39.py) | 16-question diagnostic: native/YaRN4 x greedy/sampling; GPU generation only. |
-| [`start_aimo_sft_v26.py`](start_aimo_sft_v26.py) | Colab terminal: reconstruct the v26 bundle and start training automatically. |
-| [`start_aimo_sft_v26_notify.py`](start_aimo_sft_v26_notify.py) | Local VS Code notification extension receives completion signals from Colab. |
-| [`start_aimo_sft_v27.py`](start_aimo_sft_v27.py) | Apply the small v27 Colab compatibility overlay, then train the v26 recipe. |
-| [`start_aimo_sft_v28.py`](start_aimo_sft_v28.py) | Read the private SwanLab key automatically, then launch the fixed v26 recipe. |
-| [`start_qfft_supervisor_v73.pyw`](start_qfft_supervisor_v73.pyw) | Task Scheduler entry: independent process host, durable stdout/stderr, no retries. |
-| [`supplement_incomplete_high_v91.pyw`](supplement_incomplete_high_v91.pyw) | Explicitly authorized one-pass high repair of the effective 62 incomplete questions. |
-| [`verify_migration.py`](verify_migration.py) | Offline migration verification; run from any working directory. |
-| [`watch_incomplete_high_v91.pyw`](watch_incomplete_high_v91.pyw) | Read-only status window for the 62-question high supplement. |
-| [`watch_qfft_length_retry_v86.pyw`](watch_qfft_length_retry_v86.pyw) | Read-only monitor. Closing the window never stops the two-worker task. |
-| [`watch_qfft_progress_v72.pyw`](watch_qfft_progress_v72.pyw) | Read-only native progress window; closing this window does not stop generation. |
+| `start_aimo_sft_v28.py` | **最新启动入口**：自动读私密 SwanLab Key → 准备依赖 → 启动固定 v26 配方 |
+| `start_aimo_sft_v27.py` | v27 前置兼容补丁（torchao / warmup_steps / 在线认证）后训练 v26 |
+| `start_aimo_sft_v26.py` | 早期入口：重建 v26 包并自动开始训练 |
+| `start_aimo_sft_v26_notify.py` | 本地 VS Code 通知扩展接收 Colab 完成信号 |
+| `package_aimo_sft_v26.py` | 打包全部合格原始轨迹与独立训练/评测入口 |
+| `prepare_aimo_sft_v26.py` | 冻结所有适配 Qwen 8192 窗口的完整 AIMO2 轨迹 |
+
+## evaluation/（3）
+
+| 文件 | 职责 |
+|---|---|
+| `evaluate_sft_ds_v29.py` | MATH-500 主评测：原生 Math-Verify 打分 + DeepSeek 失败复核 |
+| `evaluate_math500_final_answer_v41.py` | step429 MATH-500：7936 推理 + 可选 256 答案 token 的收尾评测 |
+| `review_math500_answer_v42.py` | 本地 DS 复核 v41 原生失败样本，完整保留原始与最终输出 |
+
+## qfft/（12）
+
+| 文件 | 职责 |
+|---|---|
+| `build_qfft_ds_dataset_v66.py` | 造数入口：默认只准备，`--run` 才在非高峰发付费/订阅请求 |
+| `qfft_ds_common_v66.py` | 冻结题目与盲评教师契约；导入本模块绝不调用 API |
+| `qfft_stream_transport_v79.py` | 持久化 OpenAI 风格 SSE 传输；不重试、不保存凭证 |
+| `continue_qfft_all_v71.py` | 监督已授权的 1000 题完成，保留 v66 既有输出 |
+| `archive_qfft_followups_v70.py` | 归档既有 QFFT 回答供后续处理；不调用 API/GPU |
+| `start_qfft_supervisor_v73.pyw` | 计划任务入口：独立进程宿主、持久 stdout/stderr、不重试 |
+| `retry_length_max_v86.pyw` | 用户授权的有界 max → high 重采；原 1000 题只读 |
+| `supplement_incomplete_high_v91.pyw` | 明确授权的一次性 high 补跑（有效 62 道不完整题） |
+| `watch_qfft_progress_v72.pyw` | 只读原生进度窗口；关闭窗口不停止造数 |
+| `watch_qfft_length_retry_v86.pyw` | 只读监控；关闭窗口不停止两个 worker 的任务 |
+| `watch_incomplete_high_v91.pyw` | 62 题 high 补跑的只读状态窗口 |
+| `查看造数进度.cmd` | 双击即可打开只读进度窗口（使用 `D:/anaconda3/envs/genai-test/pythonw`） |
+
+## review/（1）与 verification/（1）
+
+| 文件 | 职责 |
+|---|---|
+| `review/build_external_review_zip_v92.py` | 生成外部深度审查包（索引 + ZIP + SHA） |
+| `verification/verify_migration.py` | 离线迁移校验，可在任意工作目录运行 |
+
+## 边界
+
+- 所有 `.pyw` 与 `查看造数进度.cmd` 是 Windows 侧后台/监控入口，只读监控关闭不会杀任务；重跑造数前必须确认没有同任务在跑。
+- 造数与付费 API 请求需要当次明确授权；`--run` 之外不发起请求。
+- 历史工具在 `archive/tools/`（40 个：各代启动器、评测器、造数/审查/监控脚本），只作追溯，不保证可直接运行；旧路径可用 `archive/mapping/restructure_v2_mapping.json` 找回。

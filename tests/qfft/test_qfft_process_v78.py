@@ -11,7 +11,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'tools/qfft'))
 import build_qfft_ds_dataset_v66 as b
 import continue_qfft_all_v71 as s
 import qfft_ds_common_v66 as c

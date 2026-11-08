@@ -391,7 +391,7 @@ def grade(final, reference):
         return {'correct': None, 'status': 'reference_not_a_single_string_requires_review'}
     module = getattr(_JUDGE_LOCAL, 'module', None)
     if module is None:
-        spec = importlib.util.spec_from_file_location('judge_v66', ROOT / 'tools/evaluate_sft_ds_v29.py')
+        spec = importlib.util.spec_from_file_location('judge_v66', ROOT / 'tools/evaluation/evaluate_sft_ds_v29.py')
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         _JUDGE_LOCAL.module = module

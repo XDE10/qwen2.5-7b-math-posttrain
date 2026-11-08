@@ -81,7 +81,7 @@ def continuation_ids(prompt_ids, row, tok):
 
 
 def math_data(project):
-    data = rows(project / 'reports/aimo_sft_20261026_v26/math500.jsonl')
+    data = rows(project / 'data/aimo_sft_v26/math500.jsonl')
     triples = [(r['sample_id'], r['problem'], str(r['answer'])) for r in data]
     digest = hashlib.sha256(json.dumps(triples, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     if len(data) != 500 or len({r['sample_id'] for r in data}) != 500 or digest != '2d87783f5679c481cbeeb475faf064f6ff08d4ad76c1e5fea5ca383a939ab4c0':

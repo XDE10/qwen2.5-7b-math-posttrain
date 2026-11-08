@@ -20,7 +20,7 @@ def sha(path):
 
 def grader_identity():
     from importlib.metadata import version
-    names=['scripts/math_verify_v3_strict_worker.py','scripts/math_verify_pilot_worker.py','src/training/math_reward_v2.py','scripts/verifier_stream_worker_v4.py','src/training/frozen_verifier_v4.py']
+    names=['scripts/evaluation/math_verify_v3_strict_worker.py','scripts/evaluation/math_verify_pilot_worker.py','src/training/math_reward_v2.py','scripts/evaluation/verifier_stream_worker_v4.py','src/training/frozen_verifier_v4.py']
     names += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'.pilot_deps').rglob('*.py'))]
     return {'core':'unchanged math_reward_v2 category + strict-v3 check','transport':'persistent-isolated-v4','per_request_timeout_seconds':20,
             'sources':{n:sha(ROOT/n) for n in names},'versions':{n:version(n) for n in ['sympy','antlr4-python3-runtime'] if _installed(n)}}
@@ -42,7 +42,7 @@ class Worker:
 
     def start(self):
         self.close();self.q=queue.Queue()
-        self.proc=subprocess.Popen([sys.executable,'-u','-m','scripts.verifier_stream_worker_v4'],cwd=ROOT,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,encoding='utf-8',bufsize=1)
+        self.proc=subprocess.Popen([sys.executable,'-u','-m','scripts.evaluation.verifier_stream_worker_v4'],cwd=ROOT,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,encoding='utf-8',bufsize=1)
         proc=self.proc;q=self.q
         def reader():
             for line in proc.stdout:

@@ -15,7 +15,12 @@ def apply_overlay(source,root):
         raise ValueError('Compatibility patch checksum differs; wait for Drive synchronization')
     with zipfile.ZipFile(patch) as archive:archive.extractall(root)
     import json
-    manifest=json.loads((root/'reports/colab_compat_20261026_v27/patch_manifest.json').read_text(encoding='utf-8'))
+    candidates=[root/'reports/runs/colab_compat_20261026_v27/patch_manifest.json',
+                root/'reports/colab_compat_20261026_v27/patch_manifest.json']
+    manifest_path=next((p for p in candidates if p.is_file()),None)
+    if manifest_path is None:
+        raise ValueError('Patch manifest missing; the restored v26 bundle is a pre-refactor build, rebuild it with tools/aimo/package_aimo_sft_v26.py')
+    manifest=json.loads(manifest_path.read_text(encoding='utf-8'))
     for name,expected in manifest['patched_files'].items():
         if hashlib.sha256((root/name).read_bytes()).hexdigest()!=expected:
             raise ValueError('Patched file checksum differs: '+name)

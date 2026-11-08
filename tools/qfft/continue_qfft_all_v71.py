@@ -96,7 +96,7 @@ def accounted_count():
 def archive_existing():
     # Local read/export only, including exceptional-length cases. No API requests.
     with (CONTROL / 'archive.log').open('a', encoding='utf-8') as log:
-        result = subprocess.run([sys.executable, str(ROOT / 'tools/archive_qfft_followups_v70.py')],
+        result = subprocess.run([sys.executable, str(ROOT / 'tools/qfft/archive_qfft_followups_v70.py')],
                                 cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, **background_subprocess_kwargs())
     return result.returncode
 
@@ -140,7 +140,7 @@ def main():
                 continue
             attempt += 1
             log_path = CONTROL / ('generation_' + now().strftime('%Y%m%d_%H%M%S_%f') + '.log')
-            command = [sys.executable, '-u', str(ROOT / 'tools/build_qfft_ds_dataset_v66.py'),
+            command = [sys.executable, '-u', str(ROOT / 'tools/qfft/build_qfft_ds_dataset_v66.py'),
                        '--run', '--all', '--workers', str(WORKERS), '--official-cap-usd', '5']
             with log_path.open('w', encoding='utf-8') as log:
                 child = subprocess.Popen(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,

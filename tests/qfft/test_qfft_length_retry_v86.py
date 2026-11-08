@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 import unittest
 
-TOOLS = Path(__file__).resolve().parents[1] / 'tools'
+TOOLS = Path(__file__).resolve().parents[2] / 'tools/qfft'
 sys.path.insert(0, str(TOOLS))
 loader = importlib.machinery.SourceFileLoader('v86', str(TOOLS / 'retry_length_max_v86.pyw'))
 spec = importlib.util.spec_from_loader(loader.name, loader)

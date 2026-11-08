@@ -9,7 +9,7 @@ import unittest
 from unittest.mock import patch
 from datetime import datetime
 
-TOOLS = Path(__file__).resolve().parents[1] / 'tools'
+TOOLS = Path(__file__).resolve().parents[2] / 'tools/qfft'
 sys.path.insert(0, str(TOOLS))
 import qfft_ds_common_v66 as c
 import build_qfft_ds_dataset_v66 as b

@@ -2,8 +2,8 @@ import importlib.util
 from pathlib import Path
 import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('math500_v41', ROOT / 'tools/evaluate_math500_final_answer_v41.py')
+ROOT = Path(__file__).resolve().parents[2]
+spec = importlib.util.spec_from_file_location('math500_v41', ROOT / 'tools/evaluation/evaluate_math500_final_answer_v41.py')
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
 

@@ -1,7 +1,7 @@
 """Stream JSON requests; execute the original strict worker function unchanged."""
 import json
 import sys
-from scripts.math_verify_v3_strict_worker import check
+from scripts.evaluation.math_verify_v3_strict_worker import check
 
 
 def main():

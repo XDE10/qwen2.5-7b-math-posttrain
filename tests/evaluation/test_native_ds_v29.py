@@ -5,8 +5,8 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('ds_v29', ROOT / 'tools/evaluate_sft_ds_v29.py')
+ROOT = Path(__file__).resolve().parents[2]
+spec = importlib.util.spec_from_file_location('ds_v29', ROOT / 'tools/evaluation/evaluate_sft_ds_v29.py')
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 
@@ -43,7 +43,7 @@ class NativeDSReviewTests(unittest.TestCase):
             source = root / 'data.jsonl'
             records = [{'sample_id': str(i), 'problem': 'Find value', 'answer': str(i)} for i in range(3)]
             source.write_text(''.join(json.dumps(r) + '\n' for r in records), encoding='utf-8')
-            mod.save(root / 'reports/aimo_sft_20261026_v26/evaluation_sources.json',
+            mod.save(root / 'data/aimo_sft_v26/evaluation_sources.json',
                      {'dev': {'file': 'data.jsonl', 'sha256': mod.file_sha(source)}})
             directory = root / 'eval'
             directory.mkdir()

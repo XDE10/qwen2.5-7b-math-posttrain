@@ -4,7 +4,7 @@ import json
 import tkinter as tk
 from tkinter import ttk
 
-OUT = Path(__file__).resolve().parents[1] / 'artifacts/qfft_length_retry_v86'
+OUT = Path(__file__).resolve().parents[2] / 'artifacts/qfft_length_retry_v86'
 root = tk.Tk()
 root.title('项目一 | 41题 max→high 有界重跑 v86')
 root.geometry('840x520')

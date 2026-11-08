@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import tkinter as tk
 from tkinter import ttk
-OUT = Path(__file__).resolve().parents[1] / 'artifacts/qfft_incomplete_high_v91'
+OUT = Path(__file__).resolve().parents[2] / 'artifacts/qfft_incomplete_high_v91'
 root = tk.Tk(); root.title('项目一 | 62题 high 抗重复补跑 v91'); root.geometry('850x530')
 tk.Label(root,text='62题补跑 · high＋抗重复提示词 · 2题并发',font=('Microsoft YaHei',17,'bold')).pack(pady=15)
 tk.Label(root,text='每题一次；原1000份和已有27份修复候选不覆盖。关闭窗口不会停止任务。').pack()

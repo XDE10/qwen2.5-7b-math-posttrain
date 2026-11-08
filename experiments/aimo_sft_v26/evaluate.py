@@ -32,7 +32,7 @@ def main():
     p.add_argument('--benchmark',nargs='+',choices=['dev','aime2024','aime2025','math500'],required=True)
     p.add_argument('--time-budget-minutes',type=float,default=90)
     a=p.parse_args();c=config();protocol=c['evaluation'];out=Path(a.output_root);out.mkdir(parents=True,exist_ok=True)
-    sources=read(ROOT/'reports/aimo_sft_20261026_v26/evaluation_sources.json')
+    sources=read(ROOT/'data/aimo_sft_v26/evaluation_sources.json')
     from src.training.frozen_verifier_v4 import Worker,grader_identity
     from src.training.math_reward_v2 import category
     from transformers import AutoTokenizer

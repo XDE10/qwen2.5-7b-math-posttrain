@@ -5,8 +5,8 @@ from pathlib import Path
 
 
 def worker(output,reference):
-    root=Path(__file__).resolve().parents[1]
-    p=subprocess.run([sys.executable,'-m','scripts.math_verify_v3_strict_worker'],cwd=root,
+    root=Path(__file__).resolve().parents[2]
+    p=subprocess.run([sys.executable,'-m','scripts.evaluation.math_verify_v3_strict_worker'],cwd=root,
         input=json.dumps({'output':output,'reference':reference}),capture_output=True,text=True,timeout=20)
     assert p.returncode==0,p.stderr
     return json.loads(p.stdout)

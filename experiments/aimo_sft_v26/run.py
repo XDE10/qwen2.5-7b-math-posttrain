@@ -57,7 +57,7 @@ def main():
     a=p.parse_args();c=config()
     if a.checkpoint and (a.task!='eval' or a.variant!='sft' or Path(a.checkpoint).name!=a.checkpoint):
         p.error('--checkpoint requires eval --variant sft and a checkpoint directory name')
-    for name,expected in read(ROOT/'reports/aimo_sft_20261026_v26/bundle_checksums.json').items():
+    for name,expected in read(ROOT/'data/aimo_sft_v26/bundle_checksums.json').items():
         if sha(ROOT/name)!=expected:raise ValueError('Bundle changed: '+name)
     out=Path(a.output_root)
     if a.task=='train' and (out/'TRAIN_COMPLETE.json').exists():

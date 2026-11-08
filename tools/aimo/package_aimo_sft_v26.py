@@ -4,17 +4,17 @@ import json
 import sys
 import zipfile
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
 from experiments.aimo_sft_v26.common import save,sha
 
 
 def main():
-    report=ROOT/'reports/aimo_sft_20261026_v26'
-    names=['configs/project1_aimo_sft_v26.json','tests/test_aimo_sft_v26.py',
-        'tools/prepare_aimo_sft_v26.py',
+    report=ROOT/'data/aimo_sft_v26'
+    names=['configs/project1_aimo_sft_v26.json','tests/training/test_aimo_sft_v26.py',
+        'tools/aimo/prepare_aimo_sft_v26.py',
         'src/training/frozen_verifier_v4.py','src/training/math_reward_v2.py',
-        'scripts/math_verify_v3_strict_worker.py','scripts/math_verify_pilot_worker.py','scripts/verifier_stream_worker_v4.py']
+        'scripts/evaluation/math_verify_v3_strict_worker.py','scripts/evaluation/math_verify_pilot_worker.py','scripts/evaluation/verifier_stream_worker_v4.py']
     names += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'experiments/aimo_sft_v26').glob('*.py'))]
     names += ['experiments/aimo_sft_v26/start_colab.sh']
     names += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'.pilot_deps').rglob('*'))
@@ -24,7 +24,7 @@ def main():
     names += ['data/tokenizers/Qwen2.5-7B-Instruct/'+f for f in ['tokenizer.json','tokenizer_config.json']]
     checks={name:sha(ROOT/name) for name in names}
     save(report/'bundle_checksums.json',checks)
-    names.append('reports/aimo_sft_20261026_v26/bundle_checksums.json')
+    names.append('data/aimo_sft_v26/bundle_checksums.json')
     output=report/'project1_aimo_sft_v26.zip'
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as z:
         for name in names:z.write(ROOT/name,'aimo-sft-v26/'+name)

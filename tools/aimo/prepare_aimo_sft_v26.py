@@ -7,7 +7,7 @@ from pathlib import Path
 import random
 import sys
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
 from experiments.aimo_sft_v26.common import encode,read,save,sha
 
@@ -20,7 +20,7 @@ def main():
     expected='df3d6c3efafae50db8784a96d13e9f61525639f0a22d426abf577c42f39f6f28'
     if sha(source)!=expected:
         raise ValueError('Source differs from the frozen sft-4k version')
-    report=ROOT/'reports/aimo_sft_20261026_v26'
+    report=ROOT/'data/aimo_sft_v26'
     target=report/'train.jsonl'
     if target.exists():
         raise ValueError('Frozen selection already exists; do not overwrite')
