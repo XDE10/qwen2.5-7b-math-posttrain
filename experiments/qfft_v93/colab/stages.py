@@ -14,6 +14,10 @@ Stages (all idempotent; re-running resumes or skips completed work):
     analyze:<tags>[:<grpo_runs>] figures into Drive runs/project1/v93/figures
     status                      print stage markers, run progress, eval completeness and results.md
     shell                       do nothing (use with --keep to inspect the VM)
+    ping[:<seconds>]            write a probe file to Drive and wait (end-to-end CLI check on a CPU VM)
+
+A stage writes runs/project1/v93/stages/<stage>.json on Drive (running + heartbeat, then complete/failed);
+a second VM refuses a stage whose heartbeat is fresh, so relaunching a detached job cannot duplicate it.
 
 Environments: `train` = Colab system Python + DeepSpeed/Liger/SwanLab (Drive wheel cache);
 `infer` and `rl` = uv virtualenvs restored from a Drive snapshot (built once, then ~1 minute).
@@ -24,6 +28,7 @@ import hashlib
 import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import tarfile
@@ -37,6 +42,10 @@ LOCAL = Path(os.environ.get('P1_LOCAL_ROOT', '/content/p1'))
 PROJECT = DRIVE / 'projects/project1/v93'
 STAGES_DIR = DRIVE / 'runs/project1/v93/stages'
 LOGS = DRIVE / 'runs/project1/v93/logs'
+# A 'running' stage marker whose heartbeat is older than this belongs to a VM that no longer exists.
+LEASE_STALE_S = 15 * 60
+HEARTBEAT_S = 5 * 60
+READ_ONLY_STAGES = {'status', 'shell'}
 
 
 def say(*parts):
@@ -56,6 +65,83 @@ def write_json(path: Path, value) -> None:
     tmp = path.with_name(path.name + '.tmp')
     tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     os.replace(tmp, path)
+
+
+def assemble_parts(path: Path) -> None:
+    """Rebuild a file that launch.sh uploaded in parts (`<name>.partNNN` + `<name>.parts.json`)."""
+    meta = path.with_name(path.name + '.parts.json')
+    if not meta.exists():
+        return
+    info = json.loads(meta.read_text(encoding='utf-8'))
+    parts = sorted(path.parent.glob(path.name + '.part[0-9]*'))
+    if len(parts) != info['parts']:
+        raise RuntimeError(f'{path}: expected {info["parts"]} uploaded parts, found {len(parts)}')
+    digest = hashlib.sha256()
+    with open(path, 'wb') as out:
+        for part in parts:
+            data = part.read_bytes()
+            digest.update(data)
+            out.write(data)
+    if digest.hexdigest() != info['sha256']:
+        raise RuntimeError(f'{path}: reassembled file does not match the uploaded SHA-256')
+    for part in parts:
+        part.unlink()
+    meta.unlink()
+    say(f'Reassembled {path.name} from {len(parts)} parts')
+
+
+def host_id() -> str:
+    return f"{os.environ.get('P1_SESSION') or 'manual'}@{socket.gethostname()}"
+
+
+def marker_path(stage: str) -> Path:
+    return STAGES_DIR / (stage.replace(':', '__').replace('/', '_').replace(',', '+') + '.json')
+
+
+class StageLease:
+    """Per-stage Drive marker with a heartbeat.
+
+    launch.sh no longer stops a VM when its terminal disconnects, so the same command can be started again
+    while the first VM is still working. Two VMs writing the same run directory would corrupt it; the
+    lease makes the second one refuse unless the first one's heartbeat is stale (or --force is given).
+    """
+
+    def __init__(self, stage: str, code_sha: str, force: bool = False):
+        self.stage, self.code_sha, self.path = stage, code_sha, marker_path(stage)
+        self.started = datetime.now().isoformat()
+        self.stop = threading.Event()
+        try:
+            current = json.loads(self.path.read_text(encoding='utf-8')) if self.path.exists() else {}
+        except (OSError, ValueError):
+            current = {}
+        if current.get('state') == 'running' and current.get('host') != host_id():
+            age = time.time() - float(current.get('heartbeat_ts') or 0)
+            if age < LEASE_STALE_S and not force:
+                raise RuntimeError(
+                    f"stage {stage} is already running on {current.get('host')} (heartbeat {age / 60:.0f} min ago). "
+                    'Follow it with launch.sh --attach <session>, stop that VM, or relaunch with --force.')
+            say(f"Taking over stage {stage} from {current.get('host')} (heartbeat {age / 60:.0f} min ago)")
+        self._beat()
+        self.thread = threading.Thread(target=self._loop, daemon=True)
+        self.thread.start()
+
+    def _beat(self) -> None:
+        write_json(self.path, {'stage': self.stage, 'state': 'running', 'started': self.started,
+                               'code': self.code_sha, 'host': host_id(), 'heartbeat': datetime.now().isoformat(),
+                               'heartbeat_ts': time.time()})
+
+    def _loop(self) -> None:
+        while not self.stop.wait(HEARTBEAT_S):
+            try:
+                self._beat()
+            except Exception as error:
+                say('WARNING: stage heartbeat failed:', error)
+
+    def close(self, **state) -> None:
+        self.stop.set()
+        self.thread.join(timeout=120)
+        write_json(self.path, {'stage': self.stage, **state, 'started': self.started, 'code': self.code_sha,
+                               'host': host_id()})
 
 
 class Context:
@@ -229,7 +315,11 @@ def print_status() -> None:
     """Stage markers, run progress and evaluation completeness, read from Drive."""
     for path in sorted(STAGES_DIR.glob('*.json')):
         s = json.loads(path.read_text(encoding='utf-8'))
-        say(f"stage {s['stage']:<45} {s['state']:<9} {s.get('hours', '')} {(s.get('error') or '')[:120]}")
+        extra = s.get('hours', '')
+        if s['state'] == 'running':
+            age = (time.time() - float(s.get('heartbeat_ts') or 0)) / 60
+            extra = f"on {s.get('host')}, heartbeat {age:.0f} min ago" + (' (stale)' if age * 60 > LEASE_STALE_S else '')
+        say(f"stage {s['stage']:<45} {s['state']:<9} {extra} {(s.get('error') or '')[:120]}")
     runs = DRIVE / 'runs/project1/v93/runs'
     for path in sorted(runs.glob('*/status.json')) if runs.exists() else []:
         s = json.loads(path.read_text(encoding='utf-8'))
@@ -245,7 +335,8 @@ def print_status() -> None:
 
 
 def stage_sync_data(ctx: Context) -> None:
-    bundle = Path('/content/p1_data.tgz')
+    bundle = LOCAL.parent / 'p1_data.tgz'  # /content/p1_data.tgz, where launch.sh --with-data uploads it
+    assemble_parts(bundle)
     if not bundle.exists():
         raise FileNotFoundError('No data bundle uploaded; run launch.sh with --with-data')
     staging = LOCAL / 'data_bundle'
@@ -271,11 +362,23 @@ def stage_sync_data(ctx: Context) -> None:
             say(f'  {name}: {v["rows"]} rows verified')
 
 
-def run_stage(ctx: Context, stage: str) -> None:
-    kind, _, rest = stage.partition(':')
-    marker = STAGES_DIR / (stage.replace(':', '__').replace('/', '_').replace(',', '+') + '.json')
-    write_json(marker, {'stage': stage, 'state': 'running', 'started': datetime.now().isoformat(), 'code': ctx.sha})
+def run_stage(ctx: Context, stage: str, force: bool = False) -> None:
+    if stage.partition(':')[0] in READ_ONLY_STAGES:
+        _dispatch(ctx, stage)
+        return
+    lease = StageLease(stage, ctx.sha, force)
     started = time.monotonic()
+    try:
+        _dispatch(ctx, stage)
+    except BaseException as error:
+        lease.close(state='failed', error=f'{type(error).__name__}: {error}'[:2000], at=datetime.now().isoformat())
+        raise
+    lease.close(state='complete', hours=round((time.monotonic() - started) / 3600, 3),
+                finished=datetime.now().isoformat())
+
+
+def _dispatch(ctx: Context, stage: str) -> None:
+    kind, _, rest = stage.partition(':')
     m = 'experiments.qfft_v93.'
     if kind == 'sync-data':
         stage_sync_data(ctx)
@@ -325,30 +428,36 @@ def run_stage(ctx: Context, stage: str) -> None:
         print_status()
     elif kind == 'shell':
         say('shell stage: nothing to run')
+    elif kind == 'ping':
+        seconds = float(rest or 30)
+        probe = PROJECT / 'ping' / f'{host_id()}.json'
+        write_json(probe, {'host': host_id(), 'at': datetime.now().isoformat()})
+        say(f'Drive writable ({probe}); waiting {seconds:.0f} s')
+        deadline = time.monotonic() + seconds
+        while time.monotonic() < deadline:
+            time.sleep(min(10.0, max(0.0, deadline - time.monotonic())))
+            say(f'ping: {max(0.0, deadline - time.monotonic()):.0f} s left')
     else:
         raise ValueError(f'Unknown stage {stage!r}')
-    write_json(marker, {'stage': stage, 'state': 'complete', 'hours': round((time.monotonic() - started) / 3600, 3),
-                        'finished': datetime.now().isoformat(), 'code': ctx.sha})
 
 
 def main(args: dict) -> None:
-    if not DRIVE.is_dir():
-        raise RuntimeError('Google Drive is not mounted; launch.sh runs `colab drivemount` before this step')
-    code_sha = args['code_sha']
-    code_dir = LOCAL / 'code' / code_sha
-    ctx = Context(code_dir, code_sha)
-    failed = None
+    failed = 'not started'
     try:
-        for stage in args['stages']:
-            say(f'===== STAGE {stage} =====')
-            try:
-                run_stage(ctx, stage)
-            except Exception as error:
-                failed = f'{stage}: {type(error).__name__}: {error}'
-                write_json(STAGES_DIR / (stage.replace(':', '__').replace('/', '_').replace(',', '+') + '.json'),
-                           {'stage': stage, 'state': 'failed', 'error': failed[:2000], 'code': code_sha,
-                            'at': datetime.now().isoformat()})
-                raise
+        if not DRIVE.is_dir():
+            raise RuntimeError('Google Drive is not mounted; launch.sh runs `colab drivemount` before this step')
+        code_sha = args['code_sha']
+        ctx = Context(LOCAL / 'code' / code_sha, code_sha)
+        try:
+            for stage in args['stages']:
+                say(f'===== STAGE {stage} =====')
+                failed = stage
+                run_stage(ctx, stage, force=bool(args.get('force')))
+            failed = None
+        finally:
+            ctx.finish()
+    except BaseException as error:
+        failed = f'{failed}: {type(error).__name__}: {error}'
+        raise
     finally:
-        ctx.finish()
-        print('P1_RESULT=' + ('OK' if failed is None else 'FAILED ' + failed), flush=True)
+        print('P1_RESULT=' + ('OK' if failed is None else 'FAILED ' + failed)[:2000], flush=True)
