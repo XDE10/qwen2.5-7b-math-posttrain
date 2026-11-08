@@ -21,11 +21,11 @@
   ],
   "files": [
     {
-      "bytes": 5173,
+      "bytes": 5271,
       "changed_for_portability": false,
       "path": ".gitignore",
-      "refactor_note": "2026-11-08 目录重整 v2：路径/文本更新后重算",
-      "sha256": "fc9a6376c77ea3f1564dafba4873564f0ea3582783fad094ac54fa56004a1c55"
+      "refactor_note": "2026-11-08 忽略 Windows Zone.Identifier 及 OS 临时文件",
+      "sha256": "2b48eb86b2cd8ec488ba33d8ff482f3c648e99ffdfa4df85ff51794c0fc8476f"
     },
     {
       "bytes": 10780,

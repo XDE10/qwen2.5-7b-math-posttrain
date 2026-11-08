@@ -220,3 +220,9 @@ pro6000.ipynb
 .pilot_deps/
 *.zip
 .pytest_tmp/
+
+# Windows / WSL Zone.Identifier metadata
+*:Zone.Identifier
+*Zone.Identifier*
+.DS_Store
+Thumbs.db
