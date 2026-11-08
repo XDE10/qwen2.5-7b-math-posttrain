@@ -1,0 +1,19 @@
+{
+  "data_manifest": "data/portable_release/manifest.json",
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+  "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+  "seed": 42,
+  "max_steps": 2,
+  "learning_rate": 2e-05,
+  "batch_size": 1,
+  "gradient_accumulation_steps": 8,
+  "save_steps": 1,
+  "max_length": 4096,
+  "export_merged_base": true,
+  "stage": "sft",
+  "vision": false,
+  "data_file": "project1_raw_paired.jsonl",
+  "output_dir": "${PROJECT_DRIVE_ROOT}/runs/v2_raw_sft_smoke",
+  "arm": "raw"
+}

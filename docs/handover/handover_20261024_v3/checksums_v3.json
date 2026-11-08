@@ -1,0 +1,16 @@
+{
+  "reports/handover_20261024_v3/exclusion_reasons.json": "3b5aa0ee454dc8f7bdd361cfe39cbaed109c8b84db93b7b4fc21d75cc91a1928",
+  "reports/handover_20261024_v3/execution.log": "93fd9f03cc8332811fabf3b452b1f1333ba9ac2af33438f6fd96a93fb1780c59",
+  "reports/handover_20261024_v3/freeze_record.json": "d847fadf3083d87f733fb2537aad68326411b452be7993482e5ebe8339bf9b37",
+  "reports/handover_20261024_v3/migration_check.json": "51a2560ecbd0e7c92882e66418236520647fceb1cfa6de4a7adc576e6457329a",
+  "reports/handover_20261024_v3/pytest_v3.log": "7482014ac06669d6a30c1ddc691dd9dca11a19daf4604e48cff705ad1a7c362a",
+  "reports/handover_20261024_v3/rl_candidates_4630_lexically_screened_v1.jsonl": "ba42267dcd38970a99a890fafca7c29d18aa1ac3fa1e110f093aebe01cd9ae40",
+  "reports/handover_20261024_v3/rl_candidates_excluded_v1.jsonl": "62dfe80526fbba6f350c6b61b5806739a8fce345b3ae0254ad52404144b29614",
+  "reports/handover_20261024_v3/validation_results.json": "e6fbfd371285adf1a09ccc6c6bc130418edf01e51ed28df0b1a3c224c7374f49",
+  "reports/handover_20261024_v3/审查与执行记录.md": "f1b64cdcc5828b3472e9cc1f284f39f97356230fab0ba3ebff66acf4c6de763d",
+  "reports/handover_20261024_v3/equal_exposure_frozen_v1/E1_compact.parameters_frozen.json": "bc5f71ab6d3c93374d871e165ae3eabe9855144c158b91cdc938979f7a2e1b27",
+  "reports/handover_20261024_v3/equal_exposure_frozen_v1/E1_raw.parameters_frozen.json": "8b4a10f3599a36ad6d5f07e43aa590d7b210c41ada263a8fd6e3a615c34ddfc6",
+  "reports/handover_20261024_v3/equal_exposure_frozen_v1/input_identities.json": "de2cb9f6d33976716c9f2df264b380503d4527e9033fc7f5ea3f12092b9cc4d8",
+  "scripts/freeze_project1_screening_v3.py": "e357c0cfba0b0746330406423f7ad1048b503310c41d93234ed358c7e27e22af",
+  "tests/test_screening_freeze_v3.py": "9345df47636ac5e819d7c8f73851514b7afae83fe00c7967b93bc52212e86409"
+}

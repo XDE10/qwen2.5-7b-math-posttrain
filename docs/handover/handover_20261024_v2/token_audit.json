@@ -1,0 +1,350 @@
+{
+  "python": "D:\\anaconda3\\envs\\genai-test\\python.exe",
+  "python_version": "3.12.15 | packaged by Anaconda, Inc. | (main, Oct  1 2026, 20:14:50) [MSC v.1942 64 bit (AMD64)]",
+  "approved_training_files": [
+    "project1_raw_paired.jsonl",
+    "project1_compact_paired.jsonl"
+  ],
+  "approved_evaluation_files": [],
+  "release_digests": {
+    "project1_compact_paired.jsonl": true,
+    "project1_raw_paired.jsonl": true,
+    "project1_rl_priority_not_rollout_selected.jsonl": true,
+    "reserved_dev_ids_never_train.json": true
+  },
+  "pair_count": 1500,
+  "unique_pairs": {
+    "raw": 1500,
+    "compact": 1500
+  },
+  "same_pair_order": true,
+  "pair_field_mismatches": [],
+  "types": {
+    "Algebra": 525,
+    "Geometry": 300,
+    "Number Theory": 300,
+    "Combinatorics": 225,
+    "Inequalities": 100,
+    "Logic and Puzzles": 50
+  },
+  "protected_ids": 1441,
+  "dev_rows": 256,
+  "dev_ids_not_protected": [],
+  "candidate_rows": 4810,
+  "candidate_is_approved_file": false,
+  "overlap_scope": "IDs and normalized exact problem hash only; no semantic/near-duplicate absence claim",
+  "overlap": {
+    "raw": {
+      "protected_sample_ids": [],
+      "dev_normalized_exact": [],
+      "test_normalized_exact": []
+    },
+    "compact": {
+      "protected_sample_ids": [],
+      "dev_normalized_exact": [],
+      "test_normalized_exact": []
+    },
+    "rl_candidates": {
+      "protected_sample_ids": [],
+      "dev_normalized_exact": [],
+      "test_normalized_exact": []
+    }
+  },
+  "arms": {
+    "raw": {
+      "rows": 1500,
+      "all_train": true,
+      "human_reviewed": 0,
+      "model_view_keys": [
+        "problem"
+      ],
+      "relation_references": 4,
+      "entry_encode_sft": "passed",
+      "violations": [],
+      "encode_with_explicit_list_api": "passed; audit wrapper only, production unchanged",
+      "max_total_tokens": 3876,
+      "max_supervised_tokens": 3752,
+      "total_sequence_tokens": 3676090,
+      "total_supervised_tokens": 3516983,
+      "max_prompt_tokens": 1248,
+      "max_length": 4096,
+      "longest_id": "f2d8d22630a84fd96447b2f4644825597e8c5259d33d49f525ef07362636dff1",
+      "longest_tail": [
+        16,
+        11035,
+        568,
+        151645,
+        198
+      ],
+      "longest_prompt_tokens": 148,
+      "batch_shape": [
+        2,
+        3876
+      ],
+      "eos_supervised_all": true,
+      "count_over_3800": 4
+    },
+    "compact": {
+      "rows": 1500,
+      "all_train": true,
+      "human_reviewed": 0,
+      "model_view_keys": [
+        "problem"
+      ],
+      "relation_references": 4,
+      "entry_encode_sft": "passed",
+      "violations": [],
+      "encode_with_explicit_list_api": "passed; audit wrapper only, production unchanged",
+      "max_total_tokens": 1443,
+      "max_supervised_tokens": 1133,
+      "total_sequence_tokens": 519989,
+      "total_supervised_tokens": 360882,
+      "max_prompt_tokens": 1248,
+      "max_length": 3800,
+      "longest_id": "00a7c19643e6344f23adf51a8d937f65dd4e7989eaecc8a1e3523bdbeb2b2935",
+      "longest_tail": [
+        16,
+        15,
+        92,
+        151645,
+        198
+      ],
+      "longest_prompt_tokens": 1248,
+      "batch_shape": [
+        2,
+        1443
+      ],
+      "eos_supervised_all": true,
+      "count_over_3800": 0
+    }
+  },
+  "evaluation_file_identity": {
+    "math_dev": {
+      "rows": 256,
+      "sha_matches": true
+    },
+    "math500_test": {
+      "rows": 500,
+      "sha_matches": true
+    },
+    "gsm8k_test": {
+      "rows": 1319,
+      "sha_matches": true
+    }
+  },
+  "configs": {
+    "project1_compact_dr_grpo_smoke.json": {
+      "data_manifest": "data/portable_release/manifest.json",
+      "model": "runs/strict_v8_project1_compact_sft_smoke/merged",
+      "model_revision": "local-merged-with-weight-manifest",
+      "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+      "seed": 42,
+      "max_steps": 2,
+      "learning_rate": 2e-05,
+      "batch_size": 1,
+      "gradient_accumulation_steps": 8,
+      "save_steps": 1,
+      "max_length": 3800,
+      "export_merged_base": true,
+      "stage": "rl",
+      "vision": false,
+      "data_file": "project1_compact_paired.jsonl",
+      "output_dir": "runs/strict_v8_project1_compact_dr_grpo_smoke",
+      "initial_state": "sft",
+      "max_new_tokens": 2048,
+      "algorithm": "dr_grpo",
+      "num_generations": 4,
+      "generation_batch_size": 4,
+      "beta": 0.04
+    },
+    "project1_compact_grpo_smoke.json": {
+      "data_manifest": "data/portable_release/manifest.json",
+      "model": "runs/strict_v8_project1_compact_sft_smoke/merged",
+      "model_revision": "local-merged-with-weight-manifest",
+      "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+      "seed": 42,
+      "max_steps": 2,
+      "learning_rate": 2e-05,
+      "batch_size": 1,
+      "gradient_accumulation_steps": 8,
+      "save_steps": 1,
+      "max_length": 3800,
+      "export_merged_base": true,
+      "stage": "rl",
+      "vision": false,
+      "data_file": "project1_compact_paired.jsonl",
+      "output_dir": "runs/strict_v8_project1_compact_grpo_smoke",
+      "initial_state": "sft",
+      "max_new_tokens": 2048,
+      "algorithm": "grpo",
+      "num_generations": 4,
+      "generation_batch_size": 4,
+      "beta": 0.04
+    },
+    "project1_compact_sft_smoke.json": {
+      "data_manifest": "data/portable_release/manifest.json",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+      "seed": 42,
+      "max_steps": 2,
+      "learning_rate": 2e-05,
+      "batch_size": 1,
+      "gradient_accumulation_steps": 8,
+      "save_steps": 1,
+      "max_length": 3800,
+      "export_merged_base": true,
+      "stage": "sft",
+      "vision": false,
+      "data_file": "project1_compact_paired.jsonl",
+      "output_dir": "runs/strict_v8_project1_compact_sft_smoke"
+    },
+    "project1_raw_dr_grpo_smoke.json": {
+      "data_manifest": "data/portable_release/manifest.json",
+      "model": "runs/strict_v8_project1_raw_sft_smoke/merged",
+      "model_revision": "local-merged-with-weight-manifest",
+      "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+      "seed": 42,
+      "max_steps": 2,
+      "learning_rate": 2e-05,
+      "batch_size": 1,
+      "gradient_accumulation_steps": 8,
+      "save_steps": 1,
+      "max_length": 3800,
+      "export_merged_base": true,
+      "stage": "rl",
+      "vision": false,
+      "data_file": "project1_raw_paired.jsonl",
+      "output_dir": "runs/strict_v8_project1_raw_dr_grpo_smoke",
+      "initial_state": "sft",
+      "max_new_tokens": 2048,
+      "algorithm": "dr_grpo",
+      "num_generations": 4,
+      "generation_batch_size": 4,
+      "beta": 0.04
+    },
+    "project1_raw_grpo_smoke.json": {
+      "data_manifest": "data/portable_release/manifest.json",
+      "model": "runs/strict_v8_project1_raw_sft_smoke/merged",
+      "model_revision": "local-merged-with-weight-manifest",
+      "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+      "seed": 42,
+      "max_steps": 2,
+      "learning_rate": 2e-05,
+      "batch_size": 1,
+      "gradient_accumulation_steps": 8,
+      "save_steps": 1,
+      "max_length": 3800,
+      "export_merged_base": true,
+      "stage": "rl",
+      "vision": false,
+      "data_file": "project1_raw_paired.jsonl",
+      "output_dir": "runs/strict_v8_project1_raw_grpo_smoke",
+      "initial_state": "sft",
+      "max_new_tokens": 2048,
+      "algorithm": "grpo",
+      "num_generations": 4,
+      "generation_batch_size": 4,
+      "beta": 0.04
+    },
+    "project1_raw_sft_smoke.json": {
+      "data_manifest": "data/portable_release/manifest.json",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+      "seed": 42,
+      "max_steps": 2,
+      "learning_rate": 2e-05,
+      "batch_size": 1,
+      "gradient_accumulation_steps": 8,
+      "save_steps": 1,
+      "max_length": 4096,
+      "export_merged_base": true,
+      "stage": "sft",
+      "vision": false,
+      "data_file": "project1_raw_paired.jsonl",
+      "output_dir": "runs/strict_v8_project1_raw_sft_smoke"
+    }
+  },
+  "tokenizer": {
+    "eos": 151645,
+    "pad": 151643,
+    "files": {
+      "config.json": "7463bb0ea78315365e6c6b74de4e73bbcc8359dfb0c5a737584e077d42c0b03c",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+      "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "apply_chat_template_return_type": "list"
+  },
+  "grader_probes": [
+    {
+      "output": "\\boxed{2}",
+      "reference": "2",
+      "result": {
+        "correct": true,
+        "status": "equivalent",
+        "version": "math-verify-0.9.0+conservative-type-gate-v1",
+        "process_correctness": "not_certified"
+      }
+    },
+    {
+      "output": "\\boxed{3}",
+      "reference": "2",
+      "result": {
+        "correct": false,
+        "status": "mismatch",
+        "version": "math-verify-0.9.0+conservative-type-gate-v1",
+        "process_correctness": "not_certified"
+      }
+    },
+    {
+      "output": "2",
+      "reference": "2",
+      "result": {
+        "correct": false,
+        "status": "missing_box",
+        "error_type": "ValueError"
+      }
+    },
+    {
+      "output": "\\boxed{x>1}",
+      "reference": "x>1",
+      "result": {
+        "correct": false,
+        "status": "relational_answer_requires_task_aware_manual_review",
+        "classification": "unsupported_for_automatic_admission_not_proven_wrong",
+        "reason": "Do not approve inequalities/equations solely from generic expression equivalence."
+      }
+    },
+    {
+      "output": "\\boxed{1}\\boxed{2}",
+      "reference": "1",
+      "result": {
+        "correct": false,
+        "status": "multiple_distinct_boxes_require_manual_collection_review",
+        "classification": "may_be_valid_set_or_tuple_not_proven_wrong"
+      }
+    },
+    {
+      "output": "\\boxed{",
+      "reference": "2",
+      "result": {
+        "correct": false,
+        "status": "unclosed_box",
+        "error_type": "ValueError"
+      }
+    }
+  ],
+  "source_sha256": {
+    "AGENTS.md": "3025fbc77ce25b7b77f3c6f1bd0d5d1dae1fdc5d6d72e7b6203a8ba145fe6d3b",
+    "README.md": "70e7cbcf6dbae3bd82feabb663d0a80eedcc396983631f4c636e2da98b1970fb",
+    "src/training/approved_hf.py": "c5cb9e38317da57bc3df0692ad461790b2f6287fa5614233a6a1240679b0974d",
+    "src/data/approved_training_inputs.py": "236ba095002d723ae3b544e9159c930292bbc4ade1eefe5ba85e1ac72d10e2ac",
+    "src/losses/reference.py": "44f1b36b7d900bc8fc4b114f8aa490ee9b43f1a51f5efe7b28560a6b3f9f20f7",
+    "scripts/evaluate_approved_math.py": "4b4177b60377f557898c19a7c249044b37b415f1568bc1cc19cb31eea2aa8ada",
+    "scripts/math_verify_v3_strict_worker.py": "f2c82b108e2005155a884f991091b2c012c8d194111220908026b0f7fc9c5aa5",
+    "data/portable_release/manifest.json": "8b4d096797991284abb36facd66a1914aa503acc931c13fb812e93a73adffbc0"
+  }
+}

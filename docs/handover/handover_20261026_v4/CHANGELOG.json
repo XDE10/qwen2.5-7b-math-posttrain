@@ -1,0 +1,32 @@
+{
+  "updated": [
+    "AGENTS.md",
+    "README.md"
+  ],
+  "added": [
+    "tools/start_aimo_sft_v28.py",
+    "tests/test_swanlab_autoauth_v28.py",
+    "reports/handover_20261026_v4/第三次对话_完整接手提示词.md",
+    "reports/handover_20261026_v4/新对话首条消息.txt"
+  ],
+  "backups": [
+    "AGENTS.before.md",
+    "README.before.md"
+  ],
+  "verification": {
+    "date": "2026-10-26",
+    "handoff_characters": 25383,
+    "handoff_lines": 776,
+    "numbered_sections": 24,
+    "markdown_links": "all local targets exist",
+    "actual_key_not_in_public_artifacts": true,
+    "data_rows": 2275,
+    "unique_questions": 2263,
+    "base_bundle_and_patch": "unchanged and matching hashes",
+    "autoauth_unit_tests": 2,
+    "real_swanlab_login_verified": true,
+    "current_gpu_run_status": "not_checked_or_restarted",
+    "popup_work": "paused_by_user"
+  },
+  "no_gpu_process_started_stopped_or_reloaded": true
+}

@@ -1,0 +1,264 @@
+{
+  "arms": {
+    "native_greedy": {
+      "count": 16,
+      "native_correct": 7,
+      "native_accuracy": 0.4375,
+      "stop": 7,
+      "length": 9,
+      "no_box": 9,
+      "repeated_tail_window_at_least_4": 8,
+      "mean_output_tokens": 5686.5,
+      "native_statuses": {
+        "mismatch": 9,
+        "equivalent": 7
+      },
+      "timing": {
+        "count": 16,
+        "generation_seconds": 100.13916582399997,
+        "generated_tokens": 90984,
+        "raw_sha256": "dbc97b44eca080579581f3c0d63dddb735786aa299c0d7337539f2fa0c78dfc2"
+      },
+      "by_prior_stratum": {
+        "length": {
+          "count": 8,
+          "length": 7,
+          "native_correct": 2
+        },
+        "stop": {
+          "count": 8,
+          "length": 2,
+          "native_correct": 5
+        }
+      }
+    },
+    "native_sample": {
+      "count": 16,
+      "native_correct": 9,
+      "native_accuracy": 0.5625,
+      "stop": 8,
+      "length": 8,
+      "no_box": 8,
+      "repeated_tail_window_at_least_4": 7,
+      "mean_output_tokens": 4965.875,
+      "native_statuses": {
+        "equivalent": 9,
+        "mismatch": 7
+      },
+      "timing": {
+        "count": 16,
+        "generation_seconds": 104.32939997099993,
+        "generated_tokens": 79454,
+        "raw_sha256": "881228d14f7c655f0c7094b6b385f2c6a057bca63225c3f75abc111f8459b9ed"
+      },
+      "by_prior_stratum": {
+        "length": {
+          "count": 8,
+          "length": 6,
+          "native_correct": 4
+        },
+        "stop": {
+          "count": 8,
+          "length": 2,
+          "native_correct": 5
+        }
+      }
+    },
+    "yarn4_greedy": {
+      "count": 16,
+      "native_correct": 9,
+      "native_accuracy": 0.5625,
+      "stop": 10,
+      "length": 6,
+      "no_box": 6,
+      "repeated_tail_window_at_least_4": 6,
+      "mean_output_tokens": 4460.9375,
+      "native_statuses": {
+        "equivalent": 9,
+        "mismatch": 7
+      },
+      "timing": {
+        "count": 16,
+        "generation_seconds": 94.5669689339993,
+        "generated_tokens": 71375,
+        "raw_sha256": "59fa91571605a12ebd8398a5bec7179115386a0bd1ad8595381d33b8d796d24c"
+      },
+      "by_prior_stratum": {
+        "length": {
+          "count": 8,
+          "length": 5,
+          "native_correct": 3
+        },
+        "stop": {
+          "count": 8,
+          "length": 1,
+          "native_correct": 6
+        }
+      }
+    },
+    "yarn4_sample": {
+      "count": 16,
+      "native_correct": 10,
+      "native_accuracy": 0.625,
+      "stop": 11,
+      "length": 5,
+      "no_box": 5,
+      "repeated_tail_window_at_least_4": 3,
+      "mean_output_tokens": 4370.0,
+      "native_statuses": {
+        "equivalent": 10,
+        "mismatch": 5,
+        "prediction_parse_failure": 1
+      },
+      "timing": {
+        "count": 16,
+        "generation_seconds": 104.38106078600049,
+        "generated_tokens": 69920,
+        "raw_sha256": "c1743d9649b69c9fe8e1dc6cbf29c42dee5fe19f38c27ce562d948da6d317094"
+      },
+      "by_prior_stratum": {
+        "length": {
+          "count": 8,
+          "length": 5,
+          "native_correct": 4
+        },
+        "stop": {
+          "count": 8,
+          "length": 0,
+          "native_correct": 6
+        }
+      }
+    }
+  },
+  "selection": {
+    "schema": "pilot16_rope_decode_v39",
+    "seed": 42,
+    "selection": "Random 8 prior length + 8 prior stop, drawn before new arms; diagnostic conditional sample, not unbiased benchmark",
+    "source_predictions_sha256": "6d3fc96b064660fc04eaf92df7dd47a752fdfbd3876e5d5d9da136f435ad7c73",
+    "count": 16,
+    "max_new_tokens": 8192,
+    "max_model_len": 16384,
+    "samples_per_arm": 16,
+    "arms": [
+      "native_greedy",
+      "native_sample",
+      "yarn4_greedy",
+      "yarn4_sample"
+    ],
+    "rows": [
+      {
+        "sample_id": "math/train/00098",
+        "problem": "Simplify the following expression in $x$: \\[2x+8x^2+9-(4-2x-8x^2).\\] Express your answer in the form $ax^2 +bx+c$, where $a$, $b$, and $c$ are numbers.",
+        "answer": "16x^2+4x+5",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 1472
+      },
+      {
+        "sample_id": "math/train/00177",
+        "problem": "Consider the arithmetic sequence  $1$, $4$, $7$, $10$, $13$, $\\ldots$.  Find the $15^{\\text{th}}$ term in the sequence.",
+        "answer": "43",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 488
+      },
+      {
+        "sample_id": "math/train/00334",
+        "problem": "Two parabolas are the graphs of the equations $y=2x^2-10x-10$ and $y=x^2-4x+6$. Find all points where they intersect. List the points in order of increasing $x$-coordinate, separated by semicolons.",
+        "answer": "(8,38)",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 1360
+      },
+      {
+        "sample_id": "math/train/00401",
+        "problem": "How many points of intersection are there between the graphs of the following equations: \\begin{align*}\ny &=|2x + 5|, \\\\\ny &= -|3x - 2|\n\\end{align*}",
+        "answer": "0",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 5425
+      },
+      {
+        "sample_id": "math/train/01146",
+        "problem": "If $x$, $y$, and $z$ are positive with $xy=20\\sqrt[3]{2}$, $xz = 35\\sqrt[3]{2}$, and $yz=14\\sqrt[3]{2}$, then what is $xyz$?",
+        "answer": "140",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      },
+      {
+        "sample_id": "math/train/02921",
+        "problem": "A machine-shop cutting tool has the shape of a notched circle, as shown. The radius of the circle is $\\sqrt{50}$ cm, the length of $AB$ is $6$ cm and that of $BC$ is $2$ cm. The angle $ABC$ is a right angle. Find the square of the distance (in centimeters) from $B$ to the center of the circle.\n[asy] size(150);  defaultpen(linewidth(0.6)+fontsize(11)); real r=10; pair O=(0,0), A=r*dir(45),B=(A.x,A.y-r),C; path P=circle(O,r); C=intersectionpoint(B--(B.x+r,B.y),P); draw(P); draw(C--B--A--B); dot(A); dot(B); dot(C); label(\"$A$\",A,NE); label(\"$B$\",B,S); label(\"$C$\",C,SE); [/asy]\n",
+        "answer": "26",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      },
+      {
+        "sample_id": "math/train/03354",
+        "problem": "Let $A,$ $B,$ and $C$ be points on a circle of radius $18.$ If $\\angle ACB = 70^\\circ,$ what is the circumference of the minor arc ${AB}$? Express your answer in terms of $\\pi.$",
+        "answer": "14\\pi",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 1455
+      },
+      {
+        "sample_id": "math/train/03879",
+        "problem": "The ellipse whose equation is\n\\[\\frac{x^2}{25} + \\frac{y^2}{9} = 1\\]is graphed below.  The chord $\\overline{AB}$ passes through a focus $F$ of the ellipse.  If $AF = \\frac{3}{2},$ then find $BF.$\n\n[asy]\nunitsize (0.6 cm);\n\npair A, B, F;\n\nF = (4,0);\nA = (35/8,3*sqrt(15)/8);\nB = (55/16,-9*sqrt(15)/16);\n\ndraw(xscale(5)*yscale(3)*Circle((0,0),1));\ndraw(A--B);\ndraw((-6,0)--(6,0));\ndraw((0,-4)--(0,4));\n\ndot(\"$A$\", A, NE);\ndot(\"$B$\", B, SE);\ndot(\"$F$\", F, NW);\n[/asy]",
+        "answer": "\\frac{9}{4}",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      },
+      {
+        "sample_id": "math/train/04067",
+        "problem": "Simplify the expression \\[\\sqrt{37-20\\sqrt3}.\\]",
+        "answer": "5-2\\sqrt3",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 4360
+      },
+      {
+        "sample_id": "math/train/04117",
+        "problem": "Let $a,$ $b,$ and $c$ be nonnegative real numbers such that $a^2 + b^2 + c^2 = 1.$  Find the maximum value of\n\\[2ab \\sqrt{2} + 2bc.\\]",
+        "answer": "\\sqrt{3}",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      },
+      {
+        "sample_id": "math/train/04654",
+        "problem": "Evaluate the expression\n\\[\n  \\frac{121 \\left( \\frac{1}{13} - \\frac{1}{17} \\right) \n          + 169 \\left( \\frac{1}{17} - \\frac{1}{11} \\right) + 289 \\left( \\frac{1}{11} - \\frac{1}{13} \\right)}{\n        11 \\left( \\frac{1}{13} - \\frac{1}{17} \\right) \n          + 13 \\left( \\frac{1}{17} - \\frac{1}{11} \\right) + 17 \\left( \\frac{1}{11} - \\frac{1}{13} \\right)} \\, .\n\\]",
+        "answer": "41",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      },
+      {
+        "sample_id": "math/train/04918",
+        "problem": "What is the least positive integer with exactly $10$ positive factors?",
+        "answer": "48",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      },
+      {
+        "sample_id": "math/train/05956",
+        "problem": "A survey of $120$ teachers determined the following:\n\n$70$ had high blood pressure\n\n$40$ had heart trouble\n\n$20$ had both high blood pressure and heart trouble\n\nWhat percent of the teachers surveyed had neither high blood pressure nor heart trouble?",
+        "answer": "25\\%",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 1257
+      },
+      {
+        "sample_id": "math/train/06361",
+        "problem": "The length of a rectangle is three times its width. The perimeter is 160 cm. What is the number of square centimeters in the area of the rectangle?",
+        "answer": "1200",
+        "prior_finish_reason": "stop",
+        "prior_generated_tokens": 1246
+      },
+      {
+        "sample_id": "math/train/07188",
+        "problem": "Let $a,$ $b,$ $c$ be the roots of $x^3 + px + q = 0.$  Compute the determinant\n\\[\\begin{vmatrix} a & b & c \\\\ b & c & a \\\\ c & a & b \\end{vmatrix}.\\]",
+        "answer": "0",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      },
+      {
+        "sample_id": "math/train/07294",
+        "problem": "On the complex plane, the parallelogram formed by the points 0, $z,$ $\\frac{1}{z},$ and $z + \\frac{1}{z}$ has area $\\frac{35}{37}.$  If the real part of $z$ is positive, let $d$ be the smallest possible value of $\\left| z + \\frac{1}{z} \\right|.$  Compute $d^2.$",
+        "answer": "\\frac{50}{37}",
+        "prior_finish_reason": "length",
+        "prior_generated_tokens": 32768
+      }
+    ]
+  },
+  "limit": "16 stratified diagnostic questions, one sample per arm; not a full test accuracy or conclusive causal attribution."
+}

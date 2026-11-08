@@ -1,0 +1,28 @@
+{
+  "dataset": "imagination-research/aimo2-datasets",
+  "file": "sft-4k.json",
+  "revision": "237f575f59fda9b79de5f4f9e9c7860099f84349",
+  "source_sha256": "df3d6c3efafae50db8784a96d13e9f61525639f0a22d426abf577c42f39f6f28",
+  "approved_training_files": [
+    "reports/aimo_sft_20261026_v26/train.jsonl"
+  ],
+  "train_sha256": "ff6657d408a05904ccb6fbbcf3a80e07b92d3d42b2556532af30bf0ab7ec0796",
+  "train_count": 2275,
+  "selection_seed": 42,
+  "unique_question_count": 2263,
+  "eligibility": "All source rows scanned; two turns; nonempty original response; retain tagged and untagged reasoning; reject unbalanced think tags; full prompt+response+EOS <=8192; no truncation; no fixed count cap",
+  "decontamination": "Reuse user-confirmed existing decontamination; no repeated decontamination run",
+  "scanned_until_target": 4033,
+  "skipped": {
+    "over_8192": 1740,
+    "unbalanced_think_tags": 18
+  },
+  "tokens": {
+    "min": 586,
+    "max": 8187,
+    "mean": 4635.151208791209,
+    "supervised_sum": 10247634
+  },
+  "approval_basis": "Direct human instruction in current conversation",
+  "old_approved_manifest_modified": false
+}

@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-24",
+  "cwd": "D:\\Users\\Mr.Z\\Desktop\\项目一_7B数学后训练",
+  "training_started": false,
+  "model_downloaded": false,
+  "paid_api_called": false,
+  "installed_packages": false,
+  "commands": [
+    {"command": "python --version", "exit_code": 0, "result": "Python 3.8.3; D:\\anaconda3\\python.exe"},
+    {"command": "python tools/verify_migration.py", "exit_code": 1, "result": "AttributeError: 'WindowsPath' object has no attribute 'is_relative_to'; approved_training_inputs.py:11"},
+    {"command": "python -m pytest tests/test_approved_training_inputs.py tests/test_training_entries_cpu.py tests/test_losses_and_masks.py -q", "exit_code": 1, "result": "Collection interrupted: ModuleNotFoundError: No module named 'transformers'; 1 error in 13.73s; no complete-suite pass"},
+    {"command": "python -m pytest tests/test_approved_training_inputs.py tests/test_losses_and_masks.py -q", "exit_code": 1, "result": "1 failed, 12 passed in 6.78s; sole failure is Python 3.8 WindowsPath.is_relative_to"},
+    {"command": "py -0p", "exit_code": 0, "result": "Registered Python311 executable does not exist; Anaconda38 is usable"},
+    {"command": "git status --short", "exit_code": 128, "result": "Not a git repository; migration_manifest.json is the payload integrity baseline"},
+    {"command": "bundled Python 3.12 tools/verify_migration.py", "exit_code": 0, "result_file": "migration_check.json"},
+    {"command": "bundled Python 3.12 reports/handover_20261024_v1/audit_handover.py --output reports/handover_20261024_v1/data_audit.json", "exit_code": 0, "result_file": "data_audit.json"},
+    {"command": "D:/anaconda3/envs/helloAgents/python.exe reports/handover_20261024_v1/audit_handover.py --tokens --output reports/handover_20261024_v1/token_audit.json", "result_file": "token_audit.json", "note": "Local tokenizer and CPU tensor/scoring diagnostics only. This environment is incompatible with the project version snapshot. Earlier diagnostic attempts exposed BatchEncoding return-type drift; the final audit normalizes only its own diagnostic token lists and separately records unchanged encode_sft failure."},
+    {"command": "python tools/verify_migration.py --full", "executed": false, "reason": "Standard-library check with supported Python passed; no missing/hash/migration anomaly requiring full archive traversal. Historical full SHA result remains historical."}
+  ],
+  "environment_inventory": [
+    {"python": "D:/anaconda3/python.exe", "version": "3.8.3", "torch": "2.4.1", "pytest": "5.4.3", "sympy": "1.6.1", "missing": ["transformers", "trl", "peft", "datasets", "tokenizers", "accelerate"]},
+    {"python": "C:/Users/Mr.Z/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe", "version": "3.12.14", "missing": ["torch", "transformers", "trl", "peft", "datasets", "pytest", "sympy", "tokenizers", "accelerate"]},
+    {"python": "D:/anaconda3/envs/helloAgents/python.exe", "version": "3.11.16", "torch": "2.14.1", "transformers": "5.18.0", "tokenizers": "0.23.2", "sympy": "1.14.0", "missing": ["trl", "peft", "datasets", "pytest", "accelerate"]},
+    {"python": "D:/anaconda3/envs/pytorch/python.exe", "version": "3.9.23", "torch": "2.4.0+cpu", "sympy": "1.14.0", "missing": ["transformers", "trl", "peft", "datasets", "pytest", "tokenizers", "accelerate"]},
+    {"python": "D:/anaconda3/envs/drl/python.exe", "version": "3.9.23", "note": "None of the nine queried training/test packages installed"},
+    {"python": "D:/anaconda3/envs/translator/python.exe", "version": "3.9.23", "note": "None of the nine queried training/test packages installed"}
+  ]
+}

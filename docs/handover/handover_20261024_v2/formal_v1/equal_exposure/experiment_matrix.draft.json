@@ -1,0 +1,285 @@
+[
+  {
+    "experiment": "E0",
+    "arm": "shared",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E0",
+    "data": "math_dev; final MATH-500/GSM8K after freeze",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 2048,
+      "max_prompt_length": 1752
+    },
+    "algorithm": null,
+    "reference": null,
+    "training_budget": null,
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  {
+    "experiment": "E1",
+    "arm": "raw",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E0",
+    "data": "project1_raw_paired.jsonl",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": null,
+    "algorithm": "sft",
+    "reference": null,
+    "training_budget": {
+      "draft": true,
+      "status": "草稿，未冻结",
+      "epochs": 1,
+      "examples": 1500,
+      "effective_batch": 16,
+      "expected_steps_per_arm": 94,
+      "stop_rule": "one complete epoch including partial final batch; measure actual token exposure",
+      "supervised_tokens": {
+        "raw": 3516983,
+        "compact": 360882
+      }
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  {
+    "experiment": "E1",
+    "arm": "compact",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E0",
+    "data": "project1_compact_paired.jsonl",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": null,
+    "algorithm": "sft",
+    "reference": null,
+    "training_budget": {
+      "draft": true,
+      "status": "草稿，未冻结",
+      "epochs": 1,
+      "examples": 1500,
+      "effective_batch": 16,
+      "expected_steps_per_arm": 94,
+      "stop_rule": "one complete epoch including partial final batch; measure actual token exposure",
+      "supervised_tokens": {
+        "raw": 3516983,
+        "compact": 360882
+      }
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  {
+    "experiment": "E2",
+    "arm": "shared",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E0",
+    "data": "RL_POOL_PENDING_SEPARATE_APPROVAL",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": {
+      "do_sample": true,
+      "temperature": 0.8,
+      "top_p": 0.95,
+      "top_k": 0,
+      "max_new_tokens": 2048,
+      "max_prompt_length": 1752,
+      "num_generations": 4
+    },
+    "algorithm": "grpo",
+    "reference": "E0",
+    "training_budget": {
+      "pilot_updates": 20,
+      "common_checkpoints": [
+        100,
+        200
+      ],
+      "extensions": [
+        400,
+        600
+      ],
+      "extension_rule": "dev-only predeclared paired extension; fixed scheduler horizon;未验证"
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  {
+    "experiment": "E3",
+    "arm": "raw",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E1_raw/merged",
+    "model_revision": "local-merged-with-weight-manifest",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E1_raw",
+    "data": "RL_POOL_PENDING_SEPARATE_APPROVAL",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": {
+      "do_sample": true,
+      "temperature": 0.8,
+      "top_p": 0.95,
+      "top_k": 0,
+      "max_new_tokens": 2048,
+      "max_prompt_length": 1752,
+      "num_generations": 4
+    },
+    "algorithm": "grpo",
+    "reference": "exact shared E1_raw weights",
+    "training_budget": {
+      "pilot_updates": 20,
+      "common_checkpoints": [
+        100,
+        200
+      ],
+      "extensions": [
+        400,
+        600
+      ],
+      "extension_rule": "dev-only predeclared paired extension; fixed scheduler horizon;未验证"
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  {
+    "experiment": "E3",
+    "arm": "compact",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E1_compact/merged",
+    "model_revision": "local-merged-with-weight-manifest",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E1_compact",
+    "data": "RL_POOL_PENDING_SEPARATE_APPROVAL",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": {
+      "do_sample": true,
+      "temperature": 0.8,
+      "top_p": 0.95,
+      "top_k": 0,
+      "max_new_tokens": 2048,
+      "max_prompt_length": 1752,
+      "num_generations": 4
+    },
+    "algorithm": "grpo",
+    "reference": "exact shared E1_compact weights",
+    "training_budget": {
+      "pilot_updates": 20,
+      "common_checkpoints": [
+        100,
+        200
+      ],
+      "extensions": [
+        400,
+        600
+      ],
+      "extension_rule": "dev-only predeclared paired extension; fixed scheduler horizon;未验证"
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  {
+    "experiment": "E4",
+    "arm": "raw",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E1_raw/merged",
+    "model_revision": "local-merged-with-weight-manifest",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E1_raw",
+    "data": "RL_POOL_PENDING_SEPARATE_APPROVAL",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": {
+      "do_sample": true,
+      "temperature": 0.8,
+      "top_p": 0.95,
+      "top_k": 0,
+      "max_new_tokens": 2048,
+      "max_prompt_length": 1752,
+      "num_generations": 4
+    },
+    "algorithm": "dr_grpo",
+    "reference": "exact shared E1_raw weights",
+    "training_budget": {
+      "pilot_updates": 20,
+      "common_checkpoints": [
+        100,
+        200
+      ],
+      "extensions": [
+        400,
+        600
+      ],
+      "extension_rule": "dev-only predeclared paired extension; fixed scheduler horizon;未验证"
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  {
+    "experiment": "E4",
+    "arm": "compact",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E1_compact/merged",
+    "model_revision": "local-merged-with-weight-manifest",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E1_compact",
+    "data": "RL_POOL_PENDING_SEPARATE_APPROVAL",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": {
+      "do_sample": true,
+      "temperature": 0.8,
+      "top_p": 0.95,
+      "top_k": 0,
+      "max_new_tokens": 2048,
+      "max_prompt_length": 1752,
+      "num_generations": 4
+    },
+    "algorithm": "dr_grpo",
+    "reference": "exact shared E1_compact weights",
+    "training_budget": {
+      "pilot_updates": 20,
+      "common_checkpoints": [
+        100,
+        200
+      ],
+      "extensions": [
+        400,
+        600
+      ],
+      "extension_rule": "dev-only predeclared paired extension; fixed scheduler horizon;未验证"
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  }
+]

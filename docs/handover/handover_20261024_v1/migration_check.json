@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\Users\\Mr.Z\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "tools/verify_migration.py"
+  ],
+  "exit_code": 0,
+  "result": {
+    "project": "项目一_7B数学后训练",
+    "files": 4214,
+    "full_hash_check": false,
+    "release_rows": {
+      "project1_raw_paired.jsonl": 1500,
+      "project1_compact_paired.jsonl": 1500
+    },
+    "errors": [],
+    "gpu_run": false
+  }
+}

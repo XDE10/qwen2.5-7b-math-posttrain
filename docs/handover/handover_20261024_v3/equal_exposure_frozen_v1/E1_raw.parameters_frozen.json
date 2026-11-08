@@ -1,0 +1,42 @@
+{
+  "draft": true,
+  "status": "研究参数已冻结；执行未放行",
+  "stage": "sft",
+  "vision": false,
+  "arm": "raw",
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+  "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+  "data_manifest": "data/portable_release/manifest.json",
+  "data_file": "project1_raw_paired.jsonl",
+  "output_dir": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E1_raw",
+  "seed": 42,
+  "batch_size": 1,
+  "gradient_accumulation_steps": 16,
+  "learning_rate": 1e-05,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0,
+  "save_steps": 20,
+  "max_steps": 94,
+  "max_length": 4096,
+  "export_merged_base": true,
+  "budget_protocol": {
+    "draft": false,
+    "status": "等题曝光研究协议已冻结；真实7B未运行",
+    "epochs": 1,
+    "examples": 1500,
+    "effective_batch": 16,
+    "expected_steps_per_arm": 94,
+    "stop_rule": "one complete epoch including partial final batch; measure actual token exposure",
+    "supervised_tokens": {
+      "raw": 3516983,
+      "compact": 360882
+    }
+  },
+  "parameter_status": "frozen",
+  "execution_status": "未验证：等待GPU验收与环境锁",
+  "preregistration_schema": "project1-sft-equal-exposure-frozen-v1",
+  "source_draft_sha256": "97703e4175ea5dc834d4a7ddfc82d8e574f27101efa93d0830c3d9ede2324926",
+  "blocking_reason": "draft=true is an execution interlock; equal-token stopping is NOT a prerequisite"
+}

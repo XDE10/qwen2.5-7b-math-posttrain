@@ -1,0 +1,86 @@
+{
+  "draft": true,
+  "status": "草稿，未冻结",
+  "stage": "rl",
+  "vision": false,
+  "arm": "compact",
+  "model": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E1_compact/merged",
+  "model_revision": "local-merged-with-weight-manifest",
+  "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+  "data_manifest": "data/portable_release/manifest.json",
+  "data_file": "RL_POOL_PENDING_SEPARATE_APPROVAL",
+  "output_dir": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E4_compact",
+  "seed": 42,
+  "batch_size": 1,
+  "gradient_accumulation_steps": 8,
+  "learning_rate": 5e-06,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0,
+  "save_steps": 20,
+  "max_steps": 200,
+  "max_length": 3800,
+  "export_merged_base": false,
+  "budget_protocol": {
+    "draft": true,
+    "status": "草稿，未冻结",
+    "epochs": 1,
+    "examples": 1500,
+    "effective_batch": 16,
+    "expected_steps_per_arm": 94,
+    "stop_rule": "one complete epoch including partial final batch; measure actual token exposure",
+    "supervised_tokens": {
+      "raw": 3516983,
+      "compact": 360882
+    }
+  },
+  "matrix_entry": {
+    "experiment": "E4",
+    "arm": "compact",
+    "draft": true,
+    "status": "草稿，未冻结",
+    "seed": 42,
+    "model": "${PROJECT_DRIVE_ROOT}/runs/equal_exposure/E1_compact/merged",
+    "model_revision": "local-merged-with-weight-manifest",
+    "base_model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "tokenizer_path": "data/tokenizers/Qwen2.5-7B-Instruct",
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "start": "E1_compact",
+    "data": "RL_POOL_PENDING_SEPARATE_APPROVAL",
+    "grader": "strict-v3 + audited-status-v2; selection scorer NOT FROZEN; relation-capable scoring required before RL selection",
+    "generation": {
+      "do_sample": true,
+      "temperature": 0.8,
+      "top_p": 0.95,
+      "top_k": 0,
+      "max_new_tokens": 2048,
+      "max_prompt_length": 1752,
+      "num_generations": 4
+    },
+    "algorithm": "dr_grpo",
+    "reference": "exact shared E1_compact weights",
+    "training_budget": {
+      "pilot_updates": 20,
+      "common_checkpoints": [
+        100,
+        200
+      ],
+      "extensions": [
+        400,
+        600
+      ],
+      "extension_rule": "dev-only predeclared paired extension; fixed scheduler horizon;未验证"
+    },
+    "notes": "E2 shared across arms; E3/E4 share the identical E1 within each arm; no new approval"
+  },
+  "initial_state": "sft",
+  "max_prompt_length": 1752,
+  "max_new_tokens": 2048,
+  "temperature": 0.8,
+  "top_p": 0.95,
+  "num_generations": 4,
+  "generation_batch_size": 4,
+  "beta": 0.04,
+  "algorithm": "dr_grpo",
+  "expected_sft": "PIN_AFTER_SFT_EXPORT"
+}

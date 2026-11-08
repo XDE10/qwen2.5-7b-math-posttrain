@@ -1,0 +1,27 @@
+{
+  "draft": true,
+  "status": "草稿，未冻结",
+  "release_manifest_sha256": "8b4d096797991284abb36facd66a1914aa503acc931c13fb812e93a73adffbc0",
+  "training_files": {
+    "project1_raw_paired.jsonl": "65a9492420758161a59e44e8857e2db0836f4deacc3cd39614f46726b80b9203",
+    "project1_compact_paired.jsonl": "b530ca839fe5958e0b2ccb5730410def69cc06641214e98e7ee0c8107490d17c"
+  },
+  "evaluation_files": {
+    "math_dev": {
+      "path": "data/math/math_dev.jsonl",
+      "rows": 256,
+      "sha256": "b5b3c90eeea953ae954cc2aa652caff4bd9c6edcb95f1b896215b84772225023"
+    },
+    "math500_test": {
+      "path": "data/math/math500_test.jsonl",
+      "rows": 500,
+      "sha256": "4a8ada6bff87e172a59d78467764e781ae92460a4c6a3ec23f11e99ecd97c04e"
+    },
+    "gsm8k_test": {
+      "path": "data/math/gsm8k_test.jsonl",
+      "rows": 1319,
+      "sha256": "a70d6a96a1d0db216c5543f044e9dbe3cb1c2a28a26abe4d012b10d669057569"
+    }
+  },
+  "rl_pool": "not selected or approved"
+}

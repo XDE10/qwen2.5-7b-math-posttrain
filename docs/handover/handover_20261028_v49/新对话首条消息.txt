@@ -1,0 +1,10 @@
+请接手我的项目一，工作目录：D:/Users/Mr.Z/Desktop/项目一_7B数学后训练。
+
+先完整阅读根目录 AGENTS.md，以及 reports/handover_20261028_v49/第四次对话_完整接手提示词.md。新提示词已整合本轮对话、两段引用旧对话、所有主要实测数字、DS误判纠正、s1/P-ALIGN研究、当前全参短测与三次安装修复。不要只读旧README就重做准备。
+
+当前：自己的AIMO LoRA MATH500复核72.8%；公开s1.1-7B纠正后81.2%（不是81.4）；公开P-ALIGN rp1.05复核74.4%。当前下一步是单A100-SXM4-80GB的v46全参容量/速度短测，只64条样本、8次更新，不自动六轮训练。
+
+v46此前三次都卡在依赖安装，未进入GPU训练：mesonpy、错误numpy1.26.4约束、SwanLab依赖pwinput被wheel-only规则误拦。最新同名Drive脚本已修第三项，9项CPU测试及本地pwinput源码构建成功，Drive读回一致；远端安装和8步GPU仍待实跑确认。命令仍为：
+python3 /content/drive/MyDrive/projects/project1/probe_s1_full_sft_v46.py
+
+先看我最新日志/当前任务状态，不重载VSCode、不杀任务、不重复启动。不重装核心环境、不重测E0/旧dev/已完成MATH500，不重复全量去污。SwanLab和DS密钥已经保存并授权自动复用，不再问我要Key或转offline。弹窗排查暂停。先把这个短测跑通，再根据资源与速度决定正式训练。

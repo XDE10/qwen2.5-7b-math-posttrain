@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-28",
+  "checks": {
+    "sections_1_through_35": true,
+    "no_secret_values": true,
+    "no_replacement_char": true,
+    "own_score_364_of_500": true,
+    "public_s11_corrected_406": true,
+    "public_palign_372": true,
+    "probe_only_64_not_full": true,
+    "latest_script_hash": true
+  },
+  "document_characters": 25859,
+  "document_utf8_bytes": 47019,
+  "focused_cpu_tests": 9,
+  "remote_dependency_install_confirmed": false,
+  "gpu_probe_completed": false,
+  "drive_latest_script_readback_verified": true
+}

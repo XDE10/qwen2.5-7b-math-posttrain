@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-28",
+  "legacy_v49_preserved_in_full": true,
+  "gpu_started_this_handover": false,
+  "files": [
+    {
+      "path": "reports\\handover_20261028_v49\\第四次对话_完整接手提示词.md",
+      "bytes": 47801,
+      "sha256": "7d8e1a7becc2874a9983627edac7f9eef5bbc4d64c5476b7825e9f8d0f1e31ad"
+    },
+    {
+      "path": "reports\\handover_20261028_v53\\第五次对话_完整接手提示词.md",
+      "bytes": 60980,
+      "sha256": "ae97eea6cc27a5dc323dd56c94fd5a36f77acd72858b2e586009c0f4a9650e63"
+    },
+    {
+      "path": "reports\\handover_20261028_v53\\本轮新增总结.md",
+      "bytes": 12347,
+      "sha256": "6017a1063e7f71e55aa93fa4ee9ff04a077a4e58553df9f608245bb624d4ca62"
+    },
+    {
+      "path": "reports\\handover_20261028_v53\\新对话首条消息.txt",
+      "bytes": 2069,
+      "sha256": "897a3c5fb3e8b42defc46ea6e87ce7d2cdf44c79d694157e1904e4c39e88d65b"
+    },
+    {
+      "path": "tools\\evaluate_e0_romescape_avg8_v52.py",
+      "bytes": 21670,
+      "sha256": "8df5a658af6a264c7195c79c1944f8e7f85b9f06c298f39c4ffb0da9706b9fb6"
+    },
+    {
+      "path": "tools\\evaluate_public_romescape_math500_v51.py",
+      "bytes": 18725,
+      "sha256": "69818851aa7fd4961bf710b58c985c72c52f839dadf67dd1a37a0e9f3535bc94"
+    },
+    {
+      "path": "reports\\single_gpu_qwen7b_research_20261028_v50\\README.md",
+      "bytes": 15708,
+      "sha256": "5f6e5e797da0fa99b8422dadcd812945b0576c1c6d43d864d547e4bc9f2fbb1a"
+    },
+    {
+      "path": "reports\\single_gpu_qwen7b_research_20261028_v50\\sources.json",
+      "bytes": 117826,
+      "sha256": "bd3512fe239bd7d2459f51e564d231fff9509fa644b4b993cd339c0316dcb93b"
+    }
+  ]
+}

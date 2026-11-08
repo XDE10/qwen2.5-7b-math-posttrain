@@ -209,11 +209,14 @@ __marimo__/
 pro6000.ipynb
 
 # ---- 项目一本地约定（2026-11-08）：大体积数据/证据/报告不入库 ----
-data/
-artifacts/*
-!artifacts/README.md
-reports/*
-!reports/README.md
+/data/*
+!/data/README.md
+/artifacts/*
+!/artifacts/README.md
+/reports/*
+!/reports/README.md
+/archive/data/
+/archive/reports/
 .pilot_deps/
 *.zip
 .pytest_tmp/

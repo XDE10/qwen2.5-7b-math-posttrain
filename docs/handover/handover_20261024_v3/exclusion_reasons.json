@@ -1,0 +1,2216 @@
+{
+  "math/train/03999": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "07dedbf6597509469968b1180df9f377608852cfa64829fb6769f950b6906c59",
+      "target_id": "math/train/03999",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5388127853881278,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02967": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "cb55f8b30ab983cfc3f49f7598603b642aaf2b52a0f84296014605385b111e77",
+      "target_id": "math/train/02967",
+      "normalized_exact": false,
+      "char5_jaccard": 0.75,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06770": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "b4f392442f9387482e09e57b6c261411d21d50139c13ab9a5ea4640098147be4",
+      "target_id": "math/train/06770",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5202312138728323,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03033": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "5480a80e371eea1028cf404050f6afdc90c5974ace723edcad0d0cb6bf2b72fa",
+      "target_id": "math/train/03033",
+      "normalized_exact": true,
+      "char5_jaccard": 1.0,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02518": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "34f41355c2d3c33680d815b1e1997054357b5bf5e1a8481af620ff3ab1e8c848",
+      "target_id": "math/train/02518",
+      "normalized_exact": false,
+      "char5_jaccard": 0.54375,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04028": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "82a55ea91b740ed8c4eecafc595e4c146bc9ecd87378b60aacfa9a8157708f5a",
+      "target_id": "math/train/04028",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5069124423963134,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03888": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "e44b1af61c391f3019c8297e96edab64ccdf7b484b4176464610133db92d136b",
+      "target_id": "math/train/03888",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8021978021978022,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02161": [
+    {
+      "source": "sft",
+      "target": "rl",
+      "source_id": "f9fbda08ad5d47a22e2d00f931d3359d8bea071004880e7e875581df01ea6acf",
+      "target_id": "math/train/02161",
+      "normalized_exact": true,
+      "char5_jaccard": 1.0,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00083": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/00083",
+      "target_id": "math/train/00235",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7183098591549296,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00135": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/00135",
+      "target_id": "math/train/00460",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5227272727272727,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00504": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/00504",
+      "target_id": "math/train/00334",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7288135593220338,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00882": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/00882",
+      "target_id": "math/train/01611",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6024096385542169,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01077": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01077",
+      "target_id": "math/train/00229",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8705882352941177,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01241": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01241",
+      "target_id": "math/train/01083",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5072463768115942,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01360": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01360",
+      "target_id": "math/train/00783",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6407185628742516,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01469": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01469",
+      "target_id": "math/train/00334",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7161016949152542,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01543": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01543",
+      "target_id": "math/train/00460",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5510204081632653,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01922": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01922",
+      "target_id": "math/train/01901",
+      "normalized_exact": false,
+      "char5_jaccard": 0.900990099009901,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01922",
+      "target_id": "math500/test/00226",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8113207547169812,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01935": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01935",
+      "target_id": "math/train/01901",
+      "normalized_exact": false,
+      "char5_jaccard": 0.631578947368421,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01935",
+      "target_id": "math500/test/00226",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7064220183486238,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01990": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/01990",
+      "target_id": "math/train/01901",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7547169811320755,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01990",
+      "target_id": "math500/test/00226",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6756756756756757,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02061": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/02061",
+      "target_id": "math/train/01901",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6756756756756757,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02061",
+      "target_id": "math500/test/00226",
+      "normalized_exact": false,
+      "char5_jaccard": 0.603448275862069,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02068": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/02068",
+      "target_id": "math/train/01901",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6545454545454545,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02068",
+      "target_id": "math500/test/00226",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5826086956521739,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02295": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/02295",
+      "target_id": "math/train/02397",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5175879396984925,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02460": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/02460",
+      "target_id": "math/train/01901",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7064220183486238,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02460",
+      "target_id": "math500/test/00226",
+      "normalized_exact": false,
+      "char5_jaccard": 0.631578947368421,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02503": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/02503",
+      "target_id": "math/train/01901",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6756756756756757,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02503",
+      "target_id": "math500/test/00226",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7547169811320755,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02571": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/02571",
+      "target_id": "math/train/03300",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6882352941176471,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02914": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/02914",
+      "target_id": "math/train/02822",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7583892617449665,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03167": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03167",
+      "target_id": "math/train/03300",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8145695364238411,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03272": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03272",
+      "target_id": "math/train/03300",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7300613496932515,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03400": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03400",
+      "target_id": "math/train/03388",
+      "normalized_exact": false,
+      "char5_jaccard": 0.578125,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03404": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03404",
+      "target_id": "math/train/03671",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5733333333333334,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03419": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03419",
+      "target_id": "math/train/04209",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7804878048780488,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03549": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03549",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7016949152542373,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03583": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03583",
+      "target_id": "math/train/03737",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5294117647058824,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03599": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03599",
+      "target_id": "math/train/03845",
+      "normalized_exact": false,
+      "char5_jaccard": 0.764367816091954,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03599",
+      "target_id": "math500/test/00358",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6737967914438503,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03644": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03644",
+      "target_id": "math/train/03671",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5028248587570622,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03704": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03704",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6936026936026936,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03750": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03750",
+      "target_id": "math/train/04209",
+      "normalized_exact": false,
+      "char5_jaccard": 0.53125,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03876": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03876",
+      "target_id": "math/train/04209",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03973": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03973",
+      "target_id": "math/train/04117",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03977": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03977",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5768115942028985,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03988": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/03988",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6666666666666666,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04161": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04161",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6644736842105263,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04180": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04180",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7568493150684932,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04195": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04195",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6830985915492958,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04283": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04283",
+      "target_id": "math/train/03483",
+      "normalized_exact": false,
+      "char5_jaccard": 0.75,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04299": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04299",
+      "target_id": "math/train/04209",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5376344086021505,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04320": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04320",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7062937062937062,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04588": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04588",
+      "target_id": "math/train/03587",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6949152542372882,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04687": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04687",
+      "target_id": "math/train/04919",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5174129353233831,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04801": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/04801",
+      "target_id": "math/train/05595",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5789473684210527,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05016": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05016",
+      "target_id": "math/train/06506",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5396825396825397,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05211": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05211",
+      "target_id": "math/train/04918",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6708860759493671,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05382": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05382",
+      "target_id": "math/train/05004",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6382978723404256,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05416": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05416",
+      "target_id": "math/train/05497",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5033557046979866,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05451": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05451",
+      "target_id": "math/train/05595",
+      "normalized_exact": false,
+      "char5_jaccard": 0.75,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05470": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05470",
+      "target_id": "math/train/04815",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8133971291866029,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05557": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05557",
+      "target_id": "math/train/05595",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6578947368421053,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05756": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05756",
+      "target_id": "math/train/02291",
+      "normalized_exact": false,
+      "char5_jaccard": 0.502283105022831,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05952": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05952",
+      "target_id": "math/train/05595",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5394736842105263,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/05952",
+      "target_id": "math/train/06461",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5256410256410257,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06360": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/06360",
+      "target_id": "math/train/06461",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7125,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06710": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/06710",
+      "target_id": "math/train/05789",
+      "normalized_exact": false,
+      "char5_jaccard": 0.686046511627907,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06715": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/06715",
+      "target_id": "math/train/05595",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06768": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/06768",
+      "target_id": "math/train/06988",
+      "normalized_exact": false,
+      "char5_jaccard": 0.808695652173913,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06769": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/06769",
+      "target_id": "math/train/07302",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6729857819905213,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06769",
+      "target_id": "math500/test/00000",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7222222222222222,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06793": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/06793",
+      "target_id": "math/train/07259",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5387453874538746,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06867": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/06867",
+      "target_id": "math/train/07350",
+      "normalized_exact": false,
+      "char5_jaccard": 0.645320197044335,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07012": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/07012",
+      "target_id": "math/train/07154",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5283842794759825,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07127": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/07127",
+      "target_id": "math/train/07285",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5146579804560261,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/07127",
+      "target_id": "math/train/07302",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5899581589958159,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07127",
+      "target_id": "math500/test/00000",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5462184873949579,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07234": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/07234",
+      "target_id": "math/train/07302",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7216981132075472,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07234",
+      "target_id": "math500/test/00000",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6729857819905213,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07351": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/07351",
+      "target_id": "math/train/06988",
+      "normalized_exact": false,
+      "char5_jaccard": 0.680327868852459,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07351",
+      "target_id": "math500/test/00248",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5068493150684932,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07404": [
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/07404",
+      "target_id": "math/train/07285",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5048543689320388,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "dev",
+      "source_id": "math/train/07404",
+      "target_id": "math/train/07302",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5767634854771784,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07404",
+      "target_id": "math500/test/00000",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5930735930735931,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00173": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00173",
+      "target_id": "math500/test/00159",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7100591715976331,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00201": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00201",
+      "target_id": "math500/test/00276",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5943396226415094,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00257": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00257",
+      "target_id": "math500/test/00367",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5846994535519126,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00262": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00262",
+      "target_id": "math500/test/00316",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5664739884393064,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00269": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00269",
+      "target_id": "math500/test/00468",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6818181818181818,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00304": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00304",
+      "target_id": "math500/test/00386",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7848101265822784,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00386": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00386",
+      "target_id": "math500/test/00391",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6636363636363637,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00392": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00392",
+      "target_id": "math500/test/00435",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5967741935483871,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00396": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00396",
+      "target_id": "math500/test/00443",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6288659793814433,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00520": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00520",
+      "target_id": "math500/test/00319",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7378640776699029,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00677": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00677",
+      "target_id": "math500/test/00383",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5503875968992248,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00781": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00781",
+      "target_id": "math500/test/00159",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5968586387434555,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00802": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00802",
+      "target_id": "math500/test/00231",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8415841584158416,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00820": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00820",
+      "target_id": "math500/test/00183",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8878504672897196,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/00846": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/00846",
+      "target_id": "math500/test/00174",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7040816326530612,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01039": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01039",
+      "target_id": "math500/test/00258",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5991379310344828,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01079": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01079",
+      "target_id": "math500/test/00427",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5911949685534591,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01119": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01119",
+      "target_id": "math500/test/00316",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5224719101123596,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01209": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01209",
+      "target_id": "math500/test/00008",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7635135135135135,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01248": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01248",
+      "target_id": "math500/test/00354",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5824175824175825,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01278": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01278",
+      "target_id": "math500/test/00275",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6907216494845361,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01319": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01319",
+      "target_id": "math500/test/00242",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5899053627760252,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01376": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01376",
+      "target_id": "math500/test/00446",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8364779874213837,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01379": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01379",
+      "target_id": "math500/test/00174",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6213592233009708,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01394": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01394",
+      "target_id": "math500/test/00383",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6033057851239669,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01433": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01433",
+      "target_id": "math500/test/00093",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01452": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01452",
+      "target_id": "math500/test/00159",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5329949238578681,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01650": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01650",
+      "target_id": "math500/test/00008",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5094339622641509,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01661": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01661",
+      "target_id": "math500/test/00316",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5714285714285714,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01687": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01687",
+      "target_id": "math500/test/00446",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6497175141242938,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01720": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01720",
+      "target_id": "math500/test/00159",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5380710659898477,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/01732": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/01732",
+      "target_id": "math500/test/00463",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6166666666666667,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02033": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02033",
+      "target_id": "math500/test/00155",
+      "normalized_exact": false,
+      "char5_jaccard": 0.9075144508670521,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02044": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02044",
+      "target_id": "math500/test/00115",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7702702702702703,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02052": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02052",
+      "target_id": "math500/test/00142",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5666666666666667,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02066": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02066",
+      "target_id": "math500/test/00115",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7215189873417721,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02555": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02555",
+      "target_id": "math500/test/00499",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5967741935483871,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/02912": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/02912",
+      "target_id": "math500/test/00045",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7142857142857143,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03339": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03339",
+      "target_id": "math500/test/00192",
+      "normalized_exact": false,
+      "char5_jaccard": 0.543046357615894,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03492": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03492",
+      "target_id": "math500/test/00011",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5368421052631579,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03575": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03575",
+      "target_id": "math500/test/00147",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5847953216374269,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03575",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7435897435897436,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03625": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03625",
+      "target_id": "math500/test/00428",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5935828877005348,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03681": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03681",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5755813953488372,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03791": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03791",
+      "target_id": "math500/test/00147",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5647058823529412,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03791",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.66875,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03841": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03841",
+      "target_id": "math500/test/00304",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5076923076923077,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03943": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03943",
+      "target_id": "math500/test/00428",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5167464114832536,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03961": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03961",
+      "target_id": "math500/test/00147",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5149700598802395,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03961",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5875,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/03978": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/03978",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5078534031413613,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04013": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04013",
+      "target_id": "math500/test/00304",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5229357798165137,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04031": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04031",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5454545454545454,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04056": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04056",
+      "target_id": "math500/test/00312",
+      "normalized_exact": false,
+      "char5_jaccard": 0.66,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04100": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04100",
+      "target_id": "math500/test/00409",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6236559139784946,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04114": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04114",
+      "target_id": "math500/test/00312",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6203703703703703,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04158": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04158",
+      "target_id": "math500/test/00147",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5235602094240838,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04158",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5368421052631579,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04194": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04194",
+      "target_id": "math500/test/00317",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5209302325581395,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04197": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04197",
+      "target_id": "math500/test/00134",
+      "normalized_exact": false,
+      "char5_jaccard": 0.693939393939394,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04221": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04221",
+      "target_id": "math500/test/00194",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6115107913669064,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04281": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04281",
+      "target_id": "math500/test/00063",
+      "normalized_exact": false,
+      "char5_jaccard": 0.79296875,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04346": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04346",
+      "target_id": "math500/test/00304",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04373": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04373",
+      "target_id": "math500/test/00289",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5177664974619289,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04373",
+      "target_id": "math500/test/00428",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6772486772486772,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04440": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04440",
+      "target_id": "math500/test/00147",
+      "normalized_exact": false,
+      "char5_jaccard": 0.521978021978022,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04440",
+      "target_id": "math500/test/00332",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6162790697674418,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04460": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04460",
+      "target_id": "math500/test/00184",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6604938271604939,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04460",
+      "target_id": "math500/test/00289",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6140350877192983,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04460",
+      "target_id": "math500/test/00355",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6023391812865497,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04460",
+      "target_id": "math500/test/00428",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5555555555555556,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04481": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04481",
+      "target_id": "math500/test/00355",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5348837209302325,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04530": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04530",
+      "target_id": "math500/test/00289",
+      "normalized_exact": false,
+      "char5_jaccard": 0.51931330472103,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    },
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04530",
+      "target_id": "math500/test/00428",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6986301369863014,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04565": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04565",
+      "target_id": "math500/test/00134",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6230031948881789,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04640": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04640",
+      "target_id": "math500/test/00193",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8914285714285715,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04650": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04650",
+      "target_id": "math500/test/00061",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7387387387387387,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04709": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04709",
+      "target_id": "math500/test/00338",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5396825396825397,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04792": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04792",
+      "target_id": "math500/test/00130",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5652173913043478,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04834": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04834",
+      "target_id": "math500/test/00272",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7760416666666666,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04836": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04836",
+      "target_id": "math500/test/00335",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7565217391304347,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04838": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04838",
+      "target_id": "math500/test/00130",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5652173913043478,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/04882": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/04882",
+      "target_id": "math500/test/00130",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5217391304347826,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05030": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/05030",
+      "target_id": "math500/test/00130",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5470085470085471,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05238": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/05238",
+      "target_id": "math500/test/00030",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05421": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/05421",
+      "target_id": "math500/test/00415",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5813953488372093,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05455": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/05455",
+      "target_id": "math500/test/00137",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05545": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/05545",
+      "target_id": "math500/test/00135",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6371308016877637,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/05770": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/05770",
+      "target_id": "math500/test/00054",
+      "normalized_exact": false,
+      "char5_jaccard": 0.58,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06045": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06045",
+      "target_id": "math500/test/00031",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6666666666666666,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06093": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06093",
+      "target_id": "math500/test/00031",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6129032258064516,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06151": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06151",
+      "target_id": "math500/test/00031",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5757575757575758,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06252": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06252",
+      "target_id": "math500/test/00135",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5648535564853556,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06301": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06301",
+      "target_id": "math500/test/00135",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5819672131147541,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06602": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06602",
+      "target_id": "math500/test/00031",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5625,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06698": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06698",
+      "target_id": "math500/test/00229",
+      "normalized_exact": false,
+      "char5_jaccard": 0.632996632996633,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06764": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06764",
+      "target_id": "math500/test/00206",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6108949416342413,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06767": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06767",
+      "target_id": "math500/test/00408",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5493827160493827,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06859": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06859",
+      "target_id": "math500/test/00179",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8213058419243986,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06900": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06900",
+      "target_id": "math500/test/00431",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5037037037037037,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/06920": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/06920",
+      "target_id": "math500/test/00099",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5454545454545454,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07004": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07004",
+      "target_id": "math500/test/00255",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7311320754716981,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07019": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07019",
+      "target_id": "math500/test/00431",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8608695652173913,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07040": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07040",
+      "target_id": "math500/test/00227",
+      "normalized_exact": false,
+      "char5_jaccard": 0.8068181818181818,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07179": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07179",
+      "target_id": "math500/test/00109",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5611111111111111,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07216": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07216",
+      "target_id": "math500/test/00206",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6374501992031872,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07217": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07217",
+      "target_id": "math500/test/00179",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6057971014492753,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07222": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07222",
+      "target_id": "math500/test/00179",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5776566757493188,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07254": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07254",
+      "target_id": "math500/test/00179",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6342182890855457,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07328": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07328",
+      "target_id": "math500/test/00205",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5233160621761658,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07337": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07337",
+      "target_id": "math500/test/00408",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7575757575757576,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07349": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07349",
+      "target_id": "math500/test/00260",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6102941176470589,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07355": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07355",
+      "target_id": "math500/test/00179",
+      "normalized_exact": false,
+      "char5_jaccard": 0.6072507552870091,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07385": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07385",
+      "target_id": "math500/test/00408",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5153374233128835,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07401": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07401",
+      "target_id": "math500/test/00099",
+      "normalized_exact": false,
+      "char5_jaccard": 0.5459183673469388,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07441": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07441",
+      "target_id": "math500/test/00205",
+      "normalized_exact": false,
+      "char5_jaccard": 0.655,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07459": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07459",
+      "target_id": "math500/test/00307",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7094017094017094,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ],
+  "math/train/07474": [
+    {
+      "source": "rl",
+      "target": "math500",
+      "source_id": "math/train/07474",
+      "target_id": "math500/test/00492",
+      "normalized_exact": false,
+      "char5_jaccard": 0.7871485943775101,
+      "interpretation": "manual_review_required_not_automatic_deletion"
+    }
+  ]
+}

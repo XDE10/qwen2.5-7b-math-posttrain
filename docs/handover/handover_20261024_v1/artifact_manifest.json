@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-24",
+  "scope": "new handover attachments only; original manifests unchanged",
+  "files": {
+    "audit_handover.py": "462e9b727f2336af0c002b440783d3396862588c5204877da5f6ada1392fced6",
+    "command_results.json": "77a91b1698e319938b4ac763aa2c1e0c34585c14d4bf60fe0347be7c184f31a6",
+    "data_audit.json": "33e14533e745ad645d9701fc0fc95525c711b4a5786d58b2d8880e2e5002704b",
+    "migration_check.json": "60699db1c466c74658ce04334810077fda525b9a8de010a60f61138adbb7b6fd",
+    "migration_check.log": "51a2560ecbd0e7c92882e66418236520647fceb1cfa6de4a7adc576e6457329a",
+    "source_integrity.json": "5b6cabfa782337214350d8d068d2bafb630578a36eec8fa293fc0718e0a88193",
+    "token_audit.json": "cc8dc9ffb167741cc41faad5fc580e4bdfe080a8380a7dc1e0d6f319842adfcd",
+    "接手核查记录.md": "b9b1b9258caf980730032aab5a28c8870dbf4e02f0adf180f56cba77f1259549"
+  },
+  "qa": {
+    "json_parsed": true,
+    "local_links_exist": true,
+    "fences_balanced": true,
+    "migration_payload_sizes_unchanged": true,
+    "diagnostic_encoding_passed": true
+  },
+  "token_audit_environment": {
+    "python": "3.11.16",
+    "transformers": "5.18.0",
+    "tokenizers": "0.23.2"
+  }
+}

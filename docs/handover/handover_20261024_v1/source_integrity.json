@@ -1,0 +1,9 @@
+{
+  "AGENTS.md": true,
+  "README.md": true,
+  "scripts/evaluate_approved_math.py": true,
+  "scripts/math_verify_v3_strict_worker.py": true,
+  "src/data/approved_training_inputs.py": true,
+  "src/losses/reference.py": true,
+  "src/training/approved_hf.py": true
+}

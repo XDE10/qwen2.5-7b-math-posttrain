@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-24",
+  "python": "D:\\anaconda3\\envs\\genai-test\\python.exe",
+  "python_version": "3.12.15 | packaged by Anaconda, Inc. | (main, Oct  1 2026, 20:14:50) [MSC v.1942 64 bit (AMD64)]",
+  "versions": {
+    "torch": "2.14.1",
+    "transformers": "4.57.6",
+    "trl": "1.16.0",
+    "peft": "0.19.0",
+    "datasets": "4.7.0",
+    "accelerate": "1.10.1",
+    "tokenizers": "0.22.2",
+    "pytest": "8.4.2"
+  },
+  "pip_check": "passed",
+  "baseline_cpu": {
+    "passed": 17,
+    "failed": 0
+  },
+  "final_cpu": {
+    "passed": 69,
+    "failed": 0,
+    "warnings": 3,
+    "new_tests": 52,
+    "log": "pytest_final_69.log"
+  },
+  "original_full_encoding": "passed both 1500-row arms",
+  "release_digests_unchanged": {
+    "project1_compact_paired.jsonl": true,
+    "project1_raw_paired.jsonl": true,
+    "project1_rl_priority_not_rollout_selected.jsonl": true,
+    "reserved_dev_ids_never_train.json": true
+  },
+  "legacy_tracked_hashes_checked_unchanged": [
+    "AGENTS.md",
+    "README.md",
+    "configs/project1_compact_dr_grpo_smoke.json",
+    "configs/project1_compact_grpo_smoke.json",
+    "configs/project1_compact_sft_smoke.json",
+    "configs/project1_raw_dr_grpo_smoke.json",
+    "configs/project1_raw_grpo_smoke.json",
+    "configs/project1_raw_sft_smoke.json",
+    "data/math_manifest.json",
+    "data/portable_release/manifest.json",
+    "data/portable_release/project1_compact_paired.jsonl",
+    "data/portable_release/project1_raw_paired.jsonl",
+    "data/portable_release/project1_rl_priority_not_rollout_selected.jsonl",
+    "data/portable_release/reserved_dev_ids_never_train.json",
+    "requirements-cpu-snapshot.txt",
+    "scripts/evaluate_approved_math.py",
+    "scripts/math_verify_pilot_worker.py",
+    "scripts/math_verify_v3_strict_worker.py",
+    "scripts/train_project1_rl.py",
+    "scripts/train_project1_sft.py",
+    "src/data/approved_training_inputs.py",
+    "src/losses/reference.py",
+    "src/training/approved_hf.py"
+  ],
+  "config_files_checked": 28,
+  "local_markdown_links_checked": 14,
+  "bash_syntax_exit_code": 0,
+  "python_compileall_exit_code": 0,
+  "colab_notebook": "JSON structure valid; not executed",
+  "unverified": [
+    "embedding nearest neighbors: local snapshots have no weights",
+    "Linux/CUDA dependency combination",
+    "Colab Drive mount/runtime restart",
+    "A100 memory/throughput",
+    "real 7B model reference and checkpoint recovery",
+    "RL rollout selection and approval",
+    "formal supervised-token runtime stop implementation"
+  ]
+}

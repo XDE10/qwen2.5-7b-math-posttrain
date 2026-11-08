@@ -1,0 +1,19 @@
+{
+  "count": 500,
+  "native_correct": 362,
+  "native_accuracy": 0.724,
+  "ds_reviewed": 138,
+  "ds_recovered": 2,
+  "reviewed_correct": 364,
+  "reviewed_accuracy": 0.728,
+  "incorrect": 133,
+  "uncertain": 3,
+  "usage_including_retries": {
+    "prompt_tokens": 1052374,
+    "completion_tokens": 8887,
+    "total_tokens": 1061261,
+    "prompt_cache_hit_tokens": 18688,
+    "prompt_cache_miss_tokens": 1033686
+  },
+  "note": "DS answer-equivalence review, not human gold or proof validity. Native pass outputs not DS reviewed."
+}
