@@ -2,7 +2,8 @@
 import json
 from pathlib import Path
 
-CONFIG = Path('project_blueprints/configs/project2_prompt_contract.json')
+# 项目二提示词契约文件已随项目二方案于 2026-11-08 移除；此处保留路径以便历史脚本给出明确错误。
+CONFIG = Path('docs/blueprints/configs/project2_prompt_contract.json')
 
 
 def load_contract(path=CONFIG):

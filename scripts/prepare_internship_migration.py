@@ -58,7 +58,7 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--full',action='store_true',help='Also hash all archived files and source snapshots')
     args=parser.parse_args()
-    m=json.loads(Path('migration_manifest.json').read_text(encoding='utf8'))
+    m=json.loads(Path('docs/metadata/migration_manifest.json').read_text(encoding='utf8'))
     errors=[]
     for f in m['files']:
         p=Path(f['path'])
@@ -133,9 +133,9 @@ def build(project):
 
     # Small code modules and original evidence are shared across the pipeline.
     # Duplicating them intentionally removes all sibling-folder dependencies.
-    for folder in ['src', 'scripts', 'tests', 'project_blueprints', 'reports', '.pilot_deps']:
+    for folder in ['src', 'scripts', 'tests', 'docs/blueprints', 'reports', '.pilot_deps']:
         copy_tree(ROOT / folder)
-    for name in ['pytest.ini', 'requirements-project3-cpu.txt', 'OVERNIGHT_CPU_README.md', '.gitignore']:
+    for name in ['pytest.ini', 'docs/operations/OVERNIGHT_CPU_README.md', '.gitignore']:
         copy_file(ROOT / name)
     common = {'math', 'raw_math_cache', 'tokenizers', 'synthesis_mock', 'delegated_ai_releases_20261024',
               'topup_v6_20261024', 'finalfill_v7_20261024', 'strict_v8_20261024'}
@@ -272,11 +272,11 @@ def build(project):
 
 ## 从这里开始
 
-- [本项目详细方案](project_blueprints/{BLUEPRINTS[project]})。
-- [最新数据封板说明](project_blueprints/Strict_v8_数据封板与上卡说明.md)。
+- [本项目详细方案](docs/blueprints/{BLUEPRINTS[project]})。
+- [最新数据封板说明](docs/blueprints/Strict_v8_数据封板与上卡说明.md)。
 - [最新执行报告](reports/strict_v8_20261024/执行报告.md)。
 - [可迁移数据清单](data/portable_release/manifest.json)：本项目运行入口只使用这个清单。
-- `configs/`：已改成相对路径的本项目最新配置。`project_blueprints/configs/` 和原始数据目录下的配置属于历史留档。
+- `configs/`：已改成相对路径的本项目最新配置。`docs/blueprints/configs/` 和原始数据目录下的配置属于历史留档。
 - `src/`、`scripts/`、`tests/`：保留共用代码及其导入依赖；部分脚本服务于其他项目或历史流水线，运行主线见下方命令。
 - `data/`：本项目历史数据、源快照、共用数学集、tokenizer、审核依据和图片。共用 release/报告保留交叉审核证据，并不扩大本项目训练范围。
 
@@ -315,7 +315,7 @@ SFT 后的 RL 配置依赖前一步实际导出的 `runs/.../merged/` 及权重�
 
 ## 归档与修改范围
 
-原始 JSON/JSONL、源文件与审核缓存按字节复制，源 SHA 记录在 `migration_manifest.json`。`data/portable_release/` 为独立派生运行副本：只保留本项目文件，项目三仅将 `image_path` 改为包内相对路径并重算其文件 SHA；题目、答案、标签、图片内容与批准状态不变。其 manifest 记录原始/派生哈希和转换范围。
+原始 JSON/JSONL、源文件与审核缓存按字节复制，源 SHA 记录在 `docs/metadata/migration_manifest.json`。`data/portable_release/` 为独立派生运行副本：只保留本项目文件，项目三仅将 `image_path` 改为包内相对路径并重算其文件 SHA；题目、答案、标签、图片内容与批准状态不变。其 manifest 记录原始/派生哈希和转换范围。
 
 Markdown 内已有且能定位到源文件的本地链接已改为包内链接，并补齐链接目标。历史报告中的绝对路径文字和旧配置保留为溯源，不用作当前运行入口。跨项目历史说明中的旧数量以本 README 和 Strict v8 清单为准。
 
@@ -333,7 +333,8 @@ Markdown 内已有且能定位到源文件的本地链接已改为包内链接�
             item.update(copied[rel])
             item['changed_for_portability'] = item['sha256'] != item['source_sha256']
         files.append(item)
-    dump(dest / 'migration_manifest.json', {'project': NAMES[project], 'date': '2026-10-24',
+    (dest / 'docs/metadata').mkdir(parents=True, exist_ok=True)
+    dump(dest / 'docs/metadata/migration_manifest.json', {'project': NAMES[project], 'date': '2026-10-24',
          'source_root': str(ROOT), 'files': files,
          'omitted': ['.git', 'virtual environments', '__pycache__', '.pytest_cache', 'reports/backups', 'unrelated raw source shards'],
          'gpu_runs_during_migration': 0})

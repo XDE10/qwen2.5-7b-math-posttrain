@@ -1,31 +1,42 @@
 # 项目一：7B 数学后训练与同题轨迹对照
 
-**2026-10-28 最新交接：[第五次对话完整接手提示词 v53](reports/handover_20261028_v53/第五次对话_完整接手提示词.md)**；[可复制的新对话首条消息](reports/handover_20261028_v53/新对话首条消息.txt)。当前新增授权为v52单命令先E0再RomEscape，各MATH500每题8次平均，入口已上传且CPU通过，GPU未确认。v46依赖已实跑通过、RoPE检查已修，8更新待验证。下方v49及更早状态按v53覆盖解释，不重启旧任务。
+研究 Qwen2.5-7B-Instruct 在数学任务上的 SFT、GRPO 与 Dr.GRPO，以及"同一道题：原生长轨迹 vs 教师精炼轨迹"的质量、长度与成本对照。当前主模型固定 `Qwen/Qwen2.5-7B-Instruct`（revision `a09a35458c702b33eeacc393d103063234e8bc28`）。
 
-**2026-10-28 最新入口：[第四次对话完整接手提示词 v49](reports/handover_20261028_v49/第四次对话_完整接手提示词.md)**；可复制消息见[新对话首条消息](reports/handover_20261028_v49/新对话首条消息.txt)。当前AIMO SFT已完成，MATH500复核72.8%；公开s1.1-7B纠正后81.2%，公开P-ALIGN rp1.05为74.4%。下一步是`probe_s1_full_sft_v46.py`单A100全参容量/速度短测，仅64条/8次更新，不自动正式六轮训练。三次依赖安装问题已定向修复，同名Drive脚本已更新并读回；远端安装和GPU短测仍待最新实跑确认。**下方2026-10-26及更早文字为历史快照，不作为当前启动命令。**
+**最新状态、授权与未完成事项以 [AGENTS.md](AGENTS.md) 为准**（截至 2026-11-03，v91/v92 造数与外部审查）。本文件其余章节是 2026-10-25～10-28 的工程与迁移基线快照，历史状态不在此重复；两者冲突时以 AGENTS.md 与 `reports/` 中最新报告为准。
 
-2026-10-26 最新接手入口：**[第三次对话完整接手提示词](reports/handover_20261026_v4/第三次对话_完整接手提示词.md)**。当前为Qwen2.5-7B-Instruct＋原始sft-4k完整8192窗口的2275条样本，LoRA最多3epochs。**训练配方v26、兼容修复v27、最新自动认证入口v28**；Drive挂载后运行 `python3 /content/drive/MyDrive/projects/project1/start_aimo_sft_v28.py`。Key已写入独立私密Drive配置并验证在线登录，不需要每次手动输入。弹窗排查暂停。新训练已尝试并完成LoRA注入，但完整训练成功尚未确认。
 
-下文多数内容保留2026-10-24/25的迁移及旧raw/compact分支快照。历史7B GPU训练与评测已实际完成，不能再用旧“尚无GPU结果”段落覆盖后续实测；当前状态、成绩和命令以最新交接文档、AGENTS及实际产物为准。
+## 目录结构
 
-更新：2026-10-25。本 README 是新接手者和 Codex 的项目入口，覆盖当前事实、运行入口与后续验收。这个目录可以独立迁移，不需要另外两个项目目录。原 `modern_genai` 内的项目专用内容已清理；旧原仓库绝对路径只存在于部分历史记录，不是运行依赖。
+| 路径 | 内容 | 说明 |
+|---|---|---|
+| `configs/` | 工程配置 | 相对路径，根目录执行 |
+| `src/` | 训练、数据、评分、损失实现 | 主线代码 |
+| `scripts/` | 命令行入口与流水线 | 历史与现行混放，按报告中的命令定位 |
+| `tools/` | 离线校验与监控 | `verify_migration.py`、造数监视器 |
+| `tests/` | pytest 用例 | |
+| `data/` | 原始筛选源、发布数据、tokenizer | 大体积，不入 git |
+| `artifacts/` | 造数与评测原始证据 | 大体积，不入 git |
+| `reports/` | 逐次实验报告 | 过程目录，不入 git；索引见 [reports/README.md](reports/README.md) |
+| `docs/blueprints/` | 研究方案、共用规范、上卡说明、批准配置留档 | |
+| `docs/migration/` | 迁移验收、清理与重构记录 | |
+| `docs/metadata/` | 迁移清单、CPU 环境快照、Colab 校验清单 | |
+| `docs/operations/` | CPU 夜间运行手册 | |
+| `.pilot_deps/` | 数学验证器纯 Python 依赖 | 含许可证，git 忽略 |
 
-**当前 Colab 操作入口：[预装环境运行指南 v5](reports/colab_preinstalled_20261025_v5/Colab预装环境指南_v5.md)。按用户选择，保留 Colab 预装 Python、PyTorch/CUDA、Transformers 等版本；先记录与测试，只补缺失依赖。不默认安装历史固定清单、不降级、不切换 Python、不创建虚拟环境。预装环境与现有训练/采样代码的兼容性仍未验证。** 下方固定版本环境命令保留用于历史复现，不用于当前 Colab 会话。
-
-2026-10-25 编码兼容修正：[Transformers5 模板返回类型补丁 v6](reports/colab_tokenizer_20261025_v6/README.md)。原全量编码检查在用户的 5.20.2 会话失败；当前改用 `scripts.check_sft_tokenizer_v6` 验证两臂，后续文字 SFT 入口为 `scripts.train_project1_sft_v6`。保留旧代码和严格数据检查，不降级；本地回归通过不代表远端5.x或GPU已验收。
+---
 
 ## 项目目标
 
-研究 7B 指令模型在数学任务上的 SFT、GRPO 与 Dr.GRPO，以及同一道题的原生长轨迹和教师精炼轨迹是否带来不同的质量、长度与训练成本。当前主模型是 **Qwen/Qwen2.5-7B-Instruct**。这是面向实习展示的受控后训练项目；旧 0.5B/1.5B TinyPostTrain 只作为历史学习和失败诊断资料。
+研究 7B 指令模型在数学任务上的 SFT、GRPO 与 Dr.GRPO，以及同一道题的原生长轨迹和教师精炼轨迹是否带来不同的质量、长度与训练成本。当前主模型是 **Qwen/Qwen2.5-7B-Instruct**。这是面向实习展示的受控后训练项目；旧 0.5B/1.5B TinyPostTrain 试点已于 2026-11-08 删除（见 [清理记录](docs/migration/清理记录_20261108_独立化.md)）。
 
-当前可接手的是数据、审计、训练入口和小规模工程配置；还没有本项目 7B 的训练收益、准确率或速度结论。
+已产出数据、审计、训练入口、公开模型评测与 QFFT 造数证据；正式双组训练与最终收益结论仍未完成，未验证事项见 [AGENTS.md](AGENTS.md)。
 
 ## 给 Codex 的最小阅读顺序
 
 1. [AGENTS.md](AGENTS.md)：本目录的项目身份和阅读入口。
 2. 本 README：当前状态、代码地图和实际命令。
 3. [当前运行数据清单](data/portable_release/manifest.json) 与 [当前配置目录](configs)：核对实际文件、批准范围、模型和输出身份。
-4. 按任务阅读下方相关源文件；再查 [完整研究方案](project_blueprints/项目一_7B数学后训练_详细实施方案.md) 与 [Strict v8 实测报告](reports/strict_v8_20261024/执行报告.md)。
+4. 按任务阅读下方相关源文件；再查 [完整研究方案](docs/blueprints/项目一_7B数学后训练_详细实施方案.md) 与 [Strict v8 实测报告](reports/strict_v8_20261024/执行报告.md)。
 
 `data/portable_release/manifest.json` 的 `approved_training_files` / `approved_evaluation_files` 是本包当前数据准入范围。清单里的跨项目 `summary` 是原联合报告的背景，不会自动扩大授权。代码功能以实际源码为准；旧方案中的“待实现”“暂停写脚本”或旧数据数量可能已被后续实现和发布取代。具体冲突先看文件和版本，不能按段落里的“最新”二字推断。
 
@@ -63,10 +74,10 @@
 - [configs](configs)：本项目使用相对路径的最新工程配置，执行时从本目录根部运行。
 - [data/portable_release](data/portable_release)：当前实际运行副本；原始发布和历史版本在 `data/` 其他目录中留档。
 - [src](src)、[scripts](scripts)、[tests](tests)：训练、数据、评分与测试实现。迁移保留了一些共用模块和其他项目脚本作为依赖/证据；存在于本包不代表它属于本项目主线或能不加选择地运行。
-- [project_blueprints](project_blueprints)：详细研究方案、共用规范和历史配置。里面旧路径配置不能替代根目录 `configs/`。
-- [reports](reports)、[迁移记录](迁移记录)：逐项审核、失败/隔离证据、版本化测试与迁移验收。
+- [docs/blueprints](docs/blueprints)：详细研究方案、共用规范和历史配置。里面旧路径配置不能替代根目录 `configs/`。
+- [reports](reports)、[docs/migration](docs/migration)：逐项审核、失败/隔离证据、版本化测试与迁移验收。
 - [tools/verify_migration.py](tools/verify_migration.py)：无需模型或网络的离线完整性校验。
-- 原 `math`、`agentic_rl`、`video_mapping`、`tiny_posttrain` 参考学习材料与旧试点已于 2026-11-08 按用户要求删除，见 [清理记录](迁移记录/清理记录_20261108_独立化.md)。
+- 原 `math`、`agentic_rl`、`video_mapping`、`tiny_posttrain` 参考学习材料与旧试点已于 2026-11-08 按用户要求删除，见 [清理记录](docs/migration/清理记录_20261108_独立化.md)。
 
 本项目主要实现：
 
@@ -113,13 +124,13 @@ source .venv/bin/activate
 激活后恢复模块检查环境并运行相关测试：
 
 ```bash
-python -m pip install -r requirements-cpu-snapshot.txt
+python -m pip install -r docs/metadata/requirements-cpu-snapshot.txt
 python -m pytest tests/test_approved_training_inputs.py tests/test_training_entries_cpu.py tests/test_losses_and_masks.py -q
 ```
 
-[requirements-cpu-snapshot.txt](requirements-cpu-snapshot.txt) 是旧 CPU 环境的主要包版本记录，包含 PyTorch、Transformers、TRL、PEFT 等，**不是完整依赖锁或已实测的 CUDA 安装方案**。目标 GPU 环境应单独固定与驱动匹配的 PyTorch/CUDA 和框架版本并做 import/API 验收，不要据 CPU 包安装成功宣称 GPU 可运行。[.pilot_deps](.pilot_deps) 保留数学验证器及相关纯 Python 依赖/许可证；其中 SymPy 等仍依赖实际环境安装。
+[requirements-cpu-snapshot.txt](docs/metadata/requirements-cpu-snapshot.txt) 是旧 CPU 环境的主要包版本记录，包含 PyTorch、Transformers、TRL、PEFT 等，**不是完整依赖锁或已实测的 CUDA 安装方案**。目标 GPU 环境应单独固定与驱动匹配的 PyTorch/CUDA 和框架版本并做 import/API 验收，不要据 CPU 包安装成功宣称 GPU 可运行。[.pilot_deps](.pilot_deps) 保留数学验证器及相关纯 Python 依赖/许可证；其中 SymPy 等仍依赖实际环境安装。
 
-最近已保存的相关 CPU 检查为 17 passed，证据见 [迁移验收记录](迁移记录/迁移验收.md) 和 [机器可读结果](迁移记录/迁移验收.json)。本次 README 更新只运行文档与离线完整性检查，没有重跑模型测试或 GPU 训练。
+最近已保存的相关 CPU 检查为 17 passed，证据见 [迁移验收记录](docs/migration/迁移验收.md) 和 [机器可读结果](docs/migration/迁移验收.json)。本次 README 更新只运行文档与离线完整性检查，没有重跑模型测试或 GPU 训练。
 
 ## 当前 GPU 入口与输出
 
@@ -162,7 +173,7 @@ RL 在合并 SFT 基座上新建 LoRA，以便固定 SFT reference；不能把 S
 
 ## 历史材料、迁移与后续维护
 
-旧 TinyPostTrain 完整源码压缩包（原 `历史归档/`）与 `tiny_posttrain/` 目录已于 2026-11-08 按用户要求删除（旧 1.5B 试点已被 7B 主线取代），见 [清理记录](迁移记录/清理记录_20261108_独立化.md)；其中旧模型结果本就不能当作 7B 证据。
+旧 TinyPostTrain 完整源码压缩包（原 `历史归档/`）与 `tiny_posttrain/` 目录已于 2026-11-08 按用户要求删除（旧 1.5B 试点已被 7B 主线取代），见 [清理记录](docs/migration/清理记录_20261108_独立化.md)；其中旧模型结果本就不能当作 7B 证据。
 
 共用 API 审核缓存的 15119 个小文件完整保存在 [shared_api_cache.zip](reports/data_release_preparation_20261024/shared_api_cache.zip)。现有训练/离线校验无需解压；需要查询原始请求或恢复历史数据审核时再解压：
 
@@ -172,7 +183,7 @@ python -m zipfile -e reports/data_release_preparation_20261024/shared_api_cache.
 
 历史成本账本是审计事实，不是新任务的调用额度；恢复 API 数据流水线前应依据当前任务的实际范围、密钥与预算。不要自动重新生成或扩量已封存数据。
 
-[migration_manifest.json](migration_manifest.json) 跟踪迁移负载文件的大小和哈希，数据 release 的 manifest 另行保护训练批准。本次只同步 README/AGENTS 对应的文档清单项，并在 `迁移记录/README交接补充前_20261024.md`、`迁移记录/migration_manifest_交接补充前_20261024.json` 保留旧版本。以后合法修改文档/代码应说明变更和相关校验；不能用批量重算训练数据 SHA 的方式绕过数据准入。
+[migration_manifest.json](docs/metadata/migration_manifest.json) 跟踪迁移负载文件的大小和哈希，数据 release 的 manifest 另行保护训练批准。本次只同步 README/AGENTS 对应的文档清单项，并在 `docs/migration/README交接补充前_20261024.md`、`docs/migration/migration_manifest_交接补充前_20261024.json` 保留旧版本。以后合法修改文档/代码应说明变更和相关校验；不能用批量重算训练数据 SHA 的方式绕过数据准入。
 
 ## 新对话可直接使用的开场说明
 

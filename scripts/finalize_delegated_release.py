@@ -14,14 +14,14 @@ def run():
     for group in ['files','code']:
         for name,h in old.get(group,{}).items():
             path=ROOT/name
-            if path.parent==ROOT/'project_blueprints' and path.suffix=='.md':historical_docs.append(name);continue
+            if path.parent==ROOT/'docs/blueprints' and path.suffix=='.md':historical_docs.append(name);continue
             assert sha(path)==h,('old artifact changed',name);protected.append(name)
-    docs=[ROOT/'project_blueprints'/n for n in ['项目一_7B数学后训练_详细实施方案.md','项目二_双教师在线蒸馏_详细实施方案.md','项目三_多模态几何推理_详细实施方案.md','共用规范_强模型合成数据与验证.md','三项目_上卡前待办与验收清单.md','两个后训练项目_完整设计与实施指南.md']]
+    docs=[ROOT/'docs/blueprints'/n for n in ['项目一_7B数学后训练_详细实施方案.md','项目二_双教师在线蒸馏_详细实施方案.md','项目三_多模态几何推理_详细实施方案.md','共用规范_强模型合成数据与验证.md','三项目_上卡前待办与验收清单.md','两个后训练项目_完整设计与实施指南.md']]
     backup=REPORT/'blueprints_before_delegated_release.zip'
     if not backup.exists():
         with zipfile.ZipFile(backup,'x',compression=zipfile.ZIP_DEFLATED) as z:
             for p in docs:z.write(p,str(p.relative_to(ROOT)))
-    notice='> **2026-10-24 委托 AI 审核后的当前状态（本段优先于下文历史记录）**：用户授权 DeepSeek 逐题审核，总预算 $5。实际批准仅限新 release：项目一213对同题轨迹、项目二数学2380/代码1662条训练题、项目三26条感知监督原型；不是原生1500题或三项目全集封板。全量候选及存疑/隔离项保留。训练入口已新增，CPU小模型检查通过；A100/GPU未运行，核心视觉感知GRPO仍未放行。详见[本轮执行报告](<D:/Users/Mr.Z/Desktop/modern_genai/reports/data_release_preparation_20261024/执行报告.md>)与[训练入口及A100验收](<D:/Users/Mr.Z/Desktop/modern_genai/project_blueprints/批准子集训练入口与A100验收.md>)。\n\n'
+    notice='> **2026-10-24 委托 AI 审核后的当前状态（本段优先于下文历史记录）**：用户授权 DeepSeek 逐题审核，总预算 $5。实际批准仅限新 release：项目一213对同题轨迹、项目二数学2380/代码1662条训练题、项目三26条感知监督原型；不是原生1500题或三项目全集封板。全量候选及存疑/隔离项保留。训练入口已新增，CPU小模型检查通过；A100/GPU未运行，核心视觉感知GRPO仍未放行。详见[本轮执行报告](<D:/Users/Mr.Z/Desktop/modern_genai/reports/data_release_preparation_20261024/执行报告.md>)与[训练入口及A100验收](<D:/Users/Mr.Z/Desktop/modern_genai/docs/blueprints/批准子集训练入口与A100验收.md>)。\n\n'
     for p in docs:
         s=p.read_text(encoding='utf-8')
         if not s.startswith(notice):p.write_text(notice+s,encoding='utf-8')
@@ -50,8 +50,8 @@ def run():
         'paired_ids_identical':213,'project2_fixed_dev_ids_preserved':456,'dev_not_train':True,'visual_internal_ids_excluded':True,
         'no_pending_api_requests':True,'api_attempts':len(ledger),'cost_upper_usd':budget['committed_upper_usd'],'tests_passed':193,
         'entry_cli_help_checks':helps,'gpu_runs':0,'core_perception_GRPO_approved':False}
-    folders=[release,ROOT/'data/project1_native_v5',ROOT/'data/project1_batch500_20261024',ROOT/'data/project2_ai_review_20261024',ROOT/'data/project3_all_split_candidates_v2',ROOT/'data/project3_grounding_ai_review_20261024',REPORT,ROOT/'reports/project1_batch500_20261024',ROOT/'reports/project2_ai_review_20261024',ROOT/'reports/math_pair_delegated_review_20261024',ROOT/'reports/project3_grounding_ai_review_20261024',ROOT/'src/training',ROOT/'project_blueprints/configs/approved_release_20261024']
-    files=set(docs+[ROOT/'project_blueprints/批准子集训练入口与A100验收.md',ROOT/'reports/data_review_delegated_release.md'])
+    folders=[release,ROOT/'data/project1_native_v5',ROOT/'data/project1_batch500_20261024',ROOT/'data/project2_ai_review_20261024',ROOT/'data/project3_all_split_candidates_v2',ROOT/'data/project3_grounding_ai_review_20261024',REPORT,ROOT/'reports/project1_batch500_20261024',ROOT/'reports/project2_ai_review_20261024',ROOT/'reports/math_pair_delegated_review_20261024',ROOT/'reports/project3_grounding_ai_review_20261024',ROOT/'src/training',ROOT/'docs/blueprints/configs/approved_release_20261024']
+    files=set(docs+[ROOT/'docs/blueprints/批准子集训练入口与A100验收.md',ROOT/'reports/data_review_delegated_release.md'])
     for folder in folders:files.update(p for p in folder.rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.lock')
     files.update(p for p in (ROOT/'scripts').glob('*.py') if 'release' in p.name or p.name.startswith(('train_project','evaluate_approved','diagnose_project')))
     files.update([ROOT/'src/data/approved_training_inputs.py',ROOT/'src/data/geometry_model_serialization.py',ROOT/'src/synthesis/shared_cost_client.py',ROOT/'src/synthesis/data_review_contract.py',ROOT/'tests/test_training_entries_cpu.py'])

@@ -43,7 +43,7 @@ def run():
     for r in rows(release/'project3_train_fact_pruned.jsonl')[:6]:
         lines += ['## Geometry '+r['original_id'],'','!['+r['original_id']+']('+Path(r['image_path']).as_posix()+')','',r['problem'],'','认证部分事实：','',r['model_perception'],'']
     (REPORT/'审阅样本.md').write_text('\n'.join(lines),encoding='utf-8')
-    docs=ROOT/'project_blueprints';notice=docs/'Strict_v8_数据封板与上卡说明.md'
+    docs=ROOT/'docs/blueprints';notice=docs/'Strict_v8_数据封板与上卡说明.md'
     notice.write_text('# Strict v8 数据封板与上卡说明\n\n'+f"项目一实际 {s['project1_approved_pairs']} 对，项目三 {s['project3_train']} train / {s['project3_validation']} validation。精确配额达标：{s['project1_exact_target_met']}。\n\n"+link(REPORT/'执行报告.md','实测报告')+'；'+link(release/'manifest.json','批准范围')+'。\n\n不等式原生完整SFT上限4096，其他源范围及精炼150~1500门槛保持。新配置在 `data/strict_v8_20261024/training_configs/`。A100还须实际最长样本前后向、checkpoint恢复、rollout截断和教师前向Smoke；CPU测试不代替这些检查。\n\n示例：`python -m scripts.train_project1_sft --config data/strict_v8_20261024/training_configs/project1_raw_sft_smoke.json`。项目三使用对应fact SFT或sparse_v4 GRPO配置，只监督认证部分事实。\n',encoding='utf-8')
     names=['项目一_7B数学后训练_详细实施方案.md','项目二_双教师在线蒸馏_详细实施方案.md','项目三_多模态几何推理_详细实施方案.md','共用规范_强模型合成数据与验证.md','三项目_上卡前待办与验收清单.md','项目一_sft_train_v2筛选方案.md']
     backup=REPORT/'blueprints_before_v8.zip'

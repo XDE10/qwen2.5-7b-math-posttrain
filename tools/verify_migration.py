@@ -15,7 +15,7 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--full',action='store_true',help='Also hash all archived files and source snapshots')
     args=parser.parse_args()
-    m=json.loads(Path('migration_manifest.json').read_text(encoding='utf8'))
+    m=json.loads(Path('docs/metadata/migration_manifest.json').read_text(encoding='utf8'))
     errors=[]
     for f in m['files']:
         p=Path(f['path'])

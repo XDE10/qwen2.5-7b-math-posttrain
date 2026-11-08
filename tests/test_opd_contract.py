@@ -5,7 +5,13 @@ from pathlib import Path
 from src.data.screening_io import sha
 from src.teachers.opd_contract import teacher_batch_from_student, load_contract
 
+CONTRACT = Path(__file__).resolve().parents[1]/'docs/blueprints/configs/project2_prompt_contract.json'
+needs_contract = pytest.mark.skipif(
+    not CONTRACT.exists(),
+    reason='项目二提示词契约已随项目二方案于 2026-11-08 移除；契约代码保留供历史脚本导入')
 
+
+@needs_contract
 def test_contract_keeps_official_math_and_existing_code_protocol():
     c = load_contract()
     assert c['math_system']==r'Please reason step by step, and put your final answer within \boxed{}.'
@@ -26,10 +32,11 @@ def test_teacher_receives_exact_tensor_and_mask_handles_left_and_right_padding()
         teacher_batch_from_student(ids,torch.tensor([[1,0,1,1,1],[1,1,1,1,0]]),[2,2],[[4,5],[4,5]],8)
 
 
+@needs_contract
 def test_current_prompt_report_matches_contract_and_real_sealed_math_pools():
     report=json.loads(Path('reports/project2_prompt_contract_audit.json').read_text(encoding='utf-8'))
     assert report['case_count']==64 and report['all_explicit_math_prefixes_identical']
-    assert report['contract_sha256']==sha('project_blueprints/configs/project2_prompt_contract.json')
+    assert report['contract_sha256']==sha('docs/blueprints/configs/project2_prompt_contract.json')
     assert report['adapter_sha256']==sha('src/teachers/opd_contract.py')
     for path,detail in report['math_input_budget'].items():
         assert sha(path)==detail['sha256']

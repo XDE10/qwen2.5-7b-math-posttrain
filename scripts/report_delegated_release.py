@@ -80,7 +80,7 @@ def run():
         '旧v3/v4数据、已冻结pilot结果及项目二v2/v3源版本保留；所有批准由新子集manifest、文件SHA和逐项请求证据限定。',
         '实际CPU批准输入预检见 '+link(REPORT/'approved_input_preflight.json')+'；最终测试/旧版保护/本地链接检查见 '+link(REPORT/'final_checks.json')+'。',
         '本轮没有加载GPU权重、没有运行7B/VLM训练或基准评测。已编写真实HF SFT、TRL GRPO/Dr.GRPO、双教师分时OPD、VLM感知SFT及数学/视觉诊断入口；并提供批准子集的2步A100 smoke配置。',
-        'CPU小模型实际优化、恢复及教师冻结的测试见pytest.log。训练说明见 '+link(ROOT/'project_blueprints/批准子集训练入口与A100验收.md')+'。',
+        'CPU小模型实际优化、恢复及教师冻结的测试见pytest.log。训练说明见 '+link(ROOT/'docs/blueprints/批准子集训练入口与A100验收.md')+'。',
         '**核心VL感知GRPO尚未放行。** 原始目标配额的全量封板未完成，项目三只有感知监督原型；完整VL reasoning/奖励覆盖与语义代码判分仍需后续技术工作。已实现入口不等于A100/GPU端到端验收完成。','']
     (REPORT/'执行报告.md').write_text('\n'.join(lines),encoding='utf-8')
     dump(REPORT/'summary.json',{'native_pool':native,'generation':gen,'local_verification':ver,'project2_review':p2,'pair_review':pairs,

@@ -216,3 +216,4 @@ reports/*
 !reports/README.md
 .pilot_deps/
 *.zip
+.pytest_tmp/

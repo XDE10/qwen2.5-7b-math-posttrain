@@ -5,12 +5,12 @@ def run():
     while not (REPORT/'budget_after_reserves.json').exists():time.sleep(3)
     from scripts.finalize_topup_v6 import run as finalize
     finalize()
-    release=DATA/'release';s=read(release/'summary.json');docs=[ROOT/'project_blueprints'/n for n in ['项目一_7B数学后训练_详细实施方案.md','项目二_双教师在线蒸馏_详细实施方案.md','项目三_多模态几何推理_详细实施方案.md','共用规范_强模型合成数据与验证.md','三项目_上卡前待办与验收清单.md','两个后训练项目_完整设计与实施指南.md']]
+    release=DATA/'release';s=read(release/'summary.json');docs=[ROOT/'docs/blueprints'/n for n in ['项目一_7B数学后训练_详细实施方案.md','项目二_双教师在线蒸馏_详细实施方案.md','项目三_多模态几何推理_详细实施方案.md','共用规范_强模型合成数据与验证.md','三项目_上卡前待办与验收清单.md','两个后训练项目_完整设计与实施指南.md']]
     backup=REPORT/'blueprints_before_topup_v6.zip'
     if not backup.exists():
         with zipfile.ZipFile(backup,'x',zipfile.ZIP_DEFLATED) as z:
             for p in docs:z.write(p,p.relative_to(ROOT).as_posix())
-    notice=f"> **2026-10-24 Top-up v6 当前实测（优先于下文历史记录）**：用户累计API硬上限$8。严格逐项准入后：项目一{s['project1_approved_pairs']}对同题A/B；项目二数学{s['project2_math_train']} train/{s['project2_math_dev']} dev、代码train {s['project2_code_train']} / dev {s['project2_code_dev']}；项目三{s['project3_train']} train/{s['project3_validation']} validation逐事实子集。批准范围仅以新版manifest为准，候选/存疑/隔离行不随之批准。新增有限范围感知V4奖励，非100%金标，A100/GPU仍未运行。详见[Top-up实测报告](<D:/Users/Mr.Z/Desktop/modern_genai/reports/topup_v6_20261024/执行报告.md>)与[V4奖励及运行说明](<D:/Users/Mr.Z/Desktop/modern_genai/project_blueprints/Topup_v6_感知奖励与运行说明.md>)。\n\n"
+    notice=f"> **2026-10-24 Top-up v6 当前实测（优先于下文历史记录）**：用户累计API硬上限$8。严格逐项准入后：项目一{s['project1_approved_pairs']}对同题A/B；项目二数学{s['project2_math_train']} train/{s['project2_math_dev']} dev、代码train {s['project2_code_train']} / dev {s['project2_code_dev']}；项目三{s['project3_train']} train/{s['project3_validation']} validation逐事实子集。批准范围仅以新版manifest为准，候选/存疑/隔离行不随之批准。新增有限范围感知V4奖励，非100%金标，A100/GPU仍未运行。详见[Top-up实测报告](<D:/Users/Mr.Z/Desktop/modern_genai/reports/topup_v6_20261024/执行报告.md>)与[V4奖励及运行说明](<D:/Users/Mr.Z/Desktop/modern_genai/docs/blueprints/Topup_v6_感知奖励与运行说明.md>)。\n\n"
     for p in docs:
         body=p.read_text(encoding='utf-8')
         if not body.startswith(notice):p.write_text(notice+body,encoding='utf-8')
@@ -38,7 +38,7 @@ def run():
         for target in re.findall(r'\]\(<([^>]+)>\)',p.read_text(encoding='utf-8')):
             if target.startswith(('https:','http:')):continue
             assert Path(target).exists(),('broken link',target);linkcount+=1
-    files=set(docs+[ROOT/'project_blueprints/Topup_v6_感知奖励与运行说明.md'])
+    files=set(docs+[ROOT/'docs/blueprints/Topup_v6_感知奖励与运行说明.md'])
     for folder in [DATA,REPORT]:files.update(p for p in folder.rglob('*') if p.is_file() and '__pycache__' not in p.parts)
     files.update((ROOT/'scripts').glob('*topup*.py'));files.update([ROOT/p for p in ['src/synthesis/topup_budget.py','src/data/perception_v4.py','src/data/perception_text_guards.py','src/training/perception_reward_v4.py','src/training/approved_hf.py','tests/test_topup_budget.py','tests/test_perception_v4.py']])
     hits=[str(p.relative_to(ROOT)) for p in files if p.suffix in ['.py','.json','.jsonl','.md'] and re.search(r'sk-[A-Za-z0-9]{20,}',p.read_text(encoding='utf-8'))];assert not hits,('possible secret paths only',hits)

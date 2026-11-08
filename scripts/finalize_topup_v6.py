@@ -83,7 +83,7 @@ def run():
         f"账本累计{budget['all_dispatch_attempts']}次派发，本轮新增{budget['new_dispatch_attempts']}次；已完成用量按峰值价格估算${budget['completed_peak_usage_usd']:.8f}，错误/未知费用保留${budget['unknown_error_retained_reserve_usd']:.8f}，合计上界**${budget['committed_upper_usd']:.8f} <= $8**，不是账户实扣差额。无仍在途请求；错误费用预留不代表后台仍在生成。",
         link(REPORT/'approved_input_preflight.json','实际tokenizer/掩码/分割/SHA预检')+'；'+link(REPORT/'pytest.log','CPU测试日志')+'；'+link(DATA/'release/manifest.json','唯一批准范围')+'。',
         '本轮没有GPU权重下载/加载、A100训练、GPU端到端Smoke或模型准确率/速度实测。CPU及接口检查不替代真实VL processor、最长样本显存、rollout与恢复验收。',
-        link(DATA/'training_configs','新批准子集的训练配置目录')+'；'+link(ROOT/'project_blueprints/Topup_v6_感知奖励与运行说明.md','训练与奖励说明')+'。','']
+        link(DATA/'training_configs','新批准子集的训练配置目录')+'；'+link(ROOT/'docs/blueprints/Topup_v6_感知奖励与运行说明.md','训练与奖励说明')+'。','']
     (REPORT/'执行报告.md').write_text(re.sub(r'\$(\d+(?:\.\d+)?)',r'USD \1','\n'.join(lines)),encoding='utf-8')
     print(json.dumps({'release':s,'budget':budget},ensure_ascii=False),flush=True)
 if __name__=='__main__':run()

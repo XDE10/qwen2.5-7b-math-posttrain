@@ -74,8 +74,7 @@ def test_official_benchmark_overlap_and_document_rules():
     assert audit['passed'] and audit['findings']==[]
     assert audit['sources']['HumanEvalPlus-v0.1.10']['rows']==164
     assert audit['sources']['MbppPlus-v0.2.0']['rows']==378
-    p1=Path('project_blueprints/项目一_7B数学后训练_详细实施方案.md').read_text(encoding='utf-8')
-    p2=Path('project_blueprints/项目二_双教师在线蒸馏_详细实施方案.md').read_text(encoding='utf-8')
+    p1=Path('docs/blueprints/项目一_7B数学后训练_详细实施方案.md').read_text(encoding='utf-8')
+    # 项目二方案文档已于 2026-11-08 按用户要求移除，仅保留项目一口径检查。
     assert '500～1600' in p1 and 'generations[i]' in p1
-    assert 'data/math/math_dev.jsonl' in p1 and 'data/math/math_dev.jsonl' in p2
-    assert 'solution_method' in p2 and '不是独立最终测试' in p2
+    assert 'data/math/math_dev.jsonl' in p1

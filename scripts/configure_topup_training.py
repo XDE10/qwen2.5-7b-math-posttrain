@@ -2,7 +2,7 @@
 from scripts.topup_common import *
 def run():
     out=DATA/'training_configs';out.mkdir(exist_ok=True);release=DATA/'release';m=read(release/'manifest.json')
-    old=ROOT/'project_blueprints/configs/approved_release_20261024'
+    old=ROOT/'docs/blueprints/configs/approved_release_20261024'
     for name in ['project1_raw_sft_smoke','project1_compact_sft_smoke','project2_opd_smoke']:
         c=read(old/(name+'.json'));c['data_manifest']=str(release/'manifest.json');c['output_dir']=str(ROOT/'runs'/('topup_v6_'+name))
         if name.startswith('project1'):c['data_file']='project1_'+('raw' if 'raw' in name else 'compact')+'_paired.jsonl'

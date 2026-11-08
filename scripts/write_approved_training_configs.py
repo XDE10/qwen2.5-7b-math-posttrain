@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 def run():
-    root=Path(__file__).resolve().parents[1];out=root/'project_blueprints/configs/approved_release_20261024';out.mkdir(parents=True,exist_ok=True)
+    root=Path(__file__).resolve().parents[1];out=root/'docs/blueprints/configs/approved_release_20261024';out.mkdir(parents=True,exist_ok=True)
     manifest=str(root/'data/delegated_ai_releases_20261024/manifest.json');audit=json.loads((root/'reports/tokenizer_alignment_report.json').read_text(encoding='utf-8'));models={r['model']:r['revision'] for r in audit['models']}
     def save(name,c): (out/(name+'.json')).write_text(json.dumps(c,ensure_ascii=False,indent=2),encoding='utf-8')
     base={'data_manifest':manifest,'model':'Qwen/Qwen2.5-7B-Instruct','model_revision':models['Qwen/Qwen2.5-7B-Instruct'],'tokenizer_path':str(root/'data/tokenizers/Qwen2.5-7B-Instruct'),'seed':42,'max_steps':2,'learning_rate':2e-5,'batch_size':1,'gradient_accumulation_steps':8,'save_steps':1,'max_length':3800,'export_merged_base':True,'stage':'sft','vision':False}

@@ -148,7 +148,7 @@
 1. 先读[第四次对话完整接手提示词 v49](reports/handover_20261028_v49/第四次对话_完整接手提示词.md)，尤其第1～9节当前状态、短测命令、三次安装修复；[旧v4交接](reports/handover_20261026_v4/第三次对话_完整接手提示词.md)仅在补查早期细节时阅读，不能覆盖后续实测。
 2. 再看[README.md](README.md)的最新入口。正文中旧“GPU尚未验收”等表述是历史快照，不能覆盖后续实测。
 3. 当前任务读[训练配置](configs/project1_aimo_sft_v26.json)、[新数据manifest](reports/aimo_sft_20261026_v26/manifest.json)与源码；研究旧raw/compact时再读[data/portable_release/manifest.json](data/portable_release/manifest.json)。
-4. 不需要先遍历原始数据、缓存和全部历史报告。旧project_blueprints/配置可能含旧绝对路径。
+4. 不需要先遍历原始数据、缓存和全部历史报告。旧 `docs/blueprints/` 配置可能含旧绝对路径。
 
 ## 当前主线
 
