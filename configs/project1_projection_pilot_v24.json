@@ -1,0 +1,31 @@
+{
+  "experiment": "projection_pilot_v24",
+  "stage": "inference_only_no_parameter_updates",
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+  "data_file": "reports/projection_pilot_20261026_v21/selected32.jsonl",
+  "data_sha256": "2346f55c41d2aa69367296ed06b30702349ef247aeb80fddea4bc146f077a15a",
+  "tokenizer_sha256": {
+    "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+    "tokenizer_config.json": "5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583"
+  },
+  "seed": 42,
+  "max_new_tokens": 8192,
+  "block_num": 32,
+  "updates_per_block": [
+    0,
+    4
+  ],
+  "max_model_len": 32768,
+  "gpu_memory_utilization": 0.88,
+  "acceptance_rule": "strict improvement in mean response logprob under question-only model; approximate, not exact MH",
+  "correctness_policy": "unchanged strict-v3 verifier after generation; no approval; no silent deletion or resampling on failure",
+  "upstream_commit": "e74ab5eea6448bf78a4cff57179bbab8687cd243",
+  "sampling_note": "32 fixed v21 questions; Qwen Instruct; fixed expert user prefix; assistant continuation once; 256x32, 4 updates, concurrency4; not original-paper hyperparameters; v24 fixed block ceiling, per-method costs, original-length buckets, think-detail prompt",
+  "training_approved": false,
+  "block_tokens": 256,
+  "concurrency": 4,
+  "temperature": 0.6,
+  "repetition_penalty": 1.1,
+  "candidate_length_policy": "fixed per-block ceiling: min(length_before_extend+256,8192); no artificial EOS in stored generation IDs"
+}

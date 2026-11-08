@@ -1,0 +1,26 @@
+{
+  "experiment": "projection_pilot_v21",
+  "stage": "inference_only_no_parameter_updates",
+  "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+  "model_revision": "916b56a44061fd5cd7d6a8fb632557ed4f724f60",
+  "data_file": "reports/projection_pilot_20261026_v21/selected32.jsonl",
+  "data_sha256": "2346f55c41d2aa69367296ed06b30702349ef247aeb80fddea4bc146f077a15a",
+  "tokenizer_sha256": {
+    "tokenizer.json": "88145e3c3249adc2546ede277e9819d6e405e19072456e4b521cbc724bd60773",
+    "tokenizer_config.json": "8ac8c85fb242563c2260baec0909debd69d718af6a0b3d90e6cab62b4d341cd5"
+  },
+  "seed": 42,
+  "max_new_tokens": 8192,
+  "block_num": 8,
+  "updates_per_block": [
+    0,
+    2
+  ],
+  "max_model_len": 32768,
+  "gpu_memory_utilization": 0.88,
+  "acceptance_rule": "strict improvement in mean response logprob under question-only model; approximate, not exact MH",
+  "correctness_policy": "unchanged strict-v3 verifier after generation; no approval; no silent deletion or resampling on failure",
+  "upstream_commit": "e74ab5eea6448bf78a4cff57179bbab8687cd243",
+  "sampling_note": "paper used 32 blocks / 10 updates / 1856 tokens; this is a reduced-budget R1 pilot",
+  "training_approved": false
+}
