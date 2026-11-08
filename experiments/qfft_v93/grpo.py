@@ -129,6 +129,13 @@ def grpo_config(cfg: dict, out: Path, smoke: bool, max_steps: int | None):
                       vllm_gpu_memory_utilization=vllm['gpu_memory_utilization'].get(kind, vllm['gpu_memory_utilization']['generic']),
                       vllm_enable_sleep_mode=bool(vllm['enable_sleep_mode'].get(kind, False)),
                       vllm_max_model_length=cfg['max_prompt_tokens'] + cfg['max_completion_length'])
+        # Extra vLLM SamplingParams (TRL merges them in colocate mode). The GPU smoke sets
+        # min_tokens = max_completion_length so every completion has the worst-case length.
+        generation = dict(cfg.get('generation_kwargs') or {})
+        if generation.get('min_tokens') == 'max_completion_length':
+            generation['min_tokens'] = cfg['max_completion_length']
+        if generation:
+            kwargs['generation_kwargs'] = generation
     unsupported = set(kwargs) - fields
     if unsupported:
         raise TypeError('Unsupported GRPOConfig fields for this TRL version: ' + ', '.join(sorted(unsupported)))
