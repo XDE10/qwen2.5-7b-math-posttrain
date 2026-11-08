@@ -95,6 +95,27 @@
       ],
       "date": "2026-11-08",
       "purpose": "v93-P2：冒烟改为最坏长度、阶段 0–2 不依赖本地数据的状态记录"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "2b1952d869e576437509bbdf6fc0187ea52f49c39f3eccc2d1577ec6a66f5d0a",
+          "path": "AGENTS.md",
+          "previous_sha256": "67777669c190918d6892b64211883e2c259ef9091d564e16307950b656d0ca9d"
+        },
+        {
+          "current_sha256": "b1b8aac0dffef15fe2780a98ec31e19531aed2113650e02aa0c7fe564b2c896f",
+          "path": "docs/status/current_status.md",
+          "previous_sha256": "c0fb0863c56b18b61ed698ffad7552003dacd9656666b976ae22ca1420926a78"
+        },
+        {
+          "current_sha256": "2e77a574dd6ea56b5d3e2ae5118e9ebbdaa2d225571b2ebf88013fc923c14b37",
+          "path": "docs/status/history.md",
+          "previous_sha256": "d7c3a12cd74362ada7ca031056f9dd1a0dd8e21608884fda790549f5ea289ecb"
+        }
+      ],
+      "date": "2026-11-08",
+      "purpose": "v93-P3：Windows/WSL 一键入口与换行符约定的状态记录"
     }
   ],
   "files": [
@@ -827,11 +848,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 11655,
+      "bytes": 11923,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
-      "sha256": "67777669c190918d6892b64211883e2c259ef9091d564e16307950b656d0ca9d"
+      "refactor_note": "2026-11-08 v93-P3：内容更新后重算",
+      "sha256": "2b1952d869e576437509bbdf6fc0187ea52f49c39f3eccc2d1577ec6a66f5d0a"
     },
     {
       "bytes": 4434,
@@ -28617,18 +28638,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 5206,
+      "bytes": 5360,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-08 v93-P2：内容更新后重算",
-      "sha256": "c0fb0863c56b18b61ed698ffad7552003dacd9656666b976ae22ca1420926a78"
+      "refactor_note": "2026-11-08 v93-P3：内容更新后重算",
+      "sha256": "b1b8aac0dffef15fe2780a98ec31e19531aed2113650e02aa0c7fe564b2c896f"
     },
     {
-      "bytes": 69490,
+      "bytes": 70454,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-08 v93-P2：内容更新后重算",
-      "sha256": "d7c3a12cd74362ada7ca031056f9dd1a0dd8e21608884fda790549f5ea289ecb"
+      "refactor_note": "2026-11-08 v93-P3：内容更新后重算",
+      "sha256": "2e77a574dd6ea56b5d3e2ae5118e9ebbdaa2d225571b2ebf88013fc923c14b37"
     },
     {
       "bytes": 77,
