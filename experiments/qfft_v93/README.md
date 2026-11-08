@@ -36,21 +36,32 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 
 ## 二、Colab：一键运行
 
-需要 Linux、macOS 或 WSL2（Colab CLI 不支持原生 Windows）：`uv tool install google-colab-cli`，然后 `colab auth`/登录一次。
+需要 Linux 或 WSL2（Colab CLI 不支持原生 Windows）。以下内容按 google-colab-cli 0.7.5 的源码与 `--help` 核对过（2026-11-08）：
+
+1. 安装：`uv tool install google-colab-cli`。CLI 要求 Python ≥ 3.12，uv 会自动下载。
+2. 登录：第一次运行任何 `colab` 命令会打印一个 Google 授权链接，在浏览器里同意后把页面显示的授权码粘贴回终端，令牌缓存在 `~/.config/colab-cli/token.json`。`colab auth` 是给 VM 内代码授权 GCP 的，不是 CLI 登录。
+3. Drive：第一次 `colab drivemount` 会再打印一个"允许 Colab 访问 Drive"的链接，同意后按回车。之后新 VM 自动挂载，不再提示。
+4. 先花一分钟 CPU 做端到端检查：`launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、释放）。
 
 ```bash
-experiments/qfft_v93/colab/pipeline.sh 0              # CPU VM：上传数据，下载固定 revision 的模型到 Drive
-experiments/qfft_v93/colab/pipeline.sh 1 --gpu G4     # 冒烟：2 步全参、24 条生成、2 步 GRPO
-experiments/qfft_v93/colab/pipeline.sh 2 --gpu G4     # 锚点评测
-experiments/qfft_v93/colab/pipeline.sh 3 --gpu H100   # DeepSeek 对：QFFT、SFT，各自训完立即评测
-experiments/qfft_v93/colab/pipeline.sh 4 --gpu H100   # LoRA-GRPO + 合并 + 评测
-experiments/qfft_v93/colab/pipeline.sh 5 --gpu H100   # R1 对
-experiments/qfft_v93/colab/pipeline.sh 7              # CPU VM：重新判分、results.md、图
+experiments/qfft_v93/colab/pipeline.sh 0   # CPU VM：上传数据，下载固定 revision 的模型到 Drive
+experiments/qfft_v93/colab/pipeline.sh 1   # 冒烟：2 步全参、24 条生成、2 步 GRPO（H100 优先，其次 G4）
+experiments/qfft_v93/colab/pipeline.sh 2   # 锚点评测（G4 优先，其次 H100）
+experiments/qfft_v93/colab/pipeline.sh 3   # DeepSeek 对：QFFT、SFT，各自训完立即评测
+experiments/qfft_v93/colab/pipeline.sh 4   # LoRA-GRPO + 合并 + 评测
+experiments/qfft_v93/colab/pipeline.sh 5   # R1 对
+experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md、图
 ```
 
-单个阶段可以直接用 `launch.sh`，例如 `launch.sh --gpu G4 eval:run:qfft_ds_v93:full`。`launch.sh --gpu cpu status` 打印所有阶段、训练进度和评测完成度。
+- 后面可以接 launch.sh 的参数，例如 `pipeline.sh 3 --gpu G4 --wait-min 180`：只用 G4，分不到卡时每 5 分钟重试，最多 3 小时。`--gpu` 支持逗号列表（按顺序尝试）；不认识的卡名会直接报错，因为 CLI 会把未知名称静默当成 A100。
+- 单个阶段直接用 `launch.sh`，例如 `launch.sh --gpu G4 eval:run:qfft_ds_v93:full`；`launch.sh --gpu cpu status` 打印所有阶段（运行中的会显示所在 VM 和心跳）、训练进度和评测完成度。
+- 每次调用：`colab new --high-mem [--gpu ...]` → `colab drivemount` 并检查 `/content/drive/MyDrive` → 上传代码包（大文件按 8 MiB 分片，VM 端重组并核对 SHA-256）→ `colab exec` 执行 `colab/remote.py` → 看到 `P1_RESULT` 后释放 VM（`--keep` 保留，便于 `colab console` 排查）。本地日志在 `reports/colab_logs/<session>.log`，VM 端日志在 Drive `runs/project1/v93/logs/`。
 
-每次调用的过程：`colab new --gpu ... --high-mem` → `colab drivemount` → 上传代码包 → `colab exec` 执行 `colab/remote.py` → 阶段全部成功后释放 VM（`--keep` 保留，便于 `colab console` 进去排查）。本地日志在 `reports/colab_logs/<session>.log`，VM 端日志在 Drive `runs/project1/v93/logs/`。
+**断线与重复启动**：任务跑在 VM 的 kernel 里，不依赖本地终端。
+
+- 网络断开时，launch.sh 改为每分钟用 `colab download` 读 VM 上的 `session_tail.json`，直到拿到结果。
+- 关掉终端或按 Ctrl+C 只是脱离（退出码 75，pipeline.sh 不会接着开下一台 VM）：任务继续，结束后 VM 自己释放。重新跟踪用 `launch.sh --attach <session>`，中止用 `colab stop -s <session>`。
+- 每个阶段在 Drive 上有带心跳的标记文件。另一台 VM 想跑同一阶段时，若心跳在 15 分钟内就拒绝，避免两台 VM 同时写一个 run 目录；确认原 VM 已不在时可加 `--force`。
 
 ## 三、断点与续跑
 
