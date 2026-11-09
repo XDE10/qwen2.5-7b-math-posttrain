@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Stub colab CLI for check_local_check.sh.
+case "${1:-}" in
+  version) echo "Version: 0.7.5" ;;
+  *) echo "stub colab: $*" ;;
+esac

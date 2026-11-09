@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Stub rclone for check_local_check.sh: read-only `lsf` answers for a Drive that has everything v93 needs.
+# MOCK_RCLONE_FAIL=1 makes every call fail like an expired token.
+if [[ -n ${MOCK_RCLONE_FAIL:-} ]]; then echo "Failed to lsf: couldn't fetch token - maybe it has expired?" >&2; exit 1; fi
+target="${*: -1}"
+case "$target" in
+  mydrive:.project1_credentials/) printf 'deepseek.json\nswanlab.json\n' ;;
+  mydrive:models/) printf '%s/\n' Qwen2.5-7B-Instruct--a09a35458c702b33eeacc393d103063234e8bc28 \
+                     Qwen2.5-Math-7B-Instruct--ef9926d75ab1 QFFT-S1-7B--ecb7ff937689 QFFT-repro-S1.1-SFT-7B--472778500777 ;;
+  mydrive:runs/project1/rl_approved_v8_n4/*) echo "${target##*/}" ;;
+  *) echo "directory not found: $target" >&2; exit 3 ;;
+esac

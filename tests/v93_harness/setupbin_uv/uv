@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+case "$1 $2" in
+  "--version "*) echo "uv 0.9.9 (stub)" ;;
+  "tool install") mkdir -p "$HOME/.local/bin"; cp "$P1_HARNESS_SETUPBIN/colab" "$HOME/.local/bin/colab"; echo "$*" > "$HOME/uv_called" ;;
+  "tool update-shell") : ;;
+esac
