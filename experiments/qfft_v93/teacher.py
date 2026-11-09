@@ -44,8 +44,14 @@ PROVIDERS = {
     'go': {'url': 'https://opencode.ai/inference/go/openai/v1/chat/completions', 'model': 'deepseek-v4.1-flash'},
     'official': {'url': 'https://api.deepseek.com/chat/completions', 'model': 'deepseek-flash'},
 }
-DEFAULT_GO_DB = 'D:/OpenCode/runtime/data/opencode/opencode.db'
+# Key locations, Windows first, then the same files seen from WSL2 (/mnt/<drive>), then Linux/Colab places.
+# Environment variables (OPENCODE_GO_API_KEY, DEEPSEEK_API_KEY) and --go-db / --official-key-file come first.
+DEFAULT_GO_DBS = ['D:/OpenCode/runtime/data/opencode/opencode.db', '/mnt/d/OpenCode/runtime/data/opencode/opencode.db',
+                  str(Path.home() / '.local/share/opencode/opencode.db')]
 DEFAULT_OFFICIAL_KEYS = ['C:/Users/Mr.Z/.codex/private/project1/deepseek.json',
+                         '/mnt/c/Users/Mr.Z/.codex/private/project1/deepseek.json',
+                         str(Path.home() / '.config/p1/deepseek.json'),
+                         '/content/mydrive/.project1_credentials/deepseek.json',
                          '/content/drive/MyDrive/.project1_credentials/deepseek.json']
 
 # Exact copy of the v66 teacher system prompt (tools/qfft/qfft_ds_common_v66.py: SYSTEM).
@@ -102,8 +108,10 @@ NO_OUTPUT_KINDS = {'quota', 'rate_limited', 'rejected', 'server_error', 'cancell
 def load_key(provider: str, args) -> str:
     if provider == 'go':
         value = os.environ.get('OPENCODE_GO_API_KEY')
-        if not value and Path(args.go_db).exists():
-            with closing(sqlite3.connect(Path(args.go_db).as_uri() + '?mode=ro', uri=True)) as db:
+        for db_path in ([args.go_db] if args.go_db else DEFAULT_GO_DBS):
+            if value or not db_path or not Path(db_path).is_file():
+                continue
+            with closing(sqlite3.connect(Path(db_path).resolve().as_uri() + '?mode=ro', uri=True)) as db:
                 rows = db.execute('SELECT value FROM credential WHERE integration_id=? AND active=1',
                                   ('opencode-go',)).fetchall()
             if len(rows) == 1:
@@ -387,7 +395,7 @@ def main() -> None:
     p.add_argument('cmd', choices=['status', 'fill', 'verify'])
     p.add_argument('--provider', choices=list(PROVIDERS), default='go')
     p.add_argument('--fallback-official', action='store_true', help='Switch to the official API on Go quota')
-    p.add_argument('--go-db', default=DEFAULT_GO_DB)
+    p.add_argument('--go-db', help='opencode.db with the Go key (default: the DEFAULT_GO_DBS locations)')
     p.add_argument('--official-key-file')
     p.add_argument('--workers', type=int, default=4)
     p.add_argument('--max-attempts', type=int, default=8, help='Total v93 attempts per question (fill)')
@@ -400,16 +408,23 @@ def main() -> None:
     a = p.parse_args()
     plan = load_plan()
     runner = Runner(a)
+    found = {}
     for provider in dict.fromkeys([a.provider] + (['official'] if a.fallback_official else [])):
         try:
             runner.key(provider)
+            found[provider] = True
             log(f'{provider} API key: found')
         except RuntimeError as error:
-            if a.cmd == 'status' or a.dry_run or provider != a.provider:
-                log(f'{provider} API key: NOT found ({error})' +
-                    (' - the quota fallback will not work' if provider != a.provider else ''))
-            else:  # nothing has been written yet
-                raise SystemExit(f'{provider} API key not found: {error}. Nothing was sent.')
+            found[provider] = False
+            log(f'{provider} API key: NOT found ({error})' +
+                (' - the quota fallback will not work' if provider != a.provider else ''))
+    if not found[a.provider] and a.cmd != 'status' and not a.dry_run:
+        if found.get('official'):  # e.g. WSL2 without the Windows opencode.db: start on the official API
+            log(f'Starting with the official API because no {a.provider} key was found')
+            runner.provider = 'official'
+        else:  # nothing has been written yet
+            raise SystemExit(f'{a.provider} API key not found. Nothing was sent. Set OPENCODE_GO_API_KEY or '
+                             'DEEPSEEK_API_KEY, or pass --go-db / --official-key-file.')
     references = {r['sample_id']: r.get('reference_answer') for r in plan['questions']}
     grader, grade_lock = None, threading.Lock()
     if a.cmd == 'verify':
