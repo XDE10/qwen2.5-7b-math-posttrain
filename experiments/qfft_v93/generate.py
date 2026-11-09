@@ -189,16 +189,19 @@ def main() -> None:
         plans[name] = {'expected': expected, 'done_before': len(done), 'local': local_raw, 'drive': drive_raw,
                        'out_dir': out_dir}
         log(f'{tag}/{name}: {expected} generations planned, {len(done)} already saved')
+    session = None
     if not jobs:
         log('Nothing to generate; all requested generations exist')
     else:
         profile = gpu_profile()
+        engine_t0 = time.monotonic()
         if a.engine == 'fake':
             engine = FakeEngine(answers)
         else:
             engine = VLLMEngine(model_path, max_len, ev['seed'],
                                 a.gpu_memory_utilization or profile.get('vllm_gpu_memory_utilization', 0.9),
                                 a.max_num_seqs or profile.get('vllm_max_num_seqs', 128), a.attention_backend)
+        engine_start_s = time.monotonic() - engine_t0
         writers = {name: JsonlAppender(plan['local']) for name, plan in plans.items()}
         counters = {'done': 0, 'tokens': 0, 'started': time.monotonic(), 'last_sync': time.monotonic()}
 
@@ -230,11 +233,22 @@ def main() -> None:
             for w in writers.values():
                 w.close()
             sync_all()
+            seconds = time.monotonic() - counters['started']
+            session = {'new_generations': counters['done'], 'output_tokens': counters['tokens'],
+                       'seconds': round(seconds, 1), 'engine_start_s': round(engine_start_s, 1),
+                       'output_tokens_per_s': round(counters['tokens'] / max(seconds, 1e-6), 1),
+                       'gpu': profile.get('name'), 'ended': now_iso()}
+            log(f"{tag}: {session['new_generations']} new generations, {session['output_tokens']:,} output tokens in "
+                f"{seconds:.0f} s ({session['output_tokens_per_s']:.0f} tok/s; engine start {engine_start_s:.0f} s)")
     for name, plan in plans.items():
         rows = {(r['sample_id'], r['draw']) for r in read_jsonl(plan['drive'])}
         complete = len(rows) >= plan['expected']
-        write_json(plan['out_dir'] / 'generation_status.json', {
-            'expected': plan['expected'], 'saved': len(rows), 'complete': complete, 'updated': now_iso()})
+        status_path = plan['out_dir'] / 'generation_status.json'
+        previous = read_json(status_path) if status_path.exists() else {}
+        write_json(status_path, {
+            'expected': plan['expected'], 'saved': len(rows), 'complete': complete, 'updated': now_iso(),
+            # throughput of the latest session that generated anything (all benchmarks of the call together)
+            'last_session': session or previous.get('last_session')})
         if not complete:
             raise RuntimeError(f'{tag}/{name}: only {len(rows)}/{plan["expected"]} generations saved; re-run to resume')
     log(f'{tag}: generation complete for {", ".join(names)}')
