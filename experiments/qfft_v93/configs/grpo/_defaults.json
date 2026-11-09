@@ -1,0 +1,35 @@
+{
+  "pool": {
+    "files": ["runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl"],
+    "optional_globs": ["runs/project1/*/hard_candidates_e0_0of4.jsonl", "runs/project1/*/*/hard_candidates_e0_0of4.jsonl"],
+    "note": "920 E0-medium (1-3 of 4 correct) + 637 E0-hard (0 of 4) MATH-train problems, already decontaminated; re-checked against data/benchmarks_v93 at start."
+  },
+  "lora": {"r": 32, "alpha": 32, "dropout": 0.0, "target_modules": "all-linear"},
+  "learning_rate": 1e-05,
+  "lr_scheduler_type": "constant_with_warmup",
+  "warmup_steps": 5,
+  "max_steps": 150,
+  "num_generations": 8,
+  "per_device_train_batch_size": 2,
+  "gradient_accumulation_steps": 32,
+  "max_prompt_tokens": 1024,
+  "max_completion_length": 8192,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "loss_type": "dapo",
+  "beta": 0.0,
+  "epsilon": 0.2,
+  "epsilon_high": 0.28,
+  "scale_rewards": "group",
+  "mask_truncated_completions": true,
+  "seed": 42,
+  "save_steps": 10,
+  "mirror_keep": 3,
+  "reward_workers": 8,
+  "reward_timeout": 30,
+  "vllm": {
+    "gpu_memory_utilization": {"g4": 0.45, "h100": 0.42, "a100": 0.40, "generic": 0.35},
+    "enable_sleep_mode": {"g4": false, "h100": false, "a100": false, "generic": false}
+  },
+  "recipe_note": "64 completions per optimizer step = 8 prompts x 8 samples (2 per micro-batch x 32 accumulation). LoRA LR ~10x the full-FT GRPO LR (LoRA Without Regret)."
+}

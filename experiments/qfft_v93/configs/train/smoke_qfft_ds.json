@@ -1,0 +1,7 @@
+{
+  "base": "qfft_ds.json",
+  "run_name": "smoke_qfft_ds_v93",
+  "save_steps": 2,
+  "mirror_every_saves": 1000,
+  "note": "GPU smoke (stage smoke-train passes --max-steps 2): 2 optimizer steps on the real model and data, one local save, no Drive mirror, no export. Reports s/step, peak GPU and host memory."
+}

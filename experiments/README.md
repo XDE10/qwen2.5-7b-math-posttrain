@@ -1,8 +1,8 @@
 # experiments/ —— 实验包
 
-只保留 **1 个现行实验包**：`aimo_sft_v26/`（AIMO 直接 SFT）。`aimo_sft_v25/` 与 `projection_pilot_v21/v23/v24/` 已移入 `archive/experiments/`。
+现行实验包是 **`qfft_v93/`**（1000 题双教师 × 全参 SFT/QFFT × LoRA-GRPO × 评测 × Colab 一键调度），说明见 [qfft_v93/README.md](qfft_v93/README.md)。`aimo_sft_v26/`（AIMO 直接 LoRA SFT）被 v93 取代，保留为历史；`aimo_sft_v25/` 与 `projection_pilot_v21/v23/v24/` 已移入 `archive/experiments/`。
 
-## aimo_sft_v26/
+## aimo_sft_v26/（历史）
 
 | 文件 | 职责 |
 |---|---|
