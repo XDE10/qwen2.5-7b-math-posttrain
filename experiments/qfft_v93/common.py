@@ -101,16 +101,34 @@ def read_jsonl(path, tolerate_torn_tail: bool = True) -> list:
 
 
 class JsonlAppender:
-    """Append-only JSONL writer that fsyncs at most every `fsync_seconds`."""
+    """Append-only JSONL writer that fsyncs at most every `fsync_seconds`.
 
-    def __init__(self, path, fsync_seconds: float = 2.0):
+    With `mirror` (a Drive path) the journal itself lives at `path` on the VM's local SSD and the Drive copy
+    is replaced atomically at most every `mirror_seconds` and on close: a file kept open on a Drive mount
+    (rclone or Colab's) is uploaded only when it is closed, which for a training journal means hours later
+    or never. A missing local journal starts from the Drive copy, so a resumed run keeps its history.
+    """
+
+    def __init__(self, path, fsync_seconds: float = 2.0, mirror=None, mirror_seconds: float = 60.0):
         self.path = Path(path)
+        self.mirror = Path(mirror) if mirror else None
+        self.mirror_seconds = mirror_seconds
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        if self.mirror is not None and not self.path.exists() and self.mirror.is_file():
+            shutil.copyfile(self.mirror, self.path)
         self._repair_tail()
         self.handle = self.path.open('a', encoding='utf-8', newline='\n')
         self.fsync_seconds = fsync_seconds
         self.last_sync = time.monotonic()
+        self.last_mirror = time.monotonic()
         self.lock = threading.Lock()
+
+    def _sync_mirror(self) -> None:
+        try:
+            sync_file(self.path, self.mirror)
+        except OSError as error:  # the local journal stays complete; the next sync retries
+            log(f'WARNING could not update {self.mirror}: {error}')
+        self.last_mirror = time.monotonic()
 
     def _repair_tail(self) -> None:
         # Drop a torn last line so the next append starts on a clean line.
@@ -129,6 +147,8 @@ class JsonlAppender:
             if time.monotonic() - self.last_sync >= self.fsync_seconds:
                 os.fsync(self.handle.fileno())
                 self.last_sync = time.monotonic()
+            if self.mirror is not None and time.monotonic() - self.last_mirror >= self.mirror_seconds:
+                self._sync_mirror()
 
     def close(self) -> None:
         with self.lock:
@@ -136,6 +156,8 @@ class JsonlAppender:
                 self.handle.flush()
                 os.fsync(self.handle.fileno())
                 self.handle.close()
+                if self.mirror is not None:
+                    self._sync_mirror()
 
     def __enter__(self):
         return self

@@ -96,7 +96,9 @@ class ProgressCallback(TrainerCallback):
 
     def __init__(self, local_dir: Path, drive_dir: Path, swan: SwanLab, extra: dict | None = None):
         self.local_dir, self.drive_dir, self.swan = Path(local_dir), Path(drive_dir), swan
-        self.metrics = JsonlAppender(self.drive_dir / 'metrics.jsonl')
+        # Journal on the local SSD, Drive copy replaced every 30 s (see JsonlAppender `mirror`).
+        self.metrics = JsonlAppender(self.local_dir / 'metrics.jsonl', mirror=self.drive_dir / 'metrics.jsonl',
+                                     mirror_seconds=30)
         self.extra = extra or {}
         self.started = None
         self.last = None
