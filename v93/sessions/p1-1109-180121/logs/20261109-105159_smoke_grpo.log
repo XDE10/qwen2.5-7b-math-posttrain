@@ -61,3 +61,33 @@ Capturing CUDA graphs (FULL):   0%|          | 0/11 [00:00<?, ?it/s]
 Capturing CUDA graphs (FULL):  64%|██████▎   | 7/11 [00:00<00:00, 60.66it/s]
 Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<00:00, 61.98it/s]
 [11-09 18:59:46] HEARTBEAT starting
+[11-09 19:02:42] step 1/2 epoch 0.01 loss 0.0000 lr 0.00e+00 s/step 476.4 eta 0.13h peakGPU 66.1GiB
+{'loss': '7.838e-18', 'grad_norm': '3.179e-19', 'learning_rate': '0', 'num_tokens': '5.31e+05', 'completions/mean_length': '8192', 'completions/min_length': '8192', 'completions/max_length': '8192', 'completions/clipped_ratio': '1', 'completions/mean_terminated_length': '0', 'completions/min_terminated_length': '0', 'completions/max_terminated_length': '0', 'rewards/final_answer/mean': '0.2344', 'rewards/final_answer/std': '0.427', 'reward': '0.2344', 'reward_std': '0.427', 'frac_reward_zero_std': '0.25', 'reward/correct_frac': '0.2344', 'reward/no_answer_frac': '0', 'reward/wrong_frac': '0.7656', 'sampling/sampling_logp_difference/mean': '0.02759', 'sampling/sampling_logp_difference/max': '23.08', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '6.892e-16', 'sampling/importance_sampling_ratio/max': '4.318e-14', 'entropy': '0.1761', 'clip_ratio/low_mean': '4.768e-05', 'clip_ratio/high_mean': '2.861e-05', 'clip_ratio/region_mean': '7.629e-05', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '5.722e-05', 'step_time': '452.1', 'epoch': '0.005181'}
+[11-09 19:02:43] Saved checkpoint-1 locally: 935.3MiB in 0.5 s, 184.9 GiB free
+[11-09 19:02:43] Mirroring checkpoint-1 to Drive (935.3MiB) in the background
+[11-09 19:03:04] rclone copy (21 s): 2026/11/09 11:03:04 NOTICE:   935.298 MiB / 935.298 MiB, 100%, 58.454 MiB/s, ETA 0s
+[11-09 19:03:08] rclone purge (5 s): 2026/11/09 11:03:08 Failed to purge: directory not found
+[11-09 19:03:15] Uploaded checkpoint-1 to /content/mydrive/runs/project1/v93/runs/smoke_grpo_v93/ckpt_mirror/checkpoint-1 (935.3MiB in 32 s, 29 MiB/s)
+[11-09 19:03:20] rclone copyto (4 s): 2026/11/09 11:03:20 NOTICE:          77 B / 77 B, 100%, 38 B/s, ETA 0s
+[11-09 19:03:31] Mirror complete: /content/mydrive/runs/project1/v93/runs/smoke_grpo_v93/ckpt_mirror/checkpoint-1
+[11-09 19:04:47] HEARTBEAT 1
+[11-09 19:09:47] HEARTBEAT 1
+[11-09 19:10:36] step 2/2 epoch 0.01 loss -0.0000 lr 2.00e-06 s/step 474.1 eta 0.00h peakGPU 66.6GiB
+{'loss': '-1.533e-11', 'grad_norm': '3.723e-13', 'learning_rate': '2e-06', 'num_tokens': '1.06e+06', 'completions/mean_length': '8192', 'completions/min_length': '8192', 'completions/max_length': '8192', 'completions/clipped_ratio': '1', 'completions/mean_terminated_length': '0', 'completions/min_terminated_length': '0', 'completions/max_terminated_length': '0', 'rewards/final_answer/mean': '0.1406', 'rewards/final_answer/std': '0.3504', 'reward': '0.1406', 'reward_std': '0.3504', 'frac_reward_zero_std': '0.625', 'reward/correct_frac': '0.1406', 'reward/no_answer_frac': '0', 'reward/wrong_frac': '0.8594', 'sampling/sampling_logp_difference/mean': '0.02724', 'sampling/sampling_logp_difference/max': '20.76', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '2.117e-11', 'sampling/importance_sampling_ratio/max': '1.355e-09', 'entropy': '0.1645', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '449.5', 'epoch': '0.01036'}
+[11-09 19:10:37] Saved checkpoint-2 locally: 935.3MiB in 0.5 s, 184.0 GiB free
+[11-09 19:10:37] Mirroring checkpoint-2 to Drive (935.3MiB) in the background
+{'train_runtime': '950.9', 'train_samples_per_second': '0.135', 'train_steps_per_second': '0.002', 'train_loss': '-7.667e-12', 'epoch': '0.01036'}
+[11-09 19:10:37] Waiting for the previous checkpoint mirror to finish ...
+[11-09 19:11:01] rclone copy (24 s): 2026/11/09 11:11:01 NOTICE:   935.300 MiB / 935.300 MiB, 100%, 48.742 MiB/s, ETA 0s
+[11-09 19:11:05] rclone purge (5 s): 2026/11/09 11:11:05 Failed to purge: directory not found
+[11-09 19:11:12] Uploaded checkpoint-2 to /content/mydrive/runs/project1/v93/runs/smoke_grpo_v93/ckpt_mirror/checkpoint-2 (935.3MiB in 35 s, 26 MiB/s)
+[11-09 19:11:18] rclone copyto (5 s): 2026/11/09 11:11:18 NOTICE:          77 B / 77 B, 100%, 38 B/s, ETA 0s
+[11-09 19:11:19] Mirror complete: /content/mydrive/runs/project1/v93/runs/smoke_grpo_v93/ckpt_mirror/checkpoint-2
+[11-09 19:11:32] rclone copy (13 s): 2026/11/09 11:11:32 NOTICE:   318.960 MiB / 318.960 MiB, 100%, 35.437 MiB/s, ETA 0s
+[11-09 19:11:36] rclone purge (4 s): 2026/11/09 11:11:36 Failed to purge: directory not found
+[11-09 19:11:43] Uploaded adapter to /content/mydrive/runs/project1/v93/runs/smoke_grpo_v93/adapter (319.0MiB in 23 s, 14 MiB/s)
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run smoke_grpo_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/3l7wkpow
+swanlab: Upload complete: 1566 records
+[11-09 19:11:44] smoke_grpo_v93: COMPLETE -> /content/mydrive/runs/project1/v93/runs/smoke_grpo_v93

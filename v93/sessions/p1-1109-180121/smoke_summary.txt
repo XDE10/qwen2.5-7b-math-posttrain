@@ -1,0 +1,19 @@
+===== P1 SMOKE SUMMARY (copy from this line to the END line) =====
+machine: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07 | host RAM 177 GiB | 48 CPUs | local disk 236 GiB, 186 GiB free now
+env train: torch 2.14.1+cu130, transformers 5.22.1, accelerate 1.15.0, deepspeed 0.19.9, liger-kernel 0.8.5, cuda 13.0
+env infer: vllm 0.33.0, torch 2.14.0, transformers 5.20.2
+env rl: vllm 0.32.0, trl 1.17.1, peft 0.21.2, torch 2.13.0, transformers 5.19.0
+train (full FT, 2 steps of 16 x 32,768 tokens): complete in 14 min
+  s/step: 148 / 142 (step 1 includes warm-up) | ~3705 tok/s at the last step
+  GPU peak allocated 28.9 GiB, reserved 42.6 GiB | host RSS max 145.3 GiB, host available min 27.9 GiB
+  loss: 1.2394 / 1.2815 | grad_norm: 7.48 / 7.76
+  rows 32, longest 32768 tokens, 1,048,576 supervised tokens
+  checkpoint-2 saved locally: 113.5 GiB in 386 s; local disk free after 103 GiB
+eval (base model, 24 generations <= 2048 tokens): complete in 6 min
+  aime24: 8/8 saved, 0 hit the token cap, mean@n 12.5% | 772 output tok/s over 22 s of generation; vLLM start 217 s
+  math500: 16/16 saved, 0 hit the token cap, mean@n 62.5% | 772 output tok/s over 22 s of generation; vLLM start 217 s
+grpo (LoRA, 2 steps, 8 x 8 completions forced to 8192 tokens): complete in 21 min
+  s/step: 476 / 474 | GPU peak allocated 66.6 GiB, reserved 67.2 GiB (training process; vLLM memory is extra) | host RSS max 4.4 GiB
+  completions/mean_length 8192.000 | completions/clipped_ratio 1.000 | reward 0.141 | frac_reward_zero_std 0.625 | entropy 0.164
+  reward grading over 2 calls: correct 24, wrong 104
+===== END P1 SMOKE SUMMARY =====

@@ -37,12 +37,12 @@
  },
  "smoke-grpo": {
   "stage": "smoke-grpo",
-  "state": "running",
+  "state": "complete",
+  "hours": 0.342,
+  "finished": "2026-11-09T11:11:49.382547",
   "started": "2026-11-09T10:51:17.224024",
   "code": "08dfffa7ac23",
-  "host": "p1-1109-180121@b3ed41f495da",
-  "heartbeat": "2026-11-09T11:01:17.225863",
-  "heartbeat_ts": 1794222077.225885
+  "host": "p1-1109-180121@b3ed41f495da"
  },
  "smoke-train": {
   "stage": "smoke-train",
