@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # One command = one fresh Colab VM that runs one or more v93 stages, then releases itself.
 #
-#   launch.sh [--gpu LIST] [--wait-min N] [--keep] [--force] [--session NAME] [--with-data [--data-root DIR]] STAGE...
+#   launch.sh [--gpu LIST] [--wait-min N] [--keep] [--force] [--session NAME] [--drive rclone|colab]
+#             [--no-report] [--with-data [--data-root DIR]] STAGE...
 #   launch.sh --attach SESSION          # follow a job whose terminal was closed or lost its connection
 #
 #   --gpu LIST    T4, L4, G4, H100, A100 or cpu; a comma list is tried in order, e.g. --gpu G4,H100.
@@ -11,7 +12,14 @@
 #   --keep        do not release the VM at the end (inspect with: colab console -s SESSION)
 #   --force       start a stage even if Drive says another VM is still running it
 #   --data-root DIR  with --with-data: read data/qfft1000_v93 and data/benchmarks_v93 under DIR instead of
-#                 this checkout, e.g. the Windows working copy seen from WSL (default: $P1_DATA_ROOT)
+#                 this checkout (default: $P1_DATA_ROOT, else this repository)
+#   --drive MODE  rclone (default, $P1_DRIVE_MODE): upload $P1_RCLONE_CONF (default ~/.config/rclone/rclone.conf)
+#                 and mount remote $P1_RCLONE_REMOTE (default mydrive:) at /content/mydrive, no prompts;
+#                 colab: Colab's own Drive mount at /content/drive/MyDrive (asks for approval once)
+#   --no-report   do not push reports to GitHub. By default, when $P1_GH_CREDENTIALS (default
+#                 ~/.config/p1/gh_credentials, one line https://USER:TOKEN@github.com) exists, the VM pushes
+#                 small text reports to branch $P1_REPORT_BRANCH (default colab-reports) every
+#                 $P1_REPORT_MINUTES (default 30) minutes and at the end; the token stays out of logs and files
 #
 # Examples
 #   launch.sh --gpu cpu ping:30                      # one-minute end-to-end check of CLI, Drive and logs
@@ -23,8 +31,8 @@
 #
 # Needs Linux or WSL2 with GNU coreutils (the Colab CLI does not support native Windows), git, python3, tar
 # and `uv tool install google-colab-cli` (the CLI needs Python >= 3.12; uv fetches it). The first CLI command
-# prints a Google sign-in URL: open it, approve, paste the code back. The first Drive mount prints a second
-# link (Drive access for Colab VMs): approve it and press Enter; later VMs mount Drive without prompting.
+# prints a Google sign-in URL: open it, approve, paste the code back. This is a bash script; from zsh run it
+# as `bash .../launch.sh ...` or `./.../launch.sh ...`. Shells inside the VM (colab console) are bash.
 #
 # The job runs inside the VM's kernel. Closing this terminal or Ctrl+C only detaches (exit code 75): the
 # stages keep running and the VM releases itself when they finish (abort with: colab stop -s SESSION). A
@@ -33,6 +41,9 @@
 set -euo pipefail
 
 GPU_LIST="G4"; KEEP=0; FORCE=0; SESSION=""; WITH_DATA=0; WAIT_MIN=0; ATTACH=""; DATA_ROOT="${P1_DATA_ROOT:-}"
+DRIVE_MODE="${P1_DRIVE_MODE:-rclone}"; REPORT=1
+RCLONE_CONF="${P1_RCLONE_CONF:-$HOME/.config/rclone/rclone.conf}"; RCLONE_REMOTE="${P1_RCLONE_REMOTE:-mydrive:}"
+GH_CREDENTIALS="${P1_GH_CREDENTIALS:-$HOME/.config/p1/gh_credentials}"
 STAGES=()
 usage() { sed -n '2,32p' "$0"; exit 1; }
 while [[ $# -gt 0 ]]; do
@@ -44,6 +55,8 @@ while [[ $# -gt 0 ]]; do
     --session) SESSION="$2"; shift 2 ;;
     --with-data) WITH_DATA=1; shift ;;
     --data-root) DATA_ROOT="$2"; shift 2 ;;
+    --drive) DRIVE_MODE="$2"; shift 2 ;;
+    --no-report) REPORT=0; shift ;;
     --attach) ATTACH="$2"; shift 2 ;;
     -h|--help) usage ;;
     -*) echo "Unknown option: $1"; usage ;;
@@ -86,6 +99,37 @@ finish() {
 }
 trap finish EXIT
 trap 'DETACHED=1' INT TERM HUP
+
+# ------------------------------------------------------------------ Drive and report settings (before any VM)
+case "$DRIVE_MODE" in
+  rclone)
+    DRIVE_ROOT="/content/mydrive"
+    [[ $RCLONE_REMOTE == *:* ]] || { echo "P1_RCLONE_REMOTE must look like 'mydrive:' (got '$RCLONE_REMOTE')"; exit 1; }
+    if [[ -z $ATTACH ]]; then
+      if [[ ! -f $RCLONE_CONF ]]; then
+        echo "rclone config not found: $RCLONE_CONF"
+        echo "Set P1_RCLONE_CONF to the rclone.conf that defines [${RCLONE_REMOTE%%:*}], or use --drive colab."
+        exit 1
+      fi
+      grep -q "^\[${RCLONE_REMOTE%%:*}\]" "$RCLONE_CONF" || {
+        echo "$RCLONE_CONF has no [${RCLONE_REMOTE%%:*}] section (remote $RCLONE_REMOTE)"; exit 1; }
+    fi
+    ;;
+  colab) DRIVE_ROOT="/content/drive/MyDrive"; RCLONE_REMOTE="" ;;
+  *) echo "--drive must be rclone or colab (got '$DRIVE_MODE')"; exit 1 ;;
+esac
+REPORT_REPO=""
+if [[ $REPORT == 1 && -z $ATTACH ]]; then
+  REPORT_REPO="${P1_REPORT_REPO:-$(python3 "$HERE/report_push.py" "$(git remote get-url origin 2>/dev/null || true)")}"
+  if [[ -z $REPORT_REPO ]]; then
+    echo "Reports: origin is not a GitHub remote; results stay on Drive (use --no-report to hide this)."
+  elif [[ $REPORT_REPO == https://* && ! -f $GH_CREDENTIALS ]]; then
+    echo "Reports: $GH_CREDENTIALS not found, so nothing is pushed to GitHub (see experiments/qfft_v93/README.md)."
+    REPORT_REPO=""
+  else
+    echo "Reports: pushed to $REPORT_REPO branch ${P1_REPORT_BRANCH:-colab-reports}"
+  fi
+fi
 
 hhmm() { python3 -c 'import sys, time; print(time.strftime("%H:%M", time.localtime(int(sys.argv[1]))))' "$1"; }
 
@@ -231,24 +275,98 @@ done
 STOP_ON_EXIT=1
 echo "Allocated $GPU_USED ($SHAPE shape) as $SESSION."
 
-colab drivemount -s "$SESSION"
-CHECK="$(echo 'import os; print("P1_DRIVE_" + ("OK" if os.path.isdir("/content/drive/MyDrive") else "MISSING"))' \
-  | colab exec -s "$SESSION" --timeout 120 2>&1 || true)"
-if ! grep -q 'P1_DRIVE_OK' <<< "$CHECK"; then
-  echo "Google Drive is not mounted on $SESSION. Run this command in a terminal, open the Drive link the CLI"
-  echo "prints, approve access and press Enter (needed once per Google account)."
-  exit 1
+if [[ $DRIVE_MODE == colab ]]; then
+  colab drivemount -s "$SESSION"
+  CHECK="$(echo 'import os; print("P1_DRIVE_" + ("OK" if os.path.isdir("/content/drive/MyDrive") else "MISSING"))' \
+    | colab exec -s "$SESSION" --timeout 120 2>&1 || true)"
+  if ! grep -q 'P1_DRIVE_OK' <<< "$CHECK"; then
+    echo "Google Drive is not mounted on $SESSION. Run this command in a terminal, open the Drive link the CLI"
+    echo "prints, approve access and press Enter (needed once per Google account)."
+    exit 1
+  fi
+else
+  # The same steps as mounting by hand in `colab console` (rclone.conf -> ~/.config/rclone, apt-get rclone
+  # fuse3 only if missing, rclone mount --daemon), run without prompts and with time limits.
+  colab upload -s "$SESSION" "$RCLONE_CONF" /content/.colab-drive-rclone-upload.conf
+  python3 - "$WORK/mount.py" "$DRIVE_ROOT" "$RCLONE_REMOTE" <<'PY'
+import pathlib, sys
+out, mnt, remote = sys.argv[1:]
+code = f'''import os, shutil, subprocess, time
+MNT, REMOTE = {mnt!r}, {remote!r}
+UPLOAD = '/content/.colab-drive-rclone-upload.conf'
+CONF = os.path.expanduser('~/.config/rclone/rclone.conf')
+FLAGS = ['--vfs-cache-mode', 'writes', '--vfs-cache-max-size', '10G', '--poll-interval', '15s', '--daemon']
+
+def run(cmd, timeout):
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
+                           env=dict(os.environ, DEBIAN_FRONTEND='noninteractive'))
+        return r.returncode, (r.stdout + r.stderr).strip()[-1500:]
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return 124, f'{{type(error).__name__}}: {{error}}'
+
+def mounted():
+    return subprocess.run(['mountpoint', '-q', MNT]).returncode == 0
+
+os.makedirs(os.path.dirname(CONF), exist_ok=True)
+if os.path.exists(UPLOAD):
+    shutil.move(UPLOAD, CONF)
+if os.path.exists(CONF):
+    os.chmod(CONF, 0o600)
+else:
+    print('no rclone config at', CONF, flush=True)
+if not mounted():
+    if shutil.which('rclone') is None or not (shutil.which('fusermount3') or shutil.which('fusermount')):
+        code, out = run(['apt-get', 'install', '-y', '-qq', 'rclone', 'fuse3'], 600)
+        if code != 0:  # no or stale package lists: update once, then retry
+            print('apt-get install failed; running apt-get update:', out[-300:], flush=True)
+            run(['apt-get', 'update', '-qq'], 300)
+            code, out = run(['apt-get', 'install', '-y', '-qq', 'rclone', 'fuse3'], 600)
+        print('install rclone fuse3: exit', code, out[-300:] if code else '', flush=True)
+    os.makedirs(MNT, exist_ok=True)
+    code, out = run(['rclone', 'mount', REMOTE, MNT, *FLAGS], 120)
+    print('rclone mount: exit', code, out[-500:], flush=True)
+    for _ in range(60):
+        if mounted():
+            break
+        time.sleep(1)
+ok = mounted()
+if ok:
+    top = sorted(os.listdir(MNT))
+    print('mounted', REMOTE, 'at', MNT, '| top level:', top[:20], flush=True)
+    if not any(name in top for name in ('models', 'runs', 'projects')):
+        print('P1_MOUNT_WARNING: no models/, runs/ or projects/ at the top of', REMOTE, '- is it your My Drive root?')
+print('P1_MOUNT_' + ('OK' if ok else 'FAILED'), flush=True)
+'''
+pathlib.Path(out).write_text(code, encoding='utf-8')
+PY
+  MOUNT_OUT="$(colab exec -s "$SESSION" --timeout 1500 -f "$WORK/mount.py" 2>&1 || true)"
+  printf '%s\n' "$MOUNT_OUT" | grep -a -v '^\[colab\]' | tail -n 8
+  if ! grep -q 'P1_MOUNT_OK' <<< "$MOUNT_OUT"; then
+    echo "rclone could not mount $RCLONE_REMOTE at $DRIVE_ROOT on $SESSION (output above); the VM is released."
+    echo "To debug by hand: rerun with --keep, then 'colab console -s SESSION' (a bash shell) and run the"
+    echo "mount steps from experiments/qfft_v93/README.md; or use --drive colab."
+    exit 1
+  fi
 fi
 upload "$BUNDLE" /content/p1_bundle.tgz
 if [[ $WITH_DATA == 1 ]]; then upload "$WORK/p1_data.tgz" /content/p1_data.tgz; fi
+if [[ -n $REPORT_REPO && -f $GH_CREDENTIALS ]]; then
+  colab upload -s "$SESSION" "$GH_CREDENTIALS" /content/gh_credentials >/dev/null   # remote.py sets mode 600
+fi
 
 ENTRY="$WORK/entry.py"
 RELEASE=$(( KEEP == 0 ? 1 : 0 ))
-python3 - "$ENTRY" "$CODE_SHA" "$GIT_HEAD" "$RELEASE" "$SESSION" "$GPU_USED" "$FORCE" "${STAGES[@]}" <<'PY'
+python3 - "$ENTRY" "$CODE_SHA" "$GIT_HEAD" "$RELEASE" "$SESSION" "$GPU_USED" "$FORCE" "$DRIVE_ROOT" \
+  "$RCLONE_REMOTE" "$REPORT_REPO" "${P1_REPORT_BRANCH:-colab-reports}" "${P1_REPORT_MINUTES:-30}" "${STAGES[@]}" <<'PY'
 import json, pathlib, sys
-entry, sha, head, release, session, gpu, force, *stages = sys.argv[1:]
+(entry, sha, head, release, session, gpu, force, drive_root, rclone_remote, report_repo, report_branch,
+ report_minutes, *stages) = sys.argv[1:]
 args = {'code_sha': sha, 'git_head': head, 'auto_release': release == '1', 'stages': stages,
-        'bundle': '/content/p1_bundle.tgz', 'session': session, 'gpu': gpu, 'force': force == '1'}
+        'bundle': '/content/p1_bundle.tgz', 'session': session, 'gpu': gpu, 'force': force == '1',
+        'drive_root': drive_root, 'rclone_remote': rclone_remote,
+        'report': ({'repo': report_repo, 'branch': report_branch, 'credentials': '/content/gh_credentials',
+                    'interval_minutes': float(report_minutes)} if report_repo else None)}
 remote = pathlib.Path('experiments/qfft_v93/colab/remote.py').read_text(encoding='utf-8')
 # Python literal (True/False), not JSON (true/false): the kernel executes this file as Python.
 pathlib.Path(entry).write_text('P1_ARGS = ' + repr(args) + '\n' + remote, encoding='utf-8')
