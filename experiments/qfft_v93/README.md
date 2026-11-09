@@ -48,6 +48,8 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 
 需要 Linux 或 WSL2（Colab CLI 不支持原生 Windows）。以下内容按 google-colab-cli 0.7.5 的源码与 `--help` 核对过（2026-11-08）。
 
+**两份仓库的分工**：造数在 Windows 那份（有 `reports/`、`artifacts/`、本地 `data/`）；Colab CLI 在 WSL 里，可以直接用 WSL 里的克隆（`~/` 下，git 和脚本更快）。WSL 克隆里没有本地数据，所以上传数据（阶段 `d`）时用 `--data-root` 指向 Windows 那份，例如 `pipeline.sh d --data-root "/mnt/d/Users/Mr.Z/Desktop/项目一_7B数学后训练"`，或在 `~/.bashrc` 里 `export P1_DATA_ROOT=...` 后直接 `pipeline.sh d`。
+
 Windows 上的一键方式：管理员 PowerShell 里 `wsl --install` 并重启一次；之后都用 `experiments\qfft_v93\windows\v93_colab.cmd`：`setup`（在 WSL 里装 uv 与 Colab CLI、检查仓库和换行符、登录）→ `ping` → `0`、`1`、`2`、`d`、`3`……（参数原样传给 pipeline.sh，例如 `v93_colab.cmd 3 --gpu G4`），另有 `status`、`attach SESSION`。双击不带参数时会提示输入。仓库根目录的 `.gitattributes` 让 `*.sh` 在任何 `core.autocrlf` 设置下都检出为 LF；在 `/mnt/d` 下若提示 Permission denied，用 `bash experiments/qfft_v93/colab/pipeline.sh ...` 运行。
 
 1. 安装：`uv tool install google-colab-cli`（或 `bash experiments/qfft_v93/colab/setup_wsl.sh`）。CLI 要求 Python ≥ 3.12，uv 会自动下载。
@@ -58,8 +60,8 @@ Windows 上的一键方式：管理员 PowerShell 里 `wsl --install` 并重启�
 ```bash
 # 阶段 0–2 不依赖本地数据，可以和第一节的造数并行
 experiments/qfft_v93/colab/pipeline.sh 0   # CPU VM：在 VM 上按固定 revision 下载评测集和模型到 Drive
-experiments/qfft_v93/colab/pipeline.sh 1   # 冒烟（最坏长度，H100 优先，其次 G4），见下文
-experiments/qfft_v93/colab/pipeline.sh 2   # 锚点评测（G4 优先，其次 H100）
+experiments/qfft_v93/colab/pipeline.sh 1   # 冒烟（最坏长度），结束时打印 SMOKE SUMMARY，见下文
+experiments/qfft_v93/colab/pipeline.sh 2   # 锚点评测
 # 本地 data_build build 完成后
 experiments/qfft_v93/colab/pipeline.sh d   # CPU VM：上传 data/qfft1000_v93（及评测集），核对哈希
 experiments/qfft_v93/colab/pipeline.sh 3   # DeepSeek 对：QFFT、SFT，各自训完立即评测
@@ -68,13 +70,16 @@ experiments/qfft_v93/colab/pipeline.sh 5   # R1 对
 experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md、图
 ```
 
+- GPU 默认先要 G4、分不到再要 H100（所有 GPU 阶段）：G4 显存 96 GB 比 H100 的 80 GB 大，每小时约 8.71 个计算单元，约为 H100（18.05）的一半；H100 每小时更快，赶时间时用 `--gpu H100`。费率来自公开整理的数据，开跑前 `colab usage` 会打印当前费率和余额。每种卡先按 high-RAM 规格申请，被拒时再申请标准规格；训练类阶段自己会检查主机内存。
 - 冒烟按最坏情况设计，量出来的峰值就是正式训练的上限：
   - 全参：32 条恰好填满 32,768 token 的序列（`smoke_data.py`，由公开的 s1K-1.1 轨迹按训练格式拼接截取，只用于测量），真实配方跑 2 步并本地存一次 122 GB 检查点。
   - GRPO：真实批形状（8 题 × 8 采样），用 vLLM 的 `min_tokens` 把每条 completion 强制生成到 8192 token，跑 2 步并存检查点。
   - 训练类阶段开始前检查主机内存：低于 128 GiB 直接报错（ZeRO-2 offload 的优化器状态约 122 GB），低于 150 GiB 给出警告。
+  - 三个冒烟阶段互不依赖：一个失败，同一台 VM 上其余的照样跑完；每次冒烟都先清空上一次的冒烟输出，数字只属于这一次。
+  - 结束时（成功或失败）打印一段 `===== P1 SMOKE SUMMARY =====` 到 `===== END P1 SMOKE SUMMARY =====`：机器（GPU、主机内存、CPU 数、本地盘）、各环境的包版本、全参的每步秒数/峰值显存/主机内存/本地存 122 GB 检查点的耗时、生成吞吐、GRPO 的每步秒数与显存，以及失败阶段的报错行。把这一段原样发给我，我据此定正式训练的配置和 GPU 预算。同一段也存在 Drive 的 `runs/project1/v93/smoke/latest.txt`，`launch.sh --gpu cpu smoke-report` 可以重新打印。
 - 后面可以接 launch.sh 的参数，例如 `pipeline.sh 3 --gpu G4 --wait-min 180`：只用 G4，分不到卡时每 5 分钟重试，最多 3 小时。`--gpu` 支持逗号列表（按顺序尝试）；不认识的卡名会直接报错，因为 CLI 会把未知名称静默当成 A100。
 - 单个阶段直接用 `launch.sh`，例如 `launch.sh --gpu G4 eval:run:qfft_ds_v93:full`；`launch.sh --gpu cpu status` 打印所有阶段（运行中的会显示所在 VM 和心跳）、训练进度和评测完成度。
-- 每次调用：`colab new --high-mem [--gpu ...]` → `colab drivemount` 并检查 `/content/drive/MyDrive` → 上传代码包（大文件按 8 MiB 分片，VM 端重组并核对 SHA-256）→ `colab exec` 执行 `colab/remote.py` → 看到 `P1_RESULT` 后释放 VM（`--keep` 保留，便于 `colab console` 排查）。本地日志在 `reports/colab_logs/<session>.log`，VM 端日志在 Drive `runs/project1/v93/logs/`。
+- 每次调用：`colab new [--gpu ...] --high-mem`（被拒时不带 `--high-mem` 再试一次）→ `colab drivemount` 并检查 `/content/drive/MyDrive` → 上传代码包（大文件按 8 MiB 分片，VM 端重组并核对 SHA-256）→ `colab exec` 执行 `colab/remote.py` → 看到 `P1_RESULT` 后释放 VM（`--keep` 保留，便于 `colab console` 排查）。本地日志在 `reports/colab_logs/<session>.log`，VM 端日志在 Drive `runs/project1/v93/logs/`。
 
 **断线与重复启动**：任务跑在 VM 的 kernel 里，不依赖本地终端。
 
