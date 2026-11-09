@@ -72,7 +72,7 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 - `v93/sessions/<session>/`：`README.md`（跑了什么、GPU、代码版本、结果）、`session_log_tail.txt`、各阶段日志的末尾、`smoke_summary.txt`；`v93/latest_smoke_summary.txt` 是最近一次冒烟总结。
 - 只传文本，单个文件有大小上限，内容里的 token、`Bearer ...`、URL 里的账号密码都会被替换成 `[REDACTED]`。
 
-一次性准备（zsh；建议用只授权本仓库 Contents 读写的 fine-grained token）：
+一次性准备：运行 `bash experiments/qfft_v93/colab/setup_wsl.sh`，这个文件不存在时它会提示输入 token（不回显）并按下面的格式写好；也可以在 zsh 里手动写（建议用只授权本仓库、Contents 读写的 fine-grained token）：
 
 ```zsh
 mkdir -p ~/.config/p1 && chmod 700 ~/.config/p1
@@ -85,7 +85,7 @@ launch.sh 把这个文件上传到 VM 的 `/content/gh_credentials`（权限 600
 
 Windows 上的一键方式（只给 Windows 上的旧副本用）：管理员 PowerShell 里 `wsl --install` 并重启一次；之后都用 `experiments\qfft_v93\windows\v93_colab.cmd`：`setup`（在 WSL 里装 uv 与 Colab CLI、检查仓库和换行符、登录）→ `ping` → `0`、`1`、`2`、`d`、`3`……（参数原样传给 pipeline.sh，例如 `v93_colab.cmd 3 --gpu G4`），另有 `status`、`attach SESSION`。双击不带参数时会提示输入。仓库根目录的 `.gitattributes` 让 `*.sh` 在任何 `core.autocrlf` 设置下都检出为 LF；在 `/mnt/d` 下若提示 Permission denied，用 `bash experiments/qfft_v93/colab/pipeline.sh ...` 运行。
 
-1. 安装：`uv tool install google-colab-cli`（或 `bash experiments/qfft_v93/colab/setup_wsl.sh`）。CLI 要求 Python ≥ 3.12，uv 会自动下载。
+1. 安装与检查：`bash experiments/qfft_v93/colab/setup_wsl.sh`。PATH 上已有的 colab CLI（uv、pipx 或 pip 装的）保留不动，版本不在 `>=0.7.5,<0.8` 范围时只提示；没有才用 uv 安装。它还检查 rclone 配置里有 `[mydrive]` 段、GitHub token 文件是否存在（缺少时提示输入）。CLI 要求 Python ≥ 3.12，uv 会自动下载。
 2. 登录：第一次运行任何 `colab` 命令会打印一个 Google 授权链接，在浏览器里同意后把页面显示的授权码粘贴回终端，令牌缓存在 `~/.config/colab-cli/token.json`。`colab auth` 是给 VM 内代码授权 GCP 的，不是 CLI 登录。
 3. Drive：默认用 rclone（见上），不需要再做什么；`--drive colab` 时第一次 `colab drivemount` 会打印一个"允许 Colab 访问 Drive"的链接，同意后按回车。
 4. 先花一分钟 CPU 做端到端检查：`bash experiments/qfft_v93/colab/launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、推报告、释放）。
@@ -162,7 +162,7 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 | `colab/launch.sh` / `colab/pipeline.sh` / `colab/remote.py` / `colab/stages.py` | 一键调度 |
 | `colab/report_push.py` / `colab/smoke_report.py` | 把文本报告推到 `colab-reports` 分支；冒烟总结 |
 | `local_data.sh` | WSL2/Linux 上的本地造数一键入口（五步） |
-| `colab/setup_wsl.sh`、`windows/v93_colab.cmd`、`windows/v93_local_data.cmd` | WSL 一次性安装与登录；Windows 下的 Colab 阶段入口与本地造数入口 |
+| `colab/setup_wsl.sh`、`windows/v93_colab.cmd`、`windows/v93_local_data.cmd` | WSL 一次性安装、检查（rclone 配置、GitHub token 文件）与登录；Windows 下的 Colab 阶段入口与本地造数入口 |
 | `envs/*.txt` | 训练附加包、推理与 RL 虚拟环境（2026-11-08 在 PyPI 核对过版本约束） |
 
 ## 六、已验证与未验证
