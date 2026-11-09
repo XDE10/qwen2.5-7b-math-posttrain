@@ -172,10 +172,21 @@ class Context:
 
     # ------------------------------------------------------------------ process execution
     def run(self, cmd, name: str, quiet_minutes: float = 10) -> None:
-        """Stream a subprocess to the notebook and to a Drive log; never kill it on a client disconnect."""
-        LOGS.mkdir(parents=True, exist_ok=True)
-        log_path = LOGS / f'{datetime.now():%Y%m%d-%H%M%S}_{name}.log'
-        say('RUN', ' '.join(str(c) for c in cmd), '| log:', log_path)
+        """Stream a subprocess to the notebook and to a log; never kill it on a client disconnect.
+
+        The log is written on the VM's SSD and copied to Drive every minute and at the end: a file kept
+        open on a Drive mount is only uploaded when it is closed.
+        """
+        log_name = f'{datetime.now():%Y%m%d-%H%M%S}_{name}.log'
+        log_path, drive_log = LOCAL / 'logs' / log_name, LOGS / log_name
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        say('RUN', ' '.join(str(c) for c in cmd), '| log:', drive_log)
+        synced = [time.monotonic()]
+
+        def sync_log(force: bool = False):
+            if force or time.monotonic() - synced[0] >= 60:
+                copy_to_drive(log_path, drive_log)
+                synced[0] = time.monotonic()
         with open(log_path, 'a', encoding='utf-8') as logf:
             proc = subprocess.Popen([str(c) for c in cmd], cwd=self.code, env=self.env, stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT, text=True, bufsize=1, start_new_session=True)
@@ -187,6 +198,7 @@ class Context:
                     if time.monotonic() - last[0] > quiet_minutes * 60:
                         say(f'... {name} still running (pid {proc.pid}, no output for {quiet_minutes:.0f} min)')
                         last[0] = time.monotonic()
+                    sync_log()
             threading.Thread(target=watchdog, daemon=True).start()
             try:
                 for line in proc.stdout:
@@ -194,12 +206,16 @@ class Context:
                     print(line, end='', flush=True)
                     logf.write(line)
                     logf.flush()
+                    sync_log()
                 code = proc.wait()
             except KeyboardInterrupt:
                 say(f'Detached from {name} (pid {proc.pid}); it keeps running. Log: {log_path}')
                 raise
+            finally:
+                logf.flush()
+                sync_log(force=True)
         if code != 0:
-            raise RuntimeError(f'{name} failed with exit code {code}; see {log_path}')
+            raise RuntimeError(f'{name} failed with exit code {code}; see {drive_log}')
 
     # ------------------------------------------------------------------ environments
     def python(self, env_name: str) -> str:
@@ -289,9 +305,8 @@ class Context:
                 tmp.parent.mkdir(parents=True, exist_ok=True)
                 with tarfile.open(tmp, 'w') as tar:
                     tar.add(str(venv), arcname=str(venv).lstrip('/'))
-                snapshot.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(tmp, str(snapshot) + '.partial')
-                os.replace(str(snapshot) + '.partial', snapshot)
+                from experiments.qfft_v93 import drive_io  # rclone CLI or copy + rename (stdlib only)
+                drive_io.upload_file(tmp, snapshot)
                 tmp.unlink()
                 say(f'Saved venv snapshot {snapshot}')
             except Exception as error:
@@ -349,27 +364,45 @@ def gpu_banner() -> None:
         pass
 
 
+def copy_to_drive(src: Path, dst: Path) -> None:
+    """Replace a small Drive file with a local one (temp name + rename); a warning on failure."""
+    try:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dst.with_name(dst.name + '.sync')
+        shutil.copyfile(src, tmp)
+        os.replace(tmp, dst)
+    except OSError as error:
+        say('WARNING: could not copy', src.name, 'to Drive:', error)
+
+
 def print_status() -> None:
+    for line in status_lines():
+        print(line, flush=True)
+
+
+def status_lines() -> list:
     """Stage markers, run progress and evaluation completeness, read from Drive."""
+    out = []
     for path in sorted(STAGES_DIR.glob('*.json')):
         s = json.loads(path.read_text(encoding='utf-8'))
         extra = s.get('hours', '')
         if s['state'] == 'running':
             age = (time.time() - float(s.get('heartbeat_ts') or 0)) / 60
             extra = f"on {s.get('host')}, heartbeat {age:.0f} min ago" + (' (stale)' if age * 60 > LEASE_STALE_S else '')
-        say(f"stage {s['stage']:<45} {s['state']:<9} {extra} {(s.get('error') or '')[:120]}")
+        out.append(f"stage {s['stage']:<45} {s['state']:<9} {extra} {(s.get('error') or '')[:120]}")
     runs = DRIVE / 'runs/project1/v93/runs'
     for path in sorted(runs.glob('*/status.json')) if runs.exists() else []:
         s = json.loads(path.read_text(encoding='utf-8'))
-        say(f"run {path.parent.name:<28} {s.get('state')} step {s.get('step', s.get('steps'))}/{s.get('max_steps', '')} "
+        out.append(f"run {path.parent.name:<28} {s.get('state')} step {s.get('step', s.get('steps'))}/{s.get('max_steps', '')} "
             f"updated {s.get('updated', s.get('completed', ''))}")
     evals = DRIVE / 'runs/project1/v93/evals'
     for path in sorted(evals.glob('*/*/generation_status.json')) if evals.exists() else []:
         s = json.loads(path.read_text(encoding='utf-8'))
-        say(f"eval {path.parent.parent.name}/{path.parent.name:<10} {s['saved']}/{s['expected']} complete={s['complete']}")
+        out.append(f"eval {path.parent.parent.name}/{path.parent.name:<10} {s['saved']}/{s['expected']} complete={s['complete']}")
     results = evals / 'results.md'
     if results.exists():
-        print(results.read_text(encoding='utf-8'), flush=True)
+        out.append(results.read_text(encoding='utf-8'))
+    return out
 
 
 def stage_sync_data(ctx: Context) -> None:
@@ -516,10 +549,34 @@ def print_smoke_summary(ctx) -> None:
         say('WARNING: could not save the smoke summary to Drive:', error)
 
 
+def start_reporter(args: dict):
+    """GitHub report pusher (colab/report_push.py) plus its periodic thread, or (None, None)."""
+    cfg = args.get('report')
+    if not cfg or not DRIVE.is_dir():
+        return None, None
+    from experiments.qfft_v93.colab.report_push import Reporter
+    info = {'stages': ' '.join(args.get('stages', [])), 'gpu': args.get('gpu'), 'drive': str(DRIVE),
+            'code_bundle': args.get('code_sha'), 'git_head': args.get('git_head'),
+            'started': datetime.now().isoformat(timespec='seconds'), 'started_ts': time.time()}
+    reporter = Reporter(cfg, DRIVE, LOCAL, args.get('session'), info)
+    if not reporter.enabled:
+        say(f"Reports: no credentials at {cfg.get('credentials')}; results stay on Drive")
+        return None, None
+    stop = threading.Event()
+
+    def loop():
+        while not stop.wait(reporter.interval):
+            reporter.push(f"colab {args.get('session')}: progress")
+    threading.Thread(target=loop, daemon=True).start()
+    say(f"Reports: {cfg['repo']} branch {reporter.branch}, every {reporter.interval / 60:.0f} min and at the end")
+    return reporter, stop
+
+
 def main(args: dict) -> None:
     failed = 'not started'
     ctx = None
     smoke_failures = []
+    reporter, stop_reports = start_reporter(args)
     try:
         if not DRIVE.is_dir():
             raise RuntimeError('Google Drive is not mounted; launch.sh runs `colab drivemount` before this step')
@@ -555,4 +612,11 @@ def main(args: dict) -> None:
                 print_smoke_summary(ctx)
             except Exception as error:
                 say('WARNING: smoke summary failed:', type(error).__name__, error)
-        print('P1_RESULT=' + ('OK' if failed is None else 'FAILED ' + failed)[:2000], flush=True)
+        result = ('OK' if failed is None else 'FAILED ' + failed)[:2000]
+        if reporter is not None:  # before P1_RESULT, which makes launch.sh release the VM
+            stop_reports.set()
+            try:
+                reporter.push(f"colab {args.get('session')}: {result[:80]}", result=result)
+            except Exception as error:
+                say('WARNING: final report push failed:', type(error).__name__, error)
+        print('P1_RESULT=' + result, flush=True)
