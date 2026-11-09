@@ -6,20 +6,22 @@ Layout per run:
 
 On start, `resolve_resume()` picks the newest complete checkpoint: local if present, otherwise the
 newest Drive mirror (copied back to local first). A mirror without MIRROR_COMPLETE.json is ignored.
+Transfers go through drive_io: the rclone CLI with an rclone Drive mount (streams the 91 GB optimizer file,
+deletes superseded mirrors permanently), throttled file copies with Colab's own Drive mount.
 Local disk holds at most one checkpoint plus the one being written: before a save we wait for the
 previous mirror and delete older local checkpoints when free space would not fit another one.
 """
 from __future__ import annotations
 
-import json
 import re
 import shutil
 import threading
 import time
 from pathlib import Path
 
-from experiments.qfft_v93.common import (GIB, copy_tree_fast, copy_tree_throttled, free_bytes, human_bytes, log,
-                                         now_iso, read_json, tree_bytes, write_json)
+from experiments.qfft_v93 import drive_io
+from experiments.qfft_v93.common import (GIB, free_bytes, human_bytes, log, now_iso, read_json, read_jsonl,
+                                         tree_bytes, write_json, write_jsonl)
 
 try:
     from transformers import TrainerCallback
@@ -52,7 +54,7 @@ def resolve_resume(local_dir: Path, drive_dir: Path):
         step, src = mirror[-1]
         dst = Path(local_dir) / src.name
         log(f'Restoring checkpoint-{step} from Drive ({human_bytes(tree_bytes(src))}) ...')
-        copy_tree_fast(src, dst)
+        drive_io.download_tree(src, dst)
         write_json(dst / SAVED_MARK, {'restored_from': str(src), 'at': now_iso()})
         log(f'Resuming from restored {dst}')
         return str(dst)
@@ -103,10 +105,9 @@ class CheckpointMirror(TrainerCallback):
                   'free_gib_after': round(free_bytes(self.local_dir) / GIB, 1)}
         log(f"Saved {ckpt.name} locally: {human_bytes(size)} in {record['seconds']} s, "
             f"{record['free_gib_after']} GiB free")
-        try:
-            self.mirror_dir.parent.mkdir(parents=True, exist_ok=True)
-            with (self.mirror_dir.parent / 'saves.jsonl').open('a', encoding='utf-8') as handle:
-                handle.write(json.dumps(record) + '\n')
+        try:  # rewrite (tiny file) instead of appending: appends through a Drive mount upload late
+            path = self.mirror_dir.parent / 'saves.jsonl'
+            write_jsonl(path, read_jsonl(path) + [record])
         except OSError as error:
             log('WARNING could not record the save:', error)
 
@@ -145,16 +146,16 @@ class CheckpointMirror(TrainerCallback):
             dst = self.mirror_dir / ckpt.name
             size = tree_bytes(ckpt)
             log(f'Mirroring {ckpt.name} to Drive ({human_bytes(size)}) in the background')
-            copy_tree_throttled(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free)
-            write_json(dst / MIRROR_MARK, {'bytes': size, 'files': sum(1 for p in dst.rglob('*') if p.is_file()),
-                                           'at': now_iso()})
+            files = sum(1 for p in ckpt.rglob('*') if p.is_file())
+            drive_io.upload_tree(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free)
+            drive_io.put_json(dst / MIRROR_MARK, {'bytes': size, 'files': files, 'at': now_iso()})
             log(f'Mirror complete: {dst}')
             mirrors = _checkpoints(self.mirror_dir, MIRROR_MARK)
             for _, old in mirrors[:-self.keep]:
-                shutil.rmtree(old, ignore_errors=True)
+                drive_io.purge(old)
             for partial in self.mirror_dir.glob('*.partial'):
                 if partial.name != dst.name + '.partial':
-                    shutil.rmtree(partial, ignore_errors=True)
+                    drive_io.purge(partial)
         except Exception as error:  # training continues; the previous mirror stays valid
             self.error = f'{type(error).__name__}: {error}'
             log('WARNING mirror failed:', self.error)
@@ -179,7 +180,7 @@ def latest_mirror_step(drive_dir: Path):
 
 def prune_all_mirrors(drive_dir: Path) -> None:
     for _, p in _checkpoints(Path(drive_dir) / 'ckpt_mirror', MIRROR_MARK):
-        shutil.rmtree(p, ignore_errors=True)
+        drive_io.purge(p)
 
 
 def read_state(path: Path) -> dict:

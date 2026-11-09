@@ -22,7 +22,15 @@ if not _args:
     raise RuntimeError('P1_ARGS missing: start stages through experiments/qfft_v93/colab/launch.sh')
 _local = Path(os.environ.get('P1_LOCAL_ROOT', '/content/p1'))
 _local.mkdir(parents=True, exist_ok=True)
+# Where Drive is mounted on this VM (launch.sh --drive): rclone at /content/mydrive or Colab's own mount.
+# Set before stages.py is imported: its paths are computed at import time.
+if _args.get('drive_root'):
+    os.environ['P1_DRIVE_ROOT'] = _args['drive_root']
+os.environ['P1_RCLONE_REMOTE'] = _args.get('rclone_remote') or ''
 _drive = Path(os.environ.get('P1_DRIVE_ROOT', '/content/drive/MyDrive'))
+_credentials = Path((_args.get('report') or {}).get('credentials') or '/content/gh_credentials')
+if _credentials.is_file():
+    os.chmod(_credentials, 0o600)
 # Seconds to wait before the VM releases itself, so a detached `launch.sh --attach` (polling every 60 s)
 # still reads the final lines. A connected launch.sh stops the VM as soon as it sees P1_RESULT.
 _RELEASE_GRACE_S = float(os.environ.get('P1_RELEASE_GRACE_S', '120'))
@@ -167,6 +175,10 @@ finally:
     except Exception as _copy_error:
         print('could not copy the session log to Drive:', _copy_error, flush=True)
     if _auto_release:
+        try:  # the final report was pushed before P1_RESULT; the VM is about to be released
+            _credentials.unlink(missing_ok=True)
+        except OSError:
+            pass
         time.sleep(_RELEASE_GRACE_S)
         try:  # best effort; a connected launch.sh has usually stopped the VM already
             from google.colab import runtime

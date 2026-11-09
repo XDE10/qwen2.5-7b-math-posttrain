@@ -23,8 +23,10 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - RL：在合并后的 QFFT 检查点上做 LoRA-GRPO（r32、LR 1e-5、150 步、8 题 × 8 采样、`dapo` 损失、β=0、ε_high 0.28、截断掩码、最终段 0/1 奖励），题池为已批准的 920 + 637 题。
 - 评测：所有模型同一组 prompt token、原生 RoPE、`max_model_len 32768`、temperature 0.6、top_p 0.95；AIME24/25 各 16 次、AMC23 8 次、MATH-500 4 次、GSM8K 1 次；只判最终段最后一个 `\boxed{}`（`experiments/qfft_v93/grading.py`），主指标不用 LLM 复核。
 - 调度：Colab CLI（Linux/WSL2）`experiments/qfft_v93/colab/pipeline.sh <阶段>`；所有状态在 Drive `projects/project1/v93`、`models`、`runs/project1/v93`，重跑即续。
-- 环境：本地根目录 `D:/Users/Mr.Z/Desktop/项目一_7B数学后训练`（造数与本地数据都在这里），CPU 解释器 `D:/anaconda3/envs/genai-test/python.exe`；Colab CLI 装在 WSL2，用户在 WSL 的克隆里自己操作 Colab，阶段 `d` 用 `--data-root`（或 `P1_DATA_ROOT`）指向 Windows 那份上传数据。GPU 默认先 G4（RTX PRO 6000 Blackwell 96GB，约 8.71 计算单元/小时）后 H100 80GB（约 18.05），主机内存约 167 GB（以冒烟实测为准）。
-- 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`）；用户贴回这一段后，再据此定正式训练配置与 GPU 预算。
+- 环境：项目与 Colab CLI 都在 WSL2 Ubuntu：`/home/xde10/projects/qwen2.5-7b-math-posttrain`（Windows 下为 `\\wsl.localhost\Ubuntu\home\xde10\projects\qwen2.5-7b-math-posttrain`），交互 shell 是 **zsh**；给用户的命令要兼容 zsh，仓库脚本都是 bash，用 `bash 脚本` 运行。Colab VM 里（`colab console`）是 **bash**。旧的 Windows 目录 `D:/Users/Mr.Z/Desktop/项目一_7B数学后训练` 与 `D:/anaconda3/envs/genai-test/python.exe` 只是旧位置。用户自己操作 Colab（不给我登录）。GPU 默认先 G4（RTX PRO 6000 Blackwell 96GB，约 8.71 计算单元/小时）后 H100 80GB（约 18.05），主机内存约 167 GB（以冒烟实测为准）。
+- Drive：用户用 rclone，远端 `mydrive:` 挂到 VM 的 `/content/mydrive`（`--vfs-cache-mode writes --vfs-cache-max-size 10G`，launch.sh 另加 `--poll-interval 15s`），这是 launch.sh 的默认（`--drive rclone`，配置文件 `P1_RCLONE_CONF`，默认 `~/.config/rclone/rclone.conf`）；`--drive colab` 才用 Colab 自带挂载 `/content/drive/MyDrive`。大文件（检查点、导出权重、模型、环境快照）走 rclone 命令行（`experiments/qfft_v93/drive_io.py`），不经挂载的写缓存；被新镜像取代的检查点永久删除（不进回收站）。
+- 结果回传：VM 把小体积文本报告推到本仓库的 `colab-reports` 分支（永远不推 main），每 30 分钟一次并在结束时一次；凭据是用户本机的 `~/.config/p1/gh_credentials`（一行 `https://USER:TOKEN@github.com`，launch.sh 上传到 VM 的 `/content/gh_credentials`，用完删除）。我从 GitHub 直接读 `v93/latest/` 与 `v93/sessions/<session>/`，不需要用户下载再上传。
+- 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`，并推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`）；据此定正式训练配置与 GPU 预算。
 - **未完成**：GPU 冒烟与正式训练、评测、GRPO 均未运行；DeepSeek 轨迹补齐到 1000/1000 需要先跑 `teacher fill`。详见 [docs/status/current_status.md](docs/status/current_status.md)。
 
 ## 仓库约定（必须遵守）
@@ -36,7 +38,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - 不重复全量去污/审计/扩量；验证聚焦当前报错和身份关键项，避免防御性检查阻碍执行。
 - 不擅自启动 GPU 任务、不擅自发起付费/订阅 API 请求、不自动扩量或入训；这些需要用户明确授权，并把「已授权范围」写进报告。
 - 凭证（SwanLab / DeepSeek Key）只放私密文件，不打印、不回显、不入库、不写进交接文档或公开运行包。
-- 大体积数据/证据/报告只在本地：`data/`、`artifacts/`、`reports/`、`archive/data/`、`archive/reports/`、`.pilot_deps/`、`*.zip`、`.pytest_tmp/` 不入 git（各目录保留 README 例外）。详见 [.gitignore](.gitignore)。
+- 大体积数据/证据/报告只在本地：`data/`、`artifacts/`、`reports/`、`archive/data/`、`archive/reports/`、`.pilot_deps/`、`*.zip`、`.pytest_tmp/` 不入 git（各目录保留 README 例外）。详见 [.gitignore](.gitignore)。唯一例外是 Colab 推到 `colab-reports` 分支的小体积文本报告（有大小上限、去掉密钥，不进 main）。
 - 文档与代码保留来源和验证记录；**CPU 通过不等于 GPU 结果**，「已实现 / CPU 通过 / 真实 GPU 跑通 / 能力提升」要分开陈述。
 - 迁移/清理/重构的每次移动都留映射与记录（`docs/migration/`），移动后同步 `docs/metadata/migration_manifest.json` 并跑 `python tools/verification/verify_migration.py`。
 
@@ -59,8 +61,8 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 ## 路径、启动与恢复
 
-- 本地命令一律在仓库根目录执行；`pytest` 用 `D:/anaconda3/envs/genai-test/python.exe -m pytest`。Windows 一键入口：`experiments/qfft_v93/windows/v93_local_data.cmd`（本地造数五步）与 `v93_colab.cmd`（经 WSL 调 Colab 阶段，`setup` 做一次性安装与登录）。`.gitattributes` 固定 v93 的 `*.sh` 为 LF、`*.cmd` 为 CRLF，不要改回。
-- Drive 持久目录：v93 用 `projects/project1/v93`（数据、代码包、环境快照）、`models`（与 v26 共用，基座目录不变）、`runs/project1/v93`（runs、evals、stages、logs、figures）；VM 本地工作区 `/content/p1`。v26 的工作副本 `/content/workspaces/aimo-sft-v26` 与结果 `runs/project1/aimo_sft_v26` 只作历史。
+- 本地命令一律在仓库根目录执行（WSL2）：本地造数 `bash experiments/qfft_v93/local_data.sh`（解释器 `P1_PYTHON`，默认 `python3`，需要 pandas、pyarrow、tokenizers），`pytest` 用同一解释器。`experiments/qfft_v93/windows/*.cmd` 只给 Windows 上的旧副本用。`.gitattributes` 固定 v93 的 `*.sh` 为 LF、`*.cmd` 为 CRLF，不要改回。
+- Drive 持久目录：v93 用 `projects/project1/v93`（数据、代码包、环境快照）、`models`（与 v26 共用，基座目录不变）、`runs/project1/v93`（runs、evals、stages、logs、figures）；VM 本地工作区 `/content/p1`。这些都是相对 Drive 根的路径；VM 上的 Drive 根是 `/content/mydrive`（rclone）或 `/content/drive/MyDrive`（`--drive colab`）。v26 的工作副本 `/content/workspaces/aimo-sft-v26` 与结果 `runs/project1/aimo_sft_v26` 只作历史。
 - v93 起不再用 VS Code 远程终端：在 Linux/WSL2 上装 Colab CLI，用 `experiments/qfft_v93/colab/launch.sh` 或 `pipeline.sh` 启动；每次调用新建 VM、挂载 Drive、上传代码包、跑阶段、结束后释放。任务跑在 VM 的 kernel 里：断线、关终端或 Ctrl+C 不会中止它（`launch.sh --attach <session>` 重新跟踪，`colab stop -s <session>` 才是中止）。`launch.sh --gpu cpu status` 查看所有阶段与训练进度。
 - v26 的旧入口 `python3 /content/drive/MyDrive/projects/project1/start_aimo_sft_v28.py` 只用于复现历史。
 - **有任务在跑时先看最新状态（`status` 阶段或 Drive 上的 `runs/project1/v93/stages/`），不重复启动同一阶段**；阶段标记带 5 分钟心跳，另一台 VM 在心跳 15 分钟内会拒绝同一阶段（确认原 VM 已不在才用 `--force`），run 目录还有身份校验。
@@ -70,7 +72,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - torchao 0.10.0 与当前 PEFT 不兼容：v27 自动把已安装且低于 0.16.0 的版本定向升级到 0.18.0，用 `--no-deps`，不连带升级 torch。
 - Transformers 5.20.2 不接受 `warmup_ratio`：v27 改用整数 `warmup_steps`（本轮 22 步），在模型加载前验证 TrainingArguments；长度分组同时适配旧 `group_by_length` 与新 `train_sampling_strategy`。
 - 历史 `pyroaring<1.0.4` 曾解决 SwanLab 安装问题；按具体错误处理，不无条件重装整套依赖。
-- SwanLab 必须在线、详细记录、自动认证：Key 存 `/content/drive/MyDrive/.project1_credentials/swanlab.json`（字段 `SWANLAB_API_KEY`），v28 读取后注入子进程环境，不要求用户每次输入，不静默转 offline。
+- SwanLab 必须在线、详细记录、自动认证：Key 存 Drive 根下的 `.project1_credentials/swanlab.json`（字段 `SWANLAB_API_KEY`；rclone 挂载时即 `/content/mydrive/.project1_credentials/swanlab.json`），读取后注入子进程环境，不要求用户每次输入，不静默转 offline。
 - 只补缺失依赖和已证实的兼容修复，保留预装 Python/PyTorch/Transformers。
 - v93 环境分三份：训练沿用 Colab 镜像自带的 torch/transformers（与系统 CUDA 一致，DeepSpeed 在运行时编译 CPU-Adam），只补 `envs/train-extra.txt`；推理（vllm 0.33.0）与 RL（vllm 0.32.0 + trl 1.17.1）各用独立 uv 虚拟环境，首次装好后快照到 Drive 并冻结版本清单。不要把 vLLM 装进训练用的系统环境。
 - Colab CLI（google-colab-cli 0.7.5 已按源码核对）不支持原生 Windows，launch.sh 在 WSL2/Linux 上运行；CLI 需要 Python ≥ 3.12（`uv tool install` 自动处理）。CLI 登录是"打开链接、粘贴授权码"，`colab auth` 只给 VM 内代码授权 GCP。`colab exec --timeout` 是本地客户端的总时限（默认 30 s），统一传 86400；超时或断线不会中断 VM 上的任务。未知的 `--gpu` 名称会被 CLI 静默当成 A100，launch.sh 已做校验。

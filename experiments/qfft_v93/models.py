@@ -8,8 +8,9 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from experiments.qfft_v93.common import (TOKENIZER_SHA256, copy_file_throttled, drive_layout, human_bytes, load_config,
-                                         local_root, log, now_iso, read_json, sha256_file, tree_bytes, write_json)
+from experiments.qfft_v93 import drive_io
+from experiments.qfft_v93.common import (TOKENIZER_SHA256, drive_layout, human_bytes, load_config, local_root, log,
+                                         now_iso, read_json, sha256_file, tree_bytes, write_json)
 
 WEIGHT_PATTERNS = ['*.json', '*.safetensors', '*.txt', '*.model', '*.jinja', '*.tiktoken', 'merges.txt', 'vocab.json']
 MARK = 'p1_model_identity.json'
@@ -44,7 +45,7 @@ def max_model_len(spec: str) -> int:
 
 
 def download_to_drive(spec: str, layout=None) -> Path:
-    """snapshot_download to local SSD, then copy to Drive (throttled) so the Drive cache never overflows."""
+    """snapshot_download to local SSD, then publish the folder on Drive (drive_io: rclone CLI or throttled copy)."""
     layout = layout or drive_layout()
     entry = registry()[spec]
     target = drive_path(spec, layout)
@@ -56,12 +57,13 @@ def download_to_drive(spec: str, layout=None) -> Path:
     log(f"{spec}: downloading {entry['repo']}@{entry['revision'][:12]} ...")
     snapshot_download(repo_id=entry['repo'], revision=entry['revision'], local_dir=str(staging),
                       allow_patterns=WEIGHT_PATTERNS)
-    for path in sorted(p for p in staging.rglob('*') if p.is_file() and '.cache' not in p.parts):
-        copy_file_throttled(path, target / path.relative_to(staging))
-    write_json(target / MARK, {'repo': entry['repo'], 'revision': entry['revision'], 'downloaded': now_iso(),
-                               'bytes': tree_bytes(target)})
+    shutil.rmtree(staging / '.cache', ignore_errors=True)  # huggingface_hub bookkeeping, not model files
+    size = tree_bytes(staging)
+    write_json(staging / MARK, {'repo': entry['repo'], 'revision': entry['revision'], 'downloaded': now_iso(),
+                                'bytes': size})
+    drive_io.upload_tree(staging, target)
     shutil.rmtree(staging, ignore_errors=True)
-    log(f'{spec}: stored on Drive ({human_bytes(tree_bytes(target))})')
+    log(f'{spec}: stored on Drive ({human_bytes(size)})')
     return target
 
 
@@ -82,6 +84,8 @@ def ensure_local(spec: str, layout=None) -> Path:
     dst = local_cache_path(spec, layout)
     dst.mkdir(parents=True, exist_ok=True)
     copied = 0
+    if drive_io.rclone_remote():  # multi-threaded download, skips files that already match in size
+        drive_io.download_tree(src, dst, atomic=False)
     for path in sorted(p for p in src.iterdir() if p.is_file()):
         out = dst / path.name
         if out.exists() and out.stat().st_size == path.stat().st_size:

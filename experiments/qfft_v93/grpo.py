@@ -20,9 +20,9 @@ import time
 from collections import Counter
 from pathlib import Path
 
-from experiments.qfft_v93 import decontam
+from experiments.qfft_v93 import decontam, drive_io
 from experiments.qfft_v93.checkpointing import CheckpointMirror, resolve_resume
-from experiments.qfft_v93.common import (Heartbeat, JsonlAppender, copy_tree_throttled, drive_layout, gpu_profile,
+from experiments.qfft_v93.common import (Heartbeat, JsonlAppender, drive_layout, gpu_profile,
                                          load_config, local_root, log, now_iso, read_json, read_jsonl, sha256_json,
                                          write_json)
 from experiments.qfft_v93.formats import messages
@@ -200,7 +200,7 @@ def main() -> None:
                              target_modules=lora['target_modules'], task_type='CAUSAL_LM')
     swan = SwanLab(drive_run, run, {'identity': identity, 'pool': pool_report}, tags=['v93', 'grpo', 'lora'],
                    enabled=not (a.no_swanlab or a.smoke), log_dir=local_run / 'swanlog')
-    journal = JsonlAppender(drive_run / 'reward_status.jsonl')
+    journal = JsonlAppender(local_run / 'reward_status.jsonl', mirror=drive_run / 'reward_status.jsonl')
     mirror = CheckpointMirror(local_run, drive_run, every=1, keep=cfg.get('mirror_keep', 3),
                               watch_path=str(local_root()), min_free_gib=8, mirror_final=True)
     with Grader(workers=cfg.get('reward_workers', 8), timeout=cfg.get('reward_timeout', 30)) as grader:
@@ -225,7 +225,7 @@ def main() -> None:
         trainer.save_model(str(adapter_local))
         tok.save_pretrained(str(adapter_local))
         mirror.wait()
-    copy_tree_throttled(adapter_local, drive_run / 'adapter', watch_path=str(local_root()))
+    drive_io.upload_tree(adapter_local, drive_run / 'adapter', watch_path=str(local_root()))
     summary = {'steps': trainer.state.global_step, 'resumed_from': resume, 'adapter': str(drive_run / 'adapter'),
                'wall_hours_this_session': round((time.monotonic() - started) / 3600, 3), 'completed': now_iso()}
     write_json(drive_run / 'GRPO_COMPLETE.json', summary)

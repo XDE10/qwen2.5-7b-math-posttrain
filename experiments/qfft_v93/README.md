@@ -17,13 +17,20 @@ v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测�
 
 固定配方（[configs/train/_defaults.json](configs/train/_defaults.json)）：全参、LR 1e-5、cosine、warmup 10%、6 epoch、wd 1e-4、AdamW(0.9, 0.999)，与 QFFT 官方 yaml 相同；只改两处：有效 batch 16（官方 8，取 s1.1-7B 的值，CPU-Adam 步数减半）和 32K 窗口不截断（官方 16K 截断）。系统实现为 DeepSpeed ZeRO-2 + CPU AdamW offload、梯度检查点、Liger。
 
-## 一、本地（Windows 工作站，CPU）：把 1000 题数据做完
+## 一、本地（WSL2，CPU）：把 1000 题数据做完
 
-造数要在有本地数据的那份仓库里跑（`D:\Users\Mr.Z\Desktop\项目一_7B数学后训练`：`reports/`、`artifacts/`、`data/` 都只在这里，git 不管）。如果平时在 WSL 里另有一份克隆用来跑 Colab，Windows 这份也要先 `git pull`。
+项目在 WSL2 Ubuntu 的 `/home/xde10/projects/qwen2.5-7b-math-posttrain`，交互 shell 是 zsh；仓库脚本都是 bash，用 `bash 脚本` 运行即可。`reports/`、`artifacts/`、`data/` 这些本地数据 git 不管，要在这份目录里。
 
-一键：双击 `experiments\qfft_v93\windows\v93_local_data.cmd`，它按顺序跑下面五步，出错即停，重跑会续做（解释器默认 `D:\anaconda3\envs\genai-test\python.exe`，可用环境变量 `P1_PYTHON` 改；第 4 步的额外参数用 `P1_FILL_ARGS`，例如 `set P1_FILL_ARGS=--max-attempts 12`）。
+一键（zsh 里直接粘贴）：
 
-手动：在仓库根目录，用 `D:/anaconda3/envs/genai-test/python.exe`（需要 pandas、pyarrow、tokenizers；Math-Verify 用 `.pilot_deps`）：
+```zsh
+bash experiments/qfft_v93/local_data.sh
+P1_FILL_ARGS='--max-attempts 12' bash experiments/qfft_v93/local_data.sh   # 第 4 步加大额度时
+```
+
+它按顺序跑下面五步，出错即停，重跑会续做。解释器用 `P1_PYTHON`（默认 `python3`，需要 pandas、pyarrow、tokenizers；Math-Verify 缺失时用 `.pilot_deps`）。DeepSeek Key 按顺序找：环境变量 `OPENCODE_GO_API_KEY` / `DEEPSEEK_API_KEY`，`--go-db` / `--official-key-file`，再找 Windows 上原来的位置（也会在 `/mnt/c`、`/mnt/d` 下找）和 `~/.config/p1/deepseek.json`；没有 Go Key 而有官方 Key 时直接用官方 API。不想让 Key 进 shell 历史时，在 zsh 里用 `read -rs "DEEPSEEK_API_KEY?DeepSeek key: "; echo; export DEEPSEEK_API_KEY`。Windows 上的旧副本可以继续用 `experiments\qfft_v93\windows\v93_local_data.cmd`。
+
+手动（仓库根目录）：
 
 ```bash
 python -m experiments.qfft_v93.fetch_benchmarks --sources   # 固定 revision 下载评测集，核对 MATH-500 封存摘要
@@ -48,26 +55,52 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 
 需要 Linux 或 WSL2（Colab CLI 不支持原生 Windows）。以下内容按 google-colab-cli 0.7.5 的源码与 `--help` 核对过（2026-11-08）。
 
-**两份仓库的分工**：造数在 Windows 那份（有 `reports/`、`artifacts/`、本地 `data/`）；Colab CLI 在 WSL 里，可以直接用 WSL 里的克隆（`~/` 下，git 和脚本更快）。WSL 克隆里没有本地数据，所以上传数据（阶段 `d`）时用 `--data-root` 指向 Windows 那份，例如 `pipeline.sh d --data-root "/mnt/d/Users/Mr.Z/Desktop/项目一_7B数学后训练"`，或在 `~/.bashrc` 里 `export P1_DATA_ROOT=...` 后直接 `pipeline.sh d`。
+项目和 Colab CLI 都在 WSL2，下面的命令都在仓库根目录、在 zsh 里运行。上传数据（阶段 `d`）默认打包本仓库的 `data/`；数据在别处时用 `--data-root DIR`（或 `export P1_DATA_ROOT=DIR`，写进 `~/.zshrc`）。
 
-Windows 上的一键方式：管理员 PowerShell 里 `wsl --install` 并重启一次；之后都用 `experiments\qfft_v93\windows\v93_colab.cmd`：`setup`（在 WSL 里装 uv 与 Colab CLI、检查仓库和换行符、登录）→ `ping` → `0`、`1`、`2`、`d`、`3`……（参数原样传给 pipeline.sh，例如 `v93_colab.cmd 3 --gpu G4`），另有 `status`、`attach SESSION`。双击不带参数时会提示输入。仓库根目录的 `.gitattributes` 让 `*.sh` 在任何 `core.autocrlf` 设置下都检出为 LF；在 `/mnt/d` 下若提示 Permission denied，用 `bash experiments/qfft_v93/colab/pipeline.sh ...` 运行。
+**Drive（rclone，默认）**：每台新 VM 上自动做一遍和在 `colab console` 里手动挂载相同的步骤，不需要交互：
+
+1. 把本机的 rclone 配置（`P1_RCLONE_CONF`，默认 `~/.config/rclone/rclone.conf`，必须有 `[mydrive]` 段；远端名用 `P1_RCLONE_REMOTE` 改）上传到 VM 的 `/content/.colab-drive-rclone-upload.conf`，再移到 `~/.config/rclone/rclone.conf` 并设为 600。
+2. VM 上没有 rclone 或 fuse3 时才 `apt-get install -y rclone fuse3`（先不更新源；装不上再 `apt-get update` 一次，都有时间上限）。
+3. `rclone mount mydrive: /content/mydrive --vfs-cache-mode writes --vfs-cache-max-size 10G --poll-interval 15s --daemon`，用 `mountpoint` 确认。`--poll-interval 15s` 是新增的：命令行上传的文件 15 秒内就能在挂载点看到。
+4. 失败时打印输出并释放 VM；要手动排查就加 `--keep`，再 `colab console -s SESSION`（VM 里是 bash，输入密码用 `read -rsp`）。
+
+大文件不经过挂载点：挂载的写缓存要先把整个文件存到 VM 本地盘，等文件关闭后才上传，而一个全参检查点里有一个约 91 GB 的优化器文件，和 122 GB 的本地检查点加起来放不进约 235 GB 的盘。所以检查点、导出权重、模型、环境快照都用 `rclone copy` 直接流式上传（`drive_io.py`），被新镜像取代的检查点用 `rclone purge --drive-use-trash=false` 永久删除（每份 122 GB，进回收站会占 30 天空间）。`--drive colab` 改用 Colab 自带的挂载（`/content/drive/MyDrive`，第一次要在浏览器里同意）。
+
+**结果推到 GitHub**：VM 把小体积文本报告推到本仓库的 `colab-reports` 分支（不推 main），每 30 分钟一次（`P1_REPORT_MINUTES`），结束时（成功或失败、在释放 VM 之前）再推一次。我直接从 GitHub 读，不用你下载再上传：
+
+- `v93/latest/`：`status.md`、`stages.json`、各 run 的 `status.json`/`metrics.jsonl`/`saves.jsonl` 等、`evals/results.md` 与各评测的 `summary.json`。
+- `v93/sessions/<session>/`：`README.md`（跑了什么、GPU、代码版本、结果）、`session_log_tail.txt`、各阶段日志的末尾、`smoke_summary.txt`；`v93/latest_smoke_summary.txt` 是最近一次冒烟总结。
+- 只传文本，单个文件有大小上限，内容里的 token、`Bearer ...`、URL 里的账号密码都会被替换成 `[REDACTED]`。
+
+一次性准备（zsh；建议用只授权本仓库 Contents 读写的 fine-grained token）：
+
+```zsh
+mkdir -p ~/.config/p1 && chmod 700 ~/.config/p1
+read -rs "PAT?GitHub token: "; echo
+printf 'https://XDE10:%s@github.com\n' "$PAT" > ~/.config/p1/gh_credentials; unset PAT
+chmod 600 ~/.config/p1/gh_credentials
+```
+
+launch.sh 把这个文件上传到 VM 的 `/content/gh_credentials`（权限 600，任务结束后删除），git 通过 `credential.helper=store` 读取，token 不出现在命令行、远端地址、日志或推送的文件里。文件不存在时照常运行，只是不推送；`--no-report` 关闭推送。
+
+Windows 上的一键方式（只给 Windows 上的旧副本用）：管理员 PowerShell 里 `wsl --install` 并重启一次；之后都用 `experiments\qfft_v93\windows\v93_colab.cmd`：`setup`（在 WSL 里装 uv 与 Colab CLI、检查仓库和换行符、登录）→ `ping` → `0`、`1`、`2`、`d`、`3`……（参数原样传给 pipeline.sh，例如 `v93_colab.cmd 3 --gpu G4`），另有 `status`、`attach SESSION`。双击不带参数时会提示输入。仓库根目录的 `.gitattributes` 让 `*.sh` 在任何 `core.autocrlf` 设置下都检出为 LF；在 `/mnt/d` 下若提示 Permission denied，用 `bash experiments/qfft_v93/colab/pipeline.sh ...` 运行。
 
 1. 安装：`uv tool install google-colab-cli`（或 `bash experiments/qfft_v93/colab/setup_wsl.sh`）。CLI 要求 Python ≥ 3.12，uv 会自动下载。
 2. 登录：第一次运行任何 `colab` 命令会打印一个 Google 授权链接，在浏览器里同意后把页面显示的授权码粘贴回终端，令牌缓存在 `~/.config/colab-cli/token.json`。`colab auth` 是给 VM 内代码授权 GCP 的，不是 CLI 登录。
-3. Drive：第一次 `colab drivemount` 会再打印一个"允许 Colab 访问 Drive"的链接，同意后按回车。之后新 VM 自动挂载，不再提示。
-4. 先花一分钟 CPU 做端到端检查：`launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、释放）。
+3. Drive：默认用 rclone（见上），不需要再做什么；`--drive colab` 时第一次 `colab drivemount` 会打印一个"允许 Colab 访问 Drive"的链接，同意后按回车。
+4. 先花一分钟 CPU 做端到端检查：`bash experiments/qfft_v93/colab/launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、推报告、释放）。
 
-```bash
+```zsh
 # 阶段 0–2 不依赖本地数据，可以和第一节的造数并行
-experiments/qfft_v93/colab/pipeline.sh 0   # CPU VM：在 VM 上按固定 revision 下载评测集和模型到 Drive
-experiments/qfft_v93/colab/pipeline.sh 1   # 冒烟（最坏长度），结束时打印 SMOKE SUMMARY，见下文
-experiments/qfft_v93/colab/pipeline.sh 2   # 锚点评测
+bash experiments/qfft_v93/colab/pipeline.sh 0   # CPU VM：在 VM 上按固定 revision 下载评测集和模型到 Drive
+bash experiments/qfft_v93/colab/pipeline.sh 1   # 冒烟（最坏长度），结束时打印并推送 SMOKE SUMMARY，见下文
+bash experiments/qfft_v93/colab/pipeline.sh 2   # 锚点评测
 # 本地 data_build build 完成后
-experiments/qfft_v93/colab/pipeline.sh d   # CPU VM：上传 data/qfft1000_v93（及评测集），核对哈希
-experiments/qfft_v93/colab/pipeline.sh 3   # DeepSeek 对：QFFT、SFT，各自训完立即评测
-experiments/qfft_v93/colab/pipeline.sh 4   # LoRA-GRPO + 合并 + 评测
-experiments/qfft_v93/colab/pipeline.sh 5   # R1 对
-experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md、图
+bash experiments/qfft_v93/colab/pipeline.sh d   # CPU VM：上传 data/qfft1000_v93（及评测集），核对哈希
+bash experiments/qfft_v93/colab/pipeline.sh 3   # DeepSeek 对：QFFT、SFT，各自训完立即评测
+bash experiments/qfft_v93/colab/pipeline.sh 4   # LoRA-GRPO + 合并 + 评测
+bash experiments/qfft_v93/colab/pipeline.sh 5   # R1 对
+bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md、图
 ```
 
 - GPU 默认先要 G4、分不到再要 H100（所有 GPU 阶段）：G4 显存 96 GB 比 H100 的 80 GB 大，每小时约 8.71 个计算单元，约为 H100（18.05）的一半；H100 每小时更快，赶时间时用 `--gpu H100`。费率来自公开整理的数据，开跑前 `colab usage` 会打印当前费率和余额。每种卡先按 high-RAM 规格申请，被拒时再申请标准规格；训练类阶段自己会检查主机内存。
@@ -76,10 +109,10 @@ experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md�
   - GRPO：真实批形状（8 题 × 8 采样），用 vLLM 的 `min_tokens` 把每条 completion 强制生成到 8192 token，跑 2 步并存检查点。
   - 训练类阶段开始前检查主机内存：低于 128 GiB 直接报错（ZeRO-2 offload 的优化器状态约 122 GB），低于 150 GiB 给出警告。
   - 三个冒烟阶段互不依赖：一个失败，同一台 VM 上其余的照样跑完；每次冒烟都先清空上一次的冒烟输出，数字只属于这一次。
-  - 结束时（成功或失败）打印一段 `===== P1 SMOKE SUMMARY =====` 到 `===== END P1 SMOKE SUMMARY =====`：机器（GPU、主机内存、CPU 数、本地盘）、各环境的包版本、全参的每步秒数/峰值显存/主机内存/本地存 122 GB 检查点的耗时、生成吞吐、GRPO 的每步秒数与显存，以及失败阶段的报错行。把这一段原样发给我，我据此定正式训练的配置和 GPU 预算。同一段也存在 Drive 的 `runs/project1/v93/smoke/latest.txt`，`launch.sh --gpu cpu smoke-report` 可以重新打印。
+  - 结束时（成功或失败）打印一段 `===== P1 SMOKE SUMMARY =====` 到 `===== END P1 SMOKE SUMMARY =====`：机器（GPU、主机内存、CPU 数、本地盘）、各环境的包版本、全参的每步秒数/峰值显存/主机内存/本地存 122 GB 检查点的耗时、生成吞吐、GRPO 的每步秒数与显存，以及失败阶段的报错行。这一段会推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`，我直接读；没配置推送时就把这一段原样发给我。同一段也存在 Drive 的 `runs/project1/v93/smoke/latest.txt`，`launch.sh --gpu cpu smoke-report` 可以重新打印。
 - 后面可以接 launch.sh 的参数，例如 `pipeline.sh 3 --gpu G4 --wait-min 180`：只用 G4，分不到卡时每 5 分钟重试，最多 3 小时。`--gpu` 支持逗号列表（按顺序尝试）；不认识的卡名会直接报错，因为 CLI 会把未知名称静默当成 A100。
 - 单个阶段直接用 `launch.sh`，例如 `launch.sh --gpu G4 eval:run:qfft_ds_v93:full`；`launch.sh --gpu cpu status` 打印所有阶段（运行中的会显示所在 VM 和心跳）、训练进度和评测完成度。
-- 每次调用：`colab new [--gpu ...] --high-mem`（被拒时不带 `--high-mem` 再试一次）→ `colab drivemount` 并检查 `/content/drive/MyDrive` → 上传代码包（大文件按 8 MiB 分片，VM 端重组并核对 SHA-256）→ `colab exec` 执行 `colab/remote.py` → 看到 `P1_RESULT` 后释放 VM（`--keep` 保留，便于 `colab console` 排查）。本地日志在 `reports/colab_logs/<session>.log`，VM 端日志在 Drive `runs/project1/v93/logs/`。
+- 每次调用：`colab new [--gpu ...] --high-mem`（被拒时不带 `--high-mem` 再试一次）→ 挂载 Drive（rclone，或 `--drive colab` 时 `colab drivemount`）并检查挂载点 → 上传代码包（大文件按 8 MiB 分片，VM 端重组并核对 SHA-256）→ `colab exec` 执行 `colab/remote.py` → 看到 `P1_RESULT` 后释放 VM（`--keep` 保留，便于 `colab console` 排查）。本地日志在 `reports/colab_logs/<session>.log`，VM 端日志在 Drive `runs/project1/v93/logs/`。
 
 **断线与重复启动**：任务跑在 VM 的 kernel 里，不依赖本地终端。
 
@@ -91,13 +124,14 @@ experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md�
 
 | 对象 | 本地（VM SSD） | Drive（持久） | 新 VM 上怎么继续 |
 |---|---|---|---|
-| 全参训练 | `checkpoint-N`（约 122 GB：bf16 权重 + fp32 主权重 + Adam 状态） | `ckpt_mirror/checkpoint-N` + `MIRROR_COMPLETE.json`，后台限速复制 | 自动从最新完整镜像拷回本地，`resume_from_checkpoint` 续跑，LR 调度与数据顺序不变 |
+| 全参训练 | `checkpoint-N`（约 122 GB：bf16 权重 + fp32 主权重 + Adam 状态） | `ckpt_mirror/checkpoint-N` + `MIRROR_COMPLETE.json`，后台用 `rclone copy` 流式上传（`--drive colab` 时限速复制） | 自动从最新完整镜像拷回本地（`rclone copy` 多线程下载），`resume_from_checkpoint` 续跑，LR 调度与数据顺序不变 |
 | GRPO | adapter 检查点（约 1 GB），每 10 步 | 同上，保留 3 个 | 同上 |
 | 评测生成 | 每条请求结束即追加 `raw.jsonl` | 每分钟同步一次 | 合并本地与 Drive 记录，只补缺失的 (题, 第几次采样) |
 | 判分 | — | `scored.jsonl`（带判分器版本） | 增量判分，`--rescore` 全部重判 |
 | 环境 | `/content/p1/venvs/{infer,rl}` | `envcache/venvs/*.tar` 快照 + 冻结版本清单 | 约 1 分钟恢复 |
 
-- 训练镜像在后台复制，本地剩余空间低于 24 GB 时暂停复制，等 Drive 客户端上传腾出缓存；每 63 步（约 1 epoch）一次。镜像失败只记警告，训练继续，上一份完整镜像仍有效。
+- 训练镜像每 63 步（约 1 epoch）一次，在后台进行：先传到 `checkpoint-N.partial`，再在 Drive 端改名，最后写完成标记；被取代的旧镜像永久删除。`--drive colab` 时改为限速复制（本地剩余空间低于 24 GB 时暂停，等 Drive 客户端腾出缓存）。镜像失败只记警告，训练继续，上一份完整镜像仍有效。
+- 训练日志（`metrics.jsonl`）、GRPO 的判分记录和各阶段日志都先写 VM 本地，再每 30–60 秒整体替换 Drive 上的副本：挂载点上一直打开着的文件要到关闭时才会上传。
 - run 目录里的 `run_identity.json` 记录配方与数据 SHA；配方或数据变了会拒绝在同名 run 上续跑。
 - 训练完成后导出 bf16 safetensors 到 `runs/<run>/final/`，写 `TRAIN_COMPLETE.json`，删除镜像，并把权重留在本地 SSD 上供同一 VM 的评测直接使用。
 
@@ -124,7 +158,10 @@ experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md�
 | `generate.py` / `score.py` / `analyze.py` | 生成、判分汇总、图表 |
 | `grpo.py` / `merge_lora.py` | TRL GRPO + LoRA + 同卡 vLLM、合并导出 |
 | `checkpointing.py` / `telemetry.py` / `models.py` / `common.py` | 镜像与恢复、SwanLab、模型准备、公共工具 |
+| `drive_io.py` | 本地盘与 Drive 之间的大文件传输：rclone 命令行（流式上传、永久删除旧镜像）或限速复制 |
 | `colab/launch.sh` / `colab/pipeline.sh` / `colab/remote.py` / `colab/stages.py` | 一键调度 |
+| `colab/report_push.py` / `colab/smoke_report.py` | 把文本报告推到 `colab-reports` 分支；冒烟总结 |
+| `local_data.sh` | WSL2/Linux 上的本地造数一键入口（五步） |
 | `colab/setup_wsl.sh`、`windows/v93_colab.cmd`、`windows/v93_local_data.cmd` | WSL 一次性安装与登录；Windows 下的 Colab 阶段入口与本地造数入口 |
 | `envs/*.txt` | 训练附加包、推理与 RL 虚拟环境（2026-11-08 在 PyPI 核对过版本约束） |
 

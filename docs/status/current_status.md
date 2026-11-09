@@ -16,6 +16,7 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 - 训练：`train_sft.py`（全参 SFT/QFFT，ZeRO-2 offload、Liger、本地检查点 + Drive 后台镜像 + 自动恢复）、`grpo.py` + `merge_lora.py`（TRL GRPO + LoRA + 同卡 vLLM）。
 - 评测：`generate.py`（连续批处理、逐条落盘、按采样粒度续跑）、`score.py`（最终段判分、mean@n/pass@k/maj@n、配对 bootstrap、results.md）、`analyze.py`（五类图）。
 - 调度：`colab/launch.sh`、`colab/pipeline.sh`、`colab/remote.py`、`colab/stages.py`。已按 google-colab-cli 0.7.5 的源码核对命令与参数，并改为断线不中止任务（`--attach` 重新跟踪）、阶段心跳租约防止两台 VM 重复跑、GPU 列表回退与等待、大文件分片上传、Drive 挂载检查、`ping` 端到端检查；模拟 CLI 下 10 个场景 42 项检查通过。
+- 用户环境（v93-P6）：项目与 Colab CLI 都在 WSL2（zsh）；Drive 默认用 rclone 挂到 `/content/mydrive`（launch.sh 自动上传配置并挂载，大文件走 rclone 命令行，旧检查点永久删除）；VM 把文本报告推到 `colab-reports` 分支，我直接读；WSL2 本地造数入口 `local_data.sh`；`teacher fill` 也会在 `/mnt/c`、`/mnt/d` 下找 Windows 上的 Key，没有 Go Key 时直接用官方 API。模拟 CLI 19 个场景 92 项、单元检查 24 项、teacher 模拟 API 24 项通过。
 - GPU 首次运行（v93-P5）：所有 GPU 阶段默认先 G4 后 H100（G4 显存更大、计算单元约一半）；每种卡先申请 high-RAM 规格，被拒再申请标准规格；阶段 `d` 支持 `--data-root` / `P1_DATA_ROOT`（WSL 克隆 + Windows 数据）；冒烟三阶段互不阻塞、每次清空上次输出，结束时打印并在 Drive 保存 `P1 SMOKE SUMMARY`（机器、包版本、每步秒数、峰值显存、主机内存、本地存检查点耗时、生成吞吐、GRPO 数据、失败原因）。模拟 CLI 15 个场景 64 项检查通过。
 - 本地造数（v93-P4）：`teacher fill` 先读 Key 再建尝试目录，缺 Key 时一个请求都不发；鉴权/请求错误立即停，服务端连续失败自动停，额度只算拿到或可能拿到输出的尝试；仍有缺口时退出码 3。s1K-1.1 与 tokenizer 本地副本不对时自动用第 1 步下载并核对的同 revision 副本。用模拟 API 验证，未发真实请求。
 - 冒烟按最坏长度：全参用 32 条恰好 32,768 token 的序列（`smoke_data.py`，由公开 s1K-1.1 拼接，只用于测量），GRPO 用真实批形状并把 completion 强制生成到 8192 token；训练类阶段先检查主机内存（< 128 GiB 报错）。评测集可在 VM 上按固定 revision 下载（`benchmarks` 阶段），阶段 0–2 因此不依赖本地造数；本地数据做完后用新的阶段 `d` 上传。
@@ -37,6 +38,9 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 
 ## 下一步
 
-1. 工作站：双击 `experiments\qfft_v93\windows\v93_local_data.cmd`（依次 `fetch_benchmarks --sources` → `data_build plan` → `data_build status` → `teacher fill --fallback-official` → `data_build build --ds-verified`，出错即停、重跑续做），读 `data/qfft1000_v93/teacher_report.md`。
-2. 与第 1 步并行，在 WSL 的克隆里（Colab CLI 已装在 WSL2）：`launch.sh --gpu cpu ping:30` 做端到端检查（第一次挂载 Drive 要在浏览器里同意一次），再 `pipeline.sh 0`（VM 上下载评测集和模型）→ `pipeline.sh 1`（最坏长度冒烟，默认先 G4）→ 把输出末尾的 `P1 SMOKE SUMMARY` 一段贴回 → `pipeline.sh 2`（锚点）。这三步都不依赖本地数据。
-3. 第 1 步完成后 `pipeline.sh d --data-root "/mnt/d/Users/Mr.Z/Desktop/项目一_7B数学后训练"` 上传数据，按冒烟结果确认配置后开阶段 3–5。
+项目与 Colab CLI 都在 WSL2（`/home/xde10/projects/qwen2.5-7b-math-posttrain`，zsh），Colab 由用户自己操作。
+
+1. 本地造数：`bash experiments/qfft_v93/local_data.sh`（依次 `fetch_benchmarks --sources` → `data_build plan` → `data_build status` → `teacher fill --fallback-official` → `data_build build --ds-verified`，出错即停、重跑续做），读 `data/qfft1000_v93/teacher_report.md`。
+2. 一次性准备推送凭据 `~/.config/p1/gh_credentials`（见 experiments/qfft_v93/README.md 第二节），rclone 配置默认用 `~/.config/rclone/rclone.conf`（需有 `[mydrive]`，别处用 `P1_RCLONE_CONF`）。
+3. 与第 1 步并行：`bash experiments/qfft_v93/colab/launch.sh --gpu cpu ping:30` → `pipeline.sh 0`（VM 上下载评测集和模型）→ `pipeline.sh 1`（最坏长度冒烟，默认先 G4）→ 我从 `colab-reports` 分支读冒烟总结并确认配置 → `pipeline.sh 2`（锚点）。
+4. 第 1 步完成后 `pipeline.sh d` 上传数据，再开阶段 3–5。
