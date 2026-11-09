@@ -11,6 +11,13 @@
 * Every attempt is a new folder artifacts/qfft_teacher_v93/attempts/<index>/aNN/ with request.json,
   stream_chunks.jsonl, response.json and candidate.json (or error.json). Re-running resumes; a request
   whose outcome is unknown is never reused, the next attempt number is taken instead.
+* The per-question budget (--max-attempts) counts attempts that produced or may have produced a
+  completion (candidate, broken stream, interrupted run). Requests the provider refused before generating
+  anything (quota, rate limit, HTTP 5xx) take an attempt number but not budget.
+* The key is loaded before any attempt folder is created. Authentication or request errors (HTTP 400/401/
+  403/404/413/422) stop the whole run; so do 5 failures in a row or 20 in one run (outage protection),
+  so an outage cannot use up every question's budget.
+* `fill` exits with code 3 when questions are still without a usable trace (budget used up).
 * Keys are read from environment variables or private files and are never written or printed.
 """
 from __future__ import annotations
@@ -75,6 +82,23 @@ class RateLimited(RuntimeError):
     pass
 
 
+class FatalRequestError(RuntimeError):
+    """The provider rejected the request itself (auth, model name, payload): every attempt would fail."""
+
+
+class ServerError(RuntimeError):
+    """HTTP error status before any streamed output (5xx and retryable 4xx)."""
+
+
+class TooManyErrors(RuntimeError):
+    pass
+
+
+FATAL_HTTP = {400, 401, 403, 404, 405, 413, 415, 422}
+# error.json kinds that prove no completion was generated; they do not count toward --max-attempts.
+NO_OUTPUT_KINDS = {'quota', 'rate_limited', 'rejected', 'server_error', 'cancelled'}
+
+
 def load_key(provider: str, args) -> str:
     if provider == 'go':
         value = os.environ.get('OPENCODE_GO_API_KEY')
@@ -121,11 +145,38 @@ def stream_chat(url: str, body: dict, secret: str, session: str, folder: Path, p
         response = urllib.request.urlopen(request, timeout=1800)
     except urllib.error.HTTPError as error:
         text = _redact(error.read().decode('utf-8', 'replace'), secret)
-        if error.code in (402, 429) and re.search(r'quota|allowance|usage[ _-]*limit|spending|balance', text, re.I):
+        if error.code == 402 or (error.code == 429 and re.search(
+                r'quota|allowance|usage[ _-]*limit|spending|balance', text, re.I)):
             raise QuotaExhausted(f'HTTP {error.code}: {text[:300]}') from None
         if error.code == 429:
             raise RateLimited(text[:300]) from None
-        raise RuntimeError(f'HTTP {error.code}: {text[:300]}') from None
+        if error.code in FATAL_HTTP:
+            raise FatalRequestError(f'HTTP {error.code}: {text[:300]}') from None
+        raise ServerError(f'HTTP {error.code}: {text[:300]}') from None
+
+    def handle(data: str, journal) -> bool:
+        """One SSE event; True at [DONE]."""
+        nonlocal events, model, usage, finish
+        if data == '[DONE]':
+            return True
+        event = json.loads(data)
+        if event.get('error'):
+            raise RuntimeError('Provider SSE error event: ' + _redact(json.dumps(event['error']), secret))
+        journal.write(json.dumps(event, ensure_ascii=False) + '\n')
+        events += 1
+        model = event.get('model') or model
+        if isinstance(event.get('usage'), dict):
+            usage = event['usage']
+        for choice in event.get('choices', []):
+            delta = choice.get('delta') or {}
+            if isinstance(delta.get('reasoning_content'), str):
+                reasoning.append(delta['reasoning_content'])
+            if isinstance(delta.get('content'), str):
+                content.append(delta['content'])
+            if choice.get('finish_reason') is not None:
+                finish = choice['finish_reason']
+        return False
+
     with response, (folder / 'stream_chunks.jsonl').open('w', encoding='utf-8') as journal:
         if 'text/event-stream' not in response.headers.get('Content-Type', '').lower():
             raise RuntimeError('Expected text/event-stream')
@@ -138,25 +189,12 @@ def stream_chat(url: str, body: dict, secret: str, session: str, folder: Path, p
             if line or not data_lines:
                 continue
             data, data_lines = '\n'.join(data_lines), []
-            if data == '[DONE]':
+            if handle(data, journal):
                 done = True
                 break
-            event = json.loads(data)
-            if event.get('error'):
-                raise RuntimeError('Provider SSE error event: ' + _redact(json.dumps(event['error']), secret))
-            journal.write(json.dumps(event, ensure_ascii=False) + '\n')
-            events += 1
-            model = event.get('model') or model
-            if isinstance(event.get('usage'), dict):
-                usage = event['usage']
-            for choice in event.get('choices', []):
-                delta = choice.get('delta') or {}
-                if isinstance(delta.get('reasoning_content'), str):
-                    reasoning.append(delta['reasoning_content'])
-                if isinstance(delta.get('content'), str):
-                    content.append(delta['content'])
-                if choice.get('finish_reason') is not None:
-                    finish = choice['finish_reason']
+        else:  # the server may close right after the last event without the terminating blank line
+            if data_lines and handle('\n'.join(data_lines), journal):
+                done = True
     if not done or finish is None:
         raise RuntimeError(f'Stream ended before finish_reason and [DONE] ({events} events)')
     return {'model': model, 'finish_reason': finish, 'reasoning_content': ''.join(reasoning),
@@ -169,17 +207,57 @@ class Runner:
         self.provider = args.provider
         self.keys = {}
         self.lock = threading.Lock()
+        self.stop = threading.Event()
         self.counter = TokenCounter()
-        self.stats = {'attempts': 0, 'usable': 0, 'failed': 0, 'transport_errors': 0}
+        self.stats = {'attempts': 0, 'usable': 0, 'failed': 0, 'transport_errors': 0, 'server_errors': 0}
+        self.consecutive_errors = 0
+        self.total_errors = 0
 
     def key(self, provider):
-        if provider not in self.keys:
-            self.keys[provider] = load_key(provider, self.args)
-        return self.keys[provider]
+        with self.lock:
+            if provider not in self.keys:
+                self.keys[provider] = load_key(provider, self.args)
+            return self.keys[provider]
 
     def attempt_dirs(self, index):
         base = OUT / 'attempts' / f'{index:04d}'
         return sorted(base.glob('a[0-9][0-9]')) if base.exists() else []
+
+    def attempts(self, index):
+        """[(number, sample_id, status)] with status candidate | transport | unknown | no_output."""
+        out = []
+        for folder in self.attempt_dirs(index):
+            request = read_json(folder / 'request.json') if (folder / 'request.json').exists() else {}
+            if (folder / 'candidate.json').exists():
+                status = 'candidate'
+            elif (folder / 'error.json').exists():
+                kind = read_json(folder / 'error.json').get('kind')
+                status = 'no_output' if kind in NO_OUTPUT_KINDS else 'transport'
+            else:
+                status = 'unknown' if request else 'no_output'  # request.json is written before sending
+            out.append((int(folder.name[1:]), request.get('sample_id'), status))
+        return out
+
+    def budget_used(self, row) -> int:
+        return sum(1 for _, sid, status in self.attempts(row['index'])
+                   if sid == row['sample_id'] and status != 'no_output')
+
+    def abort(self, reason: str) -> None:
+        if not self.stop.is_set():
+            log('STOPPING the run:', reason)
+        self.stop.set()
+
+    def _failure(self, kind: str) -> None:
+        with self.lock:
+            self.stats['server_errors' if kind == 'server_error' else 'transport_errors'] += 1
+            self.consecutive_errors += 1
+            self.total_errors += 1
+            consecutive, total = self.consecutive_errors, self.total_errors
+        if consecutive >= self.args.max_consecutive_errors or total >= self.args.max_total_errors:
+            reason = (f'{consecutive} failed requests in a row, {total} in this run (provider outage or network '
+                      'problem); finished attempts are kept, re-run later to continue')
+            self.abort(reason)
+            raise TooManyErrors(reason)
 
     def run_attempt(self, row, k, effort, prompt):
         folder = OUT / 'attempts' / f"{row['index']:04d}" / f'a{k:02d}'
@@ -187,18 +265,20 @@ class Runner:
             return read_json(folder / 'candidate.json')
         if folder.exists():
             return None  # unknown or failed outcome: never resent, caller moves to the next number
-        folder.mkdir(parents=True)
         provider = self.provider
+        secret = self.key(provider)  # before anything is written: a missing key must not use up attempts
+        folder.mkdir(parents=True)
         body = request_body(row['question'], effort, prompt, self.args.max_tokens, provider)
         write_json(folder / 'request.json', {'sample_id': row['sample_id'], 'index': row['index'], 'attempt': k,
                                              'provider': provider, 'effort': effort, 'prompt_variant': prompt,
                                              'started': now_iso(), 'body': body})
         started = time.monotonic()
         for wait in (0, 30, 60, 120, 300):
-            if wait:
-                time.sleep(wait)
+            if wait and self.stop.wait(wait):
+                write_json(folder / 'error.json', {'kind': 'cancelled', 'at': now_iso()})
+                return None
             try:
-                result = stream_chat(PROVIDERS[provider]['url'], body, self.key(provider),
+                result = stream_chat(PROVIDERS[provider]['url'], body, secret,
                                      f"project1-qfft-v93-{row['index']}-{k}", folder, provider)
                 break
             except RateLimited:
@@ -210,16 +290,29 @@ class Runner:
                         self.provider = 'official'
                     log('Go quota exhausted; switching to the official API for the remaining attempts')
                     return None
+                self.abort(f'{provider} quota exhausted')
                 raise
+            except FatalRequestError as error:
+                write_json(folder / 'error.json', {'kind': 'rejected', 'message': str(error)[:500], 'at': now_iso()})
+                self.abort(f'{provider} rejected the request ({str(error)[:120]}); check the key, model name '
+                           'and request format')
+                raise
+            except ServerError as error:
+                write_json(folder / 'error.json', {'kind': 'server_error', 'message': str(error)[:500],
+                                                   'at': now_iso()})
+                self._failure('server_error')
+                return None
             except Exception as error:
                 write_json(folder / 'error.json', {'kind': 'transport', 'type': type(error).__name__,
                                                    'message': str(error)[:500], 'at': now_iso()})
-                with self.lock:
-                    self.stats['transport_errors'] += 1
+                self._failure('transport')
                 return None
         else:
             write_json(folder / 'error.json', {'kind': 'rate_limited', 'at': now_iso()})
+            self._failure('server_error')
             return None
+        with self.lock:
+            self.consecutive_errors = 0
         write_json(folder / 'response.json', {'received': now_iso(), 'latency_s': round(time.monotonic() - started, 1),
                                               'response': result})
         candidate = {'sample_id': row['sample_id'], 'index': row['index'], 'attempt': k, 'provider': provider,
@@ -232,12 +325,23 @@ class Runner:
         return candidate
 
     def solve(self, row, until, max_attempts):
-        """Run attempts for one question until `until(candidate)` or the attempt budget is spent."""
+        """Run attempts for one question until `until(candidate)` or the attempt budget is spent.
+
+        The budget counts this question's attempts that produced (or may have produced) a completion;
+        attempt numbers always increase, so no folder is ever reused.
+        """
         schedule = self.args.efforts.split(',')
-        k = len(self.attempt_dirs(row['index']))
-        while k < max_attempts:
-            k += 1
-            effort = schedule[(k - 1) % len(schedule)]
+        while not self.stop.is_set():
+            used = self.budget_used(row)
+            if used >= max_attempts:
+                with self.lock:
+                    self.stats['failed'] += 1
+                return False
+            numbers = [n for n, _, _ in self.attempts(row['index'])]
+            k = max(numbers, default=0) + 1
+            if k > 99:
+                raise RuntimeError(f"index {row['index']:04d}: attempt numbers a01-a99 are used up")
+            effort = schedule[used % len(schedule)]  # a refused request retries the same effort
             candidate = self.run_attempt(row, k, effort, self.args.prompt)
             with self.lock:
                 self.stats['attempts'] += 1
@@ -250,8 +354,6 @@ class Runner:
                 with self.lock:
                     self.stats['usable'] += 1
                 return True
-        with self.lock:
-            self.stats['failed'] += 1
         return False
 
 
@@ -292,10 +394,22 @@ def main() -> None:
     p.add_argument('--efforts', default='high,high,max,high,max,high,high,max')
     p.add_argument('--prompt', choices=list(PROMPTS), default='v91_anti_redundancy')
     p.add_argument('--max-tokens', type=int, default=32768)
+    p.add_argument('--max-consecutive-errors', type=int, default=5, help='Stop after this many failures in a row')
+    p.add_argument('--max-total-errors', type=int, default=20, help='Stop after this many failures in one run')
     p.add_argument('--dry-run', action='store_true')
     a = p.parse_args()
     plan = load_plan()
     runner = Runner(a)
+    for provider in dict.fromkeys([a.provider] + (['official'] if a.fallback_official else [])):
+        try:
+            runner.key(provider)
+            log(f'{provider} API key: found')
+        except RuntimeError as error:
+            if a.cmd == 'status' or a.dry_run or provider != a.provider:
+                log(f'{provider} API key: NOT found ({error})' +
+                    (' - the quota fallback will not work' if provider != a.provider else ''))
+            else:  # nothing has been written yet
+                raise SystemExit(f'{provider} API key not found: {error}. Nothing was sent.')
     references = {r['sample_id']: r.get('reference_answer') for r in plan['questions']}
     grader, grade_lock = None, threading.Lock()
     if a.cmd == 'verify':
@@ -314,10 +428,11 @@ def main() -> None:
             return verdict['usable']
     log(f'{a.cmd}: {len(targets)} questions need attempts; provider={a.provider}; prompt={a.prompt}')
     for row in targets[:50]:
-        log('  target', row['index'], row['sample_id'], f"existing v93 attempts={len(runner.attempt_dirs(row['index']))}")
+        log('  target', row['index'], row['sample_id'], f'v93 budget used {runner.budget_used(row)}/{a.max_attempts}')
     if a.dry_run or a.cmd == 'status' or not targets:
         return
     OUT.mkdir(parents=True, exist_ok=True)
+    failure = None
     try:
         if a.cmd == 'verify':
             grader = Grader(workers=2)
@@ -325,16 +440,33 @@ def main() -> None:
             with ThreadPoolExecutor(max_workers=a.workers) as pool:
                 futures = [pool.submit(runner.solve, row, until, a.max_attempts) for row in targets]
                 for future in as_completed(futures):
-                    future.result()
+                    if future.cancelled():
+                        continue
+                    error = future.exception()
+                    if error is not None and failure is None:
+                        failure = error
+                        runner.abort(f'{type(error).__name__}: {error}')
+                        for other in futures:
+                            other.cancel()  # queued questions never start; running ones stop at their next check
                     write_json(OUT / 'status.json', {'updated': now_iso(), 'cmd': a.cmd, 'targets': len(targets),
-                                                     'provider': runner.provider, **runner.stats})
+                                                     'provider': runner.provider, 'stopped': runner.stop.is_set(),
+                                                     **runner.stats})
     finally:
         if grader is not None:
             grader.close()
+    if failure is not None:
+        log(f'Stopped early: {type(failure).__name__}: {failure}')
+        log(f'Progress so far: {runner.stats}. Fix the cause and re-run the same command; finished attempts are kept.')
+        raise SystemExit(2)
     remaining = _targets_fill(plan, runner.counter)
     log(f'Done: {runner.stats}; questions still without a usable trace: {len(remaining)}')
-    if remaining:
-        log('Re-run `teacher fill --max-attempts N` with a larger N, or switch --provider/--prompt.')
+    if remaining and a.cmd == 'fill':
+        for row in remaining[:50]:
+            log('  still missing', f"{row['index']:04d}", row['sample_id'], f'budget used {runner.budget_used(row)}')
+        log(f'Every listed question used its {a.max_attempts} attempts. Re-run with a larger budget, e.g. '
+            f'`teacher fill --max-attempts {a.max_attempts + 4}` (or set P1_FILL_ARGS for v93_local_data.cmd), '
+            'or switch --provider/--prompt.')
+        raise SystemExit(3)
 
 
 if __name__ == '__main__':

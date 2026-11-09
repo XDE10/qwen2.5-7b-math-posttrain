@@ -19,7 +19,9 @@ v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测�
 
 ## 一、本地（Windows 工作站，CPU）：把 1000 题数据做完
 
-一键：双击 `experiments\qfft_v93\windows\v93_local_data.cmd`，它按顺序跑下面五步，出错即停，重跑会续做（解释器默认 `D:\anaconda3\envs\genai-test\python.exe`，可用环境变量 `P1_PYTHON` 改）。
+造数要在有本地数据的那份仓库里跑（`D:\Users\Mr.Z\Desktop\项目一_7B数学后训练`：`reports/`、`artifacts/`、`data/` 都只在这里，git 不管）。如果平时在 WSL 里另有一份克隆用来跑 Colab，Windows 这份也要先 `git pull`。
+
+一键：双击 `experiments\qfft_v93\windows\v93_local_data.cmd`，它按顺序跑下面五步，出错即停，重跑会续做（解释器默认 `D:\anaconda3\envs\genai-test\python.exe`，可用环境变量 `P1_PYTHON` 改；第 4 步的额外参数用 `P1_FILL_ARGS`，例如 `set P1_FILL_ARGS=--max-attempts 12`）。
 
 手动：在仓库根目录，用 `D:/anaconda3/envs/genai-test/python.exe`（需要 pandas、pyarrow、tokenizers；Math-Verify 用 `.pilot_deps`）：
 
@@ -33,6 +35,12 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 
 - 准入规则（两位教师、1000 题一律相同）：`finish_reason == "stop"`、思考与最终回答都非空、SFT 编码后 ≤ 32768 token。按时间顺序取第一次可用的尝试（v66 → v86 → v91 → v93），不按答案对错挑选，不截断。
 - `teacher fill` 只为还没有可用轨迹的题请求 API，每题最多 8 次（`--max-attempts`），effort 依次为 `high,high,max,...`，提示词默认用 v91 的防重复版本。每次尝试单独落盘到 `artifacts/qfft_teacher_v93/attempts/<index>/aNN/`，中断后重跑会接着做。
+  - 开始前先读 Key（Go 的 opencode.db 或 `OPENCODE_GO_API_KEY`；官方 Key 文件或 `DEEPSEEK_API_KEY`），找不到就直接退出，一个请求都不发、一次额度都不占。
+  - 额度只算"拿到或可能拿到了输出"的尝试（正常返回、流中途断开、进程被打断）；服务端在生成前就拒绝的请求（配额、限流、HTTP 5xx）占一个编号，不占额度。
+  - 鉴权或请求格式错误（HTTP 400/401/403/404/413/422）立即停止整个运行；连续 5 次或单次运行累计 20 次失败也会停（服务端故障时不会把每道题的额度都耗光）。退出码 2，修好原因后重跑即可。
+  - 还有题用完额度仍没有可用轨迹时退出码为 3，并列出这些题；加大 `--max-attempts` 重跑。
+- s1K-1.1 parquet 与 tokenizer 先用本地旧副本；本地副本缺失或哈希不对时，自动改用第 1 步按固定 revision 下载并核对过的 `data/benchmarks_v93/_sources/` 副本（同一 revision、同样的字节）。
+- `data_build status` 的预期量级（按 history 里 v66/v86/v91 的记录推算）：v66 最多约 911 题可用（747 + 164 道完整轨迹，按 Qwen tokenizer 超过 32,768 的会被拒），v86 最多 25 题（补全的 27 题里有 2 题超过 32K），v91 最多 62 题；缺口至少 1 题（第 918 题已换成新题，旧轨迹判为 `different_question`）。如果大量出现 `different_question` 或 `missing_reasoning`，说明文件对不上，先不要跑第 4 步。
 - 可选的 `teacher verify` 会为"可用但答案可核对且错误"的题继续采样，`build --ds-verified` 再用第一条答对的可用尝试替换；主矩阵仍用 `ds`。
 - `data/qfft1000_v93/teacher_report.md` 给出两位教师在同一批可核对题上的正确率、对错矩阵、长度和反思词频率。参照值：R1 在 s1K-1.1 的 742 道可核对题上答对 62.7%。
 
