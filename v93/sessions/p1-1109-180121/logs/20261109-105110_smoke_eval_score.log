@@ -1,0 +1,3 @@
+[11-09 18:51:16] smoke_base/aime24: mean@n=0.125 CI=[0.0, 0.375] tokens=958 trunc=0.000
+[11-09 18:51:16] smoke_base/math500: mean@n=0.625 CI=[0.375, 0.875] tokens=608 trunc=0.000
+[11-09 18:51:16] Wrote /content/mydrive/runs/project1/v93/evals/results.md

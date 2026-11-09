@@ -1,0 +1,28 @@
+{
+  "identity": {
+    "run": "smoke_peak_v93",
+    "format": "qfft",
+    "teacher": "ds",
+    "data_sha256": "3cee2efb79fa03454b41d453cd2b11a96f24867ed062ad657a4486112774b60c",
+    "init_model": "base",
+    "recipe": {
+      "max_length": 32768,
+      "num_train_epochs": 6,
+      "learning_rate": 1e-05,
+      "warmup_fraction": 0.1,
+      "lr_scheduler_type": "cosine",
+      "per_device_train_batch_size": 1,
+      "gradient_accumulation_steps": 16,
+      "weight_decay": 0.0001,
+      "adam_beta1": 0.9,
+      "adam_beta2": 0.999,
+      "max_grad_norm": 1.0,
+      "seed": 42
+    },
+    "smoke": false,
+    "max_steps_override": 2
+  },
+  "identity_sha256": "da04de1f281a57b4e00f824796c5f4d18362fdca451458f6ac9bf6275ad27296",
+  "code_bundle": "08dfffa7ac23",
+  "updated": "2026-11-09T18:33:11+08:00"
+}

@@ -1,0 +1,10 @@
+{
+  "files": [
+    "/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl",
+    "/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl"
+  ],
+  "unique_questions": 1555,
+  "removed_benchmark_similar": 4,
+  "overlap_with_sft_questions": 0,
+  "final_questions": 1551
+}

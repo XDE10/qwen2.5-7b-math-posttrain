@@ -1,0 +1,13 @@
+{
+  "state": "smoke_done",
+  "steps": 2,
+  "metrics": {
+    "train_runtime": 675.1915,
+    "train_samples_per_second": 0.047,
+    "train_steps_per_second": 0.003,
+    "train_loss": 1.2604632377624512,
+    "epoch": 1.0,
+    "num_input_tokens_seen": 1048576
+  },
+  "updated": "2026-11-09T18:45:06+08:00"
+}

@@ -1,0 +1,63 @@
+[11-09 18:52:08] rclone copy (2 s): 2026/11/09 10:52:08 NOTICE:           0 B / 0 B, -, 0 B/s, ETA -
+[11-09 18:52:08] Downloaded /content/mydrive/models/Qwen2.5-7B-Instruct--a09a35458c702b33eeacc393d103063234e8bc28 in 2 s
+[11-09 18:52:33] RL pool: {'files': ['/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl', '/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl'], 'unique_questions': 1555, 'removed_benchmark_similar': 4, 'overlap_with_sft_questions': 0, 'final_questions': 1551}
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/smoke_grpo_v93/swanlog/run-20261109_105239-3l7wkpow
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run smoke_grpo_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/3l7wkpow
+[11-09 18:52:40] SwanLab run 3l7wkpow https://swanlab.cn/@XDE10/project1-7b-math/runs/3l7wkpow
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<00:46,  7.31it/s]
+Loading weights:  12%|█▏        | 40/339 [00:00<00:01, 195.02it/s]
+Loading weights:  23%|██▎       | 77/339 [00:00<00:01, 249.11it/s]
+Loading weights:  35%|███▍      | 118/339 [00:00<00:00, 304.31it/s]
+Loading weights:  46%|████▌     | 156/339 [00:00<00:00, 327.95it/s]
+Loading weights:  58%|█████▊    | 196/339 [00:00<00:00, 341.50it/s]
+Loading weights:  69%|██████▊   | 233/339 [00:00<00:00, 341.27it/s]
+Loading weights:  80%|███████▉  | 270/339 [00:00<00:00, 341.85it/s]
+Loading weights:  91%|█████████▏| 310/339 [00:00<00:00, 358.61it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 320.26it/s]
+
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:00<00:00,  3.56it/s]
+
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:00<00:00,  3.27it/s]
+
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:00<00:00,  3.19it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:01<00:00,  3.24it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:01<00:00,  3.26it/s]
+
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   5%|▌         | 1/19 [00:22<06:50, 22.78s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:22<00:36,  2.82s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:40<00:36,  2.82s/it]
+Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 9/19 [00:42<00:44,  4.43s/it]
+Capturing CUDA graphs (PIECEWISE):  74%|███████▎  | 14/19 [00:42<00:11,  2.20s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  1.29s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  2.25s/it]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  50%|█████     | 1/2 [00:38<00:38, 38.94s/it]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:38<00:00, 19.48s/it]
+2026-11-09 10:54:35,810 - INFO - autotuner.py:1046 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-09 10:54:35,819 - INFO - autotuner.py:1069 - flashinfer.jit: [Autotuner]: Autotuning process ends
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  26%|██▋       | 5/19 [00:00<00:00, 44.64it/s]
+Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 10/19 [00:00<00:00, 45.48it/s]
+Capturing CUDA graphs (PIECEWISE):  79%|███████▉  | 15/19 [00:00<00:00, 46.30it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:00<00:00, 46.67it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/11 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  64%|██████▎   | 7/11 [00:00<00:00, 60.66it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<00:00, 61.98it/s]
+[11-09 18:59:46] HEARTBEAT starting

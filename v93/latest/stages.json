@@ -25,5 +25,32 @@
   "started": "2026-11-09T09:37:23.753245",
   "code": "08dfffa7ac23",
   "host": "p1-1109-173629@ae28c0da492a"
+ },
+ "smoke-eval": {
+  "stage": "smoke-eval",
+  "state": "complete",
+  "hours": 0.1,
+  "finished": "2026-11-09T10:51:16.970652",
+  "started": "2026-11-09T10:45:15.400305",
+  "code": "08dfffa7ac23",
+  "host": "p1-1109-180121@b3ed41f495da"
+ },
+ "smoke-grpo": {
+  "stage": "smoke-grpo",
+  "state": "running",
+  "started": "2026-11-09T10:51:17.224024",
+  "code": "08dfffa7ac23",
+  "host": "p1-1109-180121@b3ed41f495da",
+  "heartbeat": "2026-11-09T11:01:17.225863",
+  "heartbeat_ts": 1794222077.225885
+ },
+ "smoke-train": {
+  "stage": "smoke-train",
+  "state": "complete",
+  "hours": 0.234,
+  "finished": "2026-11-09T10:45:15.059997",
+  "started": "2026-11-09T10:31:12.674228",
+  "code": "08dfffa7ac23",
+  "host": "p1-1109-180121@b3ed41f495da"
  }
 }

@@ -1,0 +1,40 @@
+[11-09 18:33:10] rclone copy (62 s): 2026/11/09 10:33:10 NOTICE:    19.056 GiB / 19.056 GiB, 100%, 234.880 MiB/s, ETA 0s
+[11-09 18:33:10] Downloaded /content/mydrive/models/Qwen2.5-7B-Instruct--a09a35458c702b33eeacc393d103063234e8bc28 in 62 s
+[11-09 18:33:13] smoke_peak_v93: 32 examples, 1,048,576 tokens (1,048,576 supervised), longest 32768
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 10404.35it/s]
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/smoke_peak_v93/swanlog/run-20261109_103314-tv6azdee
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run smoke_peak_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/tv6azdee
+[11-09 18:33:16] SwanLab run tv6azdee https://swanlab.cn/@XDE10/project1-7b-math/runs/tv6azdee
+[RANK 0] Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 16. Using DeepSpeed's value.
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+Backend impl 'liger_kernel.ops.backends._cutedsl.rope' for op 'rope' could not be imported: ImportError: cutedsl backend requires the NVIDIA CUTLASS Python DSL (CuTe DSL). Install it with `pip install nvidia-cutlass-dsl`, or when installing Liger-Kernel use `pip install 'liger-kernel[cutedsl]'`.
+Backend impl 'liger_kernel.ops.backends._ascend.rope' for op 'rope' could not be imported: ImportError: cannot import name 'tanh' from 'triton.language.math' (/usr/local/lib/python3.13/dist-packages/triton/language/math.py)
+/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: FutureWarning: `torch.distributed.all_gather_into_tensor` is deprecated. Please use `torch.distributed.all_gather_single` instead.
+  return func(*args, **kwargs)
+[11-09 18:36:18] step 1/2 epoch 0.50 loss 1.2394 lr 1.00e-05 s/step 147.6 eta 0.04h peakGPU 28.9GiB
+{'loss': '1.239', 'grad_norm': '7.479', 'learning_rate': '1e-05', 'epoch': '0.5', 'num_input_tokens_seen': 524288, 'train_runtime': '147.6', 'train_tokens_per_second': '3553'}
+[11-09 18:38:16] HEARTBEAT 1
+[11-09 18:38:40] step 2/2 epoch 1.00 loss 1.2815 lr 0.00e+00 s/step 141.5 eta 0.00h peakGPU 28.9GiB
+{'loss': '1.282', 'grad_norm': '7.758', 'learning_rate': '0', 'epoch': '1', 'num_input_tokens_seen': 1048576, 'train_runtime': '289.1', 'train_tokens_per_second': '3627'}
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [00:40<00:00, 40.67s/it]
+Writing model shards: 100%|██████████| 1/1 [00:40<00:00, 40.67s/it]
+/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+[11-09 18:43:17] HEARTBEAT 2
+[11-09 18:45:06] Saved checkpoint-2 locally: 113.5GiB in 386.1 s, 102.7 GiB free
+{'train_runtime': '675.2', 'train_samples_per_second': '0.047', 'train_steps_per_second': '0.003', 'train_loss': '1.26', 'epoch': '1', 'num_input_tokens_seen': 1048576}
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run smoke_peak_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/tv6azdee
+swanlab: Upload complete: 940 records
+[11-09 18:45:10] smoke_peak_v93: smoke finished at step 2 (no export)

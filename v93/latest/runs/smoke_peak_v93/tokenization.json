@@ -1,0 +1,8 @@
+{
+  "examples": 32,
+  "format": "qfft",
+  "total_tokens": 1048576,
+  "supervised_tokens": 1048576,
+  "max_tokens": 32768,
+  "loss": "every response token, no EOS"
+}
