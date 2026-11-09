@@ -20,8 +20,9 @@ import shutil
 import time
 from pathlib import Path
 
+from experiments.qfft_v93 import drive_io
 from experiments.qfft_v93.checkpointing import CheckpointMirror, prune_all_mirrors, resolve_resume
-from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, copy_tree_throttled, drive_layout, local_root, log,
+from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, drive_layout, local_root, log,
                                          load_config, now_iso, read_json, read_jsonl, sha256_file, sha256_json,
                                          write_json)
 from experiments.qfft_v93.formats import IGNORE_INDEX, encode
@@ -208,7 +209,7 @@ def main() -> None:
     write_json(final_local / 'p1_model_identity.json', {'identity': identity, 'steps': trainer.state.global_step,
                                                         'base': cfg.get('init_model', 'base'), 'exported': now_iso()})
     mirror.wait()
-    copy_tree_throttled(final_local, drive_run / 'final', watch_path=str(local_root()))
+    drive_io.upload_tree(final_local, drive_run / 'final', watch_path=str(local_root()))
     summary = {'steps': trainer.state.global_step, 'metrics': result.metrics, 'tokenization': stats,
                'wall_hours_this_session': round((time.monotonic() - started) / 3600, 3),
                'final': str(drive_run / 'final'), 'resumed_from': resume, 'completed': now_iso()}

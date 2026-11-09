@@ -8,7 +8,8 @@ import argparse
 import shutil
 from pathlib import Path
 
-from experiments.qfft_v93.common import copy_tree_throttled, local_root, log, now_iso, read_json, write_json
+from experiments.qfft_v93 import drive_io
+from experiments.qfft_v93.common import local_root, log, now_iso, read_json, write_json
 
 
 def merge(base: Path, adapter: Path, out: Path, smoke: bool = False) -> Path:
@@ -27,7 +28,7 @@ def merge(base: Path, adapter: Path, out: Path, smoke: bool = False) -> Path:
     write_json(staging / 'p1_model_identity.json', {
         'merged': now_iso(), 'base': str(base), 'adapter': str(adapter),
         'base_identity': read_json(base_identity) if base_identity.exists() else None})
-    copy_tree_throttled(staging, out, watch_path=str(local_root()))
+    drive_io.upload_tree(staging, out, watch_path=str(local_root()))
     shutil.rmtree(staging, ignore_errors=True)
     log(f'Merged weights -> {out}')
     return Path(out)
