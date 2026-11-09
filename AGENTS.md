@@ -10,7 +10,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 ## 阅读入口（按顺序）
 
-1. 本文件 → [docs/status/current_status.md](docs/status/current_status.md)：当前做到哪、哪些未完成。
+1. 本文件 → [docs/handover/kiro_ide_onboarding.md](docs/handover/kiro_ide_onboarding.md)（2026-11-09 迁到本机 Kiro IDE 的交接：状态、23 题方案、初始化清单、下一步命令）→ [docs/status/current_status.md](docs/status/current_status.md)：当前做到哪、哪些未完成。本机执行约束在 [.kiro/steering/v93-local-execution.md](.kiro/steering/v93-local-execution.md)。
 2. [README.md](README.md)：目录职责、数据边界、命令。
 3. 当前任务读 [experiments/qfft_v93/README.md](experiments/qfft_v93/README.md) 与 [三周冲刺方案 v93](docs/blueprints/三周冲刺方案_v93.md)；v26 的[训练配置](configs/project1_aimo_sft_v26.json)、[实验包](experiments/aimo_sft_v26/) 与[启动入口](tools/aimo/start_aimo_sft_v28.py) 只作历史。
 4. 需要某个版本（v1…v93）的细节时再查 [docs/status/history.md](docs/status/history.md)；查旧路径用 `archive/mapping/restructure_v2_mapping.json`。
@@ -23,11 +23,12 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - RL：在合并后的 QFFT 检查点上做 LoRA-GRPO（r32、LR 1e-5、150 步、8 题 × 8 采样、`dapo` 损失、β=0、ε_high 0.28、截断掩码、最终段 0/1 奖励），题池为已批准的 920 + 637 题。
 - 评测：所有模型同一组 prompt token、原生 RoPE、`max_model_len 32768`、temperature 0.6、top_p 0.95；AIME24/25 各 16 次、AMC23 8 次、MATH-500 4 次、GSM8K 1 次；只判最终段最后一个 `\boxed{}`（`experiments/qfft_v93/grading.py`），主指标不用 LLM 复核。
 - 调度：Colab CLI（Linux/WSL2）`experiments/qfft_v93/colab/pipeline.sh <阶段>`；所有状态在 Drive `projects/project1/v93`、`models`、`runs/project1/v93`，重跑即续。
-- 环境：项目与 Colab CLI 都在 WSL2 Ubuntu：`/home/xde10/projects/qwen2.5-7b-math-posttrain`（Windows 下为 `\\wsl.localhost\Ubuntu\home\xde10\projects\qwen2.5-7b-math-posttrain`），交互 shell 是 **zsh**；给用户的命令要兼容 zsh，仓库脚本都是 bash，用 `bash 脚本` 运行。Colab VM 里（`colab console`）是 **bash**。旧的 Windows 目录 `D:/Users/Mr.Z/Desktop/项目一_7B数学后训练` 与 `D:/anaconda3/envs/genai-test/python.exe` 只是旧位置。用户自己操作 Colab（不给我登录）。GPU 默认先 G4（RTX PRO 6000 Blackwell 96GB，约 8.71 计算单元/小时）后 H100 80GB（约 18.05），主机内存约 167 GB（以冒烟实测为准）。
-- Drive：用户用 rclone，远端 `mydrive:` 挂到 VM 的 `/content/mydrive`（`--vfs-cache-mode writes --vfs-cache-max-size 10G`，launch.sh 另加 `--poll-interval 15s`），这是 launch.sh 的默认（`--drive rclone`，配置文件 `P1_RCLONE_CONF`，默认 `~/.config/rclone/rclone.conf`）；`--drive colab` 才用 Colab 自带挂载 `/content/drive/MyDrive`。大文件（检查点、导出权重、模型、环境快照）走 rclone 命令行（`experiments/qfft_v93/drive_io.py`），不经挂载的写缓存；被新镜像取代的检查点永久删除（不进回收站）。
+- 环境：项目与 Colab CLI 都在 WSL2 Ubuntu：`/home/xde10/projects/qwen2.5-7b-math-posttrain`（Windows 下为 `\\wsl.localhost\Ubuntu\home\xde10\projects\qwen2.5-7b-math-posttrain`），交互 shell 是 **zsh**；给用户的命令要兼容 zsh，仓库脚本都是 bash，用 `bash 脚本` 运行；新终端先 `source ~/.proxy_env.sh`（GitHub、Colab CLI、rclone 走代理）。Colab VM 里（`colab console`）是 **bash**。旧的 Windows 目录 `D:/Users/Mr.Z/Desktop/项目一_7B数学后训练` 与 `D:/anaconda3/envs/genai-test/python.exe` 只是旧位置。用户自己操作 Colab（不给我登录）。GPU 默认先 G4（RTX PRO 6000 Blackwell 96GB，约 8.71 计算单元/小时）后 H100 80GB（约 18.05）；G4 high-RAM 规格冒烟实测主机内存 177 GiB、48 CPU、本地盘 236 GiB。
+- Drive：用户用 rclone，远端 `mydrive:` 挂到 VM 的 `/content/mydrive`（`--vfs-cache-mode writes --vfs-cache-max-size 10G`，launch.sh 另加 `--poll-interval 15s`），这是 launch.sh 的默认（`--drive rclone`，配置文件 `P1_RCLONE_CONF`，默认 `~/.config/rclone/rclone.conf`）；`--drive colab` 才用 Colab 自带挂载 `/content/drive/MyDrive`。大文件（检查点、导出权重、模型、环境快照）走 rclone 命令行（`experiments/qfft_v93/drive_io.py`），不经挂载的写缓存；被新镜像取代的检查点永久删除（不进回收站）。Drive 每个账号每 24 小时约 750 GiB 上传上限：全参每 2 个 epoch 存一次（`save_steps` 126，每个 run 约 241 GiB），24 小时内最多 2 个全参 run，撞上限时 rclone 立即报错（`--drive-stop-on-upload-limit`）。
 - 结果回传：VM 把小体积文本报告推到本仓库的 `colab-reports` 分支（永远不推 main），每 30 分钟一次并在结束时一次；凭据是用户本机的 `~/.config/p1/gh_credentials`（一行 `https://USER:TOKEN@github.com`，launch.sh 上传到 VM 的 `/content/gh_credentials`，用完删除）。我从 GitHub 直接读 `v93/latest/` 与 `v93/sessions/<session>/`，不需要用户下载再上传。
-- 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`，并推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`）；据此定正式训练配置与 GPU 预算。
-- **未完成**：GPU 冒烟与正式训练、评测、GRPO 均未运行；DeepSeek 轨迹补齐到 1000/1000 需要先跑 `teacher fill`。详见 [docs/status/current_status.md](docs/status/current_status.md)。
+- 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`，并推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`）。2026-11-09 已在 G4 跑通（41 分钟）：32K 最坏长度全参 142 s/步、显存 28.9 GiB、主机 RSS 145.3 GiB / 177 GiB，GRPO 476 s/步、66.6 GiB。
+- 23 道缺口题（DeepSeek 在 high/max 下的轨迹一直跑出 32K 窗口）：先用同模型、同提示词的 `reasoning_effort=low` 追加尝试，之后仍缺的题从两位教师的训练集一起剔除（`data_build build --paired-exclusion`）；不用 R1 补 DS，不训练只缺一边的数据。预览构建（`--allow-gaps`）不能上传，阶段 `d` 会拒收。
+- **未完成**：阶段 0、1 已完成（2026-11-09）；DeepSeek 轨迹 977/1000，23 题待按上条处理；阶段 2、d、3–7（锚点评测、正式训练、GRPO）均未运行。详见交接文档与 [docs/status/current_status.md](docs/status/current_status.md)。
 
 ## 仓库约定（必须遵守）
 
@@ -50,7 +51,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 | `experiments/aimo_sft_v26/` | 现行 AIMO SFT 实验包（train/evaluate/export/telemetry 等） |
 | `scripts/{training,evaluation}/` | 6 个现行命令行/worker 入口；其余历史脚本在 `archive/scripts/` |
 | `src/{data,evaluation,losses,training}/` | 16 个现行库模块（批准检查、评分器、损失参考、HF 训练入口） |
-| `tests/` | 25 个现行测试文件（172 个用例），按 data / evaluation / losses / training / qfft 分组 |
+| `tests/` | 25 个现行 pytest 文件（172 个用例），按 data / evaluation / losses / training / qfft 分组；`tests/v93_harness/` 是 v93 调度、教师、Drive 的模拟测试（`bash tests/v93_harness/run_all.sh`，214 项，非 pytest） |
 | `tools/{aimo,evaluation,qfft,review,verification}/` | 现行工具：AIMO 启动、评测、QFFT 造数与监控、审查包、迁移校验 |
 | `data/` | 本地数据（`aimo_sft_v26/`、`math/`、`portable_release/`、`tokenizers/`），git 忽略 |
 | `artifacts/` | 造数与评测原始证据，git 忽略 |
@@ -61,7 +62,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 ## 路径、启动与恢复
 
-- 本地命令一律在仓库根目录执行（WSL2）：本地造数 `bash experiments/qfft_v93/local_data.sh`（解释器 `P1_PYTHON`，默认 `python3`，需要 pandas、pyarrow、tokenizers），`pytest` 用同一解释器。`experiments/qfft_v93/windows/*.cmd` 只给 Windows 上的旧副本用。`.gitattributes` 固定 v93 的 `*.sh` 为 LF、`*.cmd` 为 CRLF，不要改回。
+- 本地命令一律在仓库根目录执行（WSL2）：本地造数 `bash experiments/qfft_v93/local_data.sh`（解释器 `P1_PYTHON`，默认 `python3`，需要 pandas、pyarrow、tokenizers），`pytest` 用同一解释器。`experiments/qfft_v93/windows/*.cmd` 只给 Windows 上的旧副本用。`.gitattributes` 固定 v93 的 `*.sh` 为 LF、`*.cmd` 为 CRLF（`tests/v93_harness/` 全部 LF），不要改回。本机只读自检：`bash experiments/qfft_v93/check_local.sh`。
 - Drive 持久目录：v93 用 `projects/project1/v93`（数据、代码包、环境快照）、`models`（与 v26 共用，基座目录不变）、`runs/project1/v93`（runs、evals、stages、logs、figures）；VM 本地工作区 `/content/p1`。这些都是相对 Drive 根的路径；VM 上的 Drive 根是 `/content/mydrive`（rclone）或 `/content/drive/MyDrive`（`--drive colab`）。v26 的工作副本 `/content/workspaces/aimo-sft-v26` 与结果 `runs/project1/aimo_sft_v26` 只作历史。
 - v93 起不再用 VS Code 远程终端：在 Linux/WSL2 上装 Colab CLI，用 `experiments/qfft_v93/colab/launch.sh` 或 `pipeline.sh` 启动；每次调用新建 VM、挂载 Drive、上传代码包、跑阶段、结束后释放。任务跑在 VM 的 kernel 里：断线、关终端或 Ctrl+C 不会中止它（`launch.sh --attach <session>` 重新跟踪，`colab stop -s <session>` 才是中止）。`launch.sh --gpu cpu status` 查看所有阶段与训练进度。
 - v26 的旧入口 `python3 /content/drive/MyDrive/projects/project1/start_aimo_sft_v28.py` 只用于复现历史。

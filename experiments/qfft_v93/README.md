@@ -48,6 +48,8 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
   - 还有题用完额度仍没有可用轨迹时退出码为 3，并列出这些题；加大 `--max-attempts` 重跑。
 - s1K-1.1 parquet 与 tokenizer 先用本地旧副本；本地副本缺失或哈希不对时，自动改用第 1 步按固定 revision 下载并核对过的 `data/benchmarks_v93/_sources/` 副本（同一 revision、同样的字节）。
 - `data_build status` 的预期量级（按 history 里 v66/v86/v91 的记录推算）：v66 最多约 911 题可用（747 + 164 道完整轨迹，按 Qwen tokenizer 超过 32,768 的会被拒），v86 最多 25 题（补全的 27 题里有 2 题超过 32K），v91 最多 62 题；缺口至少 1 题（第 918 题已换成新题，旧轨迹判为 `different_question`）。如果大量出现 `different_question` 或 `missing_reasoning`，说明文件对不上，先不要跑第 4 步。
+- 用完额度、轨迹一直跑出窗口的题（2026-11-09 实测还剩 23 题）：先用同一模型、同一提示词的最低思考档追加尝试，`teacher fill --provider official --efforts low --max-attempts N`（DeepSeek 文档：effort 有 low、high、max 三档，medium 映射为 high）；之后仍没有可用轨迹的题用 `data_build build --ds-verified --paired-exclusion` 从两位教师的训练集里一起去掉（记在 manifest 的 `paired_exclusions`，教师报告列出），保证四个训练臂题目相同。不用 R1 轨迹补 DS 臂，也不训练只缺一边的数据。理由和完整命令见 [交接文档第 2 节](../../docs/handover/kiro_ide_onboarding.md)。`--allow-gaps` 只做预览：两位教师题目不同，阶段 `d` 会拒收。
+- 教师报告的"DeepSeek 轨迹来源"一节按轮次（v66/v86/v91/v93）、effort、提示词和接口统计每一行轨迹的来历。
 - 可选的 `teacher verify` 会为"可用但答案可核对且错误"的题继续采样，`build --ds-verified` 再用第一条答对的可用尝试替换；主矩阵仍用 `ds`。
 - `data/qfft1000_v93/teacher_report.md` 给出两位教师在同一批可核对题上的正确率、对错矩阵、长度和反思词频率。参照值：R1 在 s1K-1.1 的 742 道可核对题上答对 62.7%。
 
@@ -65,6 +67,8 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 4. 失败时打印输出并释放 VM；要手动排查就加 `--keep`，再 `colab console -s SESSION`（VM 里是 bash，输入密码用 `read -rsp`）。
 
 大文件不经过挂载点：挂载的写缓存要先把整个文件存到 VM 本地盘，等文件关闭后才上传，而一个全参检查点里有一个约 91 GB 的优化器文件，和 122 GB 的本地检查点加起来放不进约 235 GB 的盘。所以检查点、导出权重、模型、环境快照都用 `rclone copy` 直接流式上传（`drive_io.py`），被新镜像取代的检查点用 `rclone purge --drive-use-trash=false` 永久删除（每份 122 GB，进回收站会占 30 天空间）。`--drive colab` 改用 Colab 自带的挂载（`/content/drive/MyDrive`，第一次要在浏览器里同意）。
+
+**Drive 每日上传上限**：Google Drive 每个账号每 24 小时约 750 GiB（[rclone 文档](https://rclone.org/drive/) 的 `--drive-stop-on-upload-limit`）。所以全参每 2 个 epoch 存一次（`save_steps` 126：第 126、252、378 步），每个 run 上传两份 113.5 GiB 镜像加 14 GiB 导出，约 241 GiB；24 小时内最多跑 2 个全参 run。上传带 `--drive-stop-on-upload-limit`，撞上限时立即报错并给出说明：镜像失败只记警告、训练继续；撞在最后的导出上传上时训练阶段失败，过了 24 小时重跑从最近的完整镜像续训再导出。
 
 **结果推到 GitHub**：VM 把小体积文本报告推到本仓库的 `colab-reports` 分支（不推 main），每 30 分钟一次（`P1_REPORT_MINUTES`），结束时（成功或失败、在释放 VM 之前）再推一次。我直接从 GitHub 读，不用你下载再上传：
 
@@ -88,7 +92,8 @@ Windows 上的一键方式（只给 Windows 上的旧副本用）：管理员 Po
 1. 安装与检查：`bash experiments/qfft_v93/colab/setup_wsl.sh`。PATH 上已有的 colab CLI（uv、pipx 或 pip 装的）保留不动，版本不在 `>=0.7.5,<0.8` 范围时只提示；没有才用 uv 安装。它还检查 rclone 配置里有 `[mydrive]` 段、GitHub token 文件是否存在（缺少时提示输入）。CLI 要求 Python ≥ 3.12，uv 会自动下载。
 2. 登录：第一次运行任何 `colab` 命令会打印一个 Google 授权链接，在浏览器里同意后把页面显示的授权码粘贴回终端，令牌缓存在 `~/.config/colab-cli/token.json`。`colab auth` 是给 VM 内代码授权 GCP 的，不是 CLI 登录。
 3. Drive：默认用 rclone（见上），不需要再做什么；`--drive colab` 时第一次 `colab drivemount` 会打印一个"允许 Colab 访问 Drive"的链接，同意后按回车。
-4. 先花一分钟 CPU 做端到端检查：`bash experiments/qfft_v93/colab/launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、推报告、释放）。
+4. 本机自检（只读）：`bash experiments/qfft_v93/check_local.sh`。检查代理、colab CLI 与登录、两个凭据文件及权限、Drive 上的 SwanLab Key 和模型（本机装了 rclone 时）、`P1_PYTHON` 的依赖、`data_build status`、本地 manifest 是否为预览构建、最近一次 Colab 报告。
+5. 先花一分钟 CPU 做端到端检查：`bash experiments/qfft_v93/colab/launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、推报告、释放）。
 
 ```zsh
 # 阶段 0–2 不依赖本地数据，可以和第一节的造数并行
@@ -130,7 +135,7 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 | 判分 | — | `scored.jsonl`（带判分器版本） | 增量判分，`--rescore` 全部重判 |
 | 环境 | `/content/p1/venvs/{infer,rl}` | `envcache/venvs/*.tar` 快照 + 冻结版本清单 | 约 1 分钟恢复 |
 
-- 训练镜像每 63 步（约 1 epoch）一次，在后台进行：先传到 `checkpoint-N.partial`，再在 Drive 端改名，最后写完成标记；被取代的旧镜像永久删除。`--drive colab` 时改为限速复制（本地剩余空间低于 24 GB 时暂停，等 Drive 客户端腾出缓存）。镜像失败只记警告，训练继续，上一份完整镜像仍有效。
+- 全参每 126 步（2 个 epoch）存一次检查点并镜像到 Drive（见上文的 Drive 每日上传上限），在后台进行：先传到 `checkpoint-N.partial`，再在 Drive 端改名，最后写完成标记；被取代的旧镜像永久删除。`--drive colab` 时改为限速复制（本地剩余空间低于 24 GB 时暂停，等 Drive 客户端腾出缓存）。镜像失败只记警告，训练继续，上一份完整镜像仍有效。
 - 训练日志（`metrics.jsonl`）、GRPO 的判分记录和各阶段日志都先写 VM 本地，再每 30–60 秒整体替换 Drive 上的副本：挂载点上一直打开着的文件要到关闭时才会上传。
 - run 目录里的 `run_identity.json` 记录配方与数据 SHA；配方或数据变了会拒绝在同名 run 上续跑。
 - 训练完成后导出 bf16 safetensors 到 `runs/<run>/final/`，写 `TRAIN_COMPLETE.json`，删除镜像，并把权重留在本地 SSD 上供同一 VM 的评测直接使用。
@@ -162,10 +167,12 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 | `colab/launch.sh` / `colab/pipeline.sh` / `colab/remote.py` / `colab/stages.py` | 一键调度 |
 | `colab/report_push.py` / `colab/smoke_report.py` | 把文本报告推到 `colab-reports` 分支；冒烟总结 |
 | `local_data.sh` | WSL2/Linux 上的本地造数一键入口（五步） |
+| `check_local.sh` | 本机只读自检（代理、CLI、凭据与权限、Drive、解释器、数据状态、最近的 Colab 报告） |
 | `colab/setup_wsl.sh`、`windows/v93_colab.cmd`、`windows/v93_local_data.cmd` | WSL 一次性安装、检查（rclone 配置、GitHub token 文件）与登录；Windows 下的 Colab 阶段入口与本地造数入口 |
 | `envs/*.txt` | 训练附加包、推理与 RL 虚拟环境（2026-11-08 在 PyPI 核对过版本约束） |
 
 ## 六、已验证与未验证
 
-- CPU 上已实跑：模板与官方 S1_QFFT 数据逐字一致（1000/1000）；SFT/QFFT 编码不变量；判分器 10 个边界用例；微型 Qwen2 上的全参训练、模拟 VM 丢失后从 Drive 镜像恢复并续跑到结束、SFT 格式、身份校验；假引擎生成的按采样粒度续跑与判分汇总；TRL 1.17.1 GRPO + LoRA + 奖励 + 镜像 + 恢复 + 合并；合成数据上的 plan/status/fill/build 全流程；launch.sh 与 remote.py 的调度流程（按 google-colab-cli 0.7.5 行为写的模拟 CLI，11 个场景）；冒烟序列用真实 Qwen tokenizer 生成，QFFT 32 条、SFT 4 条都恰好 32,768 token。
-- 只能在 GPU 上验证：DeepSpeed CPU-Adam 的速度与主机内存、Liger 在 32K 下的显存、vLLM 0.32/0.33 在 G4（Blackwell）与 H100 上的吞吐、122 GB 检查点镜像到 Drive 的实际耗时。阶段 1 的冒烟按最坏长度测这些，跑完先看日志里的 `s/step`、`peakGPU`、`host/rss_gib`。
+- CPU 上已实跑：模板与官方 S1_QFFT 数据逐字一致（1000/1000）；SFT/QFFT 编码不变量；判分器 10 个边界用例；微型 Qwen2 上的全参训练、模拟 VM 丢失后从 Drive 镜像恢复并续跑到结束、SFT 格式、身份校验；假引擎生成的按采样粒度续跑与判分汇总；TRL 1.17.1 GRPO + LoRA + 奖励 + 镜像 + 恢复 + 合并；合成数据上的 plan/status/fill/build 全流程；launch.sh 与 remote.py 的调度流程（按 google-colab-cli 0.7.5 行为写的模拟 CLI）；冒烟序列用真实 Qwen tokenizer 生成，QFFT 32 条、SFT 4 条都恰好 32,768 token。
+- 模拟测试在 [tests/v93_harness/](../../tests/v93_harness/README.md)：`bash tests/v93_harness/run_all.sh`（8 组 214 项：launcher 场景、Drive 传输、冒烟总结、teacher、固定输入、data_build、setup_wsl.sh、check_local.sh），在工作区的临时快照上运行。
+- G4 上已实测（2026-11-09 阶段 1 冒烟，数字见[交接文档第 1 节](../../docs/handover/kiro_ide_onboarding.md)）：32K 最坏长度全参 142 s/步、显存峰值 28.9 GiB 已分配、主机 RSS 145.3 GiB、本地存检查点 113.5 GiB 用 386 s；GRPO 最坏长度 476 s/步、66.6 GiB。还没测：真实数据下的 s/step（每个微批变短后 ZeRO-2 offload 的梯度搬运开销）、正式评测的生成吞吐、113.5 GiB 镜像的上传耗时、H100 上的 GRPO 显存。
