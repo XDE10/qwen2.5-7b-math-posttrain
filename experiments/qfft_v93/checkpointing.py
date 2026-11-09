@@ -11,9 +11,11 @@ previous mirror and delete older local checkpoints when free space would not fit
 """
 from __future__ import annotations
 
+import json
 import re
 import shutil
 import threading
+import time
 from pathlib import Path
 
 from experiments.qfft_v93.common import (GIB, copy_tree_fast, copy_tree_throttled, free_bytes, human_bytes, log,
@@ -66,6 +68,7 @@ class CheckpointMirror(TrainerCallback):
         self.watch_path, self.min_free = watch_path, int(min_free_gib * GIB)
         self.saves, self.thread, self.error = 0, None, None
         self.lock = threading.Lock()
+        self._save_started = None  # set when the Trainer is about to save; on_save reports the duration
 
     # -- before a save: make room ------------------------------------------------------------------
     def _before_save(self, step: int) -> None:
@@ -83,10 +86,29 @@ class CheckpointMirror(TrainerCallback):
     def on_step_end(self, args, state, control, **kwargs):
         if control.should_save:
             self._before_save(state.global_step)
+            self._save_started = time.monotonic()
 
     def on_epoch_end(self, args, state, control, **kwargs):
         if control.should_save:
             self._before_save(state.global_step)
+            self._save_started = time.monotonic()
+
+    def _record_save(self, ckpt: Path, step: int) -> None:
+        """Local save duration and size: decides how long a 122 GB full-FT checkpoint costs per save."""
+        seconds = time.monotonic() - self._save_started if self._save_started is not None else None
+        self._save_started = None
+        size = tree_bytes(ckpt)
+        record = {'step': step, 'at': now_iso(), 'seconds': round(seconds, 1) if seconds is not None else None,
+                  'bytes': size, 'gib': round(size / GIB, 2),
+                  'free_gib_after': round(free_bytes(self.local_dir) / GIB, 1)}
+        log(f"Saved {ckpt.name} locally: {human_bytes(size)} in {record['seconds']} s, "
+            f"{record['free_gib_after']} GiB free")
+        try:
+            self.mirror_dir.parent.mkdir(parents=True, exist_ok=True)
+            with (self.mirror_dir.parent / 'saves.jsonl').open('a', encoding='utf-8') as handle:
+                handle.write(json.dumps(record) + '\n')
+        except OSError as error:
+            log('WARNING could not record the save:', error)
 
     # -- after a save: mark, mirror, prune ---------------------------------------------------------
     def on_save(self, args, state, control, **kwargs):
@@ -94,6 +116,7 @@ class CheckpointMirror(TrainerCallback):
         if not ckpt.exists():
             return
         write_json(ckpt / SAVED_MARK, {'step': state.global_step, 'epoch': state.epoch, 'at': now_iso()})
+        self._record_save(ckpt, state.global_step)
         self.saves += 1
         final = state.global_step >= state.max_steps
         if (self.saves % self.every == 0 and not final) or (final and self.mirror_final):

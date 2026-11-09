@@ -23,7 +23,8 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - RL：在合并后的 QFFT 检查点上做 LoRA-GRPO（r32、LR 1e-5、150 步、8 题 × 8 采样、`dapo` 损失、β=0、ε_high 0.28、截断掩码、最终段 0/1 奖励），题池为已批准的 920 + 637 题。
 - 评测：所有模型同一组 prompt token、原生 RoPE、`max_model_len 32768`、temperature 0.6、top_p 0.95；AIME24/25 各 16 次、AMC23 8 次、MATH-500 4 次、GSM8K 1 次；只判最终段最后一个 `\boxed{}`（`experiments/qfft_v93/grading.py`），主指标不用 LLM 复核。
 - 调度：Colab CLI（Linux/WSL2）`experiments/qfft_v93/colab/pipeline.sh <阶段>`；所有状态在 Drive `projects/project1/v93`、`models`、`runs/project1/v93`，重跑即续。
-- 环境：本地根目录 `D:/Users/Mr.Z/Desktop/项目一_7B数学后训练`，CPU 解释器 `D:/anaconda3/envs/genai-test/python.exe`；GPU 为 Colab H100 80GB 或 G4（RTX PRO 6000 Blackwell 96GB），主机内存约 167 GB。
+- 环境：本地根目录 `D:/Users/Mr.Z/Desktop/项目一_7B数学后训练`（造数与本地数据都在这里），CPU 解释器 `D:/anaconda3/envs/genai-test/python.exe`；Colab CLI 装在 WSL2，用户在 WSL 的克隆里自己操作 Colab，阶段 `d` 用 `--data-root`（或 `P1_DATA_ROOT`）指向 Windows 那份上传数据。GPU 默认先 G4（RTX PRO 6000 Blackwell 96GB，约 8.71 计算单元/小时）后 H100 80GB（约 18.05），主机内存约 167 GB（以冒烟实测为准）。
+- 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`）；用户贴回这一段后，再据此定正式训练配置与 GPU 预算。
 - **未完成**：GPU 冒烟与正式训练、评测、GRPO 均未运行；DeepSeek 轨迹补齐到 1000/1000 需要先跑 `teacher fill`。详见 [docs/status/current_status.md](docs/status/current_status.md)。
 
 ## 仓库约定（必须遵守）

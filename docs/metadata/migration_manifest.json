@@ -132,6 +132,27 @@
       ],
       "date": "2026-11-09",
       "purpose": "v93-P4：本地造数（teacher fill 额度与错误处理、固定副本回退）的状态记录"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "61ef9d8421bdb39549b2161bf857f0ad89d339c7b7da15d91adef00ca7ad46f9",
+          "path": "AGENTS.md",
+          "previous_sha256": "2b1952d869e576437509bbdf6fc0187ea52f49c39f3eccc2d1577ec6a66f5d0a"
+        },
+        {
+          "current_sha256": "0cb1e6f9dc0337028ed2d5fa196b43bc2c12306c1e1871fe6efb803b49d6bdcf",
+          "path": "docs/status/current_status.md",
+          "previous_sha256": "953518b1c78faf53b9774a99a03601421450a8d7293c800d356f4ece477dbcf6"
+        },
+        {
+          "current_sha256": "d1c35b4bb7d900f3c1e1b3f2ffe2050e26ae09535c4bf4bfc33be66c719d3a47",
+          "path": "docs/status/history.md",
+          "previous_sha256": "d30ce93e62494c35a102c6cdde264588f7c8ecd91f6ebcb66aace1318e89dbcf"
+        }
+      ],
+      "date": "2026-11-09",
+      "purpose": "v93-P5：GPU 默认 G4、--data-root、冒烟总结的状态与约定记录"
     }
   ],
   "files": [
@@ -864,11 +885,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 11923,
+      "bytes": 12389,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-08 v93-P3：内容更新后重算",
-      "sha256": "2b1952d869e576437509bbdf6fc0187ea52f49c39f3eccc2d1577ec6a66f5d0a"
+      "refactor_note": "2026-11-09 v93-P5：内容更新后重算",
+      "sha256": "61ef9d8421bdb39549b2161bf857f0ad89d339c7b7da15d91adef00ca7ad46f9"
     },
     {
       "bytes": 4434,
@@ -28654,18 +28675,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 5761,
+      "bytes": 6322,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-09 v93-P4：内容更新后重算",
-      "sha256": "953518b1c78faf53b9774a99a03601421450a8d7293c800d356f4ece477dbcf6"
+      "refactor_note": "2026-11-09 v93-P5：内容更新后重算",
+      "sha256": "0cb1e6f9dc0337028ed2d5fa196b43bc2c12306c1e1871fe6efb803b49d6bdcf"
     },
     {
-      "bytes": 72698,
+      "bytes": 75058,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-09 v93-P4：内容更新后重算",
-      "sha256": "d30ce93e62494c35a102c6cdde264588f7c8ecd91f6ebcb66aace1318e89dbcf"
+      "refactor_note": "2026-11-09 v93-P5：内容更新后重算",
+      "sha256": "d1c35b4bb7d900f3c1e1b3f2ffe2050e26ae09535c4bf4bfc33be66c719d3a47"
     },
     {
       "bytes": 77,

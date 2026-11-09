@@ -1,19 +1,24 @@
 #!/usr/bin/env bash
 # One command = one fresh Colab VM that runs one or more v93 stages, then releases itself.
 #
-#   launch.sh [--gpu LIST] [--wait-min N] [--keep] [--force] [--session NAME] [--with-data] STAGE...
+#   launch.sh [--gpu LIST] [--wait-min N] [--keep] [--force] [--session NAME] [--with-data [--data-root DIR]] STAGE...
 #   launch.sh --attach SESSION          # follow a job whose terminal was closed or lost its connection
 #
-#   --gpu LIST    T4, L4, G4, H100, A100 or cpu; a comma list is tried in order, e.g. --gpu H100,G4
+#   --gpu LIST    T4, L4, G4, H100, A100 or cpu; a comma list is tried in order, e.g. --gpu G4,H100.
+#                 Each GPU is requested with --high-mem first, then in the standard shape (training
+#                 stages refuse a VM with less than 128 GiB of host RAM themselves)
 #   --wait-min N  keep retrying the list for up to N minutes when no listed GPU can be allocated
 #   --keep        do not release the VM at the end (inspect with: colab console -s SESSION)
 #   --force       start a stage even if Drive says another VM is still running it
+#   --data-root DIR  with --with-data: read data/qfft1000_v93 and data/benchmarks_v93 under DIR instead of
+#                 this checkout, e.g. the Windows working copy seen from WSL (default: $P1_DATA_ROOT)
 #
 # Examples
 #   launch.sh --gpu cpu ping:30                      # one-minute end-to-end check of CLI, Drive and logs
 #   launch.sh --gpu cpu benchmarks models:base,qwen_math,qfft_official,sft_repro
-#   launch.sh --gpu H100,G4 smoke-train smoke-eval smoke-grpo
-#   launch.sh --gpu H100,G4 --wait-min 120 train:qfft_ds eval:run:qfft_ds_v93:full
+#   launch.sh --gpu G4,H100 smoke-train smoke-eval smoke-grpo
+#   launch.sh --gpu G4,H100 --wait-min 120 train:qfft_ds eval:run:qfft_ds_v93:full
+#   launch.sh --gpu cpu --with-data --data-root "/mnt/d/Users/Mr.Z/Desktop/项目一_7B数学后训练" sync-data
 #   launch.sh --gpu cpu score analyze:base,sft_ds_v93,qfft_ds_v93:grpo_qfft_ds_v93
 #
 # Needs Linux or WSL2 with GNU coreutils (the Colab CLI does not support native Windows), git, python3, tar
@@ -27,9 +32,9 @@
 # command later resumes from the last checkpoint; a stage still running on another VM is refused.
 set -euo pipefail
 
-GPU_LIST="G4"; KEEP=0; FORCE=0; SESSION=""; WITH_DATA=0; WAIT_MIN=0; ATTACH=""
+GPU_LIST="G4"; KEEP=0; FORCE=0; SESSION=""; WITH_DATA=0; WAIT_MIN=0; ATTACH=""; DATA_ROOT="${P1_DATA_ROOT:-}"
 STAGES=()
-usage() { sed -n '2,27p' "$0"; exit 1; }
+usage() { sed -n '2,32p' "$0"; exit 1; }
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --gpu) GPU_LIST="$2"; shift 2 ;;
@@ -38,6 +43,7 @@ while [[ $# -gt 0 ]]; do
     --force) FORCE=1; shift ;;
     --session) SESSION="$2"; shift 2 ;;
     --with-data) WITH_DATA=1; shift ;;
+    --data-root) DATA_ROOT="$2"; shift 2 ;;
     --attach) ATTACH="$2"; shift 2 ;;
     -h|--help) usage ;;
     -*) echo "Unknown option: $1"; usage ;;
@@ -164,10 +170,18 @@ tar --null -czf "$BUNDLE" -T "$WORK/files.txt"
 CODE_SHA="$(sha256sum "$BUNDLE" | cut -c1-12)"
 GIT_HEAD="$(git rev-parse --short=12 HEAD)$(git diff --quiet HEAD -- experiments src scripts || echo '+dirty')"
 if [[ $WITH_DATA == 1 ]]; then
-  for d in data/qfft1000_v93 data/benchmarks_v93; do
-    [[ -d $d ]] || { echo "Missing $d: run data_build / fetch_benchmarks locally first"; exit 1; }
+  DATA_ROOT="${DATA_ROOT:-$REPO}"
+  for f in data/qfft1000_v93/manifest.json data/benchmarks_v93/manifest.json; do
+    if [[ ! -f "$DATA_ROOT/$f" ]]; then
+      echo "Missing $DATA_ROOT/$f: finish data_build build / fetch_benchmarks first."
+      [[ $DATA_ROOT == "$REPO" ]] && echo "If the data was built in another checkout (e.g. the Windows working copy), pass" \
+        "--data-root \"/mnt/d/Users/Mr.Z/Desktop/项目一_7B数学后训练\" or set P1_DATA_ROOT."
+      exit 1
+    fi
   done
-  tar -czf "$WORK/p1_data.tgz" --exclude='data/benchmarks_v93/_sources' data/qfft1000_v93 data/benchmarks_v93
+  echo "Data from $DATA_ROOT"
+  tar -C "$DATA_ROOT" -czf "$WORK/p1_data.tgz" --exclude='data/benchmarks_v93/_sources' \
+    data/qfft1000_v93 data/benchmarks_v93
 fi
 
 upload() {  # upload LOCAL REMOTE, in parts when larger than CHUNK (reassembled and hash-checked on the VM)
@@ -196,12 +210,14 @@ echo "Session $SESSION | GPU ${GPUS[*]} | code $CODE_SHA (git $GIT_HEAD) | stage
 colab usage || true
 
 DEADLINE=$(( $(date +%s) + WAIT_MIN * 60 ))
-GPU_USED=""
+GPU_USED=""; SHAPE=""
 while [[ -z $GPU_USED ]]; do
   for g in "${GPUS[@]}"; do
-    args=(new -s "$SESSION" --high-mem)
+    args=(new -s "$SESSION")
     [[ $g != CPU ]] && args+=(--gpu "$g")
-    if colab "${args[@]}"; then GPU_USED="$g"; break; fi
+    if colab "${args[@]}" --high-mem; then GPU_USED="$g"; SHAPE="high-mem"; break; fi
+    # The CLI sends shape=hm for G4/H100 too; if that shape is refused, the standard one may still exist.
+    if colab "${args[@]}"; then GPU_USED="$g"; SHAPE="standard"; break; fi
     echo "Could not allocate $g."
   done
   [[ -n $GPU_USED ]] && break
@@ -213,7 +229,7 @@ while [[ -z $GPU_USED ]]; do
   sleep 300 || true
 done
 STOP_ON_EXIT=1
-echo "Allocated $GPU_USED as $SESSION."
+echo "Allocated $GPU_USED ($SHAPE shape) as $SESSION."
 
 colab drivemount -s "$SESSION"
 CHECK="$(echo 'import os; print("P1_DRIVE_" + ("OK" if os.path.isdir("/content/drive/MyDrive") else "MISSING"))' \
