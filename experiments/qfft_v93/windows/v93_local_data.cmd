@@ -5,6 +5,7 @@ rem Runs the five steps of experiments/qfft_v93/README.md section 1 in order and
 rem Every step resumes or rebuilds deterministically, so running this file again is always safe.
 rem Step 4 calls the DeepSeek API only for questions that still lack a usable trace.
 rem Interpreter: set P1_PYTHON=C:\path\to\python.exe to override the default below.
+rem Extra options for step 4, e.g.:  set P1_FILL_ARGS=--max-attempts 12
 
 pushd "%~dp0..\..\.." || goto :fail
 set "PY=%P1_PYTHON%"
@@ -21,7 +22,12 @@ echo Python:     %PY%
 call :step "1/5 benchmarks and sources at pinned revisions" -m experiments.qfft_v93.fetch_benchmarks --sources || goto :fail
 call :step "2/5 1000-question plan (v93 replacement, decontamination)" -m experiments.qfft_v93.data_build plan || goto :fail
 call :step "3/5 questions still without a usable DeepSeek trace" -m experiments.qfft_v93.data_build status || goto :fail
-call :step "4/5 DeepSeek fill until 1000/1000 (API, resumable)" -m experiments.qfft_v93.teacher fill --fallback-official || goto :fail
+echo.
+echo ===== 4/5 DeepSeek fill until 1000/1000 (API, resumable)
+"%PY%" -m experiments.qfft_v93.teacher fill --fallback-official %P1_FILL_ARGS%
+set "CODE=%errorlevel%"
+if "%CODE%"=="3" goto :budget
+if not "%CODE%"=="0" goto :fail
 call :step "5/5 build r1/, ds/, ds_verified/ and the teacher report" -m experiments.qfft_v93.data_build build --ds-verified || goto :fail
 
 echo.
@@ -36,6 +42,16 @@ echo.
 echo ===== %~1
 "%PY%" %2 %3 %4 %5 %6 %7 %8 %9
 exit /b %errorlevel%
+
+:budget
+echo.
+echo Some questions used their whole attempt budget without a usable trace (listed above).
+echo Raise the budget and run this file again, for example:
+echo     set P1_FILL_ARGS=--max-attempts 12
+echo     experiments\qfft_v93\windows\v93_local_data.cmd
+popd 2>nul
+pause
+exit /b 3
 
 :fail
 echo.
