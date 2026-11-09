@@ -53,6 +53,32 @@
         "docs/interview/面试追问与参考答案.md"
       ],
       "purpose": "v93：修复判分 worker 模块路径（src/training/approved_hf.py、math_reward_v2.py），新增 v93 管线、三周方案与面试材料，更新入口文档与状态"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "67777669c190918d6892b64211883e2c259ef9091d564e16307950b656d0ca9d",
+          "path": "AGENTS.md",
+          "previous_sha256": "02d5cb80ca445c84f8a69fc381fc7f4cce90cd74de9701bd6c56cf3356c64fd7"
+        },
+        {
+          "current_sha256": "b69fef7fcedb0c4750fa92e7633864601cb890e3803c458f07f0ce2ce40f0867",
+          "path": "README.md",
+          "previous_sha256": "031a23ebcd8a8708624fd2edf6653c5be27d5a6240a173b9cf91cfb2cacb89d9"
+        },
+        {
+          "current_sha256": "80774dfadba94e3eea95541e40e7b876ecf5fd07c2a2d053edd8e1645303e101",
+          "path": "docs/status/current_status.md",
+          "previous_sha256": "079798fae61389f9fe53a0bf36cbcc779686d804f89b700c484195b1cf8a77f5"
+        },
+        {
+          "current_sha256": "ae09d3379986b310b034b86824e7db744d5019969c92f1b535f552ef0cece9c8",
+          "path": "docs/status/history.md",
+          "previous_sha256": "5736e55068b353a2e57954f51764856260a54db9d7a19dfdb325f796270f1fce"
+        }
+      ],
+      "date": "2026-11-08",
+      "purpose": "v93-P1：按 google-colab-cli 0.7.5 核对调度脚本，更新登录/断线/租约说明与状态记录"
     }
   ],
   "files": [
@@ -785,11 +811,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 11068,
+      "bytes": 11655,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-08 v93：内容更新后重算",
-      "sha256": "02d5cb80ca445c84f8a69fc381fc7f4cce90cd74de9701bd6c56cf3356c64fd7"
+      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
+      "sha256": "67777669c190918d6892b64211883e2c259ef9091d564e16307950b656d0ca9d"
     },
     {
       "bytes": 4434,
@@ -801,11 +827,11 @@
       "source_sha256": "af9fa4d5f8526bc62685c2a9f8ff2413a2aaba4bbc6ce715cc8fcff360e496b2"
     },
     {
-      "bytes": 8629,
+      "bytes": 8665,
       "note": "size synced 2026-11-08 doc update",
       "path": "README.md",
-      "refactor_note": "2026-11-08 v93：内容更新后重算",
-      "sha256": "031a23ebcd8a8708624fd2edf6653c5be27d5a6240a173b9cf91cfb2cacb89d9"
+      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
+      "sha256": "b69fef7fcedb0c4750fa92e7633864601cb890e3803c458f07f0ce2ce40f0867"
     },
     {
       "bytes": 745,
@@ -28575,18 +28601,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 4087,
+      "bytes": 4559,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-08 v93：内容更新后重算",
-      "sha256": "079798fae61389f9fe53a0bf36cbcc779686d804f89b700c484195b1cf8a77f5"
+      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
+      "sha256": "80774dfadba94e3eea95541e40e7b876ecf5fd07c2a2d053edd8e1645303e101"
     },
     {
-      "bytes": 66870,
+      "bytes": 68240,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-08 v93：内容更新后重算",
-      "sha256": "5736e55068b353a2e57954f51764856260a54db9d7a19dfdb325f796270f1fce"
+      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
+      "sha256": "ae09d3379986b310b034b86824e7db744d5019969c92f1b535f552ef0cece9c8"
     },
     {
       "bytes": 77,

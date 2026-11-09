@@ -12,7 +12,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 1. [experiments/qfft_v93/README.md](experiments/qfft_v93/README.md)：实验矩阵、本地数据步骤、Colab 一键阶段、断点续跑、评测口径。
 2. [configs/pipeline.json](experiments/qfft_v93/configs/pipeline.json)、[configs/train/_defaults.json](experiments/qfft_v93/configs/train/_defaults.json)、[configs/grpo/_defaults.json](experiments/qfft_v93/configs/grpo/_defaults.json)：模型 revision、评测口径、全参与 GRPO 配方。
 3. [formats.py](experiments/qfft_v93/formats.py) 与 [grading.py](experiments/qfft_v93/grading.py)：唯一的 prompt/response 模板与最终段判分。
-4. 一键入口：[colab/pipeline.sh](experiments/qfft_v93/colab/pipeline.sh)（按阶段）与 [colab/launch.sh](experiments/qfft_v93/colab/launch.sh)（单次 VM），需要 Linux/macOS/WSL2 上的 Colab CLI。
+4. 一键入口：[colab/pipeline.sh](experiments/qfft_v93/colab/pipeline.sh)（按阶段）与 [colab/launch.sh](experiments/qfft_v93/colab/launch.sh)（单次 VM），需要 Linux/WSL2 上的 Colab CLI（按 google-colab-cli 0.7.5 核对过）。
 
 v93 数据在 `data/qfft1000_v93/`（`r1/`、`ds/`、可选 `ds_verified/` 各 1000 条，含 `manifest.json` 与 `teacher_report.md`），评测集在 `data/benchmarks_v93/`（固定 revision 与 SHA-256），均由本地脚本生成、git 忽略。
 
