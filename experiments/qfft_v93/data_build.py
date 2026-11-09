@@ -46,6 +46,13 @@ INPUTS = {
 }
 PREPARED_SHA = '0e8c6c83c5916e64d57247caac68bef70cb0ae41c20e07ed96cf4015f0e26781'
 S1K_SHA = '10352d1f67d21b95385a364e8cc5a111a82603071acd4e36b0cbfbd6fc628c81'
+TOKENIZER_SHA = 'c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539'
+# Pinned files that `fetch_benchmarks --sources` downloads and verifies; used when the older local copy is
+# missing or differs, so a re-saved local file cannot block the build. Same revision, same bytes.
+PINNED = {
+    's1k_parquet': (S1K_SHA, ROOT / 'data/benchmarks_v93/_sources/s1K-1.1.parquet'),
+    'tokenizer': (TOKENIZER_SHA, ROOT / 'data/benchmarks_v93/_sources/Qwen2.5-7B-Instruct-tokenizer.json'),
+}
 DS_DIRS = {
     'v66': ROOT / 'artifacts/qfft_ds_dataset_v66',
     'v86': ROOT / 'artifacts/qfft_length_retry_v86',
@@ -67,9 +74,10 @@ class TokenCounter:
 
     def __init__(self, path=None):
         from tokenizers import Tokenizer
-        path = path or INPUTS['tokenizer']
-        if sha256_file(path) != 'c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539':
-            raise RuntimeError('Unexpected tokenizer.json; expected Qwen2.5-7B-Instruct@a09a354')
+        if path is None:
+            path = pinned_input('tokenizer')
+        elif sha256_file(path) != TOKENIZER_SHA:
+            raise RuntimeError(f'Unexpected tokenizer.json at {path}; expected Qwen2.5-7B-Instruct@a09a354')
         self.tok = Tokenizer.from_file(str(path))
 
     def count(self, text: str) -> int:
@@ -113,14 +121,35 @@ def _check_input(name: str) -> Path:
     return path
 
 
+_PINNED_CACHE = {}
+
+
+def pinned_input(name: str) -> Path:
+    """The local copy if its SHA-256 matches the pinned revision, otherwise the verified download."""
+    if name in _PINNED_CACHE:
+        return _PINNED_CACHE[name]
+    expected, fallback = PINNED[name]
+    tried = []
+    for path in (INPUTS[name], fallback):
+        if not path.is_file():
+            tried.append(f'{path} (missing)')
+            continue
+        if sha256_file(path) == expected:
+            if path != INPUTS[name]:
+                log(f'{name}: using the pinned download {rel(path)} ({INPUTS[name].name} locally is '
+                    f'{"different" if INPUTS[name].is_file() else "missing"})')
+            _PINNED_CACHE[name] = path
+            return path
+        tried.append(f'{path} (sha256 differs)')
+    raise RuntimeError(f'No verified {name}: ' + '; '.join(tried) +
+                       '. Run `python -m experiments.qfft_v93.fetch_benchmarks --sources` first.')
+
+
 # ----------------------------------------------------------------------------- plan
 
 def _s1k_frame():
     import pandas as pd
-    path = _check_input('s1k_parquet')
-    if sha256_file(path) != S1K_SHA:
-        raise RuntimeError('s1K-1.1 parquet differs from the pinned revision 96c411f')
-    return pd.read_parquet(path)
+    return pd.read_parquet(pinned_input('s1k_parquet'))  # s1K-1.1 at the pinned revision 96c411f
 
 
 def _parse_meta(value):
@@ -214,7 +243,7 @@ def cmd_plan(args) -> None:
             plan[pos] = {'index': pos, 'sample_id': 'v93-topup/' + raw['sample_id'], 'question': raw['problem'],
                          'origin': 'v93_replacement', 'replaces': old_id, 'raw_pool_row': src_i,
                          'source': 'previously-approved-openr1-raw', 'task_type': 'math',
-                         'category': raw.get('category'), 'ds_effort': 'high',
+                         'category': raw.get('category') or raw.get('problem_type'), 'ds_effort': 'high',
                          'reference_answer': str(raw['reference_answer']), 'reference_kind': 'raw_pool_reference',
                          'r1': {'reasoning': reasoning, 'final': final, 'from': 'OpenR1 raw pool (v93 replacement)'}}
             log(f'{old_id} -> {plan[pos]["sample_id"]} (raw pool row {src_i}): {raw["problem"][:120]!r}')
@@ -226,9 +255,10 @@ def cmd_plan(args) -> None:
         raise RuntimeError('Decontamination failed: review new pairs in configs/decontam_review_v93.json')
     if len({r['sample_id'] for r in plan}) != 1000 or len({r['question'] for r in plan}) != 1000:
         raise RuntimeError('Plan must contain 1000 distinct questions')
+    used = {**INPUTS, **{name: pinned_input(name) for name in PINNED}}  # the files actually read
     write_json(PLAN, {'version': 'v93', 'created': now_iso(), 'window': WINDOW,
                       'inputs': {k: {'path': rel(v), 'sha256': sha256_file(v) if v.is_file() else None}
-                                 for k, v in INPUTS.items() if v.exists()},
+                                 for k, v in used.items() if v.exists()},
                       'decontamination': report, 'questions': plan})
     kinds = Counter(r['reference_kind'] for r in plan)
     log(f'Plan written: {PLAN} | origins {dict(Counter(r["origin"] for r in plan))} | references {dict(kinds)}')

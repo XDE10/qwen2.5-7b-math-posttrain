@@ -44,11 +44,19 @@ SOURCES = {
     'S1_qfft_official.json': {'repo': 'lwl-uestc/S1_QFFT', 'revision': '4a1b8ad0a6c319b40b56ee8c8c8873ad67bc8e0c',
                               'file': 'S1_qfft.json',
                               'sha256': '12bf2987d9b4e45249474aab037b5d875c3e83a989e84e3fa815a53531932a63'},
+    # Base-model tokenizer for local token counting (data_build falls back to it when the copy under
+    # data/tokenizers/ is missing or differs).
+    'Qwen2.5-7B-Instruct-tokenizer.json': {'repo': 'Qwen/Qwen2.5-7B-Instruct', 'kind': 'model',
+                                           'revision': 'a09a35458c702b33eeacc393d103063234e8bc28',
+                                           'file': 'tokenizer.json',
+                                           'sha256': 'c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539'},
 }
+SOURCES_DIR = OUT / '_sources'
 
 
 def download(spec: dict) -> bytes:
-    url = f"https://huggingface.co/datasets/{spec['repo']}/resolve/{spec['revision']}/{spec['file']}"
+    prefix = '' if spec.get('kind') == 'model' else 'datasets/'
+    url = f"https://huggingface.co/{prefix}{spec['repo']}/resolve/{spec['revision']}/{spec['file']}"
     with urllib.request.urlopen(url, timeout=300) as response:
         data = response.read()
     digest = sha256_bytes(data)
