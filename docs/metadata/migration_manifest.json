@@ -153,6 +153,27 @@
       ],
       "date": "2026-11-09",
       "purpose": "v93-P5：GPU 默认 G4、--data-root、冒烟总结的状态与约定记录"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "7d1840dd1f3d71f7f9b0028d186a7833c0e76bf8445744e098e607872a09d9c9",
+          "path": "AGENTS.md",
+          "previous_sha256": "61ef9d8421bdb39549b2161bf857f0ad89d339c7b7da15d91adef00ca7ad46f9"
+        },
+        {
+          "current_sha256": "194edd692682988b3da99c6679c84c622efc95dac7b98c5d3fa75be5f5b8985e",
+          "path": "docs/status/current_status.md",
+          "previous_sha256": "0cb1e6f9dc0337028ed2d5fa196b43bc2c12306c1e1871fe6efb803b49d6bdcf"
+        },
+        {
+          "current_sha256": "4944139151f921c8b7689360ffe4f1f223d0ac64bc94465f585c9d59b6d508af",
+          "path": "docs/status/history.md",
+          "previous_sha256": "d1c35b4bb7d900f3c1e1b3f2ffe2050e26ae09535c4bf4bfc33be66c719d3a47"
+        }
+      ],
+      "date": "2026-11-09",
+      "purpose": "v93-P6：WSL2/zsh 环境、rclone Drive、GitHub 报告分支的约定与状态记录"
     }
   ],
   "files": [
@@ -885,11 +906,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 12389,
+      "bytes": 13993,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-09 v93-P5：内容更新后重算",
-      "sha256": "61ef9d8421bdb39549b2161bf857f0ad89d339c7b7da15d91adef00ca7ad46f9"
+      "refactor_note": "2026-11-09 v93-P6：内容更新后重算",
+      "sha256": "7d1840dd1f3d71f7f9b0028d186a7833c0e76bf8445744e098e607872a09d9c9"
     },
     {
       "bytes": 4434,
@@ -28675,18 +28696,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 6322,
+      "bytes": 6971,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-09 v93-P5：内容更新后重算",
-      "sha256": "0cb1e6f9dc0337028ed2d5fa196b43bc2c12306c1e1871fe6efb803b49d6bdcf"
+      "refactor_note": "2026-11-09 v93-P6：内容更新后重算",
+      "sha256": "194edd692682988b3da99c6679c84c622efc95dac7b98c5d3fa75be5f5b8985e"
     },
     {
-      "bytes": 75058,
+      "bytes": 78546,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-09 v93-P5：内容更新后重算",
-      "sha256": "d1c35b4bb7d900f3c1e1b3f2ffe2050e26ae09535c4bf4bfc33be66c719d3a47"
+      "refactor_note": "2026-11-09 v93-P6：内容更新后重算",
+      "sha256": "4944139151f921c8b7689360ffe4f1f223d0ac64bc94465f585c9d59b6d508af"
     },
     {
       "bytes": 77,
