@@ -365,12 +365,10 @@ def gpu_banner() -> None:
 
 
 def copy_to_drive(src: Path, dst: Path) -> None:
-    """Replace a small Drive file with a local one (temp name + rename); a warning on failure."""
+    """Replace a small Drive file (a stage log) with the local one; a warning on failure."""
+    from experiments.qfft_v93.common import sync_file  # stdlib only; falls back to a plain copy on ENOENT
     try:
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        tmp = dst.with_name(dst.name + '.sync')
-        shutil.copyfile(src, tmp)
-        os.replace(tmp, dst)
+        sync_file(src, dst)
     except OSError as error:
         say('WARNING: could not copy', src.name, 'to Drive:', error)
 
