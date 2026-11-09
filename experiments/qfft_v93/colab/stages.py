@@ -365,12 +365,10 @@ def gpu_banner() -> None:
 
 
 def copy_to_drive(src: Path, dst: Path) -> None:
-    """Replace a small Drive file with a local one (temp name + rename); a warning on failure."""
+    """Replace a small Drive file (a stage log) with the local one; a warning on failure."""
+    from experiments.qfft_v93.common import sync_file  # stdlib only; falls back to a plain copy on ENOENT
     try:
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        tmp = dst.with_name(dst.name + '.sync')
-        shutil.copyfile(src, tmp)
-        os.replace(tmp, dst)
+        sync_file(src, dst)
     except OSError as error:
         say('WARNING: could not copy', src.name, 'to Drive:', error)
 
@@ -414,6 +412,15 @@ def stage_sync_data(ctx: Context) -> None:
     shutil.rmtree(staging, ignore_errors=True)
     with tarfile.open(bundle) as tar:
         tar.extractall(staging)
+    staged = staging / 'data/qfft1000_v93/manifest.json'
+    if staged.exists():  # checked before anything on Drive is replaced
+        gaps = json.loads(staged.read_text(encoding='utf-8')).get('gaps') or []
+        if gaps:
+            raise RuntimeError(
+                f'data/qfft1000_v93 is a preview build (data_build build --allow-gaps): {len(gaps)} questions have no '
+                'DeepSeek trace, so the two teachers would train on different questions. Nothing was changed on '
+                'Drive. Finish `teacher fill`, or rebuild with `data_build build --ds-verified --paired-exclusion` '
+                f'to drop those questions from both teachers, then run pipeline.sh d again. First: {gaps[:3]}')
     for sub in ('qfft1000_v93', 'benchmarks_v93'):
         src = staging / 'data' / sub
         if not src.exists():
@@ -432,6 +439,10 @@ def stage_sync_data(ctx: Context) -> None:
             if sha_file(path) != v['sha256']:
                 raise RuntimeError(f'{path} hash differs from manifest')
             say(f'  {name}: {v["rows"]} rows verified')
+        excluded = m.get('paired_exclusions') or []
+        if excluded:
+            say(f'  {len(excluded)} questions dropped from both teachers (paired exclusion): '
+                + ', '.join(e['sample_id'] for e in excluded[:30]))
 
 
 def run_stage(ctx: Context, stage: str, force: bool = False) -> None:

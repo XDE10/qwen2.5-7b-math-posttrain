@@ -383,12 +383,29 @@ def _agreement(a_rows, b_rows) -> dict:
             'only_second': cell[(False, True)], 'both_wrong': cell[(False, False)]}
 
 
+def _effort(tag: str, candidate: dict):
+    return candidate.get('reasoning_effort_requested') or (tag.split('-', 1)[1] if tag.startswith('v86-') else None)
+
+
+def _ds_provenance(rows: list) -> dict:
+    """Where the DeepSeek traces of a variant come from: round, effort, prompt and API, counted per row."""
+    details = [r['teacher_detail'] for r in rows]
+
+    def count(key):
+        return dict(sorted(Counter(str(d.get(key)) for d in details).items()))
+    return {'rounds': dict(sorted(Counter((d.get('verified_swap_to') or d['attempt']).split('-')[0]
+                                          for d in details).items())),
+            'efforts': count('effort'), 'prompt_variants': count('prompt_variant'), 'providers': count('provider')}
+
+
 def cmd_build(args) -> None:
+    if args.allow_gaps and args.paired_exclusion:
+        raise SystemExit('--allow-gaps (preview) and --paired-exclusion (final, paired) cannot be combined')
     plan, counter = load_plan(), TokenCounter()
     variants = {'r1': [], 'ds': []}
     if args.ds_verified:
         variants['ds_verified'] = []
-    gaps = []
+    gaps, excluded = [], []
     pending_grades = []
     for row in plan['questions']:
         base = {'sample_id': row['sample_id'], 'index': row['index'], 'question': row['question'],
@@ -398,18 +415,24 @@ def cmd_build(args) -> None:
         r1_tokens = counter.lengths(row['question'], r1_response)
         if r1_tokens['sft_total'] > WINDOW:
             raise RuntimeError(f"R1 trace for {row['sample_id']} exceeds the window ({r1_tokens['sft_total']})")
-        variants['r1'].append({**base, 'teacher': 'r1', 'response': r1_response, 'tokens': r1_tokens,
-                               'teacher_detail': {'from': row['r1']['from']},
-                               'final_text': row['r1']['final'].strip(),
-                               'reflections': reflection_count(row['r1']['reasoning'])})
+        r1_row = {**base, 'teacher': 'r1', 'response': r1_response, 'tokens': r1_tokens,
+                  'teacher_detail': {'from': row['r1']['from']}, 'final_text': row['r1']['final'].strip(),
+                  'reflections': reflection_count(row['r1']['reasoning'])}
         first, judged = ds_selection(row, counter)
         if first is None:
             gaps.append(row['sample_id'])
+            if args.paired_exclusion:  # neither teacher trains on it, so both sets keep the same questions
+                excluded.append({'sample_id': row['sample_id'], 'index': row['index'],
+                                 'r1_sft_tokens': r1_tokens['sft_total'],
+                                 'ds_attempts': [j[0] + ':' + j[3]['reason'] for j in judged]})
+            else:
+                variants['r1'].append(r1_row)
             continue
+        variants['r1'].append(r1_row)
         tag, path, candidate, verdict = first
         detail = {'attempt': tag, 'path': rel(path), 'provider': candidate.get('provider'),
                   'model_returned': candidate.get('model_returned'),
-                  'effort': candidate.get('reasoning_effort_requested'),
+                  'effort': _effort(tag, candidate),
                   'prompt_variant': candidate.get('prompt_variant', 'v66_original'),
                   'meta_edits': verdict['meta_edits'], 'usage': candidate.get('usage'),
                   'attempts_before': [j[0] + ':' + j[3]['reason'] for j in judged[:judged.index(first)]]}
@@ -420,9 +443,10 @@ def cmd_build(args) -> None:
         if args.ds_verified:
             later = [j for j in judged[judged.index(first) + 1:] if j[3]['usable']]
             variants['ds_verified'].append({**ds_row, '_alternatives': later})
-    if gaps and not args.allow_gaps:
-        raise RuntimeError(f'{len(gaps)} questions still lack a usable DeepSeek trace; run `teacher fill` '
-                           f'(or pass --allow-gaps for a preview build). First: {gaps[:5]}')
+    if gaps and not (args.allow_gaps or args.paired_exclusion):
+        raise RuntimeError(f'{len(gaps)} questions still lack a usable DeepSeek trace; run `teacher fill`, or pass '
+                           '--paired-exclusion to drop them from both teachers (or --allow-gaps for a preview that '
+                           f'cannot be uploaded). First: {gaps[:5]}')
     # Grade every teacher final answer once, in parallel.
     for name, rows in variants.items():
         for r in rows:
@@ -444,7 +468,10 @@ def cmd_build(args) -> None:
                         r.update(response=verdict['response'], tokens=verdict['tokens'], final_text=verdict['final'],
                                  reflections=reflection_count(verdict['reasoning']), teacher_answer_grade='correct')
                         r['teacher_detail'] = {**r['teacher_detail'], 'verified_swap_to': tag,
-                                               'path': rel(path)}
+                                               'path': rel(path), 'provider': candidate.get('provider'),
+                                               'model_returned': candidate.get('model_returned'),
+                                               'effort': _effort(tag, candidate),
+                                               'prompt_variant': candidate.get('prompt_variant', 'v66_original')}
                         swapped += 1
                         break
             log(f'ds_verified: swapped {swapped} checkably-wrong traces for later correct usable attempts')
@@ -452,7 +479,11 @@ def cmd_build(args) -> None:
                 'acceptance_policy': __doc__.split('Acceptance rule')[1].split('\n\n')[0].strip(),
                 'formats': 'Both teachers share the response layout reasoning + "\\n<|im_start|>answer\\n" + final; '
                            'SFT/QFFT encodings are applied at training time (experiments/qfft_v93/formats.py).',
-                'variants': {}, 'gaps': gaps, 'decontamination': {
+                'variants': {},
+                # gaps: DS is missing these while R1 keeps them (preview builds only; pipeline.sh d refuses them).
+                # paired_exclusions: dropped from every variant, so all training sets share the same questions.
+                'gaps': [] if args.paired_exclusion else gaps, 'paired_exclusions': excluded,
+                'decontamination': {
                     k: v for k, v in read_json(PLAN)['decontamination'].items() if k != 'cleared_not_duplicate'}}
     for name, rows in variants.items():
         rows.sort(key=lambda r: r['index'])
@@ -461,7 +492,12 @@ def cmd_build(args) -> None:
         manifest['variants'][name] = {'path': rel(path), 'rows': len(rows),
                                       'sha256': sha256_file(path), 'questions_sha256': sha256_json(
                                           [r['sample_id'] for r in rows]), **_teacher_summary(rows)}
+        if name != 'r1':
+            manifest['variants'][name]['ds_provenance'] = _ds_provenance(rows)
         log(f'{name}: {len(rows)} rows -> {path}')
+    if excluded:
+        log(f'paired exclusion: {len(excluded)} questions dropped from every variant:',
+            ', '.join(e['sample_id'] for e in excluded))
     if variants['ds'] and len(variants['ds']) == len(variants['r1']):
         manifest['agreement_r1_vs_ds'] = _agreement(variants['r1'], variants['ds'])
     write_json(OUT / 'manifest.json', manifest)
@@ -480,6 +516,22 @@ def write_teacher_report(manifest: dict) -> None:
         lines.append(f"| {name} | {v['rows']} | {v['checkable']} | {acc:.1%} | {t.get('mean')}/{t.get('median')}/"
                      f"{t.get('p90')}/{t.get('max')} | {t.get('over_16k')} | {v['reflections_per_1k_words']} |"
                      if acc is not None else f"| {name} | {v['rows']} | 0 | – | – | – | – |")
+    if manifest.get('gaps'):
+        lines += ['', f"**预览构建（--allow-gaps）**：DS 缺 {len(manifest['gaps'])} 题而 R1 不缺，两位教师的题目不同，"
+                      '上表正确率不可直接比较；这份数据不能上传训练（pipeline.sh d 会拒收）。']
+    if manifest.get('paired_exclusions'):
+        excluded = manifest['paired_exclusions']
+        lines += ['', f"成对剔除 {len(excluded)} 题（DS 在全部尝试后仍没有可用轨迹，两位教师都不进训练集，"
+                      f"所有训练臂题目相同）：{', '.join(e['sample_id'] for e in excluded)}。"]
+    sources = [(name, v['ds_provenance']) for name, v in manifest['variants'].items() if v.get('ds_provenance')]
+    if sources:
+        lines += ['', '## DeepSeek 轨迹来源（每行一条）', '']
+
+        def fmt(counts):
+            return '，'.join(f'{k} {n}' for k, n in counts.items())
+        for name, p in sources:
+            lines.append(f"- {name}：轮次 {fmt(p['rounds'])}；reasoning_effort {fmt(p['efforts'])}；"
+                         f"提示词 {fmt(p['prompt_variants'])}；接口 {fmt(p['providers'])}")
     if 'agreement_r1_vs_ds' in manifest:
         a = manifest['agreement_r1_vs_ds']
         lines += ['', '## R1 与 DeepSeek-V4.1-Flash 在同一批可核对题上的对错矩阵', '',
@@ -499,7 +551,11 @@ def main() -> None:
     plan.add_argument('--workers', type=int, default=4)
     sub.add_parser('status')
     build = sub.add_parser('build')
-    build.add_argument('--allow-gaps', action='store_true', help='Preview only: skip questions without a DS trace')
+    build.add_argument('--allow-gaps', action='store_true',
+                       help='Preview only: skip questions without a DS trace in ds/ (R1 keeps them); cannot be uploaded')
+    build.add_argument('--paired-exclusion', action='store_true',
+                       help='Final build without the questions that still lack a DS trace: drop them from every '
+                            'variant (both teachers), recorded in manifest.json and the teacher report')
     build.add_argument('--ds-verified', action='store_true', help='Also write the ds_verified variant')
     build.add_argument('--workers', type=int, default=6)
     a = p.parse_args()

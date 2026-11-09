@@ -38,3 +38,4 @@ D:/anaconda3/envs/genai-test/python.exe -m pytest -q
 - 唯一例外：`qfft/test_qfft_ds_dataset_v63.py` 从 `archive/tools/` 只读加载 v63 造数模块（v63 未进入现行主线，`tools/qfft/` 只有 v66+），仅为保留该历史协议的行为验证；其余测试只加载 `src/`、`scripts/`、`tools/` 下的现行代码。
 - 已归档的 70 个历史测试在 `archive/tests/`（例如 v1…v92 早期 smoke、评测与 QFFT 阶段测试），它们依赖旧路径与旧数据布局，**不保证可直接运行**，不要把它们重新加回 `testpaths`。
 - 新增测试必须落在当前分组内，并确保不依赖本地大数据集或网络；涉及 GPU/API 的路径用离线分支覆盖。
+- 例外：[v93_harness/](v93_harness/README.md) 不是 pytest 用例（文件名不以 `test_` 开头，pytest 不会收集），而是 v93 的 bash launcher、VM 阶段、rclone/GitHub/DeepSeek 客户端的模拟测试，用 `bash tests/v93_harness/run_all.sh` 运行（8 组，共 214 项）。

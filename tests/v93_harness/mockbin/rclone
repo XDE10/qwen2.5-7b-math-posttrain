@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+"""Fake rclone for tests: `mydrive:` maps to $MOCK_RCLONE_ROOT (default $MOCK_ROOT/drive); a mount is a symlink.
+
+MOCK_RCLONE_MOUNT_FAIL=1 makes `mount` fail; MOCK_RCLONE_UPLOAD_LIMIT=1 makes uploads hit the Drive daily limit.
+"""
+import os
+import shutil
+import sys
+from pathlib import Path
+
+root = Path(os.environ.get('MOCK_RCLONE_ROOT') or Path(os.environ['MOCK_ROOT']) / 'drive')
+args = sys.argv[1:]
+with open(Path(os.environ.get('MOCK_ROOT', root.parent)) / 'rclone_calls.log', 'a') as f:
+    f.write(' '.join(args) + '\n')
+cmd = args[0] if args else ''
+pos = [a for a in args[1:] if not a.startswith('-')]
+# drop values of flags that take one
+for flag in ('--transfers', '--checkers', '--drive-chunk-size', '--retries', '--low-level-retries', '--stats',
+             '--stats-log-level', '--multi-thread-streams', '--vfs-cache-mode', '--vfs-cache-max-size', '--poll-interval'):
+    if flag in args:
+        value = args[args.index(flag) + 1]
+        if value in pos:
+            pos.remove(value)
+
+
+def local(p: str) -> Path:
+    if ':' in p and not p.startswith('/'):
+        rel = p.split(':', 1)[1].lstrip('/')
+        return root / rel
+    return Path(p)
+
+
+if cmd == 'version':
+    print('rclone v1.99-mock')
+elif cmd == 'mount':
+    if os.environ.get('MOCK_RCLONE_MOUNT_FAIL'):
+        print('mount failed: fusermount not found', file=sys.stderr)
+        sys.exit(1)
+    mnt = Path(pos[1])
+    root.mkdir(parents=True, exist_ok=True)
+    if mnt.is_dir() and not mnt.is_symlink():
+        mnt.rmdir()
+    if not mnt.exists():
+        mnt.symlink_to(root)
+elif cmd in ('copy', 'copyto') and os.environ.get('MOCK_RCLONE_UPLOAD_LIMIT') and ':' in pos[1]:
+    # what rclone prints with --drive-stop-on-upload-limit once the 750 GiB/day quota is used up
+    print('ERROR : Received upload limit error: googleapi: Error 403: User rate limit exceeded., '
+          'userRateLimitExceeded', file=sys.stderr)
+    sys.exit(7)
+elif cmd == 'copy':
+    src, dst = local(pos[0]), local(pos[1])
+    if not src.exists():
+        print(f'directory not found: {pos[0]}', file=sys.stderr)
+        sys.exit(3)
+    shutil.copytree(src, dst, dirs_exist_ok=True)
+elif cmd == 'copyto':
+    src, dst = local(pos[0]), local(pos[1])
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(src, dst)
+elif cmd == 'moveto':
+    src, dst = local(pos[0]), local(pos[1])
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    os.replace(src, dst)
+elif cmd == 'purge':
+    target = local(pos[0])
+    if not target.exists():
+        print('Failed to purge: directory not found', file=sys.stderr)
+        sys.exit(3)
+    shutil.rmtree(target)
+else:
+    print(f'mock rclone: unsupported {cmd}', file=sys.stderr)
+    sys.exit(2)

@@ -380,14 +380,26 @@ def copy_tree_fast(src, dst) -> None:
 
 
 def sync_file(src, dst) -> None:
-    """Atomically refresh a small file on Drive (e.g. a JSONL journal) from its local copy."""
+    """Refresh a small file on Drive (a JSONL journal, a stage log) from its local copy.
+
+    Normally temp file + rename, so readers never see a half-written file. The rclone mount can refuse that
+    rename with ENOENT while it is still uploading the temp file (seen on a G4 VM for a growing vLLM log); the
+    file is then copied over the old one directly: it is only a mirror, the local copy stays complete.
+    """
     src, dst = Path(src), Path(dst)
     if not src.exists():
         return
     dst.parent.mkdir(parents=True, exist_ok=True)
-    tmp = dst.with_name(dst.name + f'.{os.getpid()}.sync')
+    tmp = dst.with_name(dst.name + f'.{os.getpid()}.{threading.get_ident()}.sync')
     shutil.copyfile(src, tmp)
-    _replace_with_retry(tmp, dst)
+    try:
+        _replace_with_retry(tmp, dst)
+    except FileNotFoundError:
+        shutil.copyfile(src, dst)
+        try:
+            tmp.unlink()
+        except OSError:
+            pass
 
 
 # ----------------------------------------------------------------------------- heartbeat

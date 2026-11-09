@@ -18,6 +18,10 @@
   403/404/413/422) stop the whole run; so do 5 failures in a row or 20 in one run (outage protection),
   so an outage cannot use up every question's budget.
 * `fill` exits with code 3 when questions are still without a usable trace (budget used up).
+* `--efforts` sets reasoning_effort per counted attempt. The official API has three levels, low/high/max
+  (medium is mapped to high). For questions whose high/max traces keep running past the window,
+  `--provider official --efforts low --max-attempts N` adds attempts with the same model and prompt and a
+  smaller thinking budget; the acceptance rule does not change and every row records its effort.
 * Keys are read from environment variables or private files and are never written or printed.
 """
 from __future__ import annotations
@@ -399,7 +403,9 @@ def main() -> None:
     p.add_argument('--official-key-file')
     p.add_argument('--workers', type=int, default=4)
     p.add_argument('--max-attempts', type=int, default=8, help='Total v93 attempts per question (fill)')
-    p.add_argument('--efforts', default='high,high,max,high,max,high,high,max')
+    p.add_argument('--efforts', default='high,high,max,high,max,high,high,max',
+                   help='reasoning_effort per counted attempt, cycled: low, high or max (DeepSeek maps medium to '
+                        'high). `--efforts low` for questions whose traces keep running past the window')
     p.add_argument('--prompt', choices=list(PROMPTS), default='v91_anti_redundancy')
     p.add_argument('--max-tokens', type=int, default=32768)
     p.add_argument('--max-consecutive-errors', type=int, default=5, help='Stop after this many failures in a row')
@@ -479,8 +485,11 @@ def main() -> None:
         for row in remaining[:50]:
             log('  still missing', f"{row['index']:04d}", row['sample_id'], f'budget used {runner.budget_used(row)}')
         log(f'Every listed question used its {a.max_attempts} attempts. Re-run with a larger budget, e.g. '
-            f'`teacher fill --max-attempts {a.max_attempts + 4}` (or set P1_FILL_ARGS for v93_local_data.cmd), '
-            'or switch --provider/--prompt.')
+            f'`teacher fill --max-attempts {a.max_attempts + 4}` (P1_FILL_ARGS for local_data.sh). When the '
+            'attempts keep running past the 32K window, use the lowest thinking effort for the next ones: '
+            f'`teacher fill --provider official --efforts low --max-attempts {a.max_attempts + 8}` (DeepSeek maps '
+            'medium to high, so only low is shorter). Questions that still fail can be dropped from both '
+            'teachers with `data_build build --ds-verified --paired-exclusion`.')
         raise SystemExit(3)
 
 

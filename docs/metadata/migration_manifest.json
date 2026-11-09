@@ -174,6 +174,43 @@
       ],
       "date": "2026-11-09",
       "purpose": "v93-P6：WSL2/zsh 环境、rclone Drive、GitHub 报告分支的约定与状态记录"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "6f89d625ca75baa28825e02b4eaa4a1706dc32ae8fa04267a4d4c6f1c78ba825",
+          "path": "docs/status/history.md",
+          "previous_sha256": "4944139151f921c8b7689360ffe4f1f223d0ac64bc94465f585c9d59b6d508af"
+        }
+      ],
+      "date": "2026-11-09",
+      "purpose": "v93-P6 补充：setup_wsl.sh 保留已装的 colab CLI，检查 rclone 配置与 GitHub token 文件"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "0c724c2af3e09d6b1b45705fe4faa730cc972893f3413c947574d05aae71ea1c",
+          "path": "AGENTS.md",
+          "previous_sha256": "7d1840dd1f3d71f7f9b0028d186a7833c0e76bf8445744e098e607872a09d9c9"
+        },
+        {
+          "current_sha256": "34a369f49f840a2770743e24c50705a9c9473aeb936402efc463eb122a2c7fa7",
+          "path": "README.md",
+          "previous_sha256": "b69fef7fcedb0c4750fa92e7633864601cb890e3803c458f07f0ce2ce40f0867"
+        },
+        {
+          "current_sha256": "a209156cb6e8a4d05d7190f5cfb6e41139280f496b694e3ddaeeb0052a05aa96",
+          "path": "docs/status/current_status.md",
+          "previous_sha256": "194edd692682988b3da99c6679c84c622efc95dac7b98c5d3fa75be5f5b8985e"
+        },
+        {
+          "current_sha256": "c42f94459ece0bdbec1f8ee580a3aae1cb5b36448548eeffc5f9c46d61604cc5",
+          "path": "docs/status/history.md",
+          "previous_sha256": "6f89d625ca75baa28825e02b4eaa4a1706dc32ae8fa04267a4d4c6f1c78ba825"
+        }
+      ],
+      "date": "2026-11-09",
+      "purpose": "v93-P7：迁到本机 Kiro IDE 的交接（新增 docs/handover/kiro_ide_onboarding.md、docs/handover/templates/、.kiro/steering/v93-local-execution.md、experiments/qfft_v93/check_local.sh、tests/v93_harness/），冒烟实测与 23 题方案写入状态文档"
     }
   ],
   "files": [
@@ -906,11 +943,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 13993,
+      "bytes": 15442,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-09 v93-P6：内容更新后重算",
-      "sha256": "7d1840dd1f3d71f7f9b0028d186a7833c0e76bf8445744e098e607872a09d9c9"
+      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
+      "sha256": "0c724c2af3e09d6b1b45705fe4faa730cc972893f3413c947574d05aae71ea1c"
     },
     {
       "bytes": 4434,
@@ -922,11 +959,11 @@
       "source_sha256": "af9fa4d5f8526bc62685c2a9f8ff2413a2aaba4bbc6ce715cc8fcff360e496b2"
     },
     {
-      "bytes": 8665,
+      "bytes": 8797,
       "note": "size synced 2026-11-08 doc update",
       "path": "README.md",
-      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
-      "sha256": "b69fef7fcedb0c4750fa92e7633864601cb890e3803c458f07f0ce2ce40f0867"
+      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
+      "sha256": "34a369f49f840a2770743e24c50705a9c9473aeb936402efc463eb122a2c7fa7"
     },
     {
       "bytes": 745,
@@ -28696,18 +28733,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 6971,
+      "bytes": 5003,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-09 v93-P6：内容更新后重算",
-      "sha256": "194edd692682988b3da99c6679c84c622efc95dac7b98c5d3fa75be5f5b8985e"
+      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
+      "sha256": "a209156cb6e8a4d05d7190f5cfb6e41139280f496b694e3ddaeeb0052a05aa96"
     },
     {
-      "bytes": 78546,
+      "bytes": 83417,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-09 v93-P6：内容更新后重算",
-      "sha256": "4944139151f921c8b7689360ffe4f1f223d0ac64bc94465f585c9d59b6d508af"
+      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
+      "sha256": "c42f94459ece0bdbec1f8ee580a3aae1cb5b36448548eeffc5f9c46d61604cc5"
     },
     {
       "bytes": 77,

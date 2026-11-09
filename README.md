@@ -5,6 +5,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - **当前状态**：[docs/status/current_status.md](docs/status/current_status.md)
 - **协作约定与阅读入口**：[AGENTS.md](AGENTS.md)
 - **逐版本历史（v1…v93）**：[docs/status/history.md](docs/status/history.md)
+- **接手当前工作（本机 Kiro IDE / WSL2）**：[docs/handover/kiro_ide_onboarding.md](docs/handover/kiro_ide_onboarding.md)
 - **v93 方案与面试材料**：[docs/blueprints/三周冲刺方案_v93.md](docs/blueprints/三周冲刺方案_v93.md)、[docs/interview/面试追问与参考答案.md](docs/interview/面试追问与参考答案.md)
 
 ## 当前主线从哪开始读（v93）
