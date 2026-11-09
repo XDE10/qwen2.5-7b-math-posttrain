@@ -166,7 +166,7 @@ def grpo(root: Path, stages_dir: Path, logs_dir: Path) -> list:
     if steps:
         lines.append(f"  s/step: {' / '.join(_f(r.get('time/seconds_per_step'), 0) for r in steps)} | GPU peak allocated "
                      f"{_f(_num(steps, 'gpu/peak_allocated_gib'))} GiB, reserved {_f(_num(steps, 'gpu/peak_reserved_gib'))}"
-                     f" GiB (training process; vLLM memory is extra) | host RSS max {_f(_num(steps, 'host/rss_gib'))} GiB")
+                     f" GiB (one process: trainer + colocated vLLM) | host RSS max {_f(_num(steps, 'host/rss_gib'))} GiB")
         keys = ['completions/mean_length', 'completions/clipped_ratio', 'reward', 'frac_reward_zero_std', 'entropy']
         lines.append('  ' + ' | '.join(f"{k} {_f(steps[-1].get(k), 3)}" for k in keys if k in steps[-1]))
     calls = _jsonl(run / 'reward_status.jsonl')
