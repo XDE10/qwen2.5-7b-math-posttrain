@@ -169,7 +169,7 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 | `local_data.sh` | WSL2/Linux 上的本地造数一键入口（五步） |
 | `check_local.sh` | 本机只读自检（代理、CLI、凭据与权限、Drive、解释器、数据状态、最近的 Colab 报告） |
 | `colab/setup_wsl.sh`、`windows/v93_colab.cmd`、`windows/v93_local_data.cmd` | WSL 一次性安装、检查（rclone 配置、GitHub token 文件）与登录；Windows 下的 Colab 阶段入口与本地造数入口 |
-| `envs/*.txt` | 训练附加包、推理与 RL 虚拟环境（2026-11-08 在 PyPI 核对过版本约束） |
+| `envs/*.txt` | 训练附加包、推理与 RL 虚拟环境（2026-11-08 在 PyPI 核对过版本约束）；`envs/resolved_20261109/` 是按 Python 3.12/3.13 解析出的完整依赖，仅供参考 |
 
 ## 六、已验证与未验证
 
