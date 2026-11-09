@@ -44,6 +44,7 @@ proxy="${HTTPS_PROXY:-${https_proxy:-${ALL_PROXY:-${all_proxy:-}}}}"
 if [[ -n $proxy ]]; then
   ok "proxy set: $(no_userinfo <<< "$proxy")"
 elif [[ -f $HOME/.proxy_env.sh ]]; then
+  # shellcheck disable=SC2088  # the tilde is shown to the user, who types it in zsh
   warn "~/.proxy_env.sh exists but no proxy variable is set in this shell: run 'source ~/.proxy_env.sh' first"
 else
   ok "no proxy configured (none needed if GitHub and Google are reachable directly)"
@@ -177,7 +178,8 @@ PY
   if [[ ${ngaps:-0} != 0 ]]; then
     warn "manifest is a preview build ($ngaps DS gaps, $rows; $created): pipeline.sh d refuses it"
   else
-    ok "manifest $created: $rows${nexcluded:+, paired exclusions $nexcluded}"
+    extra=""; [[ ${nexcluded:-0} != 0 ]] && extra=", $nexcluded questions dropped from both teachers"
+    ok "manifest $created: $rows$extra"
   fi
 else
   echo "  info  no manifest yet (data_build build has not run)"
