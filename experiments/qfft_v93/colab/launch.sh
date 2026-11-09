@@ -313,20 +313,23 @@ if os.path.exists(UPLOAD):
     shutil.move(UPLOAD, CONF)
 if os.path.exists(CONF):
     os.chmod(CONF, 0o600)
+    print('[mount] rclone.conf ready', flush=True)
 else:
     print('no rclone config at', CONF, flush=True)
 if not mounted():
     if shutil.which('rclone') is None or not (shutil.which('fusermount3') or shutil.which('fusermount')):
-        code, out = run(['apt-get', 'install', '-y', '-qq', 'rclone', 'fuse3'], 600)
+        print('[mount] Installing rclone and fuse3 via apt-get...', flush=True)
+        code, out = run(['apt-get', 'install', '-y', '-qq', 'rclone', 'fuse3'], 300)
         if code != 0:  # no or stale package lists: update once, then retry
-            print('apt-get install failed; running apt-get update:', out[-300:], flush=True)
-            run(['apt-get', 'update', '-qq'], 300)
-            code, out = run(['apt-get', 'install', '-y', '-qq', 'rclone', 'fuse3'], 600)
+            print('[mount] apt-get install failed; running apt-get update...', flush=True)
+            run(['apt-get', 'update', '-qq'], 180)
+            code, out = run(['apt-get', 'install', '-y', '-qq', 'rclone', 'fuse3'], 300)
         print('install rclone fuse3: exit', code, out[-300:] if code else '', flush=True)
     os.makedirs(MNT, exist_ok=True)
-    code, out = run(['rclone', 'mount', REMOTE, MNT, *FLAGS], 120)
+    print(f'[mount] Mounting {REMOTE} at {MNT}...', flush=True)
+    code, out = run(['rclone', 'mount', REMOTE, MNT, *FLAGS], 60)
     print('rclone mount: exit', code, out[-500:], flush=True)
-    for _ in range(60):
+    for _ in range(30):
         if mounted():
             break
         time.sleep(1)
@@ -340,10 +343,11 @@ print('P1_MOUNT_' + ('OK' if ok else 'FAILED'), flush=True)
 '''
 pathlib.Path(out).write_text(code, encoding='utf-8')
 PY
-  MOUNT_OUT="$(colab exec -s "$SESSION" --timeout 1500 -f "$WORK/mount.py" 2>&1 || true)"
-  printf '%s\n' "$MOUNT_OUT" | grep -a -v '^\[colab\]' | tail -n 8
-  if ! grep -q 'P1_MOUNT_OK' <<< "$MOUNT_OUT"; then
-    echo "rclone could not mount $RCLONE_REMOTE at $DRIVE_ROOT on $SESSION (output above); the VM is released."
+  MOUNT_LOG="$WORK/mount.log"
+  echo "Mounting Google Drive ($RCLONE_REMOTE at $DRIVE_ROOT)..."
+  colab exec -s "$SESSION" --timeout 300 -f "$WORK/mount.py" 2>&1 | tee "$MOUNT_LOG" | grep -a -v '^\[colab\]' || true
+  if ! grep -q 'P1_MOUNT_OK' "$MOUNT_LOG"; then
+    echo "rclone could not mount $RCLONE_REMOTE at $DRIVE_ROOT on $SESSION (see log above); the VM is released."
     echo "To debug by hand: rerun with --keep, then 'colab console -s SESSION' (a bash shell) and run the"
     echo "mount steps from experiments/qfft_v93/README.md; or use --drive colab."
     exit 1
