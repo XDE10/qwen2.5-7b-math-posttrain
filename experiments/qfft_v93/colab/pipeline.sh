@@ -29,16 +29,16 @@ CPU=("${OPTS[@]}" --gpu cpu)
 TAGS=base,qwen_math,qfft_official,sft_repro,sft_ds_v93,qfft_ds_v93,grpo_qfft_ds_v93_merged,sft_r1_v93,qfft_r1_v93
 
 case "$PHASE" in
-  0) "$L" "${CPU[@]}" benchmarks models:base,qwen_math,qfft_official,sft_repro ;;
-  d) "$L" "${CPU[@]}" --with-data sync-data ;;
-  1) "$L" "${TRAIN[@]}" smoke-train smoke-eval smoke-grpo ;;
-  2) "$L" "${EVAL[@]}" eval:base:full eval:qfft_official:full eval:sft_repro:full eval:qwen_math:full ;;
-  3) "$L" "${TRAIN[@]}" train:qfft_ds eval:run:qfft_ds_v93:full
-     "$L" "${TRAIN[@]}" train:sft_ds  eval:run:sft_ds_v93:full ;;
-  4) "$L" "${TRAIN[@]}" grpo:grpo_qfft_ds eval:run:grpo_qfft_ds_v93/merged:full ;;
-  5) "$L" "${TRAIN[@]}" train:qfft_r1 eval:run:qfft_r1_v93:full
-     "$L" "${TRAIN[@]}" train:sft_r1  eval:run:sft_r1_v93:full ;;
-  6) "$L" "${TRAIN[@]}" grpo:grpo_sft_ds eval:run:grpo_sft_ds_v93/merged:full ;;
-  7) "$L" "${CPU[@]}" score status "analyze:$TAGS:grpo_qfft_ds_v93" ;;
+  0) bash "$L" "${CPU[@]}" benchmarks models:base,qwen_math,qfft_official,sft_repro ;;
+  d) bash "$L" "${CPU[@]}" --with-data sync-data ;;
+  1) bash "$L" "${TRAIN[@]}" smoke-train smoke-eval smoke-grpo ;;
+  2) bash "$L" "${EVAL[@]}" eval:base:full eval:qfft_official:full eval:sft_repro:full eval:qwen_math:full ;;
+  3) bash "$L" "${TRAIN[@]}" train:qfft_ds eval:run:qfft_ds_v93:full
+     bash "$L" "${TRAIN[@]}" train:sft_ds  eval:run:sft_ds_v93:full ;;
+  4) bash "$L" "${TRAIN[@]}" grpo:grpo_qfft_ds eval:run:grpo_qfft_ds_v93/merged:full ;;
+  5) bash "$L" "${TRAIN[@]}" train:qfft_r1 eval:run:qfft_r1_v93:full
+     bash "$L" "${TRAIN[@]}" train:sft_r1  eval:run:sft_r1_v93:full ;;
+  6) bash "$L" "${TRAIN[@]}" grpo:grpo_sft_ds eval:run:grpo_sft_ds_v93/merged:full ;;
+  7) bash "$L" "${CPU[@]}" score status "analyze:$TAGS:grpo_qfft_ds_v93" ;;
   *) sed -n '2,20p' "$0"; exit 1 ;;
 esac

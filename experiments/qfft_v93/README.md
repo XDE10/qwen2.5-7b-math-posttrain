@@ -19,7 +19,9 @@ v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测�
 
 ## 一、本地（Windows 工作站，CPU）：把 1000 题数据做完
 
-在仓库根目录，用 `D:/anaconda3/envs/genai-test/python.exe`（需要 pandas、pyarrow、tokenizers；Math-Verify 用 `.pilot_deps`）：
+一键：双击 `experiments\qfft_v93\windows\v93_local_data.cmd`，它按顺序跑下面五步，出错即停，重跑会续做（解释器默认 `D:\anaconda3\envs\genai-test\python.exe`，可用环境变量 `P1_PYTHON` 改）。
+
+手动：在仓库根目录，用 `D:/anaconda3/envs/genai-test/python.exe`（需要 pandas、pyarrow、tokenizers；Math-Verify 用 `.pilot_deps`）：
 
 ```bash
 python -m experiments.qfft_v93.fetch_benchmarks --sources   # 固定 revision 下载评测集，核对 MATH-500 封存摘要
@@ -36,9 +38,11 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 
 ## 二、Colab：一键运行
 
-需要 Linux 或 WSL2（Colab CLI 不支持原生 Windows）。以下内容按 google-colab-cli 0.7.5 的源码与 `--help` 核对过（2026-11-08）：
+需要 Linux 或 WSL2（Colab CLI 不支持原生 Windows）。以下内容按 google-colab-cli 0.7.5 的源码与 `--help` 核对过（2026-11-08）。
 
-1. 安装：`uv tool install google-colab-cli`。CLI 要求 Python ≥ 3.12，uv 会自动下载。
+Windows 上的一键方式：管理员 PowerShell 里 `wsl --install` 并重启一次；之后都用 `experiments\qfft_v93\windows\v93_colab.cmd`：`setup`（在 WSL 里装 uv 与 Colab CLI、检查仓库和换行符、登录）→ `ping` → `0`、`1`、`2`、`d`、`3`……（参数原样传给 pipeline.sh，例如 `v93_colab.cmd 3 --gpu G4`），另有 `status`、`attach SESSION`。双击不带参数时会提示输入。仓库根目录的 `.gitattributes` 让 `*.sh` 在任何 `core.autocrlf` 设置下都检出为 LF；在 `/mnt/d` 下若提示 Permission denied，用 `bash experiments/qfft_v93/colab/pipeline.sh ...` 运行。
+
+1. 安装：`uv tool install google-colab-cli`（或 `bash experiments/qfft_v93/colab/setup_wsl.sh`）。CLI 要求 Python ≥ 3.12，uv 会自动下载。
 2. 登录：第一次运行任何 `colab` 命令会打印一个 Google 授权链接，在浏览器里同意后把页面显示的授权码粘贴回终端，令牌缓存在 `~/.config/colab-cli/token.json`。`colab auth` 是给 VM 内代码授权 GCP 的，不是 CLI 登录。
 3. Drive：第一次 `colab drivemount` 会再打印一个"允许 Colab 访问 Drive"的链接，同意后按回车。之后新 VM 自动挂载，不再提示。
 4. 先花一分钟 CPU 做端到端检查：`launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、释放）。
@@ -108,6 +112,7 @@ experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md�
 | `grpo.py` / `merge_lora.py` | TRL GRPO + LoRA + 同卡 vLLM、合并导出 |
 | `checkpointing.py` / `telemetry.py` / `models.py` / `common.py` | 镜像与恢复、SwanLab、模型准备、公共工具 |
 | `colab/launch.sh` / `colab/pipeline.sh` / `colab/remote.py` / `colab/stages.py` | 一键调度 |
+| `colab/setup_wsl.sh`、`windows/v93_colab.cmd`、`windows/v93_local_data.cmd` | WSL 一次性安装与登录；Windows 下的 Colab 阶段入口与本地造数入口 |
 | `envs/*.txt` | 训练附加包、推理与 RL 虚拟环境（2026-11-08 在 PyPI 核对过版本约束） |
 
 ## 六、已验证与未验证

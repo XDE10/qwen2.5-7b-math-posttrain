@@ -58,7 +58,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 ## 路径、启动与恢复
 
-- 本地命令一律在仓库根目录执行；`pytest` 用 `D:/anaconda3/envs/genai-test/python.exe -m pytest`。
+- 本地命令一律在仓库根目录执行；`pytest` 用 `D:/anaconda3/envs/genai-test/python.exe -m pytest`。Windows 一键入口：`experiments/qfft_v93/windows/v93_local_data.cmd`（本地造数五步）与 `v93_colab.cmd`（经 WSL 调 Colab 阶段，`setup` 做一次性安装与登录）。`.gitattributes` 固定 v93 的 `*.sh` 为 LF、`*.cmd` 为 CRLF，不要改回。
 - Drive 持久目录：v93 用 `projects/project1/v93`（数据、代码包、环境快照）、`models`（与 v26 共用，基座目录不变）、`runs/project1/v93`（runs、evals、stages、logs、figures）；VM 本地工作区 `/content/p1`。v26 的工作副本 `/content/workspaces/aimo-sft-v26` 与结果 `runs/project1/aimo_sft_v26` 只作历史。
 - v93 起不再用 VS Code 远程终端：在 Linux/WSL2 上装 Colab CLI，用 `experiments/qfft_v93/colab/launch.sh` 或 `pipeline.sh` 启动；每次调用新建 VM、挂载 Drive、上传代码包、跑阶段、结束后释放。任务跑在 VM 的 kernel 里：断线、关终端或 Ctrl+C 不会中止它（`launch.sh --attach <session>` 重新跟踪，`colab stop -s <session>` 才是中止）。`launch.sh --gpu cpu status` 查看所有阶段与训练进度。
 - v26 的旧入口 `python3 /content/drive/MyDrive/projects/project1/start_aimo_sft_v28.py` 只用于复现历史。

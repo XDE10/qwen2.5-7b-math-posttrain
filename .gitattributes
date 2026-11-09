@@ -1,0 +1,4 @@
+# v93 entry points keep their native line endings on every checkout, whatever core.autocrlf says:
+# the bash scripts run inside WSL/Linux and fail with CRLF; cmd.exe batch files expect CRLF.
+experiments/qfft_v93/**/*.sh text eol=lf
+experiments/qfft_v93/**/*.cmd text eol=crlf

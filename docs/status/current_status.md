@@ -35,6 +35,6 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 
 ## 下一步
 
-1. 工作站：`python -m experiments.qfft_v93.fetch_benchmarks --sources` → `data_build plan` → `data_build status` → `teacher fill --fallback-official` → `data_build build --ds-verified`，读 `data/qfft1000_v93/teacher_report.md`。
-2. 与第 1 步并行：WSL2 上 `uv tool install google-colab-cli`，第一次命令按提示粘贴授权码；`launch.sh --gpu cpu ping:30` 做端到端检查（第一次挂载 Drive 要在浏览器里同意一次），再 `pipeline.sh 0`（VM 上下载评测集和模型）→ `pipeline.sh 1`（最坏长度冒烟）→ `pipeline.sh 2`（锚点），这三步都不依赖本地数据。
+1. 工作站：双击 `experiments\qfft_v93\windows\v93_local_data.cmd`（依次 `fetch_benchmarks --sources` → `data_build plan` → `data_build status` → `teacher fill --fallback-official` → `data_build build --ds-verified`，出错即停、重跑续做），读 `data/qfft1000_v93/teacher_report.md`。
+2. 与第 1 步并行：`wsl --install` 后用 `experiments\qfft_v93\windows\v93_colab.cmd setup`（WSL 里装 uv 与 Colab CLI，第一次按提示粘贴授权码），`v93_colab.cmd ping`（即 `launch.sh --gpu cpu ping:30`）做端到端检查（第一次挂载 Drive 要在浏览器里同意一次），再 `pipeline.sh 0`（VM 上下载评测集和模型）→ `pipeline.sh 1`（最坏长度冒烟）→ `pipeline.sh 2`（锚点），这三步都不依赖本地数据。
 3. 第 1 步完成后 `pipeline.sh d` 上传数据，核对冒烟的 s/step、峰值显存、主机内存后开阶段 3–5。
