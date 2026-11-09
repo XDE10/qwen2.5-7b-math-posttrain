@@ -16,6 +16,7 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 - 训练：`train_sft.py`（全参 SFT/QFFT，ZeRO-2 offload、Liger、本地检查点 + Drive 后台镜像 + 自动恢复）、`grpo.py` + `merge_lora.py`（TRL GRPO + LoRA + 同卡 vLLM）。
 - 评测：`generate.py`（连续批处理、逐条落盘、按采样粒度续跑）、`score.py`（最终段判分、mean@n/pass@k/maj@n、配对 bootstrap、results.md）、`analyze.py`（五类图）。
 - 调度：`colab/launch.sh`、`colab/pipeline.sh`、`colab/remote.py`、`colab/stages.py`。已按 google-colab-cli 0.7.5 的源码核对命令与参数，并改为断线不中止任务（`--attach` 重新跟踪）、阶段心跳租约防止两台 VM 重复跑、GPU 列表回退与等待、大文件分片上传、Drive 挂载检查、`ping` 端到端检查；模拟 CLI 下 10 个场景 42 项检查通过。
+- 冒烟按最坏长度：全参用 32 条恰好 32,768 token 的序列（`smoke_data.py`，由公开 s1K-1.1 拼接，只用于测量），GRPO 用真实批形状并把 completion 强制生成到 8192 token；训练类阶段先检查主机内存（< 128 GiB 报错）。评测集可在 VM 上按固定 revision 下载（`benchmarks` 阶段），阶段 0–2 因此不依赖本地造数；本地数据做完后用新的阶段 `d` 上传。
 - 修复的 P0：`src/training/approved_hf.py` 与 `src/training/math_reward_v2.py` 的判分 worker 路径（11-08 重构后失效，approved_hf 会静默把所有奖励算成 0），并改为基础设施失败直接报错。
 - CPU 实跑验证：模板与官方 S1_QFFT 数据逐字一致（1000/1000）；判分器 10 个边界用例；微型模型上的全参训练、模拟 VM 丢失后从 Drive 恢复续跑、身份校验；假引擎生成续跑与判分；TRL GRPO + LoRA + 恢复 + 合并；合成数据上的 plan/status/fill/build；launch.sh/remote.py 调度流程。原有测试结果不变（本环境缺本地数据导致的 1 failed + 4 errors 与改动前相同）。
 - 参照数字：R1 教师在 s1K-1.1 的 742 道可核对题上答对 62.7%；R1 response 最长 26,835 token，32K 窗口可全部容纳。
@@ -35,4 +36,5 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 ## 下一步
 
 1. 工作站：`python -m experiments.qfft_v93.fetch_benchmarks --sources` → `data_build plan` → `data_build status` → `teacher fill --fallback-official` → `data_build build --ds-verified`，读 `data/qfft1000_v93/teacher_report.md`。
-2. WSL2 上 `uv tool install google-colab-cli`，第一次命令按提示粘贴授权码；`launch.sh --gpu cpu ping:30` 做端到端检查（第一次挂载 Drive 要在浏览器里同意一次），再 `pipeline.sh 0` → `pipeline.sh 1`，核对 s/step、峰值显存、主机内存后再开阶段 2–5。
+2. 与第 1 步并行：WSL2 上 `uv tool install google-colab-cli`，第一次命令按提示粘贴授权码；`launch.sh --gpu cpu ping:30` 做端到端检查（第一次挂载 Drive 要在浏览器里同意一次），再 `pipeline.sh 0`（VM 上下载评测集和模型）→ `pipeline.sh 1`（最坏长度冒烟）→ `pipeline.sh 2`（锚点），这三步都不依赖本地数据。
+3. 第 1 步完成后 `pipeline.sh d` 上传数据，核对冒烟的 s/step、峰值显存、主机内存后开阶段 3–5。

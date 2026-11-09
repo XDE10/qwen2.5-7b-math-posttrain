@@ -44,15 +44,22 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 4. 先花一分钟 CPU 做端到端检查：`launch.sh --gpu cpu ping:30`（开 VM、挂 Drive、上传、执行、写日志、释放）。
 
 ```bash
-experiments/qfft_v93/colab/pipeline.sh 0   # CPU VM：上传数据，下载固定 revision 的模型到 Drive
-experiments/qfft_v93/colab/pipeline.sh 1   # 冒烟：2 步全参、24 条生成、2 步 GRPO（H100 优先，其次 G4）
+# 阶段 0–2 不依赖本地数据，可以和第一节的造数并行
+experiments/qfft_v93/colab/pipeline.sh 0   # CPU VM：在 VM 上按固定 revision 下载评测集和模型到 Drive
+experiments/qfft_v93/colab/pipeline.sh 1   # 冒烟（最坏长度，H100 优先，其次 G4），见下文
 experiments/qfft_v93/colab/pipeline.sh 2   # 锚点评测（G4 优先，其次 H100）
+# 本地 data_build build 完成后
+experiments/qfft_v93/colab/pipeline.sh d   # CPU VM：上传 data/qfft1000_v93（及评测集），核对哈希
 experiments/qfft_v93/colab/pipeline.sh 3   # DeepSeek 对：QFFT、SFT，各自训完立即评测
 experiments/qfft_v93/colab/pipeline.sh 4   # LoRA-GRPO + 合并 + 评测
 experiments/qfft_v93/colab/pipeline.sh 5   # R1 对
 experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md、图
 ```
 
+- 冒烟按最坏情况设计，量出来的峰值就是正式训练的上限：
+  - 全参：32 条恰好填满 32,768 token 的序列（`smoke_data.py`，由公开的 s1K-1.1 轨迹按训练格式拼接截取，只用于测量），真实配方跑 2 步并本地存一次 122 GB 检查点。
+  - GRPO：真实批形状（8 题 × 8 采样），用 vLLM 的 `min_tokens` 把每条 completion 强制生成到 8192 token，跑 2 步并存检查点。
+  - 训练类阶段开始前检查主机内存：低于 128 GiB 直接报错（ZeRO-2 offload 的优化器状态约 122 GB），低于 150 GiB 给出警告。
 - 后面可以接 launch.sh 的参数，例如 `pipeline.sh 3 --gpu G4 --wait-min 180`：只用 G4，分不到卡时每 5 分钟重试，最多 3 小时。`--gpu` 支持逗号列表（按顺序尝试）；不认识的卡名会直接报错，因为 CLI 会把未知名称静默当成 A100。
 - 单个阶段直接用 `launch.sh`，例如 `launch.sh --gpu G4 eval:run:qfft_ds_v93:full`；`launch.sh --gpu cpu status` 打印所有阶段（运行中的会显示所在 VM 和心跳）、训练进度和评测完成度。
 - 每次调用：`colab new --high-mem [--gpu ...]` → `colab drivemount` 并检查 `/content/drive/MyDrive` → 上传代码包（大文件按 8 MiB 分片，VM 端重组并核对 SHA-256）→ `colab exec` 执行 `colab/remote.py` → 看到 `P1_RESULT` 后释放 VM（`--keep` 保留，便于 `colab console` 排查）。本地日志在 `reports/colab_logs/<session>.log`，VM 端日志在 Drive `runs/project1/v93/logs/`。
@@ -93,7 +100,8 @@ experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md�
 | `grading.py` | 最终段判分、带超时的进程池、多数投票聚类 |
 | `metrics.py` | pass@k、bootstrap、配对检验、长度与行为统计 |
 | `decontam.py` + [configs/decontam_review_v93.json](configs/decontam_review_v93.json) | 13-gram + 相似度去污，17 对已人工复核 |
-| `fetch_benchmarks.py` | 固定 revision 与 SHA-256 下载评测集 |
+| `fetch_benchmarks.py` | 固定 revision 与 SHA-256 下载评测集（本地或 VM 上的 `benchmarks` 阶段） |
+| `smoke_data.py` | 冒烟用的最坏长度序列（每条恰好填满训练窗口，只用于测量） |
 | `data_build.py` / `teacher.py` | 1000 题计划、准入、API 补齐、两份训练集与教师报告 |
 | `train_sft.py` | 全参 SFT/QFFT（DeepSpeed ZeRO-2 offload、Liger、Drive 镜像续跑） |
 | `generate.py` / `score.py` / `analyze.py` | 生成、判分汇总、图表 |
@@ -104,5 +112,5 @@ experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、results.md�
 
 ## 六、已验证与未验证
 
-- CPU 上已实跑：模板与官方 S1_QFFT 数据逐字一致（1000/1000）；SFT/QFFT 编码不变量；判分器 10 个边界用例；微型 Qwen2 上的全参训练、模拟 VM 丢失后从 Drive 镜像恢复并续跑到结束、SFT 格式、身份校验；假引擎生成的按采样粒度续跑与判分汇总；TRL 1.17.1 GRPO + LoRA + 奖励 + 镜像 + 恢复 + 合并；合成数据上的 plan/status/fill/build 全流程；launch.sh 与 remote.py 的调度流程（模拟 CLI）。
-- 只能在 GPU 上验证：DeepSpeed CPU-Adam 的速度与主机内存、Liger 在 32K 下的显存、vLLM 0.32/0.33 在 G4（Blackwell）与 H100 上的吞吐、122 GB 检查点镜像到 Drive 的实际耗时。阶段 1 的冒烟就是为这些准备的，跑完先看日志里的 `s/step`、`peakGPU`、`host/rss_gib`。
+- CPU 上已实跑：模板与官方 S1_QFFT 数据逐字一致（1000/1000）；SFT/QFFT 编码不变量；判分器 10 个边界用例；微型 Qwen2 上的全参训练、模拟 VM 丢失后从 Drive 镜像恢复并续跑到结束、SFT 格式、身份校验；假引擎生成的按采样粒度续跑与判分汇总；TRL 1.17.1 GRPO + LoRA + 奖励 + 镜像 + 恢复 + 合并；合成数据上的 plan/status/fill/build 全流程；launch.sh 与 remote.py 的调度流程（按 google-colab-cli 0.7.5 行为写的模拟 CLI，11 个场景）；冒烟序列用真实 Qwen tokenizer 生成，QFFT 32 条、SFT 4 条都恰好 32,768 token。
+- 只能在 GPU 上验证：DeepSpeed CPU-Adam 的速度与主机内存、Liger 在 32K 下的显存、vLLM 0.32/0.33 在 G4（Blackwell）与 H100 上的吞吐、122 GB 检查点镜像到 Drive 的实际耗时。阶段 1 的冒烟按最坏长度测这些，跑完先看日志里的 `s/step`、`peakGPU`、`host/rss_gib`。

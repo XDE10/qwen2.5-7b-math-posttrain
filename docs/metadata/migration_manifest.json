@@ -79,6 +79,22 @@
       ],
       "date": "2026-11-08",
       "purpose": "v93-P1：按 google-colab-cli 0.7.5 核对调度脚本，更新登录/断线/租约说明与状态记录"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "c0fb0863c56b18b61ed698ffad7552003dacd9656666b976ae22ca1420926a78",
+          "path": "docs/status/current_status.md",
+          "previous_sha256": "80774dfadba94e3eea95541e40e7b876ecf5fd07c2a2d053edd8e1645303e101"
+        },
+        {
+          "current_sha256": "d7c3a12cd74362ada7ca031056f9dd1a0dd8e21608884fda790549f5ea289ecb",
+          "path": "docs/status/history.md",
+          "previous_sha256": "ae09d3379986b310b034b86824e7db744d5019969c92f1b535f552ef0cece9c8"
+        }
+      ],
+      "date": "2026-11-08",
+      "purpose": "v93-P2：冒烟改为最坏长度、阶段 0–2 不依赖本地数据的状态记录"
     }
   ],
   "files": [
@@ -28601,18 +28617,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 4559,
+      "bytes": 5206,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
-      "sha256": "80774dfadba94e3eea95541e40e7b876ecf5fd07c2a2d053edd8e1645303e101"
+      "refactor_note": "2026-11-08 v93-P2：内容更新后重算",
+      "sha256": "c0fb0863c56b18b61ed698ffad7552003dacd9656666b976ae22ca1420926a78"
     },
     {
-      "bytes": 68240,
+      "bytes": 69490,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-08 v93-P1：内容更新后重算",
-      "sha256": "ae09d3379986b310b034b86824e7db744d5019969c92f1b535f552ef0cece9c8"
+      "refactor_note": "2026-11-08 v93-P2：内容更新后重算",
+      "sha256": "d7c3a12cd74362ada7ca031056f9dd1a0dd8e21608884fda790549f5ea289ecb"
     },
     {
       "bytes": 77,
