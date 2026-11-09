@@ -1,0 +1,6 @@
+[11-09 17:45:03] math500: 500 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/math500.jsonl
+[11-09 17:45:05] aime24: 30 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/aime24.jsonl
+[11-09 17:45:05] aime25: 30 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/aime25.jsonl
+[11-09 17:45:05] amc23: 40 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/amc23.jsonl
+[11-09 17:45:06] gsm8k: 1319 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/gsm8k.jsonl
+[11-09 17:45:06] MATH-500 sealed digest verified; manifest written to /content/mydrive/projects/project1/v93/data/benchmarks_v93/manifest.json

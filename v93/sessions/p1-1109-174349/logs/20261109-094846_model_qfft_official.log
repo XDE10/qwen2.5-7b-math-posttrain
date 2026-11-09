@@ -1,0 +1,18 @@
+[11-09 17:48:47] qfft_official: downloading lwl-uestc/QFFT-S1-7B@ecb7ff937689 ...
+
+Fetching 16 files:   0%|          | 0/16 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 16 files:   6%|▋         | 1/16 [00:00<00:06,  2.49it/s]
+Fetching 16 files:  31%|███▏      | 5/16 [00:00<00:00, 11.71it/s]
+Fetching 16 files:  50%|█████     | 8/16 [00:00<00:00, 10.05it/s]
+Fetching 16 files:  62%|██████▎   | 10/16 [00:01<00:00,  8.29it/s]
+Fetching 16 files:  75%|███████▌  | 12/16 [00:04<00:02,  1.62it/s]
+Fetching 16 files:  81%|████████▏ | 13/16 [00:15<00:07,  2.55s/it]
+Fetching 16 files:  88%|████████▊ | 14/16 [00:45<00:16,  8.06s/it]
+Fetching 16 files:  94%|█████████▍| 15/16 [00:45<00:06,  6.27s/it]
+Fetching 16 files: 100%|██████████| 16/16 [00:45<00:00,  4.81s/it]
+Fetching 16 files: 100%|██████████| 16/16 [00:45<00:00,  2.87s/it]
+[11-09 17:51:56] rclone copy (140 s): 2026/11/09 09:51:56 NOTICE:    14.200 GiB / 14.200 GiB, 100%, 97.594 MiB/s, ETA 0s
+[11-09 17:51:58] rclone purge (2 s): 2026/11/09 09:51:58 Failed to purge: directory not found
+[11-09 17:52:01] Uploaded QFFT-S1-7B--ecb7ff937689 to /content/mydrive/models/QFFT-S1-7B--ecb7ff937689 (14.2GiB in 145 s, 100 MiB/s)
+[11-09 17:52:01] qfft_official: stored on Drive (14.2GiB)

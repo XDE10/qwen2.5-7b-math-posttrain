@@ -1,0 +1,72 @@
+P1_SESSION=p1-1109-174349 gpu=CPU auto_release=1
+/tmp/ipykernel_3170/706094117.py:144: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 08dfffa7ac23 (git e23531d450d3); stages: ['benchmarks', 'models:base,qwen_math,qfft_official,sft_repro']
+[11-09 09:44:55] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-09 09:44:56] ===== STAGE benchmarks =====
+[11-09 09:45:00] RUN /usr/bin/python3 -m experiments.qfft_v93.fetch_benchmarks --out /content/mydrive/projects/project1/v93/data/benchmarks_v93 | log: /content/mydrive/runs/project1/v93/logs/20261109-094500_benchmarks.log
+[11-09 17:45:03] math500: 500 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/math500.jsonl
+[11-09 17:45:05] aime24: 30 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/aime24.jsonl
+[11-09 17:45:05] aime25: 30 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/aime25.jsonl
+[11-09 17:45:05] amc23: 40 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/amc23.jsonl
+[11-09 17:45:06] gsm8k: 1319 rows -> /content/mydrive/projects/project1/v93/data/benchmarks_v93/gsm8k.jsonl
+[11-09 17:45:06] MATH-500 sealed digest verified; manifest written to /content/mydrive/projects/project1/v93/data/benchmarks_v93/manifest.json
+[11-09 09:45:06] ===== STAGE models:base,qwen_math,qfft_official,sft_repro =====
+[11-09 09:45:06] RUN /usr/bin/python3 -m experiments.qfft_v93.colab.fetch_model base | log: /content/mydrive/runs/project1/v93/logs/20261109-094506_model_base.log
+[11-09 17:45:08] base: already on Drive at /content/mydrive/models/Qwen2.5-7B-Instruct--a09a35458c702b33eeacc393d103063234e8bc28
+[11-09 09:45:08] RUN /usr/bin/python3 -m experiments.qfft_v93.colab.fetch_model qwen_math | log: /content/mydrive/runs/project1/v93/logs/20261109-094508_model_qwen_math.log
+[11-09 17:45:09] qwen_math: downloading Qwen/Qwen2.5-Math-7B-Instruct@ef9926d75ab1 ...
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  5.64it/s]
+Fetching 11 files:  27%|██▋       | 3/11 [00:00<00:00, 11.55it/s]
+Fetching 11 files:  55%|█████▍    | 6/11 [00:00<00:00, 16.22it/s]
+Fetching 11 files:  64%|██████▎   | 7/11 [00:20<00:00, 16.22it/s]
+Fetching 11 files:  73%|███████▎  | 8/11 [00:42<00:23,  7.83s/it]
+Fetching 11 files:  82%|████████▏ | 9/11 [00:43<00:12,  6.41s/it]
+Fetching 11 files: 100%|██████████| 11/11 [00:46<00:00,  4.52s/it]
+Fetching 11 files: 100%|██████████| 11/11 [00:46<00:00,  4.22s/it]
+[11-09 17:48:41] rclone copy (163 s): 2026/11/09 09:48:41 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 92.088 MiB/s, ETA 0s
+[11-09 17:48:43] rclone purge (2 s): 2026/11/09 09:48:43 Failed to purge: directory not found
+[11-09 17:48:46] Uploaded Qwen2.5-Math-7B-Instruct--ef9926d75ab1 to /content/mydrive/models/Qwen2.5-Math-7B-Instruct--ef9926d75ab1 (14.2GiB in 168 s, 86 MiB/s)
+[11-09 17:48:46] qwen_math: stored on Drive (14.2GiB)
+[11-09 09:48:46] RUN /usr/bin/python3 -m experiments.qfft_v93.colab.fetch_model qfft_official | log: /content/mydrive/runs/project1/v93/logs/20261109-094846_model_qfft_official.log
+[11-09 17:48:47] qfft_official: downloading lwl-uestc/QFFT-S1-7B@ecb7ff937689 ...
+
+Fetching 16 files:   0%|          | 0/16 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 16 files:   6%|▋         | 1/16 [00:00<00:06,  2.49it/s]
+Fetching 16 files:  31%|███▏      | 5/16 [00:00<00:00, 11.71it/s]
+Fetching 16 files:  50%|█████     | 8/16 [00:00<00:00, 10.05it/s]
+Fetching 16 files:  62%|██████▎   | 10/16 [00:01<00:00,  8.29it/s]
+Fetching 16 files:  75%|███████▌  | 12/16 [00:04<00:02,  1.62it/s]
+Fetching 16 files:  81%|████████▏ | 13/16 [00:15<00:07,  2.55s/it]
+Fetching 16 files:  88%|████████▊ | 14/16 [00:45<00:16,  8.06s/it]
+Fetching 16 files:  94%|█████████▍| 15/16 [00:45<00:06,  6.27s/it]
+Fetching 16 files: 100%|██████████| 16/16 [00:45<00:00,  4.81s/it]
+Fetching 16 files: 100%|██████████| 16/16 [00:45<00:00,  2.87s/it]
+[11-09 17:51:56] rclone copy (140 s): 2026/11/09 09:51:56 NOTICE:    14.200 GiB / 14.200 GiB, 100%, 97.594 MiB/s, ETA 0s
+[11-09 17:51:58] rclone purge (2 s): 2026/11/09 09:51:58 Failed to purge: directory not found
+[11-09 17:52:01] Uploaded QFFT-S1-7B--ecb7ff937689 to /content/mydrive/models/QFFT-S1-7B--ecb7ff937689 (14.2GiB in 145 s, 100 MiB/s)
+[11-09 17:52:01] qfft_official: stored on Drive (14.2GiB)
+[11-09 09:52:02] RUN /usr/bin/python3 -m experiments.qfft_v93.colab.fetch_model sft_repro | log: /content/mydrive/runs/project1/v93/logs/20261109-095202_model_sft_repro.log
+[11-09 17:52:02] sft_repro: downloading PJiNH/QFFT-repro-S1.1-SFT-7B@472778500777 ...
+
+Fetching 17 files:   0%|          | 0/17 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 17 files:   6%|▌         | 1/17 [00:00<00:05,  2.78it/s]
+Fetching 17 files:  18%|█▊        | 3/17 [00:00<00:01,  7.49it/s]
+Fetching 17 files:  35%|███▌      | 6/17 [00:00<00:01,  9.61it/s]
+Fetching 17 files:  47%|████▋     | 8/17 [00:00<00:00, 11.47it/s]
+Fetching 17 files:  59%|█████▉    | 10/17 [00:01<00:00, 10.19it/s]
+Fetching 17 files:  71%|███████   | 12/17 [00:01<00:00, 11.05it/s]
+Fetching 17 files:  82%|████████▏ | 14/17 [00:08<00:03,  1.29s/it]
+Fetching 17 files:  88%|████████▊ | 15/17 [00:39<00:13,  6.78s/it]
+Fetching 17 files:  94%|█████████▍| 16/17 [00:40<00:05,  5.50s/it]
+Fetching 17 files: 100%|██████████| 17/17 [00:53<00:00,  7.23s/it]
+Fetching 17 files: 100%|██████████| 17/17 [00:53<00:00,  3.14s/it]
+[11-09 17:55:23] rclone copy (145 s): 2026/11/09 09:55:23 NOTICE:    14.200 GiB / 14.200 GiB, 100%, 84.672 MiB/s, ETA 0s
+[11-09 17:55:25] rclone purge (2 s): 2026/11/09 09:55:25 Failed to purge: directory not found
+[11-09 17:55:27] Uploaded QFFT-repro-S1.1-SFT-7B--472778500777 to /content/mydrive/models/QFFT-repro-S1.1-SFT-7B--472778500777 (14.2GiB in 149 s, 97 MiB/s)
+[11-09 17:55:28] sft_repro: stored on Drive (14.2GiB)

@@ -1,0 +1,16 @@
+[11-09 17:45:09] qwen_math: downloading Qwen/Qwen2.5-Math-7B-Instruct@ef9926d75ab1 ...
+
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  5.64it/s]
+Fetching 11 files:  27%|██▋       | 3/11 [00:00<00:00, 11.55it/s]
+Fetching 11 files:  55%|█████▍    | 6/11 [00:00<00:00, 16.22it/s]
+Fetching 11 files:  64%|██████▎   | 7/11 [00:20<00:00, 16.22it/s]
+Fetching 11 files:  73%|███████▎  | 8/11 [00:42<00:23,  7.83s/it]
+Fetching 11 files:  82%|████████▏ | 9/11 [00:43<00:12,  6.41s/it]
+Fetching 11 files: 100%|██████████| 11/11 [00:46<00:00,  4.52s/it]
+Fetching 11 files: 100%|██████████| 11/11 [00:46<00:00,  4.22s/it]
+[11-09 17:48:41] rclone copy (163 s): 2026/11/09 09:48:41 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 92.088 MiB/s, ETA 0s
+[11-09 17:48:43] rclone purge (2 s): 2026/11/09 09:48:43 Failed to purge: directory not found
+[11-09 17:48:46] Uploaded Qwen2.5-Math-7B-Instruct--ef9926d75ab1 to /content/mydrive/models/Qwen2.5-Math-7B-Instruct--ef9926d75ab1 (14.2GiB in 168 s, 86 MiB/s)
+[11-09 17:48:46] qwen_math: stored on Drive (14.2GiB)

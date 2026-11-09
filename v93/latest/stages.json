@@ -1,4 +1,22 @@
 {
+ "benchmarks": {
+  "stage": "benchmarks",
+  "state": "complete",
+  "hours": 0.003,
+  "finished": "2026-11-09T09:45:06.749698",
+  "started": "2026-11-09T09:44:56.553663",
+  "code": "08dfffa7ac23",
+  "host": "p1-1109-174349@23325975227a"
+ },
+ "models__base+qwen_math+qfft_official+sft_repro": {
+  "stage": "models:base,qwen_math,qfft_official,sft_repro",
+  "state": "complete",
+  "hours": 0.173,
+  "finished": "2026-11-09T09:55:28.909081",
+  "started": "2026-11-09T09:45:06.756862",
+  "code": "08dfffa7ac23",
+  "host": "p1-1109-174349@23325975227a"
+ },
  "ping__30": {
   "stage": "ping:30",
   "state": "complete",

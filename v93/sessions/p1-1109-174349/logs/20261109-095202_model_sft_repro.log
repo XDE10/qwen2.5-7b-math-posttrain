@@ -1,0 +1,19 @@
+[11-09 17:52:02] sft_repro: downloading PJiNH/QFFT-repro-S1.1-SFT-7B@472778500777 ...
+
+Fetching 17 files:   0%|          | 0/17 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Fetching 17 files:   6%|▌         | 1/17 [00:00<00:05,  2.78it/s]
+Fetching 17 files:  18%|█▊        | 3/17 [00:00<00:01,  7.49it/s]
+Fetching 17 files:  35%|███▌      | 6/17 [00:00<00:01,  9.61it/s]
+Fetching 17 files:  47%|████▋     | 8/17 [00:00<00:00, 11.47it/s]
+Fetching 17 files:  59%|█████▉    | 10/17 [00:01<00:00, 10.19it/s]
+Fetching 17 files:  71%|███████   | 12/17 [00:01<00:00, 11.05it/s]
+Fetching 17 files:  82%|████████▏ | 14/17 [00:08<00:03,  1.29s/it]
+Fetching 17 files:  88%|████████▊ | 15/17 [00:39<00:13,  6.78s/it]
+Fetching 17 files:  94%|█████████▍| 16/17 [00:40<00:05,  5.50s/it]
+Fetching 17 files: 100%|██████████| 17/17 [00:53<00:00,  7.23s/it]
+Fetching 17 files: 100%|██████████| 17/17 [00:53<00:00,  3.14s/it]
+[11-09 17:55:23] rclone copy (145 s): 2026/11/09 09:55:23 NOTICE:    14.200 GiB / 14.200 GiB, 100%, 84.672 MiB/s, ETA 0s
+[11-09 17:55:25] rclone purge (2 s): 2026/11/09 09:55:25 Failed to purge: directory not found
+[11-09 17:55:27] Uploaded QFFT-repro-S1.1-SFT-7B--472778500777 to /content/mydrive/models/QFFT-repro-S1.1-SFT-7B--472778500777 (14.2GiB in 149 s, 97 MiB/s)
+[11-09 17:55:28] sft_repro: stored on Drive (14.2GiB)
