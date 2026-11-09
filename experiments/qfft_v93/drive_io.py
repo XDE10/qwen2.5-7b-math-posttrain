@@ -14,6 +14,11 @@ Two ways to reach Drive on a Colab VM (launch.sh --drive):
 The rclone CLI is used when P1_RCLONE_REMOTE is set (e.g. `mydrive:`); P1_DRIVE_ROOT is the mount point of
 that remote. After every CLI upload we wait until the mount shows the new files, so later small writes
 through the mount never create a second folder with the same name (Drive allows duplicate names).
+
+Google Drive accepts about 750 GiB of uploads per account per 24 hours (rclone docs,
+--drive-stop-on-upload-limit). One full-FT run uploads about 241 GiB (two 113.5 GiB checkpoint mirrors with
+save_steps 126, plus the 14 GiB export), so at most two such runs fit in 24 hours. Uploads stop with an
+error at the limit instead of retrying for hours, which would leave the trainer waiting for its mirror.
 """
 from __future__ import annotations
 
@@ -27,7 +32,11 @@ from pathlib import Path
 from experiments.qfft_v93.common import copy_tree_fast, copy_tree_throttled, human_bytes, log, write_json
 
 UPLOAD_FLAGS = ['--transfers', '4', '--checkers', '8', '--drive-chunk-size', '128M', '--retries', '10',
-                '--low-level-retries', '20', '--stats', '5m', '--stats-one-line', '--stats-log-level', 'NOTICE']
+                '--low-level-retries', '20', '--stats', '5m', '--stats-one-line', '--stats-log-level', 'NOTICE',
+                '--drive-stop-on-upload-limit']  # supported since rclone 1.51; Ubuntu 22.04 ships 1.53.3
+UPLOAD_LIMIT_HINT = ('Google Drive allows about 750 GiB of uploads per account per 24 hours and this account '
+                     'reached it; a full-FT run uploads about 241 GiB. Wait until the limit resets, then rerun the '
+                     'same command (it resumes from the last complete mirror).')
 DOWNLOAD_FLAGS = ['--transfers', '8', '--checkers', '8', '--multi-thread-streams', '4', '--retries', '10',
                   '--low-level-retries', '20', '--stats', '5m', '--stats-one-line', '--stats-log-level', 'NOTICE']
 
@@ -54,7 +63,10 @@ def _rclone(*args, timeout=None, check=True):
     started = time.monotonic()
     result = subprocess.run(['rclone', *args], capture_output=True, text=True, timeout=timeout)
     if check and result.returncode != 0:
-        raise RuntimeError(f'rclone {args[0]} failed ({result.returncode}): {result.stderr.strip()[-1200:]}')
+        hint = ''
+        if any(s in result.stderr.lower() for s in ('upload limit', 'uploadlimit', 'stop_on_upload_limit')):
+            hint = ' ' + UPLOAD_LIMIT_HINT
+        raise RuntimeError(f'rclone {args[0]} failed ({result.returncode}): {result.stderr.strip()[-1200:]}{hint}')
     if result.stderr.strip():
         tail = result.stderr.strip().splitlines()[-1]
         log(f'rclone {args[0]} ({time.monotonic() - started:.0f} s): {tail[-300:]}')
