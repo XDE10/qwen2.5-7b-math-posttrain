@@ -14,6 +14,7 @@ Stages (all idempotent; re-running resumes or skips completed work):
     score[:<tags>]              re-score saved generations and rebuild results.md
     analyze:<tags>[:<grpo_runs>] figures into Drive runs/project1/v93/figures
     status                      print stage markers, run progress, eval completeness and results.md
+    smoke-report                re-print the smoke summary block from Drive (also printed after smoke stages)
     shell                       do nothing (use with --keep to inspect the VM)
     ping[:<seconds>]            write a probe file to Drive and wait (end-to-end CLI check on a CPU VM)
 
@@ -46,7 +47,15 @@ LOGS = DRIVE / 'runs/project1/v93/logs'
 # A 'running' stage marker whose heartbeat is older than this belongs to a VM that no longer exists.
 LEASE_STALE_S = 15 * 60
 HEARTBEAT_S = 5 * 60
-READ_ONLY_STAGES = {'status', 'shell'}
+READ_ONLY_STAGES = {'status', 'shell', 'smoke-report'}
+
+
+def fresh_smoke(*paths: Path) -> None:
+    """Smoke outputs are measurements, not results: start every smoke from empty folders so the numbers
+    (and the run identity / completion markers) always belong to this session."""
+    for path in paths:
+        if path.exists():
+            shutil.rmtree(path)
 
 
 def say(*parts):
@@ -310,8 +319,8 @@ def check_host_ram() -> None:
     total = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / 2 ** 30
     if total < MIN_HOST_RAM_GIB:
         raise RuntimeError(f'Host RAM is {total:.0f} GiB; full-parameter training needs about 122 GB of optimizer '
-                           f'state in CPU memory (ZeRO-2 offload), so at least {MIN_HOST_RAM_GIB} GiB. '
-                           'Use a VM with more RAM (G4 reports ~167 GB) via --gpu.')
+                           f'state in CPU memory (ZeRO-2 offload), so at least {MIN_HOST_RAM_GIB} GiB. Use a '
+                           'high-RAM GPU VM (Colab lists about 167 GB for A100 and 230 GB for H100 high-RAM).')
     if total < WARN_HOST_RAM_GIB:
         say(f'WARNING: host RAM {total:.0f} GiB leaves little headroom above the ~122 GB optimizer state')
     say(f'Host RAM {total:.0f} GiB (need >= {MIN_HOST_RAM_GIB})')
@@ -424,6 +433,7 @@ def _dispatch(ctx: Context, stage: str) -> None:
     elif kind == 'smoke-train':
         gpu_banner()
         check_host_ram()
+        fresh_smoke(DRIVE / 'runs/project1/v93/runs/smoke_peak_v93', LOCAL / 'runs/smoke_peak_v93')
         # Worst case on purpose: 32 rows that each fill the 32K window (smoke_data.py), not the real data.
         rows = LOCAL / 'smoke/peak_qfft.jsonl'
         ctx.run([ctx.python('train'), '-m', m + 'smoke_data', '--tokenizer', str(drive_model_dir(ctx, 'base')),
@@ -433,11 +443,13 @@ def _dispatch(ctx: Context, stage: str) -> None:
                             '--max-steps', '2', '--no-export', '--new-run'], 'smoke_train')
     elif kind == 'smoke-eval':
         gpu_banner()
+        fresh_smoke(DRIVE / 'runs/project1/v93/evals/smoke_base', LOCAL / 'evals/smoke_base')
         ctx.run(ctx.py_module('infer', m + 'generate', '--model', 'base', '--suite', 'smoke', '--tag', 'smoke_base'),
                 'smoke_eval_generate')
         ctx.run(ctx.py_module('infer', m + 'score', '--tags', 'smoke_base'), 'smoke_eval_score')
     elif kind == 'smoke-grpo':
         gpu_banner()
+        fresh_smoke(DRIVE / 'runs/project1/v93/runs/smoke_grpo_v93', LOCAL / 'runs/smoke_grpo_v93')
         ctx.run(ctx.py_module('rl', m + 'grpo', '--config', 'grpo/smoke_grpo.json', '--no-merge'), 'smoke_grpo')
     elif kind == 'train':
         from experiments.qfft_v93.common import load_config
@@ -472,6 +484,8 @@ def _dispatch(ctx: Context, stage: str) -> None:
                 'analyze')
     elif kind == 'status':
         print_status()
+    elif kind == 'smoke-report':
+        print_smoke_summary(ctx)
     elif kind == 'shell':
         say('shell stage: nothing to run')
     elif kind == 'ping':
@@ -487,23 +501,58 @@ def _dispatch(ctx: Context, stage: str) -> None:
         raise ValueError(f'Unknown stage {stage!r}')
 
 
+def print_smoke_summary(ctx) -> None:
+    """Print the smoke summary block and keep a copy on Drive (runs/project1/v93/smoke/)."""
+    from experiments.qfft_v93.colab import smoke_report
+    text = smoke_report.summary(DRIVE, LOCAL, dict(ctx.pythons) if ctx is not None else {})
+    print(text, flush=True)
+    try:
+        out = DRIVE / 'runs/project1/v93/smoke'
+        out.mkdir(parents=True, exist_ok=True)
+        session = os.environ.get('P1_SESSION') or datetime.now().strftime('%Y%m%d-%H%M%S')
+        (out / f'summary_{session}.txt').write_text(text + '\n', encoding='utf-8')
+        (out / 'latest.txt').write_text(text + '\n', encoding='utf-8')
+    except OSError as error:
+        say('WARNING: could not save the smoke summary to Drive:', error)
+
+
 def main(args: dict) -> None:
     failed = 'not started'
+    ctx = None
+    smoke_failures = []
     try:
         if not DRIVE.is_dir():
             raise RuntimeError('Google Drive is not mounted; launch.sh runs `colab drivemount` before this step')
         code_sha = args['code_sha']
         ctx = Context(LOCAL / 'code' / code_sha, code_sha)
+        stages = list(args['stages'])
         try:
-            for stage in args['stages']:
+            for i, stage in enumerate(stages):
                 say(f'===== STAGE {stage} =====')
                 failed = stage
-                run_stage(ctx, stage, force=bool(args.get('force')))
-            failed = None
+                try:
+                    run_stage(ctx, stage, force=bool(args.get('force')))
+                except Exception as error:
+                    # Smoke stages are independent measurements: on an allocated GPU VM, a failed one
+                    # should not cost the numbers of the others.
+                    if stage.startswith('smoke-') and any(s.startswith('smoke-') for s in stages[i + 1:]):
+                        smoke_failures.append(f'{stage}: {type(error).__name__}: {error}')
+                        say(f'{stage} failed ({type(error).__name__}); continuing with the remaining smoke stages')
+                        continue
+                    raise
+            failed = '; '.join(smoke_failures) or None
         finally:
             ctx.finish()
     except BaseException as error:
-        failed = f'{failed}: {type(error).__name__}: {error}'
+        failed = '; '.join(smoke_failures + [f'{failed}: {type(error).__name__}: {error}'])
         raise
     finally:
+        # Before P1_RESULT: launch.sh releases the VM as soon as it sees that line.
+        requested = args.get('stages', [])
+        if (any(s.startswith('smoke-') for s in requested) and 'smoke-report' not in requested
+                and DRIVE.is_dir()):
+            try:
+                print_smoke_summary(ctx)
+            except Exception as error:
+                say('WARNING: smoke summary failed:', type(error).__name__, error)
         print('P1_RESULT=' + ('OK' if failed is None else 'FAILED ' + failed)[:2000], flush=True)
