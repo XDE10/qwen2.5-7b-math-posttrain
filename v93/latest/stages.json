@@ -32,8 +32,8 @@
   "started": "2026-11-10T19:34:37.290584",
   "code": "7e18a2c7bda6",
   "host": "p1-1110-234216@4b5c96d35876",
-  "heartbeat": "2026-11-10T22:19:40.347645",
-  "heartbeat_ts": 1794349180.3476598
+  "heartbeat": "2026-11-10T22:49:40.863116",
+  "heartbeat_ts": 1794350980.8631334
  },
  "models__base+qwen_math+qfft_official+sft_repro": {
   "stage": "models:base,qwen_math,qfft_official,sft_repro",

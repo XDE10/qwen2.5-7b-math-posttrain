@@ -781,3 +781,27 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<
 [11-11 06:18:10] sft_repro: 2192/4599 new generations, 1798 output tok/s
 [11-11 06:19:34] sft_repro: 2197/4599 new generations, 1795 output tok/s
 [11-11 06:20:06] sft_repro: 2200/4599 new generations, 1797 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 06:21:47] sft_repro: 2208/4599 new generations, 1804 output tok/s
+[11-11 06:22:48] sft_repro: 2211/4599 new generations, 1799 output tok/s
+[11-11 06:24:11] sft_repro: 2215/4599 new generations, 1790 output tok/s
+[11-11 06:25:14] sft_repro: 2216/4599 new generations, 1781 output tok/s
+[11-11 06:26:31] sft_repro: 2224/4599 new generations, 1784 output tok/s
+[11-11 06:28:18] sft_repro: 2227/4599 new generations, 1770 output tok/s
+[11-11 06:29:35] sft_repro: 2233/4599 new generations, 1770 output tok/s
+[11-11 06:30:45] sft_repro: 2239/4599 new generations, 1771 output tok/s
+[11-11 06:31:48] sft_repro: 2243/4599 new generations, 1769 output tok/s
+[11-11 06:33:03] sft_repro: 2250/4599 new generations, 1768 output tok/s
+[11-11 06:34:17] sft_repro: 2254/4599 new generations, 1765 output tok/s
+[11-11 06:35:46] sft_repro: 2257/4599 new generations, 1756 output tok/s
+[11-11 06:36:56] sft_repro: 2262/4599 new generations, 1757 output tok/s
+[11-11 06:38:08] sft_repro: 2267/4599 new generations, 1757 output tok/s
+[11-11 06:39:25] sft_repro: 2269/4599 new generations, 1749 output tok/s
+[11-11 06:41:08] sft_repro: 2276/4599 new generations, 1749 output tok/s
+[11-11 06:42:21] sft_repro: 2283/4599 new generations, 1754 output tok/s
+[11-11 06:43:32] sft_repro: 2288/4599 new generations, 1752 output tok/s
+[11-11 06:44:50] sft_repro: 2290/4599 new generations, 1742 output tok/s
+[11-11 06:45:51] sft_repro: 2295/4599 new generations, 1744 output tok/s
+[11-11 06:47:23] sft_repro: 2296/4599 new generations, 1732 output tok/s
+[11-11 06:49:29] sft_repro: 2301/4599 new generations, 1722 output tok/s
+[11-11 06:50:35] sft_repro: 2305/4599 new generations, 1722 output tok/s
