@@ -73,6 +73,34 @@ cd ~/projects/qwen2.5-7b-math-posttrain && source ~/.proxy_env.sh
 - 构建后读 `data/qfft1000_v93/teacher_report.md`。"DeepSeek 轨迹来源"一节列出各轮次、各 effort、各提示词的条数；成对剔除时还会列出被剔除的题。
 - 如果以前用 `--allow-gaps` 生成过预览，现在的 `data/qfft1000_v93/` 就是预览构建：阶段 `d` 会拒收它，Drive 上的数据不动。第 4 步会覆盖它。
 
+### 2.1 2026-11-10 19 题替换执行记录（客观数据）
+
+- **背景与操作**：2026-11-10 用户指示不采用成对剔除，要求保留 1,000 题。对历史 19 道超出 32K 窗口的死锁题目（`0021, 0024, 0057, 0268, 0339, 0459, 0576, 0693, 0704, 0731, 0740, 0745, 0769, 0808, 0840, 0870, 0920, 0943, 0974`），从 `data/portable_release/project1_raw_paired.jsonl` 中筛选了同科目、R1 词数 $\ge 1400$ 且经 decontam 校验合格的候选，使用 OpenCode Go 接口（DeepSeek-V4.1-Flash，参数 `effort=high`, `prompt=v91_anti_redundancy`）进行了流式生成与验证。
+- **19 题生成实测**：
+  - 19 道替换题经 Math-Verify 答案判定状态均为 `correct`；
+  - 19 道题的 Flash 思考词数分布：极小值 544 词，极大值 1,789 词，均值 976.9 词，中位数 891 词；
+  - 19 道题的对应 R1 思考词数分布：极小值 1,644 词，极大值 2,346 词，均值 1,913.4 词；
+  - 详细逐题映射、原始题号、题目文本与双模型词数记录保存在 `scratch/final_hard_19_replacements.json`。
+- **1,000 题构建产物**：
+  - 本机执行 `data_build build --ds-verified`，在 `data/qfft1000_v93/` 下生成了 `r1/train.jsonl`（1000条）、`ds/train.jsonl`（1000条）、`ds_verified/train.jsonl`（1000条）、`manifest.json` 与 `teacher_report.md`；
+  - `data_build status` 刷新 `data/qfft1000_v93/ds_status.json`，记录 `gaps: 0`，`DS usable: 1000/1000 by round {'v66': 897, 'v93': 56, 'v91': 22, 'v86': 25}`。
+- **`teacher_report.md` 记录的客观数据**：
+  - 可核对题共 750 题：Flash 正确率 67.3%（505/750），R1 正确率 64.3%（482/750）；
+  - 750 题对错分布：两者都对 428 题，仅 R1 对 54 题，仅 Flash 对 77 题，两者都错 191 题；
+  - Response Token 统计：R1 均值 9636.0 / 中位 9332 / p90 16176 / 最大 26835；Flash 均值 10020.8 / 中位 6719 / p90 25141 / 最大 32508。
+- **Token 长度分布客观统计（Flash）**：
+  - `< 1,000 Token`：13 题（1.3%）；
+  - `1,000 ~ 2,000 Token`：93 题（9.3%）；
+  - `2,000 ~ 5,000 Token`：301 题（30.1%）；
+  - `5,000 ~ 20,000 Token`：425 题（42.5%）；
+  - `$\ge 20,000$ Token`：168 题（16.8%）；
+  - 全部 106 道 $< 2,000$ Token 的双模型完整推导文本已导出至 `scratch/under_2k_audit_all.json`，供接手方审查其逻辑链是否完整。
+- **状态与下一步命令**：
+  - 本地环境自检 `check_local.sh` 运行输出为 `1 warnings (git status), no failures`；
+  - 数据上传阶段为 `bash experiments/qfft_v93/colab/pipeline.sh d`；
+  - 锚点评测阶段为 `bash experiments/qfft_v93/colab/pipeline.sh 2`；
+  - 接手方可根据上述数据与文件自行评估，决定何时启动后续阶段。
+
 ## 3. 本机 Kiro IDE 初始化清单（zsh）
 
 ```zsh

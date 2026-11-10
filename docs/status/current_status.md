@@ -16,8 +16,13 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 
 ## 本地数据
 
-- DeepSeek-V4.1-Flash 轨迹 977/1000 可用（用户本机 `data_build status`）。23 题在 v66/v86/v91 与 v93 的 8 次 high/max 尝试里都超出 32K 窗口或被截断；处理方案（先 `reasoning_effort=low` 追加尝试，仍缺的成对剔除）见交接文档第 2 节，`teacher fill` 由用户在本机启动（付费 API）。
-- 用户在预览数据上看到的教师对比（728 道可核对题，Math-Verify）：DS 66.8%（486/728，平均约 4,181 token），R1 63.6%（463/728，平均约 9,810 token）。正式数字以补齐或剔除后 `data_build build` 的 `teacher_report.md` 为准。
+- 历史记录（2026-11-09）：DeepSeek-V4.1-Flash 轨迹 977/1000 可用（用户本机 `data_build status`）。23 题在 v66/v86/v91 与 v93 的 8 次 high/max 尝试里都超出 32K 窗口或被截断；
+- 最新记录（2026-11-10）：
+  - 用户要求不进行成对剔除，保持 1000 题；对 19 道死锁题目从 `data/portable_release/project1_raw_paired.jsonl` 中筛选同科目且 R1 词数 $\ge 1400$ 的候选，通过 OpenCode Go 接口补充了 Flash 轨迹并替换入题池，替换记录见 `scratch/final_hard_19_replacements.json`；
+  - 本机执行 `data_build build --ds-verified` 生成了 `data/qfft1000_v93/`（`r1/train.jsonl` 1000条，`ds/train.jsonl` 1000条，`ds_verified/train.jsonl` 1000条，`manifest.json` 与 `teacher_report.md`）；
+  - `data_build status` 输出：`DS usable: 1000/1000 by round {'v66': 897, 'v93': 56, 'v91': 22, 'v86': 25}; gaps: 0`；
+  - `teacher_report.md` 记录：可核对 750 题中 Flash 答对 505（67.3%），R1 答对 482（64.3%）；两者均对 428，仅 R1 对 54，仅 Flash 对 77，均错 191；Response Token 均值：R1 9,636.0，Flash 10,020.8；
+  - 全部 106 道 $< 2,000$ Token 的双模型完整推导已存档于 `scratch/under_2k_audit_all.json` 供审查。
 
 ## v93 已完成（代码与 CPU / 模拟验证）
 
