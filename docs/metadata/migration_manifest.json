@@ -211,6 +211,27 @@
       ],
       "date": "2026-11-09",
       "purpose": "v93-P7：迁到本机 Kiro IDE 的交接（新增 docs/handover/kiro_ide_onboarding.md、docs/handover/templates/、.kiro/steering/v93-local-execution.md、experiments/qfft_v93/check_local.sh、tests/v93_harness/），冒烟实测与 23 题方案写入状态文档"
+    },
+    {
+      "changes": [
+        {
+          "current_sha256": "ea1ab9f811b35e587354cde3c8bc781af7144d0e757cfa13a0a481082c0208b4",
+          "path": "AGENTS.md",
+          "previous_sha256": "0c724c2af3e09d6b1b45705fe4faa730cc972893f3413c947574d05aae71ea1c"
+        },
+        {
+          "current_sha256": "eb34febecb1a9db1f626354cd48180b4d3d689774dc35bdd2cb8e7b47bd4adae",
+          "path": "docs/status/current_status.md",
+          "previous_sha256": "a209156cb6e8a4d05d7190f5cfb6e41139280f496b694e3ddaeeb0052a05aa96"
+        },
+        {
+          "current_sha256": "3e63fed67f2dc3d3436feb0052e6a0cedb42976adf7f86b3d6435fb4b2f3eb99",
+          "path": "docs/status/history.md",
+          "previous_sha256": "c42f94459ece0bdbec1f8ee580a3aae1cb5b36448548eeffc5f9c46d61604cc5"
+        }
+      ],
+      "date": "2026-11-10",
+      "purpose": "v93-P8：19 道窗口外题改为替换（对预注册方案的偏离）的记录与来源修复：AGENTS.md 当前主线、current_status、history 新条目；同一 PR 还改了未登记的交接文档 2.1、方案第 10 节、experiments/qfft_v93/README.md 与 data_build.py 注释"
     }
   ],
   "files": [
@@ -943,11 +964,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 15442,
+      "bytes": 15923,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
-      "sha256": "0c724c2af3e09d6b1b45705fe4faa730cc972893f3413c947574d05aae71ea1c"
+      "refactor_note": "2026-11-10 v93-P8：内容更新后重算",
+      "sha256": "ea1ab9f811b35e587354cde3c8bc781af7144d0e757cfa13a0a481082c0208b4"
     },
     {
       "bytes": 4434,
@@ -28733,18 +28754,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 5003,
+      "bytes": 6607,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
-      "sha256": "a209156cb6e8a4d05d7190f5cfb6e41139280f496b694e3ddaeeb0052a05aa96"
+      "refactor_note": "2026-11-10 v93-P8：内容更新后重算",
+      "sha256": "eb34febecb1a9db1f626354cd48180b4d3d689774dc35bdd2cb8e7b47bd4adae"
     },
     {
-      "bytes": 83417,
+      "bytes": 87796,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
-      "sha256": "c42f94459ece0bdbec1f8ee580a3aae1cb5b36448548eeffc5f9c46d61604cc5"
+      "refactor_note": "2026-11-10 v93-P8：内容更新后重算",
+      "sha256": "3e63fed67f2dc3d3436feb0052e6a0cedb42976adf7f86b3d6435fb4b2f3eb99"
     },
     {
       "bytes": 77,
