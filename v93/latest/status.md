@@ -1,7 +1,8 @@
-# v93 status (2026-11-10T15:07:40, session p1-1110-230033)
+# v93 status (2026-11-10T15:26:40, session p1-1110-232041)
 
 ```
 stage benchmarks                                    complete  0.003 
+stage eval:base:full                                failed     RuntimeError: gen_base failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261110-152436_gen_base.log
 stage models:base,qwen_math,qfft_official,sft_repro complete  0.173 
 stage ping:30                                       complete  0.008 
 stage smoke-eval                                    complete  0.1 

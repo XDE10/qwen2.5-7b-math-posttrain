@@ -1,0 +1,21 @@
+{
+  "protocol": {
+    "model": "base",
+    "model_identity": {
+      "spec": "base"
+    },
+    "benchmark": "gsm8k",
+    "benchmark_sha256": "b31c428526c7f9286cd04d35934b20407193c7d68806b9bc481bfa9bdf7967f7",
+    "n": 1,
+    "limit": null,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "max_model_len": 32768,
+    "max_tokens_cap": null,
+    "seed": 42,
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "engine": "vllm"
+  },
+  "protocol_sha256": "d0554ce19479e9718af62389ec58845d9cd2eafadd97953ea42a41588eb22a26",
+  "updated": "2026-11-10T23:26:00+08:00"
+}

@@ -8,6 +8,15 @@
   "code": "08dfffa7ac23",
   "host": "p1-1109-174349@23325975227a"
  },
+ "eval__base__full": {
+  "stage": "eval:base:full",
+  "state": "failed",
+  "error": "RuntimeError: gen_base failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261110-152436_gen_base.log",
+  "at": "2026-11-10T15:26:39.873348",
+  "started": "2026-11-10T15:23:00.491939",
+  "code": "b125ef25a72a",
+  "host": "p1-1110-232041@f0948c109074"
+ },
  "models__base+qwen_math+qfft_official+sft_repro": {
   "stage": "models:base,qwen_math,qfft_official,sft_repro",
   "state": "complete",
