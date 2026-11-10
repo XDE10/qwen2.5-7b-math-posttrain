@@ -10,7 +10,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 ## 阅读入口（按顺序）
 
-1. 本文件 → [docs/handover/kiro_ide_onboarding.md](docs/handover/kiro_ide_onboarding.md)（2026-11-09 迁到本机 Kiro IDE 的交接：状态、23 题方案、初始化清单、下一步命令）→ [docs/status/current_status.md](docs/status/current_status.md)：当前做到哪、哪些未完成。本机执行约束在 [.kiro/steering/v93-local-execution.md](.kiro/steering/v93-local-execution.md)。
+1. 本文件 → [docs/handover/kiro_ide_onboarding.md](docs/handover/kiro_ide_onboarding.md)（2026-11-09 迁到本机 Kiro IDE 的交接：状态、23 题方案与 11-10 的实际处理、初始化清单、下一步命令）→ [docs/status/current_status.md](docs/status/current_status.md)：当前做到哪、哪些未完成。本机执行约束在 [.kiro/steering/v93-local-execution.md](.kiro/steering/v93-local-execution.md)。
 2. [README.md](README.md)：目录职责、数据边界、命令。
 3. 当前任务读 [experiments/qfft_v93/README.md](experiments/qfft_v93/README.md) 与 [三周冲刺方案 v93](docs/blueprints/三周冲刺方案_v93.md)；v26 的[训练配置](configs/project1_aimo_sft_v26.json)、[实验包](experiments/aimo_sft_v26/) 与[启动入口](tools/aimo/start_aimo_sft_v28.py) 只作历史。
 4. 需要某个版本（v1…v93）的细节时再查 [docs/status/history.md](docs/status/history.md)；查旧路径用 `archive/mapping/restructure_v2_mapping.json`。
@@ -18,7 +18,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 ## 当前主线（摘要，v93）
 
-- 数据：1000 题（s1K-1.1 的 993 题 + v57 的 6 题替换 + v93 替换与 MATH-500 同题的 `s1k11/row/0918`），两位教师：s1K-1.1 的 R1 轨迹与自建 DeepSeek-V4.1-Flash 轨迹；准入为"正常结束 + 思考与回答非空 + SFT 编码 ≤ 32768"，按时间顺序取第一次可用尝试，不按对错过滤，不截断。由 `experiments/qfft_v93/data_build.py` 与 `teacher.py` 在本地生成 `data/qfft1000_v93/`。
+- 数据：1000 题（s1K-1.1 的 974 题 + v57 的 6 题替换 + v93 的 20 题替换：与 MATH-500 同题的 `s1k11/row/0918`，以及 19 道 DS 轨迹始终超出 32K 窗口的题），两位教师：s1K-1.1 的 R1 轨迹与自建 DeepSeek-V4.1-Flash 轨迹；准入为"正常结束 + 思考与回答非空 + SFT 编码 ≤ 32768"，按时间顺序取第一次可用尝试，不按对错过滤，不截断。例外：那 19 道替换题是看了 Flash 输出才选定的（对预注册规则的偏离，报告结果时必须写明，见 [history.md](docs/status/history.md) v93-P8）。由 `experiments/qfft_v93/data_build.py` 与 `teacher.py` 在本地生成 `data/qfft1000_v93/`。
 - 训练：全参 SFT 与 QFFT（官方 `qwen_qfft` 格式：只训 response、无 chat 标记、无 EOS），LR 1e-5、6 epoch、cosine、warmup 10%、wd 1e-4、AdamW(0.9, 0.999)（与 QFFT 官方 yaml 相同），有效 batch 16、32K 窗口、DeepSpeed ZeRO-2 + CPU AdamW offload、Liger；矩阵为教师 × 格式 2×2。
 - RL：在合并后的 QFFT 检查点上做 LoRA-GRPO（r32、LR 1e-5、150 步、8 题 × 8 采样、`dapo` 损失、β=0、ε_high 0.28、截断掩码、最终段 0/1 奖励），题池为已批准的 920 + 637 题。
 - 评测：所有模型同一组 prompt token、原生 RoPE、`max_model_len 32768`、temperature 0.6、top_p 0.95；AIME24/25 各 16 次、AMC23 8 次、MATH-500 4 次、GSM8K 1 次；只判最终段最后一个 `\boxed{}`（`experiments/qfft_v93/grading.py`），主指标不用 LLM 复核。
@@ -27,8 +27,9 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - Drive：用户用 rclone，远端 `mydrive:` 挂到 VM 的 `/content/mydrive`（`--vfs-cache-mode writes --vfs-cache-max-size 10G`，launch.sh 另加 `--poll-interval 15s`），这是 launch.sh 的默认（`--drive rclone`，配置文件 `P1_RCLONE_CONF`，默认 `~/.config/rclone/rclone.conf`）；`--drive colab` 才用 Colab 自带挂载 `/content/drive/MyDrive`。大文件（检查点、导出权重、模型、环境快照）走 rclone 命令行（`experiments/qfft_v93/drive_io.py`），不经挂载的写缓存；被新镜像取代的检查点永久删除（不进回收站）。Drive 每个账号每 24 小时约 750 GiB 上传上限：全参每 2 个 epoch 存一次（`save_steps` 126，每个 run 约 241 GiB），24 小时内最多 2 个全参 run，撞上限时 rclone 立即报错（`--drive-stop-on-upload-limit`）。
 - 结果回传：VM 把小体积文本报告推到本仓库的 `colab-reports` 分支（永远不推 main），每 30 分钟一次并在结束时一次；凭据是用户本机的 `~/.config/p1/gh_credentials`（一行 `https://USER:TOKEN@github.com`，launch.sh 上传到 VM 的 `/content/gh_credentials`，用完删除）。我从 GitHub 直接读 `v93/latest/` 与 `v93/sessions/<session>/`，不需要用户下载再上传。
 - 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`，并推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`）。2026-11-09 已在 G4 跑通（41 分钟）：32K 最坏长度全参 142 s/步、显存 28.9 GiB、主机 RSS 145.3 GiB / 177 GiB，GRPO 476 s/步、66.6 GiB。
-- 23 道缺口题（DeepSeek 在 high/max 下的轨迹一直跑出 32K 窗口）：先用同模型、同提示词的 `reasoning_effort=low` 追加尝试，之后仍缺的题从两位教师的训练集一起剔除（`data_build build --paired-exclusion`）；不用 R1 补 DS，不训练只缺一边的数据。预览构建（`--allow-gaps`）不能上传，阶段 `d` 会拒收。
-- **未完成**：阶段 0、1 已完成（2026-11-09）；DeepSeek 轨迹 977/1000，23 题待按上条处理；阶段 2、d、3–7（锚点评测、正式训练、GRPO）均未运行。详见交接文档与 [docs/status/current_status.md](docs/status/current_status.md)。
+- 23 道缺口题（DeepSeek 在 high/max 下的轨迹一直跑出 32K 窗口）：预注册方案是先用 `reasoning_effort=low` 追加尝试、仍缺的成对剔除。实际（2026-11-10）：4 题补齐；剩下 19 题用户决定保留 1000 题、不做成对剔除，改为用已批准的 OpenR1 原题替换。不用 R1 补 DS，不训练只缺一边的数据。预览构建（`--allow-gaps`）不能上传，阶段 `d` 会拒收。
+- DS 思考段里关于隐藏参数 "oververbosity 5" 的句子由 `data_build.py` 的 `META` 删除，原文留在每行 `teacher_detail.meta_edits`。
+- **未完成**：阶段 0、1 已完成（2026-11-09）；DS 轨迹 1000/1000，数据已构建（2026-11-10）；阶段 2、3–7（锚点评测、正式训练、GRPO）均未运行。详见交接文档与 [docs/status/current_status.md](docs/status/current_status.md)。
 
 ## 仓库约定（必须遵守）
 

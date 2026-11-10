@@ -1,6 +1,8 @@
 # 项目一 v93：迁到本机 Kiro IDE 的交接（2026-11-09）
 
 > 写给在本机 Kiro IDE（WSL2）里继续这个项目的人和 Claude。长期约定在根目录 [AGENTS.md](../../AGENTS.md)（Kiro 自动加载），本机执行约束在 [.kiro/steering/v93-local-execution.md](../../.kiro/steering/v93-local-execution.md)，命令细节在 [experiments/qfft_v93/README.md](../../experiments/qfft_v93/README.md)。本文只写此刻的状态、23 道缺口题的处理方案和下一步命令。
+>
+> 2026-11-10 更新：23 道缺口题里 4 题补齐，剩下 19 题按用户决定用 OpenR1 原题替换（第 2 节的方案只执行到 A），这是对预注册方案的偏离，经过见 2.1。数据已构建并上传，下一步见第 4 节。
 
 ## 1. 现在的状态
 
@@ -8,8 +10,9 @@
 |---|---|---|
 | 阶段 0：5 个评测集 + 4 个模型（base、qwen_math、qfft_official、sft_repro）到 Drive | 完成（CPU VM，约 11 分钟） | `colab-reports` 分支 `v93/sessions/p1-1109-174349/` |
 | 阶段 1：最坏长度 GPU 冒烟（全参 2 步、评测 24 条、GRPO 2 步） | 完成（G4，41 分钟） | `v93/latest_smoke_summary.txt`，commit `d6a9608` |
-| DeepSeek-V4.1-Flash 轨迹 | 977/1000 可用，23 题缺口 | 用户本机 `data_build status` |
-| 阶段 2、d、3–7 | 未运行 | |
+| DeepSeek-V4.1-Flash 轨迹 | 1000/1000（2026-11-10：4 题补齐，19 题替换，见 2.1） | `data_build status` |
+| 阶段 d：上传 `data/qfft1000_v93` 与评测集 | 完成（2026-11-10，CPU VM，见 2.1 末尾） | `colab-reports` 分支 `v93/sessions/p1-1110-230033/` |
+| 阶段 2、3–7 | 未运行 | |
 
 阶段 1 实测（G4 = RTX PRO 6000 Blackwell Server Edition 96 GB，主机内存 177 GiB，48 CPU，本地盘 236 GiB）：
 
@@ -27,6 +30,8 @@
 日志里有两条警告。一是阶段日志复制到 Drive 时 rclone 挂载拒绝了改名（ENOENT），本次已修：改名失败时直接覆盖。二是 FlashInfer 没有预编译内核，每台新 VM 启动 vLLM 时要现场编译几分钟，这次没处理。
 
 ## 2. 23 道缺口题怎么处理
+
+> 下面到"执行"为止是 2026-11-09 写定的原文。实际只执行到 A，剩下 19 题没有成对剔除，而是按用户决定替换，见 2.1。
 
 ### 事实
 
@@ -73,6 +78,21 @@ cd ~/projects/qwen2.5-7b-math-posttrain && source ~/.proxy_env.sh
 - 构建后读 `data/qfft1000_v93/teacher_report.md`。"DeepSeek 轨迹来源"一节列出各轮次、各 effort、各提示词的条数；成对剔除时还会列出被剔除的题。
 - 如果以前用 `--allow-gaps` 生成过预览，现在的 `data/qfft1000_v93/` 就是预览构建：阶段 `d` 会拒收它，Drive 上的数据不动。第 4 步会覆盖它。
 
+### 2.1 2026-11-10 实际处理：4 题补齐，19 题替换（对上面方案的偏离）
+
+- **补齐的 4 题**：0049、0829、0993 用官方 API `reasoning_effort=low`（方案 A）拿到可用轨迹；0857 由 Go 的第 14 次 high 尝试拿到。
+- **剩下 19 题**（0021 0024 0057 0268 0339 0459 0576 0693 0704 0731 0740 0745 0769 0808 0840 0870 0920 0943 0974）：连同 v66/v86/v91，每题有 16–22 条可判定的尝试（Go high/max，之后官方 API low 每题 2–6 次），全部在 32K 处截断，或正常结束但 SFT 编码 32,876–54,773 token。其中 4 题还试过带长度预算的 `v93_compact` 提示词（方案 B），请求都中途断流，没有拿到输出。
+- **用户决定**：保留 1000 题，不做成对剔除（方案 E），改为用已批准的 OpenR1 原题池（`data/portable_release/project1_raw_paired.jsonl`）替换。没有用 C、D。
+- **怎么选的**（按 `scratch/` 里的脚本整理）：
+  1. 第一轮按 `choose_replacement` 的确定性规则（同主题优先、R1 答案判对、去污）选出 19 题，Flash 都拿到了可用轨迹，但思考加回答的中位只有 420 词，这一轮被放弃。
+  2. 第二轮按原题类别，从 R1 解答 ≥1350 词（补充轮 ≥1400 词）、R1 判对、去污通过、题面不含 junior high / grade 6–8 / primary / middle school 的题里，按 R1 解答从长到短取候选。每个候选用 Go、effort high、`v91_anti_redundancy` 生成一条 Flash 轨迹，要求准入通过且思考 ≥500 词（补充轮 ≥300 词）。
+  3. 最后在 `scratch/assemble_final_19_replacements.py` 里逐题指定：704、920 跳过了较短但答对的候选，745、920 跳过了答错的候选。
+- **影响**：这 19 题的 Flash 轨迹是看了输出才留下的，全部答对，而且比"取第一次可用"会更长；R1 一侧按原有规则本来就要求答对。20 道 v93 替换题上两位教师都对的有 19 题（0918 的 DS 答 90°，判分器判错）。只看 s1K-1.1 原题（724 道可核对）时 R1 63.0%、DS 66.3%，750 题全部为 64.3%、67.3%，差距基本不变。这 19 题之外准入规则不变。结果报告要写明这一偏离（方案文档第 10 节）。
+- **记录**：`V93_REPLACE` 固定这 19 个 raw id，`data_build plan` 能复现当前计划。训练用的 19 条 DS 轨迹在 `artifacts/qfft_teacher_v93/attempts/<题号>/a25/`，candidate 与 `scratch/hard_attempts/` 里的流式日志逐字一致；request.json、response.json 是事后按 `teacher.request_body` 和日志重建的（字段 `reconstructed`），先前写的版本保留为 `*.superseded.json`。这 19 个题号的 `a01` 在 11-10 10:42 被第一轮的脚本覆盖成别的题，原始流式日志还在，目录里的 `overwritten_note.json` 有说明。`artifacts/qfft_teacher_v93/` 与 `scratch/` 备份在 Drive `projects/project1/v93/local_backup/`（`qfft_teacher_v93/`、`scratch_20261110/`），rclone check 0 差异。
+- **元信息清洗**：DS 思考段里关于隐藏参数 "oververbosity 5" 的句子，`data_build.py` 的 `META` 从 v66 的固定句式扩成"含 oververbos* 或 desired 5 的整句、分号子句或括号"，共删 552 处（479 行），原文在每行 `teacher_detail.meta_edits`。其中 50 处较长的我逐条读过：没有删掉公式或计算，删的是关于最终回答怎么写的计划句；4 处留下不成对的引号。清洗没有改变任何一题选中的尝试。
+- **数据**：`data/qfft1000_v93/` 的 r1、ds、ds_verified 各 1000 行，manifest 里的 SHA-256 与文件一致。DS response 均值 10,016.7、中位 6,718、最大 32,496 token（R1 为 9,636.0、9,332、26,835）；DS 来源 Go 997、官方 API 3。用当前代码重建到临时目录：ds、ds_verified 逐字节相同；r1 只有 0133 一行的 `teacher_answer_grade` 不同（判分超时），训练只读 question 与 response，不受影响。
+- **上传**：阶段 d 于 2026-11-10 完成（CPU VM，会话 `p1-1110-230033`，代码 git `3d52d52`，约 7 分钟）。VM 上三份 train.jsonl 的 SHA-256 与 manifest 一致；VM 端读的是挂载缓存，所以又在本机用 `rclone check` 核对了 Drive 本身：`projects/project1/v93/data/qfft1000_v93` 的 7 个文件、`benchmarks_v93` 的 6 个文件与本地逐个相同（大小 + MD5）。
+
 ## 3. 本机 Kiro IDE 初始化清单（zsh）
 
 ```zsh
@@ -102,9 +122,9 @@ bash experiments/qfft_v93/check_local.sh        # 只读自检，内容见下表
 
 ## 4. 下一步（按顺序）
 
-1. **现在就能跑、不依赖数据：阶段 2 锚点评测**，顺便测出正式评测的吞吐：`bash experiments/qfft_v93/colab/pipeline.sh 2`（G4 优先，分不到用 H100）。
-2. 23 题：第 2 节的命令（本机，API）。
-3. 上传数据：`bash experiments/qfft_v93/colab/pipeline.sh d`（CPU VM，核对每个 `train.jsonl` 的 SHA-256；预览构建会被拒收）。
+1. **阶段 2 锚点评测**（GPU，由用户启动，不依赖训练数据），顺便测出正式评测的吞吐：`bash experiments/qfft_v93/colab/pipeline.sh 2`（G4 优先，分不到用 H100）。
+2. ~~23 题~~：2026-11-10 已处理，见 2.1。
+3. ~~上传数据~~：`bash experiments/qfft_v93/colab/pipeline.sh d`（CPU VM，核对每个 `train.jsonl` 的 SHA-256；预览构建会被拒收），2026-11-10 的结果见 2.1 末尾。以后重建了数据就重跑一次，Drive 上的训练集整份替换。
 4. 阶段 3：`bash experiments/qfft_v93/colab/pipeline.sh 3`。它依次开两台 VM，先 `train:qfft_ds` 加 `eval:run:qfft_ds_v93:full`，再 `train:sft_ds` 加 `eval:run:sft_ds_v93:full`。想一次只跑一个：
 
    ```zsh

@@ -59,33 +59,50 @@ DS_DIRS = {
     'v91': ROOT / 'artifacts/qfft_incomplete_high_v91',
     'v93': ROOT / 'artifacts/qfft_teacher_v93',
 }
-# Replaced in v93: MATH-500 near-duplicate (0918) and 19 ultra-long insoluble proof outliers replaced with approved raw pool items.
+# Replaced in v93 with approved OpenR1 raw-pool rows. 0918: MATH-500 near-duplicate, picked by `topic` with the
+# deterministic rule in choose_replacement. The other 19: every DeepSeek-V4.1-Flash attempt (16-22 per question,
+# high/max/low) ran past the 32K window; on 2026-11-10 the user chose replacement over paired exclusion. Those 19
+# raw ids were picked after looking at Flash outputs (deviation from the pre-registered rule; selection steps in
+# docs/status/history.md, v93-P8) and are pinned here so `plan` reproduces the frozen question_plan.json.
 V93_REPLACE = {
     's1k11/row/0918': 'complex',
-    's1k11/row/0021': '8f6de4287d92c4903672bcc14abc354b43bec5c228d8bd8c2ce1bd60eb0cd2eb',
-    's1k11/row/0024': 'e4f5ea8d9867157a392079982818386760489ef3016e38ff6688f83d9d54c713',
-    's1k11/row/0057': 'ae5fe9622ffedb2652df305f20341f485a383dc4d8328cb101fa5fed96d467d0',
-    's1k11/row/0268': '5accae5ba720d0c469c89e9737981d27c8ab472c8b07d53a1ee9cfb1b2d71226',
-    's1k11/row/0339': '64ab3aa7508b17ad314b043e042ff3f93568d587bef1d221c0aaecfc9d2c0838',
-    's1k11/row/0459': '1ffc2ec3d79315d11bafb3db3c68011b4e9c6714777be60b1b3ed7151d293073',
-    's1k11/row/0576': '13bcc9eb3a9bb900de81dd6897ee7e32e4a08a534047686a632a26fa075c8a63',
-    's1k11/row/0693': '9e9e2d2bd13eaa98ad5986b6eb09405d5dbf8491583e47d8b76967bf6fdb15c0',
-    's1k11/row/0704': '18a1305375f1847a3c0f4a802a446fafd92a46d3ada409e5945576993c23d913',
-    's1k11/row/0731': '380955ddbfd8403bbd91ab65353313cc2273934c12ab3748b3455562aebb6034',
-    's1k11/row/0740': '854bfbf0be801a3ead44a3f7075795a3636c27d86f2ee5b01d52ca69e2836ac1',
-    's1k11/row/0745': '7ebd9a5036610ef5bc91a72b2d342cd96437b2040e6682e09e9c89805830de7a',
-    's1k11/row/0769': '6d3e37f8b18ed14212c5d2d499f1ce1b1c3a939c0cf84c669047d9fc757edf44',
-    's1k11/row/0808': '4407a8b92372f97238b19d6dc8552d5100361f7e23c8c98d04c0a89460de1460',
-    's1k11/row/0840': '5d2385c4c1b69f3cc4ad0a6b703838f1a863986bfd0c672fc7f93d4b297fbf56',
-    's1k11/row/0870': '26af222702cbdae39ab06373c9de3bc0247981ef5e0a9d1c5d34c3e4429d5612',
-    's1k11/row/0920': 'f17eeae9af5cb9065e524c21632c25e0fdac48625f50c6057fd5ce49ed98fa10',
-    's1k11/row/0943': '6fe41be4666c91dba25cf29773128e98f21b3b4ad7c62df8a584a078fc25a041',
-    's1k11/row/0974': '59de9f5b8f51440ef9f91aebcf4e6f39d0cf0e6826142bff5f0cb7b4b8f3fead',
+    's1k11/row/0021': '65a9104d83967dc53c3766c2c86db39687b7b0e0b932161afb284af476ea4a3d',
+    's1k11/row/0024': '63ae1cf0b64bc83850e3dc68cff2bedee8dbe5fa623a7404155d502195e84c01',
+    's1k11/row/0057': '56b66761b29af0a70b421fc2916e00bf7c6afa70f5d77aa5ebc4268b4fa1026a',
+    's1k11/row/0268': '5c9180c4cbecfe6704774b9f60ec02a96e2b18ba2cbc2d4a9f86422426e50b7b',
+    's1k11/row/0339': '35327b646ee1006b6428829ac544051c8aaca0ab5e1ed4130669479e06b174aa',
+    's1k11/row/0459': '0fe9a8e8752b1fcd1826c8a2439f9e7a9aa11f292375f81595e2c961709fdad9',
+    's1k11/row/0576': '0b123b77ff6b6fc4a9add15f91f0c3c5056f20bc1a293ea1b4196d7551d9155e',
+    's1k11/row/0693': '4371131d3016c8a687f92bd7de3387095758f8be99a97b8d950428dbe42b3e33',
+    's1k11/row/0704': '0d285b61a26fc23fb1c14066e5ee43f8df8de1754e359dae7e7e92829d56e0f2',
+    's1k11/row/0731': '6e73565f676a6ed1d10f6b889fc0a38a545d09cc57a3ac26f0bd130d3eea4d3a',
+    's1k11/row/0740': '33a8b81e02eb9ad9dd64930e58ae3be2ee0ce7b0d64e3fe943e84701c9681f0c',
+    's1k11/row/0745': '6acd9534d48f1e2ab36af2c21134b26ccdcff84806bf86d16fd8cf82397dbdb6',
+    's1k11/row/0769': '0ca1f5f2de4299a43e5629c0de3b369b0886ed19567cecb39d5ffbf38d7cf4a3',
+    's1k11/row/0808': 'eb4f6468d2a4a17bf5f93fa2631939c3fe87fbba69bb641a8027812c58dc283b',
+    's1k11/row/0840': '68812eb5896f69763a82e3202b5c3fe857f6296a3ef29adee1b45fb856178733',
+    's1k11/row/0870': '413d5205047d6a031b7b8a401b8b82aba63f578ca21aade305caabda311ed350',
+    's1k11/row/0920': '0ba6fd578dbc1dbef8f9e902de2a230cc225e3b8c9b3cb6cddfa42b4e978e335',
+    's1k11/row/0943': '3a3655a023cec69b14ff2fd852fa40dcedad01ff5c2ea6c3ea31a12dc3a6a674',
+    's1k11/row/0974': '8810aaf66ec8b609679f0f8943758301d88b06e1cc6f2910c7c6be79badc38cf',
 }
-# Exact meta sentences observed in DeepSeek reasoning (copied from tools/qfft/qfft_ds_common_v66.py).
-META = re.compile(r'(?:Since desired oververbosity 5, (?:step-by-step|but final can explain)\.|'
-                  r'Since desired oververbosity 5\.|Desired oververbosity 5, so moderate\.|'
-                  r'Desired oververbosity 5\.|Desired oververbose 5\.|desired 5\.)')
+# DeepSeek reasoning sometimes talks about a hidden "oververbosity 5" setting. v93-P8 widened the exact v66 sentence
+# list (tools/qfft/qfft_ds_common_v66.py) to any sentence, ';' clause or parenthesis that mentions oververbos* or
+# "desired 5". Removed text is kept per row in teacher_detail.meta_edits (552 pieces in 479 of the 1000 DS rows).
+META = re.compile(
+    r'(?i)'
+    r'(?:'
+    r'(?:(?<=[\n.!?])|^)\s*'
+    r'[^.!?\n]*?\b(?:oververbos\w*|desired\s*5\b)[^.!?\n]*?'
+    r'(?:[.!?]|\n|$)'
+    r'|'
+    r';\s*[^;.\n]*?\b(?:oververbos\w*|desired\s*5\b)[^;.\n]*?(?=[;.\n]|$)'
+    r'|'
+    r'\([^)\n]*?\b(?:oververbos\w*|desired\s*5\b)[^)\n]*?\)'
+    r'|'
+    r',\s*(?:but\s+)?(?:final\s+)?(?:answer\s+)?(?:desired\s+)?oververbos\w*\s*5?\s*(?=[.!?\n]|$)'
+    r')'
+)
 
 
 # ----------------------------------------------------------------------------- helpers
