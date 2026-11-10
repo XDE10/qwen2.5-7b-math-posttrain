@@ -40,6 +40,7 @@ def suite_spec(name: str, cfg: dict) -> dict:
 
 class VLLMEngine:
     def __init__(self, model_path, max_model_len, seed, gpu_memory_utilization, max_num_seqs, attention_backend=None):
+        os.environ.setdefault('VLLM_USE_FLASHINFER_SAMPLER', '0')
         if attention_backend:
             os.environ['VLLM_ATTENTION_BACKEND'] = attention_backend
         from vllm import LLM

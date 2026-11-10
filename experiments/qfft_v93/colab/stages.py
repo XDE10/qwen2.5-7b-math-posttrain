@@ -161,7 +161,8 @@ class Context:
         self.env = dict(os.environ, PYTHONPATH=str(code_dir), P1_CODE_SHA=code_sha, P1_DRIVE_ROOT=str(DRIVE),
                         P1_LOCAL_ROOT=str(LOCAL), HF_HOME=str(LOCAL / 'hf'), TOKENIZERS_PARALLELISM='false',
                         PYTORCH_CUDA_ALLOC_CONF='expandable_segments:True', DS_SKIP_CUDA_CHECK='1',
-                        PYTHONUNBUFFERED='1', VLLM_WORKER_MULTIPROC_METHOD='spawn')
+                        PYTHONUNBUFFERED='1', VLLM_WORKER_MULTIPROC_METHOD='spawn',
+                        VLLM_USE_FLASHINFER_SAMPLER='0')
         credential = DRIVE / '.project1_credentials/swanlab.json'
         if credential.exists():
             key = json.loads(credential.read_text(encoding='utf-8-sig')).get('SWANLAB_API_KEY')
