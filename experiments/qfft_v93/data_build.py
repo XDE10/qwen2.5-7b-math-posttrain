@@ -59,7 +59,11 @@ DS_DIRS = {
     'v91': ROOT / 'artifacts/qfft_incomplete_high_v91',
     'v93': ROOT / 'artifacts/qfft_teacher_v93',
 }
-# Replaced in v93: MATH-500 near-duplicate (0918) and 19 ultra-long insoluble proof outliers replaced with approved raw pool items.
+# Replaced in v93 with approved OpenR1 raw-pool rows. 0918: MATH-500 near-duplicate, picked by `topic` with the
+# deterministic rule in choose_replacement. The other 19: every DeepSeek-V4.1-Flash attempt (16-22 per question,
+# high/max/low) ran past the 32K window; on 2026-11-10 the user chose replacement over paired exclusion. Those 19
+# raw ids were picked after looking at Flash outputs (deviation from the pre-registered rule; selection steps in
+# docs/status/history.md, v93-P8) and are pinned here so `plan` reproduces the frozen question_plan.json.
 V93_REPLACE = {
     's1k11/row/0918': 'complex',
     's1k11/row/0021': '65a9104d83967dc53c3766c2c86db39687b7b0e0b932161afb284af476ea4a3d',
@@ -82,7 +86,9 @@ V93_REPLACE = {
     's1k11/row/0943': '3a3655a023cec69b14ff2fd852fa40dcedad01ff5c2ea6c3ea31a12dc3a6a674',
     's1k11/row/0974': '8810aaf66ec8b609679f0f8943758301d88b06e1cc6f2910c7c6be79badc38cf',
 }
-# Robust regex for DeepSeek meta-prompt / oververbosity remnants
+# DeepSeek reasoning sometimes talks about a hidden "oververbosity 5" setting. v93-P8 widened the exact v66 sentence
+# list (tools/qfft/qfft_ds_common_v66.py) to any sentence, ';' clause or parenthesis that mentions oververbos* or
+# "desired 5". Removed text is kept per row in teacher_detail.meta_edits (552 pieces in 479 of the 1000 DS rows).
 META = re.compile(
     r'(?i)'
     r'(?:'
