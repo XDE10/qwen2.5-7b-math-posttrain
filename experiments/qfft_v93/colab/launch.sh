@@ -326,7 +326,7 @@ if not mounted():
             code, out = run(['apt-get', 'install', '-y', '-qq', 'rclone', 'fuse3'], 300)
         print('install rclone fuse3: exit', code, out[-300:] if code else '', flush=True)
     os.makedirs(MNT, exist_ok=True)
-    print(f'[mount] Mounting {REMOTE} at {MNT}...', flush=True)
+    print('[mount] Mounting', REMOTE, 'at', MNT, '...', flush=True)
     code, out = run(['rclone', 'mount', REMOTE, MNT, *FLAGS], 60)
     print('rclone mount: exit', code, out[-500:], flush=True)
     for _ in range(30):
