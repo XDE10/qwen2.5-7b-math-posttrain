@@ -1,0 +1,10 @@
+P1_SESSION=p1-1110-135452 gpu=CPU auto_release=1
+/tmp/ipykernel_1800/2862552590.py:144: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 0f7a0623a31d (git 40f2b68ef58f); stages: ['ping:30']
+[11-10 05:57:55] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-10 05:57:56] ===== STAGE ping:30 =====
+[11-10 05:57:58] Drive writable (/content/mydrive/projects/project1/v93/ping/p1-1110-135452@6be45fc5fe3e.json); waiting 30 s
+[11-10 05:58:08] ping: 20 s left
+[11-10 05:58:18] ping: 10 s left
+[11-10 05:58:28] ping: 0 s left

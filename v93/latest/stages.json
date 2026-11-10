@@ -20,11 +20,11 @@
  "ping__30": {
   "stage": "ping:30",
   "state": "complete",
-  "hours": 0.009,
-  "finished": "2026-11-09T09:37:57.881378",
-  "started": "2026-11-09T09:37:23.753245",
-  "code": "08dfffa7ac23",
-  "host": "p1-1109-173629@ae28c0da492a"
+  "hours": 0.008,
+  "finished": "2026-11-10T05:58:28.098519",
+  "started": "2026-11-10T05:57:56.241816",
+  "code": "0f7a0623a31d",
+  "host": "p1-1110-135452@6be45fc5fe3e"
  },
  "smoke-eval": {
   "stage": "smoke-eval",
