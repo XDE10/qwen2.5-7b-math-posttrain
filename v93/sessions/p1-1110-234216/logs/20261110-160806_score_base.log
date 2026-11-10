@@ -1,0 +1,6 @@
+[11-11 00:08:12] base/aime24: mean@n=0.113 CI=[0.03125, 0.21458333333333332] tokens=1479 trunc=0.015
+[11-11 00:08:12] base/aime25: mean@n=0.077 CI=[0.029166666666666667, 0.13125] tokens=1506 trunc=0.019
+[11-11 00:08:13] base/amc23: mean@n=0.509 CI=[0.390625, 0.625] tokens=955 trunc=0.003
+[11-11 00:08:15] base/gsm8k: mean@n=0.916 CI=[0.9006823351023503, 0.9302501895375285] tokens=300 trunc=0.000
+[11-11 00:08:18] base/math500: mean@n=0.768 CI=[0.7365, 0.7995] tokens=627 trunc=0.001
+[11-11 00:08:18] Wrote /content/mydrive/runs/project1/v93/evals/results.md

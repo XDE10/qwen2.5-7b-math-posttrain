@@ -10,12 +10,21 @@
  },
  "eval__base__full": {
   "stage": "eval:base:full",
-  "state": "failed",
-  "error": "RuntimeError: gen_base failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261110-152436_gen_base.log",
-  "at": "2026-11-10T15:26:39.873348",
-  "started": "2026-11-10T15:23:00.491939",
-  "code": "b125ef25a72a",
-  "host": "p1-1110-232041@f0948c109074"
+  "state": "complete",
+  "hours": 0.394,
+  "finished": "2026-11-10T16:08:18.201402",
+  "started": "2026-11-10T15:44:38.420109",
+  "code": "7e18a2c7bda6",
+  "host": "p1-1110-234216@4b5c96d35876"
+ },
+ "eval__qfft_official__full": {
+  "stage": "eval:qfft_official:full",
+  "state": "running",
+  "started": "2026-11-10T16:08:18.327881",
+  "code": "7e18a2c7bda6",
+  "host": "p1-1110-234216@4b5c96d35876",
+  "heartbeat": "2026-11-10T16:13:18.328647",
+  "heartbeat_ts": 1794327198.3286583
  },
  "models__base+qwen_math+qfft_official+sft_repro": {
   "stage": "models:base,qwen_math,qfft_official,sft_repro",

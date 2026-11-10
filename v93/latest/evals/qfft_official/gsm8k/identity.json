@@ -1,0 +1,24 @@
+{
+  "protocol": {
+    "model": "qfft_official",
+    "model_identity": {
+      "repo": "lwl-uestc/QFFT-S1-7B",
+      "revision": "ecb7ff937689a86e59bec5e2d0125f1764cd85c6",
+      "downloaded": "2026-11-09T17:49:33+08:00",
+      "bytes": 15247193154
+    },
+    "benchmark": "gsm8k",
+    "benchmark_sha256": "b31c428526c7f9286cd04d35934b20407193c7d68806b9bc481bfa9bdf7967f7",
+    "n": 1,
+    "limit": null,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "max_model_len": 32768,
+    "max_tokens_cap": null,
+    "seed": 42,
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "engine": "vllm"
+  },
+  "protocol_sha256": "a9a9528537b31cda70c56529b63ef7f4129eba1e950bb535525661bb227add42",
+  "updated": "2026-11-11T00:09:55+08:00"
+}
