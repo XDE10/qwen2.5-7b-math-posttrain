@@ -52,5 +52,14 @@
   "started": "2026-11-09T10:31:12.674228",
   "code": "08dfffa7ac23",
   "host": "p1-1109-180121@b3ed41f495da"
+ },
+ "sync-data": {
+  "stage": "sync-data",
+  "state": "complete",
+  "hours": 0.002,
+  "finished": "2026-11-10T15:07:39.208810",
+  "started": "2026-11-10T15:07:31.171316",
+  "code": "54f692d73244",
+  "host": "p1-1110-230033@2151685a1c04"
  }
 }

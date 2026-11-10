@@ -1,0 +1,12 @@
+P1_SESSION=p1-1110-230033 gpu=CPU auto_release=1
+/tmp/ipykernel_1702/1086284144.py:144: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 54f692d73244 (git 3d52d52a2d7f); stages: ['sync-data']
+[11-10 15:07:29] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-10 15:07:31] ===== STAGE sync-data =====
+[11-10 15:07:32] Reassembled p1_data.tgz from 5 parts
+[11-10 15:07:38] Synced qfft1000_v93 to /content/mydrive/projects/project1/v93/data/qfft1000_v93
+[11-10 15:07:38] Synced benchmarks_v93 to /content/mydrive/projects/project1/v93/data/benchmarks_v93
+[11-10 15:07:39]   r1: 1000 rows verified
+[11-10 15:07:39]   ds: 1000 rows verified
+[11-10 15:07:39]   ds_verified: 1000 rows verified
