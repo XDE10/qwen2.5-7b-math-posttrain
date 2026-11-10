@@ -1,0 +1,6 @@
+[11-11 03:34:29] qfft_official/aime24: mean@n=0.208 CI=[0.10208333333333333, 0.32916666666666666] tokens=14604 trunc=0.094
+[11-11 03:34:30] qfft_official/aime25: mean@n=0.160 CI=[0.06875, 0.26875] tokens=11467 trunc=0.044
+[11-11 03:34:31] qfft_official/amc23: mean@n=0.613 CI=[0.496875, 0.728125] tokens=7552 trunc=0.019
+[11-11 03:34:33] qfft_official/gsm8k: mean@n=0.923 CI=[0.9082638362395754, 0.9370735405610311] tokens=420 trunc=0.000
+[11-11 03:34:36] qfft_official/math500: mean@n=0.811 CI=[0.7825, 0.839] tokens=3104 trunc=0.009
+[11-11 03:34:37] Wrote /content/mydrive/runs/project1/v93/evals/results.md

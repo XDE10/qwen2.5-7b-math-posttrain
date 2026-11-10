@@ -293,3 +293,26 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<
 [11-11 03:16:38] qfft_official: 3800/4599 new generations, 1722 output tok/s
 [11-11 03:17:39] qfft_official: 3962/4599 new generations, 1725 output tok/s
 [11-11 03:17:53] qfft_official: 4000/4599 new generations, 1724 output tok/s
+[11-11 03:18:54] qfft_official: 4158/4599 new generations, 1724 output tok/s
+[11-11 03:19:09] qfft_official: 4200/4599 new generations, 1722 output tok/s
+[11-11 03:20:10] qfft_official: 4358/4599 new generations, 1721 output tok/s
+[11-11 03:20:16] qfft_official: 4400/4599 new generations, 1723 output tok/s
+[11-11 03:21:18] qfft_official: 4493/4599 new generations, 1725 output tok/s
+[11-11 03:22:20] qfft_official: 4511/4599 new generations, 1732 output tok/s
+[11-11 03:23:32] qfft_official: 4523/4599 new generations, 1732 output tok/s
+[11-11 03:24:36] qfft_official: 4536/4599 new generations, 1738 output tok/s
+[11-11 03:25:39] qfft_official: 4541/4599 new generations, 1740 output tok/s
+[11-11 03:26:43] qfft_official: 4551/4599 new generations, 1745 output tok/s
+[11-11 03:27:49] qfft_official: 4565/4599 new generations, 1760 output tok/s
+[11-11 03:29:19] qfft_official: 4572/4599 new generations, 1760 output tok/s
+[11-11 03:30:25] qfft_official: 4581/4599 new generations, 1768 output tok/s
+[11-11 03:31:52] qfft_official: 4586/4599 new generations, 1764 output tok/s
+[11-11 03:32:54] qfft_official: 4588/4599 new generations, 1759 output tok/s
+[11-11 03:34:10] qfft_official: 4597/4599 new generations, 1771 output tok/s
+[11-11 03:34:16] qfft_official: 4599 new generations, 21,693,037 output tokens in 12219 s (1775 tok/s; engine start 41 s)
+[11-11 03:34:16] qfft_official: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=8171) INFO 11-10 19:34:16 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=8776) INFO 11-10 19:34:16 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=8776) INFO 11-10 19:34:16 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=8776) INFO 11-10 19:34:16 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=8776) INFO 11-10 19:34:16 [core.py:1573] [shutdown] EngineCore: exiting busy loop

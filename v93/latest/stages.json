@@ -19,12 +19,21 @@
  },
  "eval__qfft_official__full": {
   "stage": "eval:qfft_official:full",
-  "state": "running",
+  "state": "complete",
+  "hours": 3.439,
+  "finished": "2026-11-10T19:34:37.186145",
   "started": "2026-11-10T16:08:18.327881",
   "code": "7e18a2c7bda6",
+  "host": "p1-1110-234216@4b5c96d35876"
+ },
+ "eval__sft_repro__full": {
+  "stage": "eval:sft_repro:full",
+  "state": "running",
+  "started": "2026-11-10T19:34:37.290584",
+  "code": "7e18a2c7bda6",
   "host": "p1-1110-234216@4b5c96d35876",
-  "heartbeat": "2026-11-10T19:18:22.136033",
-  "heartbeat_ts": 1794338302.1360452
+  "heartbeat": "2026-11-10T19:44:37.412056",
+  "heartbeat_ts": 1794339877.4120698
  },
  "models__base+qwen_math+qfft_official+sft_repro": {
   "stage": "models:base,qwen_math,qfft_official,sft_repro",
