@@ -81,7 +81,17 @@ def system_v91() -> str:
     ] + lines[6:])
 
 
-PROMPTS = {'v66_original': SYSTEM_V66, 'v91_anti_redundancy': system_v91()}
+def system_v93_compact() -> str:
+    """The v93 compact variant: enforces focused derivation and early convergence within the training window."""
+    base = system_v91()
+    return base + (
+        '\nKeep reasoning strictly focused and concise. Complete all necessary logical steps and final deductions '
+        'within a 32,000-token budget without branching into circular exploration. Once the argument is solid, '
+        'immediately state the unambiguous final result within \\boxed{}.'
+    )
+
+
+PROMPTS = {'v66_original': SYSTEM_V66, 'v91_anti_redundancy': system_v91(), 'v93_compact': system_v93_compact()}
 
 
 class QuotaExhausted(RuntimeError):

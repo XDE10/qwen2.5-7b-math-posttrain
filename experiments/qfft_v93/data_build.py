@@ -59,8 +59,29 @@ DS_DIRS = {
     'v91': ROOT / 'artifacts/qfft_incomplete_high_v91',
     'v93': ROOT / 'artifacts/qfft_teacher_v93',
 }
-# Replaced in v93: near-duplicate of MATH-500 test/intermediate_algebra/1063.json (see decontam review).
-V93_REPLACE = {'s1k11/row/0918': 'complex'}
+# Replaced in v93: MATH-500 near-duplicate (0918) and 19 ultra-long insoluble proof outliers replaced with approved raw pool items.
+V93_REPLACE = {
+    's1k11/row/0918': 'complex',
+    's1k11/row/0021': '8f6de4287d92c4903672bcc14abc354b43bec5c228d8bd8c2ce1bd60eb0cd2eb',
+    's1k11/row/0024': 'e4f5ea8d9867157a392079982818386760489ef3016e38ff6688f83d9d54c713',
+    's1k11/row/0057': 'ae5fe9622ffedb2652df305f20341f485a383dc4d8328cb101fa5fed96d467d0',
+    's1k11/row/0268': '5accae5ba720d0c469c89e9737981d27c8ab472c8b07d53a1ee9cfb1b2d71226',
+    's1k11/row/0339': '64ab3aa7508b17ad314b043e042ff3f93568d587bef1d221c0aaecfc9d2c0838',
+    's1k11/row/0459': '1ffc2ec3d79315d11bafb3db3c68011b4e9c6714777be60b1b3ed7151d293073',
+    's1k11/row/0576': '13bcc9eb3a9bb900de81dd6897ee7e32e4a08a534047686a632a26fa075c8a63',
+    's1k11/row/0693': '9e9e2d2bd13eaa98ad5986b6eb09405d5dbf8491583e47d8b76967bf6fdb15c0',
+    's1k11/row/0704': '18a1305375f1847a3c0f4a802a446fafd92a46d3ada409e5945576993c23d913',
+    's1k11/row/0731': '380955ddbfd8403bbd91ab65353313cc2273934c12ab3748b3455562aebb6034',
+    's1k11/row/0740': '854bfbf0be801a3ead44a3f7075795a3636c27d86f2ee5b01d52ca69e2836ac1',
+    's1k11/row/0745': '7ebd9a5036610ef5bc91a72b2d342cd96437b2040e6682e09e9c89805830de7a',
+    's1k11/row/0769': '6d3e37f8b18ed14212c5d2d499f1ce1b1c3a939c0cf84c669047d9fc757edf44',
+    's1k11/row/0808': '4407a8b92372f97238b19d6dc8552d5100361f7e23c8c98d04c0a89460de1460',
+    's1k11/row/0840': '5d2385c4c1b69f3cc4ad0a6b703838f1a863986bfd0c672fc7f93d4b297fbf56',
+    's1k11/row/0870': '26af222702cbdae39ab06373c9de3bc0247981ef5e0a9d1c5d34c3e4429d5612',
+    's1k11/row/0920': 'f17eeae9af5cb9065e524c21632c25e0fdac48625f50c6057fd5ce49ed98fa10',
+    's1k11/row/0943': '6fe41be4666c91dba25cf29773128e98f21b3b4ad7c62df8a584a078fc25a041',
+    's1k11/row/0974': '59de9f5b8f51440ef9f91aebcf4e6f39d0cf0e6826142bff5f0cb7b4b8f3fead',
+}
 # Exact meta sentences observed in DeepSeek reasoning (copied from tools/qfft/qfft_ds_common_v66.py).
 META = re.compile(r'(?:Since desired oververbosity 5, (?:step-by-step|but final can explain)\.|'
                   r'Since desired oververbosity 5\.|Desired oververbosity 5, so moderate\.|'
@@ -236,7 +257,7 @@ def cmd_plan(args) -> None:
         for old_id, topic in V93_REPLACE.items():
             pos = next(k for k, r in enumerate(plan) if r['sample_id'] == old_id)
             others = [(r['sample_id'], r['question']) for r in plan if r['sample_id'] != old_id]
-            override = (args.replacement or {}).get(old_id)
+            override = (args.replacement or {}).get(old_id) or (topic if len(topic) == 64 else None)
             src_i, raw, reasoning, final = choose_replacement(raw_rows, used_raw, others, benchmarks, topic,
                                                               override=override, grader=grader)
             used_raw.add(raw['sample_id'])
