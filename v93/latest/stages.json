@@ -26,14 +26,23 @@
   "code": "7e18a2c7bda6",
   "host": "p1-1110-234216@4b5c96d35876"
  },
+ "eval__qwen_math__full": {
+  "stage": "eval:qwen_math:full",
+  "state": "complete",
+  "hours": 0.171,
+  "finished": "2026-11-11T02:37:48.398680",
+  "started": "2026-11-11T02:27:34.083008",
+  "code": "7e18a2c7bda6",
+  "host": "p1-1110-234216@4b5c96d35876"
+ },
  "eval__sft_repro__full": {
   "stage": "eval:sft_repro:full",
-  "state": "running",
+  "state": "complete",
+  "hours": 6.882,
+  "finished": "2026-11-11T02:27:34.082152",
   "started": "2026-11-10T19:34:37.290584",
   "code": "7e18a2c7bda6",
-  "host": "p1-1110-234216@4b5c96d35876",
-  "heartbeat": "2026-11-11T02:24:44.789389",
-  "heartbeat_ts": 1794363884.7894027
+  "host": "p1-1110-234216@4b5c96d35876"
  },
  "models__base+qwen_math+qfft_official+sft_repro": {
   "stage": "models:base,qwen_math,qfft_official,sft_repro",
@@ -95,7 +104,7 @@
   "started": "2026-11-11T00:42:26.227006",
   "code": "7e18a2c7bda6",
   "host": "p1-1111-084149@cd5950f279e0",
-  "heartbeat": "2026-11-11T02:22:34.318451",
-  "heartbeat_ts": 1794363754.318465
+  "heartbeat": "2026-11-11T02:37:35.916064",
+  "heartbeat_ts": 1794364655.916082
  }
 }

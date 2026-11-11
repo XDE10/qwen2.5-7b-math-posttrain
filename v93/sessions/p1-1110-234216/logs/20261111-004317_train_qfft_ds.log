@@ -269,3 +269,33 @@ Backend impl 'liger_kernel.ops.backends._ascend.rope' for op 'rope' could not be
 [11-11 10:24:46] HEARTBEAT 114
 [11-11 10:24:57] step 115/378 epoch 1.83 loss 1.2232 lr 8.79e-06 s/step 66.2 eta 4.84h peakGPU 28.8GiB
 {'loss': '1.223', 'grad_norm': '1.271', 'learning_rate': '8.787e-06', 'epoch': '1.832', 'num_input_tokens_seen': 18336128, 'train_runtime': '5979', 'train_tokens_per_second': '3067'}
+[11-11 10:25:50] step 116/378 epoch 1.85 loss 1.2346 lr 8.76e-06 s/step 52.2 eta 3.80h peakGPU 28.8GiB
+{'loss': '1.235', 'grad_norm': '1.505', 'learning_rate': '8.757e-06', 'epoch': '1.848', 'num_input_tokens_seen': 18495256, 'train_runtime': '6032', 'train_tokens_per_second': '3066'}
+[11-11 10:26:44] step 117/378 epoch 1.86 loss 1.2488 lr 8.73e-06 s/step 54.5 eta 3.95h peakGPU 28.8GiB
+{'loss': '1.249', 'grad_norm': '1.494', 'learning_rate': '8.726e-06', 'epoch': '1.864', 'num_input_tokens_seen': 18662811, 'train_runtime': '6086', 'train_tokens_per_second': '3067'}
+[11-11 10:27:28] step 118/378 epoch 1.88 loss 1.0909 lr 8.70e-06 s/step 44.2 eta 3.19h peakGPU 28.8GiB
+{'loss': '1.091', 'grad_norm': '1.352', 'learning_rate': '8.695e-06', 'epoch': '1.88', 'num_input_tokens_seen': 18790013, 'train_runtime': '6130', 'train_tokens_per_second': '3065'}
+[11-11 10:28:30] step 119/378 epoch 1.90 loss 1.1568 lr 8.66e-06 s/step 61.9 eta 4.45h peakGPU 28.8GiB
+{'loss': '1.157', 'grad_norm': '1.235', 'learning_rate': '8.664e-06', 'epoch': '1.896', 'num_input_tokens_seen': 18993250, 'train_runtime': '6192', 'train_tokens_per_second': '3067'}
+[11-11 10:29:31] step 120/378 epoch 1.91 loss 1.1875 lr 8.63e-06 s/step 60.6 eta 4.34h peakGPU 28.8GiB
+{'loss': '1.187', 'grad_norm': '1.277', 'learning_rate': '8.632e-06', 'epoch': '1.912', 'num_input_tokens_seen': 19191564, 'train_runtime': '6253', 'train_tokens_per_second': '3069'}
+[11-11 10:29:46] HEARTBEAT 120
+[11-11 10:30:13] step 121/378 epoch 1.93 loss 1.2518 lr 8.60e-06 s/step 41.9 eta 2.99h peakGPU 28.8GiB
+{'loss': '1.252', 'grad_norm': '1.708', 'learning_rate': '8.6e-06', 'epoch': '1.928', 'num_input_tokens_seen': 19290257, 'train_runtime': '6295', 'train_tokens_per_second': '3065'}
+[11-11 10:31:12] step 122/378 epoch 1.94 loss 1.1722 lr 8.57e-06 s/step 59.6 eta 4.24h peakGPU 28.8GiB
+{'loss': '1.172', 'grad_norm': '1.257', 'learning_rate': '8.568e-06', 'epoch': '1.944', 'num_input_tokens_seen': 19481200, 'train_runtime': '6354', 'train_tokens_per_second': '3066'}
+[11-11 10:32:12] step 123/378 epoch 1.96 loss 1.0855 lr 8.54e-06 s/step 59.7 eta 4.23h peakGPU 28.8GiB
+{'loss': '1.085', 'grad_norm': '1.134', 'learning_rate': '8.536e-06', 'epoch': '1.96', 'num_input_tokens_seen': 19668547, 'train_runtime': '6414', 'train_tokens_per_second': '3067'}
+[11-11 10:32:59] step 124/378 epoch 1.98 loss 1.1732 lr 8.50e-06 s/step 46.6 eta 3.29h peakGPU 28.8GiB
+{'loss': '1.173', 'grad_norm': '1.456', 'learning_rate': '8.503e-06', 'epoch': '1.976', 'num_input_tokens_seen': 19796549, 'train_runtime': '6461', 'train_tokens_per_second': '3064'}
+[11-11 10:33:43] step 125/378 epoch 1.99 loss 0.9882 lr 8.47e-06 s/step 44.5 eta 3.12h peakGPU 28.8GiB
+{'loss': '0.9882', 'grad_norm': '1.291', 'learning_rate': '8.47e-06', 'epoch': '1.992', 'num_input_tokens_seen': 19917074, 'train_runtime': '6505', 'train_tokens_per_second': '3062'}
+[11-11 10:34:20] step 126/378 epoch 2.00 loss 1.2311 lr 8.44e-06 s/step 36.5 eta 2.56h peakGPU 28.8GiB
+{'loss': '1.231', 'grad_norm': '1.904', 'learning_rate': '8.436e-06', 'epoch': '2', 'num_input_tokens_seen': 20033444, 'train_runtime': '6542', 'train_tokens_per_second': '3063'}
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s][11-11 10:34:46] HEARTBEAT 126
+
+Writing model shards: 100%|██████████| 1/1 [00:38<00:00, 38.67s/it]
+Writing model shards: 100%|██████████| 1/1 [00:38<00:00, 38.67s/it]
+/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)

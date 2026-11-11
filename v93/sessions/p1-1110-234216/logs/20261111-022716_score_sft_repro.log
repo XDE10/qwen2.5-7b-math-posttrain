@@ -1,0 +1,6 @@
+[11-11 10:27:23] sft_repro/aime24: mean@n=0.188 CI=[0.07916666666666666, 0.3145833333333333] tokens=22040 trunc=0.188
+[11-11 10:27:25] sft_repro/aime25: mean@n=0.169 CI=[0.06458333333333334, 0.29375] tokens=20946 trunc=0.158
+[11-11 10:27:26] sft_repro/amc23: mean@n=0.613 CI=[0.496875, 0.725] tokens=14055 trunc=0.078
+[11-11 10:27:29] sft_repro/gsm8k: mean@n=0.923 CI=[0.909021986353298, 0.9370735405610311] tokens=2191 trunc=0.000
+[11-11 10:27:33] sft_repro/math500: mean@n=0.817 CI=[0.789, 0.844] tokens=6837 trunc=0.021
+[11-11 10:27:33] Wrote /content/mydrive/runs/project1/v93/evals/results.md

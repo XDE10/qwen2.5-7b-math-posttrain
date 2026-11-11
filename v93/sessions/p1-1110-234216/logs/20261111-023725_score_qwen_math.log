@@ -1,0 +1,14 @@
+[11-11 10:37:32] qwen_math/aime24: mean@n=0.123 CI=[0.041666666666666664, 0.22291666666666668] tokens=1595 trunc=0.194
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+[11-11 10:37:42] qwen_math/aime25: mean@n=0.115 CI=[0.04375, 0.20208333333333334] tokens=1360 trunc=0.098
+[11-11 10:37:43] qwen_math/amc23: mean@n=0.556 CI=[0.4375, 0.671875] tokens=1010 trunc=0.050
+[11-11 10:37:45] qwen_math/gsm8k: mean@n=0.953 CI=[0.9416224412433661, 0.9636087945413192] tokens=321 trunc=0.005
+[11-11 10:37:48] qwen_math/math500: mean@n=0.834 CI=[0.805, 0.8625] tokens=679 trunc=0.028
+[11-11 10:37:48] Wrote /content/mydrive/runs/project1/v93/evals/results.md
