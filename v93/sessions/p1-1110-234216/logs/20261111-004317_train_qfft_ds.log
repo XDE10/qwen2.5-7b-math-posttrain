@@ -1,0 +1,38 @@
+[11-11 08:44:27] rclone copy (60 s): 2026/11/11 00:44:27 NOTICE:    19.056 GiB / 19.056 GiB, 100%, 224.334 MiB/s, ETA 0s
+[11-11 08:44:27] Downloaded /content/mydrive/models/Qwen2.5-7B-Instruct--a09a35458c702b33eeacc393d103063234e8bc28 in 60 s
+[11-11 08:44:40] qfft_ds_v93: 1000 examples, 10,016,722 tokens (10,016,722 supervised), longest 32496
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 11761.87it/s]
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/qfft_ds_v93/swanlog/run-20261111_004442-hwh5u6cr
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run qfft_ds_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/hwh5u6cr
+[11-11 08:44:43] SwanLab run hwh5u6cr https://swanlab.cn/@XDE10/project1-7b-math/runs/hwh5u6cr
+[RANK 0] Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 16. Using DeepSpeed's value.
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+Backend impl 'liger_kernel.ops.backends._cutedsl.rope' for op 'rope' could not be imported: ImportError: cutedsl backend requires the NVIDIA CUTLASS Python DSL (CuTe DSL). Install it with `pip install nvidia-cutlass-dsl`, or when installing Liger-Kernel use `pip install 'liger-kernel[cutedsl]'`.
+Backend impl 'liger_kernel.ops.backends._ascend.rope' for op 'rope' could not be imported: ImportError: cannot import name 'tanh' from 'triton.language.math' (/usr/local/lib/python3.13/dist-packages/triton/language/math.py)
+/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: FutureWarning: `torch.distributed.all_gather_into_tensor` is deprecated. Please use `torch.distributed.all_gather_single` instead.
+  return func(*args, **kwargs)
+[11-11 08:46:15] step 1/378 epoch 0.02 loss 1.8195 lr 2.63e-07 s/step 57.2 eta 5.99h peakGPU 28.4GiB
+{'loss': '1.82', 'grad_norm': '9.478', 'learning_rate': '2.632e-07', 'epoch': '0.016', 'num_input_tokens_seen': 145592, 'train_runtime': '57.24', 'train_tokens_per_second': '2544'}
+[11-11 08:47:01] step 2/378 epoch 0.03 loss 1.7750 lr 5.26e-07 s/step 45.9 eta 4.80h peakGPU 28.4GiB
+{'loss': '1.775', 'grad_norm': '9.202', 'learning_rate': '5.263e-07', 'epoch': '0.032', 'num_input_tokens_seen': 277097, 'train_runtime': '103.2', 'train_tokens_per_second': '2686'}
+[11-11 08:48:00] step 3/378 epoch 0.05 loss 1.7994 lr 7.89e-07 s/step 58.8 eta 6.12h peakGPU 28.5GiB
+{'loss': '1.799', 'grad_norm': '8.688', 'learning_rate': '7.895e-07', 'epoch': '0.048', 'num_input_tokens_seen': 460400, 'train_runtime': '162', 'train_tokens_per_second': '2843'}
+[11-11 08:48:47] step 4/378 epoch 0.06 loss 1.7658 lr 1.05e-06 s/step 47.3 eta 4.91h peakGPU 28.5GiB
+{'loss': '1.766', 'grad_norm': '9.276', 'learning_rate': '1.053e-06', 'epoch': '0.064', 'num_input_tokens_seen': 599098, 'train_runtime': '209.2', 'train_tokens_per_second': '2863'}
+[11-11 08:49:39] step 5/378 epoch 0.08 loss 1.8362 lr 1.32e-06 s/step 51.8 eta 5.37h peakGPU 28.8GiB
+{'loss': '1.836', 'grad_norm': '9.018', 'learning_rate': '1.316e-06', 'epoch': '0.08', 'num_input_tokens_seen': 759622, 'train_runtime': '261', 'train_tokens_per_second': '2910'}
+[11-11 08:49:43] HEARTBEAT 5
+[11-11 08:50:31] step 6/378 epoch 0.10 loss 1.8406 lr 1.58e-06 s/step 51.7 eta 5.34h peakGPU 28.8GiB
+{'loss': '1.841', 'grad_norm': '8.515', 'learning_rate': '1.579e-06', 'epoch': '0.096', 'num_input_tokens_seen': 916196, 'train_runtime': '312.7', 'train_tokens_per_second': '2930'}
+[11-11 08:51:28] step 7/378 epoch 0.11 loss 1.8140 lr 1.84e-06 s/step 57.3 eta 5.90h peakGPU 28.8GiB
+{'loss': '1.814', 'grad_norm': '7.124', 'learning_rate': '1.842e-06', 'epoch': '0.112', 'num_input_tokens_seen': 1101124, 'train_runtime': '370', 'train_tokens_per_second': '2976'}
+[11-11 08:52:19] step 8/378 epoch 0.13 loss 1.4796 lr 2.11e-06 s/step 50.4 eta 5.18h peakGPU 28.8GiB
+{'loss': '1.48', 'grad_norm': '5.826', 'learning_rate': '2.105e-06', 'epoch': '0.128', 'num_input_tokens_seen': 1250009, 'train_runtime': '420.4', 'train_tokens_per_second': '2974'}

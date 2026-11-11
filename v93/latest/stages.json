@@ -32,8 +32,8 @@
   "started": "2026-11-10T19:34:37.290584",
   "code": "7e18a2c7bda6",
   "host": "p1-1110-234216@4b5c96d35876",
-  "heartbeat": "2026-11-11T00:19:42.519565",
-  "heartbeat_ts": 1794356382.5195792
+  "heartbeat": "2026-11-11T00:49:43.037527",
+  "heartbeat_ts": 1794358183.0375416
  },
  "models__base+qwen_math+qfft_official+sft_repro": {
   "stage": "models:base,qwen_math,qfft_official,sft_repro",
@@ -88,5 +88,14 @@
   "started": "2026-11-10T15:07:31.171316",
   "code": "54f692d73244",
   "host": "p1-1110-230033@2151685a1c04"
+ },
+ "train__qfft_ds": {
+  "stage": "train:qfft_ds",
+  "state": "running",
+  "started": "2026-11-11T00:42:26.227006",
+  "code": "7e18a2c7bda6",
+  "host": "p1-1111-084149@cd5950f279e0",
+  "heartbeat": "2026-11-11T00:52:27.047530",
+  "heartbeat_ts": 1794358347.0475428
  }
 }
