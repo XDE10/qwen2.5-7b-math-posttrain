@@ -1,0 +1,650 @@
+[... first 66,251 bytes omitted ...]
+(EngineCore pid=60181) WARNING 11-10 19:36:11 [flashinfer.py:99] FlashInfer kernels are disabled: flashinfer-cubin is not installed and nvcc (CUDA_HOME, CUDA_PATH, PATH or /usr/local/cuda) or ninja (PATH) is missing. Set CUDA_HOME to a CUDA toolkit and put ninja on PATH, or run `vllm download-kernels`.
+(EngineCore pid=60181) INFO 11-10 19:36:12 [parallel_state.py:1929] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_07f78e54686e44a1b7f4cabac0c35807 backend=nccl
+(EngineCore pid=60181) INFO 11-10 19:36:12 [parallel_state.py:2385] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=60181) INFO 11-10 19:36:12 [gpu_worker.py:513] Using V2 Model Runner
+(EngineCore pid=60181) INFO 11-10 19:36:13 [model_runner.py:399] Loading model from scratch...
+(EngineCore pid=60181) INFO 11-10 19:36:13 [cuda.py:508] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(EngineCore pid=60181) INFO 11-10 19:36:13 [flash_attn.py:1122] Using FlashAttention version 2
+(EngineCore pid=60181) INFO 11-10 19:36:14 [base_loader.py:82] Initializing model took 0.495843 seconds
+(EngineCore pid=60181) INFO 11-10 19:36:14 [weight_utils.py:1144] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 14.19 GiB. Available RAM: 170.56 GiB.
+(EngineCore pid=60181) INFO 11-10 19:36:14 [weight_utils.py:1167] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:00<00:02,  1.48it/s]
+
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:01<00:01,  1.40it/s]
+
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:02<00:00,  1.50it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:02<00:00,  2.11it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:02<00:00,  1.81it/s]
+
+(EngineCore pid=60181) INFO 11-10 19:36:16 [default_loader.py:506] Loading weights took 2.22 seconds
+(EngineCore pid=60181) INFO 11-10 19:36:17 [model_runner.py:428] Model loading took 14.19 GiB memory and 4.391347 seconds
+(EngineCore pid=60181) INFO 11-10 19:36:17 [topk_topp_sampler.py:121] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=60181) INFO 11-10 19:36:17 [torch_utils.py:281] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=60181) INFO 11-10 19:36:17 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=60181) INFO 11-10 19:36:18 [monitor.py:40] [backbone] Starting torch.compile
+(EngineCore pid=60181) INFO 11-10 19:36:21 [backends.py:1125] [backbone] Using cache directory: /root/.cache/vllm/torch_compile_cache/90d17083fa/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=60181) INFO 11-10 19:36:21 [backends.py:1187] [backbone] Dynamo bytecode transform time: 2.83 s
+(EngineCore pid=60181) INFO 11-10 19:36:24 [backends.py:417] [backbone] Compiling a graph for compile range (1, 16384) takes 3.68 s
+(EngineCore pid=60181) INFO 11-10 19:36:26 [backends.py:948] collected artifacts: 29 entries, 3 artifacts, 4325357 bytes total
+(EngineCore pid=60181) INFO 11-10 19:36:26 [decorators.py:752] [backbone] saved AOT compiled function to /root/.cache/vllm/torch_compile_cache/torch_aot_compile/9a4aec7592213aa90386d537126f31a93ae38b3b7f1e5c0c12c1b5eadca6f697/rank_0_0/model
+(EngineCore pid=60181) INFO 11-10 19:36:26 [monitor.py:62] [backbone] torch.compile took 8.06 s in total
+(EngineCore pid=60181) INFO 11-10 19:36:26 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.11 s
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   4%|▍         | 2/51 [00:00<00:03, 15.56it/s]
+Capturing CUDA graphs (PIECEWISE):  10%|▉         | 5/51 [00:00<00:02, 19.46it/s]
+Capturing CUDA graphs (PIECEWISE):  16%|█▌        | 8/51 [00:00<00:02, 20.74it/s]
+Capturing CUDA graphs (PIECEWISE):  22%|██▏       | 11/51 [00:00<00:01, 22.14it/s]
+Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 14/51 [00:00<00:01, 23.01it/s]
+Capturing CUDA graphs (PIECEWISE):  33%|███▎      | 17/51 [00:00<00:01, 21.93it/s]
+Capturing CUDA graphs (PIECEWISE):  41%|████      | 21/51 [00:00<00:01, 24.42it/s]
+Capturing CUDA graphs (PIECEWISE):  49%|████▉     | 25/51 [00:01<00:00, 26.55it/s]
+Capturing CUDA graphs (PIECEWISE):  57%|█████▋    | 29/51 [00:01<00:00, 28.11it/s]
+Capturing CUDA graphs (PIECEWISE):  65%|██████▍   | 33/51 [00:01<00:00, 29.29it/s]
+Capturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:01<00:00, 30.48it/s]
+Capturing CUDA graphs (PIECEWISE):  80%|████████  | 41/51 [00:01<00:00, 31.33it/s]
+Capturing CUDA graphs (PIECEWISE):  88%|████████▊ | 45/51 [00:01<00:00, 32.22it/s]
+Capturing CUDA graphs (PIECEWISE):  96%|█████████▌| 49/51 [00:01<00:00, 32.73it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 27.64it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 48.22it/s]
+(EngineCore pid=60181) INFO 11-10 19:36:34 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.34 GiB
+(EngineCore pid=60181) INFO 11-10 19:36:35 [gpu_worker.py:772] Available KV cache memory: 68.56 GiB
+(EngineCore pid=60181) INFO 11-10 19:36:35 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8959 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9041. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=60181) INFO 11-10 19:36:35 [kv_cache_utils.py:1147] GPU KV cache size: 1,283,792 tokens, Maximum concurrency for 32,768 tokens per request: 39.18x
+(EngineCore pid=60181) INFO 11-10 19:36:35 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=60181) INFO 11-10 19:36:35 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   6%|▌         | 3/51 [00:00<00:02, 21.15it/s]
+Capturing CUDA graphs (PIECEWISE):  12%|█▏        | 6/51 [00:00<00:02, 21.76it/s]
+Capturing CUDA graphs (PIECEWISE):  18%|█▊        | 9/51 [00:00<00:01, 22.34it/s]
+Capturing CUDA graphs (PIECEWISE):  24%|██▎       | 12/51 [00:00<00:01, 22.94it/s]
+Capturing CUDA graphs (PIECEWISE):  29%|██▉       | 15/51 [00:00<00:01, 23.57it/s]
+Capturing CUDA graphs (PIECEWISE):  35%|███▌      | 18/51 [00:00<00:01, 25.13it/s]
+Capturing CUDA graphs (PIECEWISE):  43%|████▎     | 22/51 [00:00<00:01, 27.30it/s]
+Capturing CUDA graphs (PIECEWISE):  51%|█████     | 26/51 [00:01<00:00, 28.76it/s]
+Capturing CUDA graphs (PIECEWISE):  59%|█████▉    | 30/51 [00:01<00:00, 29.83it/s]
+Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 30.66it/s]
+Capturing CUDA graphs (PIECEWISE):  75%|███████▍  | 38/51 [00:01<00:00, 31.51it/s]
+Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:01<00:00, 32.07it/s]
+Capturing CUDA graphs (PIECEWISE):  90%|█████████ | 46/51 [00:01<00:00, 32.68it/s]
+Capturing CUDA graphs (PIECEWISE):  98%|█████████▊| 50/51 [00:01<00:00, 33.22it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 29.00it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  14%|█▍        | 5/35 [00:00<00:00, 49.13it/s]
+Capturing CUDA graphs (FULL):  31%|███▏      | 11/35 [00:00<00:00, 49.89it/s]
+Capturing CUDA graphs (FULL):  49%|████▊     | 17/35 [00:00<00:00, 51.07it/s]
+Capturing CUDA graphs (FULL):  66%|██████▌   | 23/35 [00:00<00:00, 53.19it/s]
+Capturing CUDA graphs (FULL):  83%|████████▎ | 29/35 [00:00<00:00, 45.68it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<00:00, 49.73it/s]
+(EngineCore pid=60181) INFO 11-10 19:36:43 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.19 GiB
+(EngineCore pid=60181) INFO 11-10 19:36:43 [gpu_worker.py:1003] CUDA graph pool memory: 0.19 GiB (actual), 0.39 GiB (estimated), difference: 0.2 GiB (106.2%).
+(EngineCore pid=60181) INFO 11-10 19:36:43 [gpu_worker.py:1066] Free memory on device (94.29/94.97 GiB) on startup. Desired GPU memory utilization is (0.9, 85.47 GiB). Actual usage is 14.55 GiB for consumed memory (weights + non-torch), 2.36 GiB for peak activation, and 0.19 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=73257826407` (68.23 GiB) to fit into requested memory, or `--kv-cache-memory=82723131904` (77.04 GiB) to fully utilize gpu memory. Current kv cache memory in use is 68.56 GiB.
+(EngineCore pid=60181) INFO 11-10 19:36:43 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=60181) INFO 11-10 19:36:44 [core.py:405] init engine (profile, create kv cache, warmup model) took 26.66 s (compilation: 8.06 s)
+(EngineCore pid=60181) INFO 11-10 19:36:44 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=59623) INFO 11-10 19:36:45 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=59623) WARNING 11-10 19:36:45 [input_processor.py:408] Passing raw prompts to InputProcessor is deprecated and will be removed in the future. You should instead pass the outputs of Renderer.render_cmpl() or Renderer.render_chat().
+(EngineCore pid=60181) WARNING 11-10 19:36:45 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_stats_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=60181) WARNING 11-10 19:36:45 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_step_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=60181) WARNING 11-10 19:36:46 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_mask_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=60181) WARNING 11-10 19:36:46 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topk_topp_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+[11-11 03:37:45] sft_repro: 117/4599 new generations, 2652 output tok/s
+[11-11 03:38:38] sft_repro: 200/4599 new generations, 2879 output tok/s
+[11-11 03:39:40] sft_repro: 268/4599 new generations, 2886 output tok/s
+[11-11 03:40:43] sft_repro: 312/4599 new generations, 2550 output tok/s
+[11-11 03:41:45] sft_repro: 346/4599 new generations, 2453 output tok/s
+[11-11 03:42:46] sft_repro: 385/4599 new generations, 2419 output tok/s
+[11-11 03:43:26] sft_repro: 400/4599 new generations, 2372 output tok/s
+[11-11 03:44:32] sft_repro: 414/4599 new generations, 2201 output tok/s
+[11-11 03:45:36] sft_repro: 439/4599 new generations, 2243 output tok/s
+[11-11 03:46:42] sft_repro: 448/4599 new generations, 2135 output tok/s
+[11-11 03:47:47] sft_repro: 461/4599 new generations, 2120 output tok/s
+[11-11 03:48:50] sft_repro: 477/4599 new generations, 2156 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 03:49:52] sft_repro: 487/4599 new generations, 2132 output tok/s
+[11-11 03:51:05] sft_repro: 498/4599 new generations, 2108 output tok/s
+[11-11 03:52:09] sft_repro: 511/4599 new generations, 2082 output tok/s
+[11-11 03:53:48] sft_repro: 522/4599 new generations, 2019 output tok/s
+[11-11 03:54:52] sft_repro: 526/4599 new generations, 1954 output tok/s
+[11-11 03:55:54] sft_repro: 536/4599 new generations, 1970 output tok/s
+[11-11 03:56:57] sft_repro: 549/4599 new generations, 1965 output tok/s
+[11-11 03:57:59] sft_repro: 566/4599 new generations, 1989 output tok/s
+[11-11 03:59:00] sft_repro: 598/4599 new generations, 2009 output tok/s
+[11-11 03:59:02] sft_repro: 600/4599 new generations, 2008 output tok/s
+[11-11 04:00:05] sft_repro: 633/4599 new generations, 2030 output tok/s
+[11-11 04:01:07] sft_repro: 661/4599 new generations, 2023 output tok/s
+[11-11 04:02:09] sft_repro: 676/4599 new generations, 2032 output tok/s
+[11-11 04:03:13] sft_repro: 698/4599 new generations, 2053 output tok/s
+[11-11 04:04:16] sft_repro: 730/4599 new generations, 2046 output tok/s
+[11-11 04:05:17] sft_repro: 752/4599 new generations, 2036 output tok/s
+[11-11 04:06:19] sft_repro: 769/4599 new generations, 2038 output tok/s
+[11-11 04:07:23] sft_repro: 780/4599 new generations, 2015 output tok/s
+[11-11 04:08:28] sft_repro: 791/4599 new generations, 2001 output tok/s
+[11-11 04:09:33] sft_repro: 800/4599 new generations, 1986 output tok/s
+[11-11 04:10:40] sft_repro: 806/4599 new generations, 1961 output tok/s
+[11-11 04:11:41] sft_repro: 817/4599 new generations, 1974 output tok/s
+[11-11 04:12:47] sft_repro: 833/4599 new generations, 2060 output tok/s
+[11-11 04:13:48] sft_repro: 855/4599 new generations, 2070 output tok/s
+[11-11 04:14:49] sft_repro: 910/4599 new generations, 2107 output tok/s
+[11-11 04:15:50] sft_repro: 955/4599 new generations, 2117 output tok/s
+[11-11 04:16:54] sft_repro: 984/4599 new generations, 2110 output tok/s
+[11-11 04:17:31] sft_repro: 1000/4599 new generations, 2110 output tok/s
+[11-11 04:18:32] sft_repro: 1017/4599 new generations, 2093 output tok/s
+[11-11 04:19:38] sft_repro: 1033/4599 new generations, 2097 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 04:20:49] sft_repro: 1057/4599 new generations, 2110 output tok/s
+[11-11 04:22:03] sft_repro: 1071/4599 new generations, 2088 output tok/s
+[11-11 04:23:04] sft_repro: 1086/4599 new generations, 2097 output tok/s
+[11-11 04:24:07] sft_repro: 1104/4599 new generations, 2100 output tok/s
+[11-11 04:25:09] sft_repro: 1125/4599 new generations, 2115 output tok/s
+[11-11 04:26:11] sft_repro: 1156/4599 new generations, 2105 output tok/s
+[11-11 04:27:17] sft_repro: 1182/4599 new generations, 2129 output tok/s
+[11-11 04:28:00] sft_repro: 1200/4599 new generations, 2122 output tok/s
+[11-11 04:29:21] sft_repro: 1221/4599 new generations, 2108 output tok/s
+[11-11 04:30:56] sft_repro: 1234/4599 new generations, 2090 output tok/s
+[11-11 04:31:58] sft_repro: 1249/4599 new generations, 2103 output tok/s
+[11-11 04:33:18] sft_repro: 1261/4599 new generations, 2076 output tok/s
+[11-11 04:34:21] sft_repro: 1277/4599 new generations, 2080 output tok/s
+[11-11 04:35:25] sft_repro: 1294/4599 new generations, 2090 output tok/s
+[11-11 04:36:26] sft_repro: 1312/4599 new generations, 2072 output tok/s
+[11-11 04:37:28] sft_repro: 1328/4599 new generations, 2077 output tok/s
+[11-11 04:38:31] sft_repro: 1356/4599 new generations, 2069 output tok/s
+[11-11 04:39:33] sft_repro: 1369/4599 new generations, 2068 output tok/s
+[11-11 04:40:40] sft_repro: 1377/4599 new generations, 2048 output tok/s
+[11-11 04:41:41] sft_repro: 1385/4599 new generations, 2044 output tok/s
+[11-11 04:42:52] sft_repro: 1391/4599 new generations, 2033 output tok/s
+[11-11 04:43:42] sft_repro: 1400/4599 new generations, 2034 output tok/s
+[11-11 04:44:43] sft_repro: 1412/4599 new generations, 2038 output tok/s
+[11-11 04:45:45] sft_repro: 1434/4599 new generations, 2053 output tok/s
+[11-11 04:46:47] sft_repro: 1464/4599 new generations, 2042 output tok/s
+[11-11 04:47:49] sft_repro: 1488/4599 new generations, 2042 output tok/s
+[11-11 04:48:58] sft_repro: 1504/4599 new generations, 2030 output tok/s
+[11-11 04:49:59] sft_repro: 1518/4599 new generations, 2029 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 04:51:03] sft_repro: 1531/4599 new generations, 2026 output tok/s
+[11-11 04:52:07] sft_repro: 1546/4599 new generations, 2023 output tok/s
+[11-11 04:53:17] sft_repro: 1562/4599 new generations, 2012 output tok/s
+[11-11 04:54:18] sft_repro: 1575/4599 new generations, 2025 output tok/s
+[11-11 04:55:03] sft_repro: 1600/4599 new generations, 2038 output tok/s
+[11-11 04:56:04] sft_repro: 1640/4599 new generations, 2055 output tok/s
+[11-11 04:57:11] sft_repro: 1684/4599 new generations, 2057 output tok/s
+[11-11 04:58:12] sft_repro: 1714/4599 new generations, 2063 output tok/s
+[11-11 04:59:15] sft_repro: 1744/4599 new generations, 2059 output tok/s
+[11-11 05:00:18] sft_repro: 1766/4599 new generations, 2056 output tok/s
+[11-11 05:01:26] sft_repro: 1782/4599 new generations, 2050 output tok/s
+[11-11 05:02:27] sft_repro: 1795/4599 new generations, 2046 output tok/s
+[11-11 05:02:49] sft_repro: 1800/4599 new generations, 2049 output tok/s
+[11-11 05:03:58] sft_repro: 1812/4599 new generations, 2042 output tok/s
+[11-11 05:04:59] sft_repro: 1824/4599 new generations, 2055 output tok/s
+[11-11 05:06:01] sft_repro: 1836/4599 new generations, 2059 output tok/s
+[11-11 05:07:10] sft_repro: 1854/4599 new generations, 2072 output tok/s
+[11-11 05:08:12] sft_repro: 1870/4599 new generations, 2064 output tok/s
+[11-11 05:09:13] sft_repro: 1889/4599 new generations, 2064 output tok/s
+[11-11 05:10:25] sft_repro: 1905/4599 new generations, 2066 output tok/s
+[11-11 05:11:32] sft_repro: 1914/4599 new generations, 2053 output tok/s
+[11-11 05:12:34] sft_repro: 1920/4599 new generations, 2047 output tok/s
+[11-11 05:13:39] sft_repro: 1928/4599 new generations, 2038 output tok/s
+[11-11 05:14:58] sft_repro: 1937/4599 new generations, 2033 output tok/s
+[11-11 05:16:06] sft_repro: 1946/4599 new generations, 2038 output tok/s
+[11-11 05:17:18] sft_repro: 1957/4599 new generations, 2039 output tok/s
+[11-11 05:18:22] sft_repro: 1963/4599 new generations, 2036 output tok/s
+[11-11 05:19:48] sft_repro: 1970/4599 new generations, 2027 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 05:21:29] sft_repro: 1974/4599 new generations, 2006 output tok/s
+[11-11 05:23:35] sft_repro: 1978/4599 new generations, 1979 output tok/s
+[11-11 05:24:57] sft_repro: 1983/4599 new generations, 1970 output tok/s
+[11-11 05:26:04] sft_repro: 1987/4599 new generations, 1961 output tok/s
+[11-11 05:27:27] sft_repro: 1993/4599 new generations, 1960 output tok/s
+[11-11 05:28:35] sft_repro: 1997/4599 new generations, 1954 output tok/s
+[11-11 05:30:00] sft_repro: 2000/4599 new generations, 1941 output tok/s
+[11-11 05:31:09] sft_repro: 2002/4599 new generations, 1929 output tok/s
+[11-11 05:32:27] sft_repro: 2008/4599 new generations, 1928 output tok/s
+[11-11 05:33:41] sft_repro: 2015/4599 new generations, 1932 output tok/s
+[11-11 05:35:02] sft_repro: 2019/4599 new generations, 1923 output tok/s
+[11-11 05:36:22] sft_repro: 2022/4599 new generations, 1914 output tok/s
+[11-11 05:38:08] sft_repro: 2024/4599 new generations, 1893 output tok/s
+[11-11 05:39:28] sft_repro: 2026/4599 new generations, 1880 output tok/s
+[11-11 05:40:32] sft_repro: 2031/4599 new generations, 1885 output tok/s
+[11-11 05:41:49] sft_repro: 2033/4599 new generations, 1874 output tok/s
+[11-11 05:42:53] sft_repro: 2036/4599 new generations, 1871 output tok/s
+[11-11 05:44:01] sft_repro: 2052/4599 new generations, 1918 output tok/s
+[11-11 05:45:10] sft_repro: 2058/4599 new generations, 1912 output tok/s
+[11-11 05:46:18] sft_repro: 2069/4599 new generations, 1914 output tok/s
+[11-11 05:47:23] sft_repro: 2074/4599 new generations, 1904 output tok/s
+[11-11 05:48:33] sft_repro: 2080/4599 new generations, 1895 output tok/s
+[11-11 05:50:21] sft_repro: 2087/4599 new generations, 1880 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 05:51:27] sft_repro: 2090/4599 new generations, 1872 output tok/s
+[11-11 05:52:37] sft_repro: 2095/4599 new generations, 1867 output tok/s
+[11-11 05:53:38] sft_repro: 2098/4599 new generations, 1858 output tok/s
+[11-11 05:54:40] sft_repro: 2104/4599 new generations, 1857 output tok/s
+[11-11 05:55:42] sft_repro: 2108/4599 new generations, 1851 output tok/s
+[11-11 05:56:50] sft_repro: 2114/4599 new generations, 1846 output tok/s
+[11-11 05:58:07] sft_repro: 2117/4599 new generations, 1837 output tok/s
+[11-11 05:59:27] sft_repro: 2121/4599 new generations, 1829 output tok/s
+[11-11 06:00:34] sft_repro: 2124/4599 new generations, 1822 output tok/s
+[11-11 06:01:35] sft_repro: 2130/4599 new generations, 1825 output tok/s
+[11-11 06:03:39] sft_repro: 2135/4599 new generations, 1811 output tok/s
+[11-11 06:04:49] sft_repro: 2139/4599 new generations, 1809 output tok/s
+[11-11 06:05:54] sft_repro: 2141/4599 new generations, 1801 output tok/s
+[11-11 06:07:13] sft_repro: 2148/4599 new generations, 1805 output tok/s
+[11-11 06:08:21] sft_repro: 2155/4599 new generations, 1811 output tok/s
+[11-11 06:09:40] sft_repro: 2160/4599 new generations, 1810 output tok/s
+[11-11 06:10:52] sft_repro: 2165/4599 new generations, 1809 output tok/s
+[11-11 06:11:59] sft_repro: 2169/4599 new generations, 1807 output tok/s
+[11-11 06:13:32] sft_repro: 2174/4599 new generations, 1799 output tok/s
+[11-11 06:14:42] sft_repro: 2180/4599 new generations, 1802 output tok/s
+[11-11 06:15:54] sft_repro: 2183/4599 new generations, 1797 output tok/s
+[11-11 06:16:55] sft_repro: 2187/4599 new generations, 1797 output tok/s
+[11-11 06:18:10] sft_repro: 2192/4599 new generations, 1798 output tok/s
+[11-11 06:19:34] sft_repro: 2197/4599 new generations, 1795 output tok/s
+[11-11 06:20:06] sft_repro: 2200/4599 new generations, 1797 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 06:21:47] sft_repro: 2208/4599 new generations, 1804 output tok/s
+[11-11 06:22:48] sft_repro: 2211/4599 new generations, 1799 output tok/s
+[11-11 06:24:11] sft_repro: 2215/4599 new generations, 1790 output tok/s
+[11-11 06:25:14] sft_repro: 2216/4599 new generations, 1781 output tok/s
+[11-11 06:26:31] sft_repro: 2224/4599 new generations, 1784 output tok/s
+[11-11 06:28:18] sft_repro: 2227/4599 new generations, 1770 output tok/s
+[11-11 06:29:35] sft_repro: 2233/4599 new generations, 1770 output tok/s
+[11-11 06:30:45] sft_repro: 2239/4599 new generations, 1771 output tok/s
+[11-11 06:31:48] sft_repro: 2243/4599 new generations, 1769 output tok/s
+[11-11 06:33:03] sft_repro: 2250/4599 new generations, 1768 output tok/s
+[11-11 06:34:17] sft_repro: 2254/4599 new generations, 1765 output tok/s
+[11-11 06:35:46] sft_repro: 2257/4599 new generations, 1756 output tok/s
+[11-11 06:36:56] sft_repro: 2262/4599 new generations, 1757 output tok/s
+[11-11 06:38:08] sft_repro: 2267/4599 new generations, 1757 output tok/s
+[11-11 06:39:25] sft_repro: 2269/4599 new generations, 1749 output tok/s
+[11-11 06:41:08] sft_repro: 2276/4599 new generations, 1749 output tok/s
+[11-11 06:42:21] sft_repro: 2283/4599 new generations, 1754 output tok/s
+[11-11 06:43:32] sft_repro: 2288/4599 new generations, 1752 output tok/s
+[11-11 06:44:50] sft_repro: 2290/4599 new generations, 1742 output tok/s
+[11-11 06:45:51] sft_repro: 2295/4599 new generations, 1744 output tok/s
+[11-11 06:47:23] sft_repro: 2296/4599 new generations, 1732 output tok/s
+[11-11 06:49:29] sft_repro: 2301/4599 new generations, 1722 output tok/s
+[11-11 06:50:35] sft_repro: 2305/4599 new generations, 1722 output tok/s
+[11-11 06:52:03] sft_repro: 2310/4599 new generations, 1719 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 06:53:10] sft_repro: 2320/4599 new generations, 1730 output tok/s
+[11-11 06:54:17] sft_repro: 2329/4599 new generations, 1734 output tok/s
+[11-11 06:55:22] sft_repro: 2334/4599 new generations, 1730 output tok/s
+[11-11 06:56:38] sft_repro: 2340/4599 new generations, 1730 output tok/s
+[11-11 06:57:42] sft_repro: 2344/4599 new generations, 1727 output tok/s
+[11-11 06:59:07] sft_repro: 2350/4599 new generations, 1724 output tok/s
+[11-11 07:00:28] sft_repro: 2358/4599 new generations, 1728 output tok/s
+[11-11 07:01:31] sft_repro: 2365/4599 new generations, 1730 output tok/s
+[11-11 07:02:36] sft_repro: 2368/4599 new generations, 1726 output tok/s
+[11-11 07:04:08] sft_repro: 2378/4599 new generations, 1723 output tok/s
+[11-11 07:05:14] sft_repro: 2380/4599 new generations, 1718 output tok/s
+[11-11 07:06:16] sft_repro: 2384/4599 new generations, 1720 output tok/s
+[11-11 07:07:18] sft_repro: 2388/4599 new generations, 1718 output tok/s
+[11-11 07:08:25] sft_repro: 2391/4599 new generations, 1714 output tok/s
+[11-11 07:09:58] sft_repro: 2394/4599 new generations, 1708 output tok/s
+[11-11 07:11:07] sft_repro: 2397/4599 new generations, 1703 output tok/s
+[11-11 07:12:18] sft_repro: 2400/4599 new generations, 1700 output tok/s
+[11-11 07:13:26] sft_repro: 2401/4599 new generations, 1692 output tok/s
+[11-11 07:14:34] sft_repro: 2404/4599 new generations, 1690 output tok/s
+[11-11 07:15:38] sft_repro: 2407/4599 new generations, 1687 output tok/s
+[11-11 07:16:56] sft_repro: 2410/4599 new generations, 1682 output tok/s
+[11-11 07:18:39] sft_repro: 2413/4599 new generations, 1674 output tok/s
+[11-11 07:20:10] sft_repro: 2419/4599 new generations, 1675 output tok/s
+[11-11 07:21:26] sft_repro: 2429/4599 new generations, 1680 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 07:23:01] sft_repro: 2434/4599 new generations, 1677 output tok/s
+[11-11 07:24:11] sft_repro: 2444/4599 new generations, 1685 output tok/s
+[11-11 07:25:19] sft_repro: 2447/4599 new generations, 1681 output tok/s
+[11-11 07:26:32] sft_repro: 2451/4599 new generations, 1677 output tok/s
+[11-11 07:27:35] sft_repro: 2459/4599 new generations, 1677 output tok/s
+[11-11 07:28:59] sft_repro: 2467/4599 new generations, 1677 output tok/s
+[11-11 07:29:59] sft_repro: 2478/4599 new generations, 1690 output tok/s
+[11-11 07:31:07] sft_repro: 2493/4599 new generations, 1705 output tok/s
+[11-11 07:32:10] sft_repro: 2507/4599 new generations, 1707 output tok/s
+[11-11 07:33:12] sft_repro: 2516/4599 new generations, 1712 output tok/s
+[11-11 07:34:15] sft_repro: 2521/4599 new generations, 1708 output tok/s
+[11-11 07:35:26] sft_repro: 2528/4599 new generations, 1705 output tok/s
+[11-11 07:36:40] sft_repro: 2532/4599 new generations, 1699 output tok/s
+[11-11 07:37:44] sft_repro: 2535/4599 new generations, 1695 output tok/s
+[11-11 07:38:50] sft_repro: 2538/4599 new generations, 1690 output tok/s
+[11-11 07:39:54] sft_repro: 2546/4599 new generations, 1690 output tok/s
+[11-11 07:41:05] sft_repro: 2552/4599 new generations, 1688 output tok/s
+[11-11 07:42:12] sft_repro: 2558/4599 new generations, 1688 output tok/s
+[11-11 07:43:14] sft_repro: 2563/4599 new generations, 1686 output tok/s
+[11-11 07:44:37] sft_repro: 2566/4599 new generations, 1680 output tok/s
+[11-11 07:45:46] sft_repro: 2570/4599 new generations, 1678 output tok/s
+[11-11 07:47:30] sft_repro: 2576/4599 new generations, 1674 output tok/s
+[11-11 07:48:32] sft_repro: 2579/4599 new generations, 1671 output tok/s
+[11-11 07:49:39] sft_repro: 2584/4599 new generations, 1671 output tok/s
+[11-11 07:51:09] sft_repro: 2592/4599 new generations, 1671 output tok/s
+[11-11 07:52:18] sft_repro: 2597/4599 new generations, 1672 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 07:53:21] sft_repro: 2600/4599 new generations, 1669 output tok/s
+[11-11 07:54:42] sft_repro: 2603/4599 new generations, 1665 output tok/s
+[11-11 07:55:51] sft_repro: 2606/4599 new generations, 1663 output tok/s
+[11-11 07:57:01] sft_repro: 2613/4599 new generations, 1668 output tok/s
+[11-11 07:58:23] sft_repro: 2619/4599 new generations, 1668 output tok/s
+[11-11 07:59:26] sft_repro: 2623/4599 new generations, 1669 output tok/s
+[11-11 08:00:28] sft_repro: 2629/4599 new generations, 1671 output tok/s
+[11-11 08:01:29] sft_repro: 2632/4599 new generations, 1669 output tok/s
+[11-11 08:03:21] sft_repro: 2636/4599 new generations, 1664 output tok/s
+[11-11 08:04:26] sft_repro: 2641/4599 new generations, 1665 output tok/s
+[11-11 08:05:37] sft_repro: 2645/4599 new generations, 1662 output tok/s
+[11-11 08:06:44] sft_repro: 2662/4599 new generations, 1680 output tok/s
+[11-11 08:07:47] sft_repro: 2668/4599 new generations, 1675 output tok/s
+[11-11 08:08:52] sft_repro: 2677/4599 new generations, 1675 output tok/s
+[11-11 08:10:03] sft_repro: 2681/4599 new generations, 1669 output tok/s
+[11-11 08:11:04] sft_repro: 2683/4599 new generations, 1666 output tok/s
+[11-11 08:12:42] sft_repro: 2689/4599 new generations, 1660 output tok/s
+[11-11 08:13:43] sft_repro: 2693/4599 new generations, 1658 output tok/s
+[11-11 08:15:11] sft_repro: 2699/4599 new generations, 1657 output tok/s
+[11-11 08:16:22] sft_repro: 2703/4599 new generations, 1656 output tok/s
+[11-11 08:17:33] sft_repro: 2707/4599 new generations, 1655 output tok/s
+[11-11 08:18:39] sft_repro: 2710/4599 new generations, 1653 output tok/s
+[11-11 08:20:15] sft_repro: 2714/4599 new generations, 1650 output tok/s
+[11-11 08:21:16] sft_repro: 2721/4599 new generations, 1651 output tok/s
+[11-11 08:22:34] sft_repro: 2729/4599 new generations, 1656 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 08:24:15] sft_repro: 2732/4599 new generations, 1650 output tok/s
+[11-11 08:25:17] sft_repro: 2736/4599 new generations, 1651 output tok/s
+[11-11 08:26:27] sft_repro: 2740/4599 new generations, 1650 output tok/s
+[11-11 08:28:04] sft_repro: 2745/4599 new generations, 1646 output tok/s
+[11-11 08:29:50] sft_repro: 2753/4599 new generations, 1647 output tok/s
+[11-11 08:31:01] sft_repro: 2757/4599 new generations, 1645 output tok/s
+[11-11 08:32:18] sft_repro: 2762/4599 new generations, 1645 output tok/s
+[11-11 08:33:34] sft_repro: 2765/4599 new generations, 1643 output tok/s
+[11-11 08:34:41] sft_repro: 2774/4599 new generations, 1651 output tok/s
+[11-11 08:36:00] sft_repro: 2776/4599 new generations, 1646 output tok/s
+[11-11 08:37:21] sft_repro: 2780/4599 new generations, 1644 output tok/s
+[11-11 08:38:29] sft_repro: 2782/4599 new generations, 1641 output tok/s
+[11-11 08:39:35] sft_repro: 2784/4599 new generations, 1638 output tok/s
+[11-11 08:40:43] sft_repro: 2786/4599 new generations, 1634 output tok/s
+[11-11 08:42:12] sft_repro: 2790/4599 new generations, 1631 output tok/s
+[11-11 08:43:25] sft_repro: 2792/4599 new generations, 1628 output tok/s
+[11-11 08:45:07] sft_repro: 2796/4599 new generations, 1625 output tok/s
+[11-11 08:45:43] sft_repro: 2800/4599 new generations, 1627 output tok/s
+[11-11 08:46:44] sft_repro: 2804/4599 new generations, 1626 output tok/s
+[11-11 08:47:48] sft_repro: 2806/4599 new generations, 1624 output tok/s
+[11-11 08:49:02] sft_repro: 2809/4599 new generations, 1621 output tok/s
+[11-11 08:50:11] sft_repro: 2812/4599 new generations, 1618 output tok/s
+[11-11 08:51:19] sft_repro: 2815/4599 new generations, 1617 output tok/s
+[11-11 08:52:22] sft_repro: 2819/4599 new generations, 1617 output tok/s
+[11-11 08:53:37] sft_repro: 2824/4599 new generations, 1618 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 08:54:44] sft_repro: 2834/4599 new generations, 1627 output tok/s
+[11-11 08:56:00] sft_repro: 2857/4599 new generations, 1639 output tok/s
+[11-11 08:57:05] sft_repro: 2869/4599 new generations, 1636 output tok/s
+[11-11 08:58:26] sft_repro: 2879/4599 new generations, 1633 output tok/s
+[11-11 08:59:28] sft_repro: 2881/4599 new generations, 1629 output tok/s
+[11-11 09:00:31] sft_repro: 2886/4599 new generations, 1629 output tok/s
+[11-11 09:01:32] sft_repro: 2890/4599 new generations, 1627 output tok/s
+[11-11 09:02:40] sft_repro: 2902/4599 new generations, 1634 output tok/s
+[11-11 09:03:57] sft_repro: 2906/4599 new generations, 1632 output tok/s
+[11-11 09:05:11] sft_repro: 2913/4599 new generations, 1631 output tok/s
+[11-11 09:06:35] sft_repro: 2915/4599 new generations, 1626 output tok/s
+[11-11 09:07:40] sft_repro: 2919/4599 new generations, 1623 output tok/s
+[11-11 09:08:53] sft_repro: 2925/4599 new generations, 1623 output tok/s
+[11-11 09:10:15] sft_repro: 2928/4599 new generations, 1620 output tok/s
+[11-11 09:12:30] sft_repro: 2933/4599 new generations, 1614 output tok/s
+[11-11 09:13:49] sft_repro: 2937/4599 new generations, 1612 output tok/s
+[11-11 09:14:55] sft_repro: 2939/4599 new generations, 1609 output tok/s
+[11-11 09:16:31] sft_repro: 2943/4599 new generations, 1606 output tok/s
+[11-11 09:18:09] sft_repro: 2945/4599 new generations, 1600 output tok/s
+[11-11 09:19:11] sft_repro: 2951/4599 new generations, 1602 output tok/s
+[11-11 09:20:26] sft_repro: 2955/4599 new generations, 1601 output tok/s
+[11-11 09:21:30] sft_repro: 2959/4599 new generations, 1601 output tok/s
+[11-11 09:22:44] sft_repro: 2964/4599 new generations, 1601 output tok/s
+[11-11 09:24:38] sft_repro: 2968/4599 new generations, 1597 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 09:26:03] sft_repro: 2973/4599 new generations, 1597 output tok/s
+[11-11 09:27:11] sft_repro: 2982/4599 new generations, 1603 output tok/s
+[11-11 09:28:14] sft_repro: 2992/4599 new generations, 1608 output tok/s
+[11-11 09:28:52] sft_repro: 3000/4599 new generations, 1608 output tok/s
+[11-11 09:29:53] sft_repro: 3013/4599 new generations, 1616 output tok/s
+[11-11 09:30:57] sft_repro: 3038/4599 new generations, 1620 output tok/s
+[11-11 09:31:59] sft_repro: 3062/4599 new generations, 1624 output tok/s
+[11-11 09:33:00] sft_repro: 3092/4599 new generations, 1630 output tok/s
+[11-11 09:34:01] sft_repro: 3128/4599 new generations, 1629 output tok/s
+[11-11 09:35:08] sft_repro: 3138/4599 new generations, 1626 output tok/s
+[11-11 09:36:10] sft_repro: 3144/4599 new generations, 1624 output tok/s
+[11-11 09:37:17] sft_repro: 3152/4599 new generations, 1623 output tok/s
+[11-11 09:38:36] sft_repro: 3154/4599 new generations, 1618 output tok/s
+[11-11 09:39:40] sft_repro: 3157/4599 new generations, 1615 output tok/s
+[11-11 09:40:48] sft_repro: 3161/4599 new generations, 1611 output tok/s
+[11-11 09:41:59] sft_repro: 3169/4599 new generations, 1613 output tok/s
+[11-11 09:43:01] sft_repro: 3172/4599 new generations, 1610 output tok/s
+[11-11 09:44:02] sft_repro: 3174/4599 new generations, 1607 output tok/s
+[11-11 09:45:17] sft_repro: 3176/4599 new generations, 1604 output tok/s
+[11-11 09:46:25] sft_repro: 3178/4599 new generations, 1601 output tok/s
+[11-11 09:47:35] sft_repro: 3184/4599 new generations, 1601 output tok/s
+[11-11 09:48:47] sft_repro: 3188/4599 new generations, 1600 output tok/s
+[11-11 09:50:23] sft_repro: 3196/4599 new generations, 1600 output tok/s
+[11-11 09:50:45] sft_repro: 3200/4599 new generations, 1603 output tok/s
+[11-11 09:52:29] sft_repro: 3204/4599 new generations, 1600 output tok/s
+[11-11 09:53:38] sft_repro: 3211/4599 new generations, 1602 output tok/s
+[11-11 09:54:48] sft_repro: 3218/4599 new generations, 1605 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 09:55:53] sft_repro: 3226/4599 new generations, 1608 output tok/s
+[11-11 09:57:37] sft_repro: 3235/4599 new generations, 1606 output tok/s
+[11-11 09:58:58] sft_repro: 3247/4599 new generations, 1606 output tok/s
+[11-11 10:00:02] sft_repro: 3264/4599 new generations, 1607 output tok/s
+[11-11 10:01:04] sft_repro: 3302/4599 new generations, 1610 output tok/s
+[11-11 10:02:09] sft_repro: 3359/4599 new generations, 1610 output tok/s
+[11-11 10:03:10] sft_repro: 3399/4599 new generations, 1614 output tok/s
+[11-11 10:03:12] sft_repro: 3400/4599 new generations, 1614 output tok/s
+[11-11 10:04:12] sft_repro: 3456/4599 new generations, 1619 output tok/s
+[11-11 10:05:14] sft_repro: 3519/4599 new generations, 1619 output tok/s
+[11-11 10:06:16] sft_repro: 3584/4599 new generations, 1620 output tok/s
+[11-11 10:06:29] sft_repro: 3600/4599 new generations, 1621 output tok/s
+[11-11 10:07:30] sft_repro: 3656/4599 new generations, 1626 output tok/s
+[11-11 10:08:32] sft_repro: 3724/4599 new generations, 1628 output tok/s
+[11-11 10:09:34] sft_repro: 3800/4599 new generations, 1638 output tok/s
+[11-11 10:10:35] sft_repro: 3869/4599 new generations, 1640 output tok/s
+[11-11 10:11:36] sft_repro: 3940/4599 new generations, 1640 output tok/s
+[11-11 10:12:24] sft_repro: 4000/4599 new generations, 1643 output tok/s
+[11-11 10:13:31] sft_repro: 4077/4599 new generations, 1646 output tok/s
+[11-11 10:14:33] sft_repro: 4157/4599 new generations, 1649 output tok/s
+[11-11 10:15:16] sft_repro: 4200/4599 new generations, 1652 output tok/s
+[11-11 10:16:18] sft_repro: 4273/4599 new generations, 1656 output tok/s
+[11-11 10:17:18] sft_repro: 4352/4599 new generations, 1658 output tok/s
+[11-11 10:17:51] sft_repro: 4400/4599 new generations, 1661 output tok/s
+[11-11 10:18:53] sft_repro: 4476/4599 new generations, 1667 output tok/s
+[11-11 10:19:56] sft_repro: 4516/4599 new generations, 1671 output tok/s
+[11-11 10:20:58] sft_repro: 4541/4599 new generations, 1676 output tok/s
+[11-11 10:22:00] sft_repro: 4559/4599 new generations, 1681 output tok/s
+[11-11 10:23:07] sft_repro: 4574/4599 new generations, 1688 output tok/s
+[11-11 10:24:09] sft_repro: 4590/4599 new generations, 1698 output tok/s
+[11-11 10:25:12] sft_repro: 4596/4599 new generations, 1698 output tok/s
+[report] pushed to colab-reports: colab p1-1110-234216: progress
+[11-11 10:26:17] sft_repro: 4598/4599 new generations, 1696 output tok/s
+[11-11 10:27:10] sft_repro: 4599 new generations, 41,694,285 output tokens in 24626 s (1693 tok/s; engine start 41 s)
+[11-11 10:27:11] sft_repro: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=59623) INFO 11-11 02:27:11 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=60181) INFO 11-11 02:27:11 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=60181) INFO 11-11 02:27:11 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=60181) INFO 11-11 02:27:11 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=60181) INFO 11-11 02:27:11 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-11 02:27:16] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --tags sft_repro | log: /content/mydrive/runs/project1/v93/logs/20261111-022716_score_sft_repro.log
+[11-11 10:27:23] sft_repro/aime24: mean@n=0.188 CI=[0.07916666666666666, 0.3145833333333333] tokens=22040 trunc=0.188
+[11-11 10:27:25] sft_repro/aime25: mean@n=0.169 CI=[0.06458333333333334, 0.29375] tokens=20946 trunc=0.158
+[11-11 10:27:26] sft_repro/amc23: mean@n=0.613 CI=[0.496875, 0.725] tokens=14055 trunc=0.078
+[11-11 10:27:29] sft_repro/gsm8k: mean@n=0.923 CI=[0.909021986353298, 0.9370735405610311] tokens=2191 trunc=0.000
+[11-11 10:27:33] sft_repro/math500: mean@n=0.817 CI=[0.789, 0.844] tokens=6837 trunc=0.021
+[11-11 10:27:33] Wrote /content/mydrive/runs/project1/v93/evals/results.md
+[11-11 02:27:34] ===== STAGE eval:qwen_math:full =====
+[11-11 02:27:34] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-11 02:27:34] Host RAM: 177 GiB, CPUs: 48, local disk free: 178 GiB
+[11-11 02:27:34] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.generate --model qwen_math --suite full --tag qwen_math | log: /content/mydrive/runs/project1/v93/logs/20261111-022734_gen_qwen_math.log
+[11-11 10:28:29] rclone copy (55 s): 2026/11/11 02:28:29 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 129.526 MiB/s, ETA 0s
+[11-11 10:28:29] Downloaded /content/mydrive/models/Qwen2.5-Math-7B-Instruct--ef9926d75ab1 in 55 s
+[11-11 10:28:35] qwen_math/math500: 2000 generations planned, 0 already saved
+[11-11 10:28:37] qwen_math/aime24: 480 generations planned, 0 already saved
+[11-11 10:28:39] qwen_math/aime25: 480 generations planned, 0 already saved
+[11-11 10:28:42] qwen_math/amc23: 320 generations planned, 0 already saved
+[11-11 10:28:43] qwen_math/gsm8k: 1319 generations planned, 0 already saved
+W1111 02:28:44.529000 162176 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1111 02:28:44.530000 162176 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1111 02:28:44.530000 162176 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(MainProcess pid=162176) INFO 11-11 02:28:46 [startup.py:96] non-default args: {'tokenizer': '/content/p1/models/models__Qwen2.5-Math-7B-Instruct--ef9926d75ab1', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 4096, 'enable_prefix_caching': True, 'gpu_memory_utilization': 0.9, 'max_num_seqs': 256, 'disable_log_stats': True, 'generation_config': 'vllm', 'model': '/content/p1/models/models__Qwen2.5-Math-7B-Instruct--ef9926d75ab1'}
+(MainProcess pid=162176) INFO 11-11 02:28:46 [model.py:744] Resolved architecture: Qwen2ForCausalLM
+(MainProcess pid=162176) INFO 11-11 02:28:46 [model.py:2170] Using max model len 4096
+(MainProcess pid=162176) INFO 11-11 02:28:46 [scheduler.py:310] Chunked prefill is enabled with max_num_batched_tokens=16384.
+(MainProcess pid=162176) INFO 11-11 02:28:46 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=162176) WARNING 11-11 02:28:46 [flashinfer.py:99] FlashInfer kernels are disabled: flashinfer-cubin is not installed and nvcc (CUDA_HOME, CUDA_PATH, PATH or /usr/local/cuda) or ninja (PATH) is missing. Set CUDA_HOME to a CUDA toolkit and put ninja on PATH, or run `vllm download-kernels`.
+W1111 02:28:49.358000 162669 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1111 02:28:49.359000 162669 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1111 02:28:49.359000 162669 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(EngineCore pid=162669) INFO 11-11 02:28:51 [core.py:139] Initializing a V1 LLM engine (v0.33.0) with config: model='/content/p1/models/models__Qwen2.5-Math-7B-Instruct--ef9926d75ab1', speculative_config=None, tokenizer='/content/p1/models/models__Qwen2.5-Math-7B-Instruct--ef9926d75ab1', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, custom_histogram_buckets=None, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=42, served_model_name=/content/p1/models/models__Qwen2.5-Math-7B-Instruct--ef9926d75ab1, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::qwen4_exp_qsa_prepare_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'cudagraph_decoder_replay': True, 'decoder_replay_cudagraph_capture_sizes': [], 'decoder_replay_trim_threshold': 768, 'compile_sizes': [], 'compile_ranges_endpoints': [16384], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_rocm_segmented_attn_autotune=False, enable_cutedsl_warmup=True, enable_jit_warmup=True, monokernel=False, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=162669) WARNING 11-11 02:28:51 [flashinfer.py:99] FlashInfer kernels are disabled: flashinfer-cubin is not installed and nvcc (CUDA_HOME, CUDA_PATH, PATH or /usr/local/cuda) or ninja (PATH) is missing. Set CUDA_HOME to a CUDA toolkit and put ninja on PATH, or run `vllm download-kernels`.
+(EngineCore pid=162669) INFO 11-11 02:28:52 [parallel_state.py:1929] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_62da0a3fa00d46ada9044e5ef0890149 backend=nccl
+(EngineCore pid=162669) INFO 11-11 02:28:52 [parallel_state.py:2385] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=162669) INFO 11-11 02:28:52 [gpu_worker.py:513] Using V2 Model Runner
+(EngineCore pid=162669) INFO 11-11 02:28:53 [model_runner.py:399] Loading model from scratch...
+(EngineCore pid=162669) INFO 11-11 02:28:53 [cuda.py:508] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(EngineCore pid=162669) INFO 11-11 02:28:53 [flash_attn.py:1122] Using FlashAttention version 2
+(EngineCore pid=162669) INFO 11-11 02:28:53 [base_loader.py:82] Initializing model took 0.479284 seconds
+(EngineCore pid=162669) INFO 11-11 02:28:53 [weight_utils.py:1144] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 14.19 GiB. Available RAM: 170.50 GiB.
+(EngineCore pid=162669) INFO 11-11 02:28:53 [weight_utils.py:1167] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:00<00:01,  1.82it/s]
+
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:01<00:01,  1.79it/s]
+
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:01<00:00,  1.78it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:02<00:00,  1.85it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:02<00:00,  1.83it/s]
+
+(EngineCore pid=162669) INFO 11-11 02:28:56 [default_loader.py:506] Loading weights took 2.23 seconds
+(EngineCore pid=162669) INFO 11-11 02:28:57 [model_runner.py:428] Model loading took 14.19 GiB memory and 4.461086 seconds
+(EngineCore pid=162669) INFO 11-11 02:28:57 [topk_topp_sampler.py:121] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=162669) INFO 11-11 02:28:57 [torch_utils.py:281] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=162669) INFO 11-11 02:28:57 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=162669) INFO 11-11 02:28:58 [monitor.py:40] [backbone] Starting torch.compile
+(EngineCore pid=162669) INFO 11-11 02:29:01 [backends.py:1125] [backbone] Using cache directory: /root/.cache/vllm/torch_compile_cache/c11e74d431/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=162669) INFO 11-11 02:29:01 [backends.py:1187] [backbone] Dynamo bytecode transform time: 2.85 s
+(EngineCore pid=162669) INFO 11-11 02:29:04 [backends.py:417] [backbone] Compiling a graph for compile range (1, 16384) takes 3.70 s
+(EngineCore pid=162669) INFO 11-11 02:29:06 [backends.py:948] collected artifacts: 29 entries, 3 artifacts, 4327486 bytes total
+(EngineCore pid=162669) INFO 11-11 02:29:06 [decorators.py:752] [backbone] saved AOT compiled function to /root/.cache/vllm/torch_compile_cache/torch_aot_compile/8f7b98a8e76090e91dab805b2fa312f3a52bfcd0b2d116e7793ca28d910d18ed/rank_0_0/model
+(EngineCore pid=162669) INFO 11-11 02:29:06 [monitor.py:62] [backbone] torch.compile took 8.10 s in total
+(EngineCore pid=162669) INFO 11-11 02:29:06 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.11 s
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   4%|▍         | 2/51 [00:00<00:03, 15.51it/s]
+Capturing CUDA graphs (PIECEWISE):  10%|▉         | 5/51 [00:00<00:02, 19.33it/s]
+Capturing CUDA graphs (PIECEWISE):  16%|█▌        | 8/51 [00:00<00:02, 20.60it/s]
+Capturing CUDA graphs (PIECEWISE):  22%|██▏       | 11/51 [00:00<00:01, 21.97it/s]
+Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 14/51 [00:00<00:01, 22.81it/s]
+Capturing CUDA graphs (PIECEWISE):  33%|███▎      | 17/51 [00:00<00:01, 21.76it/s]
+Capturing CUDA graphs (PIECEWISE):  41%|████      | 21/51 [00:00<00:01, 24.19it/s]
+Capturing CUDA graphs (PIECEWISE):  49%|████▉     | 25/51 [00:01<00:00, 26.17it/s]
+Capturing CUDA graphs (PIECEWISE):  57%|█████▋    | 29/51 [00:01<00:00, 27.75it/s]
+Capturing CUDA graphs (PIECEWISE):  65%|██████▍   | 33/51 [00:01<00:00, 28.95it/s]
+Capturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:01<00:00, 30.13it/s]
+Capturing CUDA graphs (PIECEWISE):  80%|████████  | 41/51 [00:01<00:00, 30.94it/s]
+Capturing CUDA graphs (PIECEWISE):  88%|████████▊ | 45/51 [00:01<00:00, 31.81it/s]
+Capturing CUDA graphs (PIECEWISE):  96%|█████████▌| 49/51 [00:01<00:00, 32.32it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 27.34it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 48.14it/s]
+(EngineCore pid=162669) INFO 11-11 02:29:14 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.34 GiB
+(EngineCore pid=162669) INFO 11-11 02:29:15 [gpu_worker.py:772] Available KV cache memory: 68.56 GiB
+(EngineCore pid=162669) INFO 11-11 02:29:15 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8959 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9041. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=162669) INFO 11-11 02:29:15 [kv_cache_utils.py:1147] GPU KV cache size: 1,283,760 tokens, Maximum concurrency for 4,096 tokens per request: 313.42x
+(EngineCore pid=162669) INFO 11-11 02:29:15 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=162669) INFO 11-11 02:29:15 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   6%|▌         | 3/51 [00:00<00:02, 20.87it/s]
+Capturing CUDA graphs (PIECEWISE):  12%|█▏        | 6/51 [00:00<00:02, 21.52it/s]
+Capturing CUDA graphs (PIECEWISE):  18%|█▊        | 9/51 [00:00<00:01, 22.08it/s]
+Capturing CUDA graphs (PIECEWISE):  24%|██▎       | 12/51 [00:00<00:01, 22.88it/s]
+Capturing CUDA graphs (PIECEWISE):  29%|██▉       | 15/51 [00:00<00:01, 23.48it/s]
+Capturing CUDA graphs (PIECEWISE):  35%|███▌      | 18/51 [00:00<00:01, 24.99it/s]
+Capturing CUDA graphs (PIECEWISE):  43%|████▎     | 22/51 [00:00<00:01, 27.12it/s]
+Capturing CUDA graphs (PIECEWISE):  51%|█████     | 26/51 [00:01<00:00, 28.55it/s]
+Capturing CUDA graphs (PIECEWISE):  59%|█████▉    | 30/51 [00:01<00:00, 29.61it/s]
+Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 30.38it/s]
+Capturing CUDA graphs (PIECEWISE):  75%|███████▍  | 38/51 [00:01<00:00, 31.16it/s]
+Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:01<00:00, 31.72it/s]
+Capturing CUDA graphs (PIECEWISE):  90%|█████████ | 46/51 [00:01<00:00, 32.29it/s]
+Capturing CUDA graphs (PIECEWISE):  98%|█████████▊| 50/51 [00:01<00:00, 32.88it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 28.75it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  14%|█▍        | 5/35 [00:00<00:00, 48.93it/s]
+Capturing CUDA graphs (FULL):  31%|███▏      | 11/35 [00:00<00:00, 49.80it/s]
+Capturing CUDA graphs (FULL):  49%|████▊     | 17/35 [00:00<00:00, 50.92it/s]
+Capturing CUDA graphs (FULL):  66%|██████▌   | 23/35 [00:00<00:00, 53.04it/s]
+Capturing CUDA graphs (FULL):  83%|████████▎ | 29/35 [00:00<00:00, 45.65it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<00:00, 49.70it/s]
+(EngineCore pid=162669) INFO 11-11 02:29:23 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.19 GiB
+(EngineCore pid=162669) INFO 11-11 02:29:23 [gpu_worker.py:1003] CUDA graph pool memory: 0.19 GiB (actual), 0.39 GiB (estimated), difference: 0.2 GiB (106.2%).
+(EngineCore pid=162669) INFO 11-11 02:29:23 [gpu_worker.py:1066] Free memory on device (94.29/94.97 GiB) on startup. Desired GPU memory utilization is (0.9, 85.47 GiB). Actual usage is 14.55 GiB for consumed memory (weights + non-torch), 2.36 GiB for peak activation, and 0.19 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=73255729255` (68.22 GiB) to fit into requested memory, or `--kv-cache-memory=82721034752` (77.04 GiB) to fully utilize gpu memory. Current kv cache memory in use is 68.56 GiB.
+(EngineCore pid=162669) INFO 11-11 02:29:23 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=162669) INFO 11-11 02:29:24 [core.py:405] init engine (profile, create kv cache, warmup model) took 26.71 s (compilation: 8.10 s)
+(EngineCore pid=162669) INFO 11-11 02:29:24 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=162176) INFO 11-11 02:29:24 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=162176) WARNING 11-11 02:29:24 [input_processor.py:408] Passing raw prompts to InputProcessor is deprecated and will be removed in the future. You should instead pass the outputs of Renderer.render_cmpl() or Renderer.render_chat().
+(EngineCore pid=162669) WARNING 11-11 02:29:24 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_stats_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=162669) WARNING 11-11 02:29:25 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_step_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=162669) WARNING 11-11 02:29:25 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_mask_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=162669) WARNING 11-11 02:29:26 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topk_topp_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+[11-11 10:29:39] qwen_math: 200/4599 new generations, 4506 output tok/s
+[11-11 10:29:50] qwen_math: 400/4599 new generations, 6682 output tok/s
+[11-11 10:30:04] qwen_math: 600/4599 new generations, 7173 output tok/s
+[11-11 10:30:18] qwen_math: 800/4599 new generations, 7518 output tok/s
+[11-11 10:30:30] qwen_math: 1000/4599 new generations, 7931 output tok/s
+[11-11 10:30:46] qwen_math: 1200/4599 new generations, 7918 output tok/s
+[11-11 10:31:01] qwen_math: 1400/4599 new generations, 7781 output tok/s
+[11-11 10:31:19] qwen_math: 1600/4599 new generations, 7914 output tok/s
+[11-11 10:31:35] qwen_math: 1800/4599 new generations, 8115 output tok/s
+[11-11 10:32:00] qwen_math: 2000/4599 new generations, 8002 output tok/s
+[11-11 10:32:33] qwen_math: 2200/4599 new generations, 7834 output tok/s
+[11-11 10:33:17] qwen_math: 2400/4599 new generations, 7502 output tok/s
+[11-11 10:34:11] qwen_math: 2600/4599 new generations, 7095 output tok/s
+[11-11 10:34:47] qwen_math: 2800/4599 new generations, 7371 output tok/s
+[11-11 10:35:20] qwen_math: 3000/4599 new generations, 7402 output tok/s
+[11-11 10:35:38] qwen_math: 3200/4599 new generations, 7588 output tok/s
+[11-11 10:35:50] qwen_math: 3400/4599 new generations, 7664 output tok/s
+[11-11 10:35:59] qwen_math: 3600/4599 new generations, 7674 output tok/s
+[11-11 10:36:08] qwen_math: 3800/4599 new generations, 7775 output tok/s
+[11-11 10:36:16] qwen_math: 4000/4599 new generations, 7795 output tok/s
+[11-11 10:36:25] qwen_math: 4200/4599 new generations, 7801 output tok/s
+[11-11 10:36:32] qwen_math: 4400/4599 new generations, 7842 output tok/s
+[11-11 10:37:20] qwen_math: 4599 new generations, 3,521,725 output tokens in 476 s (7405 tok/s; engine start 41 s)
+[11-11 10:37:20] qwen_math: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=162176) INFO 11-11 02:37:20 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=162669) INFO 11-11 02:37:20 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=162669) INFO 11-11 02:37:20 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=162669) INFO 11-11 02:37:20 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=162669) INFO 11-11 02:37:20 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-11 02:37:25] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --tags qwen_math | log: /content/mydrive/runs/project1/v93/logs/20261111-023725_score_qwen_math.log
+[11-11 10:37:32] qwen_math/aime24: mean@n=0.123 CI=[0.041666666666666664, 0.22291666666666668] tokens=1595 trunc=0.194
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+Timeout during comparison
+[11-11 10:37:42] qwen_math/aime25: mean@n=0.115 CI=[0.04375, 0.20208333333333334] tokens=1360 trunc=0.098
+[11-11 10:37:43] qwen_math/amc23: mean@n=0.556 CI=[0.4375, 0.671875] tokens=1010 trunc=0.050
+[11-11 10:37:45] qwen_math/gsm8k: mean@n=0.953 CI=[0.9416224412433661, 0.9636087945413192] tokens=321 trunc=0.005
+[11-11 10:37:48] qwen_math/math500: mean@n=0.834 CI=[0.805, 0.8625] tokens=679 trunc=0.028
+[11-11 10:37:48] Wrote /content/mydrive/runs/project1/v93/evals/results.md
+[report] pushed to colab-reports: colab p1-1110-234216: OK
+P1_RESULT=OK
