@@ -1,2 +1,2 @@
-p1-1111-084149
-running
+p1-1111-222952
+FAILED pilot: ValueError: Unknown stage 'pilot'

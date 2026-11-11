@@ -53,6 +53,15 @@
   "code": "08dfffa7ac23",
   "host": "p1-1109-174349@23325975227a"
  },
+ "pilot": {
+  "stage": "pilot",
+  "state": "failed",
+  "error": "ValueError: Unknown stage 'pilot'",
+  "at": "2026-11-11T14:45:23.827855",
+  "started": "2026-11-11T14:45:23.372147",
+  "code": "3679f04d04b4",
+  "host": "p1-1111-222952@8cb612a2ba5b"
+ },
  "ping__30": {
   "stage": "ping:30",
   "state": "complete",
@@ -104,7 +113,7 @@
   "started": "2026-11-11T00:42:26.227006",
   "code": "7e18a2c7bda6",
   "host": "p1-1111-084149@cd5950f279e0",
-  "heartbeat": "2026-11-11T04:17:42.871882",
-  "heartbeat_ts": 1794370662.8719049
+  "heartbeat": "2026-11-11T07:21:08.357314",
+  "heartbeat_ts": 1794381668.3573272
  }
 }
