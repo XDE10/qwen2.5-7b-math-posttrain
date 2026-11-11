@@ -105,12 +105,12 @@ def encode(tokenizer, fmt: str, question: str, response: str, max_length: int) -
     raise ValueError(f'Unknown training format: {fmt}')
 
 
-def final_segment(text: str) -> str:
-    """Text after the last answer tag (or </think>); the whole text when neither is present."""
+def final_segment(text: str, strict: bool = False) -> str:
+    """Text after the last answer tag (or </think>); empty when strict=True and neither tag exists."""
     i = text.rfind(ANSWER_TAG)
     if i >= 0:
         return text[i + len(ANSWER_TAG):].lstrip('\n')
     j = text.rfind('</think>')
     if j >= 0:
-        return text[j + len('</think>'):]
-    return text
+        return text[j + len('</think>'):].lstrip('\n')
+    return "" if strict else text

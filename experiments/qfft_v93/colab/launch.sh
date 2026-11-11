@@ -228,22 +228,39 @@ if [[ $WITH_DATA == 1 ]]; then
     data/qfft1000_v93 data/benchmarks_v93
 fi
 
+colab_upload_retry() {
+  local src="$1" dst="$2" retries=5 delay=3 attempt=1
+  while true; do
+    if colab upload -s "$SESSION" "$src" "$dst"; then
+      return 0
+    fi
+    if (( attempt >= retries )); then
+      echo "ERROR: Failed to upload $src to $dst after $retries attempts." >&2
+      return 1
+    fi
+    echo "WARNING: Upload of $(basename "$src") failed (attempt $attempt/$retries); retrying in ${delay}s..." >&2
+    sleep "$delay"
+    delay=$(( delay * 2 ))
+    attempt=$(( attempt + 1 ))
+  done
+}
+
 upload() {  # upload LOCAL REMOTE, in parts when larger than CHUNK (reassembled and hash-checked on the VM)
   local src="$1" dst="$2" size n=0 part
   size=$(wc -c < "$src")
   if (( size <= CHUNK )); then
-    colab upload -s "$SESSION" "$src" "$dst"
+    colab_upload_retry "$src" "$dst"
     return
   fi
   mkdir -p "$WORK/parts"; rm -f "$WORK"/parts/*
   split -b "$CHUNK" -d -a 3 "$src" "$WORK/parts/p"
   for part in "$WORK"/parts/p*; do
-    colab upload -s "$SESSION" "$part" "$dst.part${part##*/p}"
+    colab_upload_retry "$part" "$dst.part${part##*/p}"
     n=$((n + 1))
   done
   printf '{"parts": %d, "bytes": %d, "sha256": "%s"}\n' "$n" "$size" "$(sha256sum "$src" | cut -c1-64)" \
     > "$WORK/parts.json"
-  colab upload -s "$SESSION" "$WORK/parts.json" "$dst.parts.json"
+  colab_upload_retry "$WORK/parts.json" "$dst.parts.json"
   echo "Uploaded $(basename "$src") in $n parts ($((size / 1048576)) MiB)."
 }
 
@@ -287,7 +304,7 @@ if [[ $DRIVE_MODE == colab ]]; then
 else
   # The same steps as mounting by hand in `colab console` (rclone.conf -> ~/.config/rclone, apt-get rclone
   # fuse3 only if missing, rclone mount --daemon), run without prompts and with time limits.
-  colab upload -s "$SESSION" "$RCLONE_CONF" /content/.colab-drive-rclone-upload.conf
+  colab_upload_retry "$RCLONE_CONF" /content/.colab-drive-rclone-upload.conf
   python3 - "$WORK/mount.py" "$DRIVE_ROOT" "$RCLONE_REMOTE" <<'PY'
 import pathlib, sys
 out, mnt, remote = sys.argv[1:]
@@ -356,7 +373,7 @@ fi
 upload "$BUNDLE" /content/p1_bundle.tgz
 if [[ $WITH_DATA == 1 ]]; then upload "$WORK/p1_data.tgz" /content/p1_data.tgz; fi
 if [[ -n $REPORT_REPO && -f $GH_CREDENTIALS ]]; then
-  colab upload -s "$SESSION" "$GH_CREDENTIALS" /content/gh_credentials >/dev/null   # remote.py sets mode 600
+  colab_upload_retry "$GH_CREDENTIALS" /content/gh_credentials >/dev/null   # remote.py sets mode 600
 fi
 
 ENTRY="$WORK/entry.py"

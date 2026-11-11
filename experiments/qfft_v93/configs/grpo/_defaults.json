@@ -20,8 +20,12 @@
   "beta": 0.0,
   "epsilon": 0.2,
   "epsilon_high": 0.28,
-  "scale_rewards": "group",
+  "scale_rewards": "none",
   "mask_truncated_completions": true,
+  "generation_kwargs": {
+    "stop_token_ids": [151645, 151643],
+    "stop": ["\n\nQuestion:", "\n\nProblem:", "<|im_start|>user"]
+  },
   "seed": 42,
   "save_steps": 10,
   "mirror_keep": 3,

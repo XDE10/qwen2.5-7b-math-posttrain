@@ -147,7 +147,8 @@ class CheckpointMirror(TrainerCallback):
             size = tree_bytes(ckpt)
             log(f'Mirroring {ckpt.name} to Drive ({human_bytes(size)}) in the background')
             files = sum(1 for p in ckpt.rglob('*') if p.is_file())
-            drive_io.upload_tree(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free)
+            drive_io.upload_tree(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free,
+                                 exclude=['*optim*'])
             drive_io.put_json(dst / MIRROR_MARK, {'bytes': size, 'files': files, 'at': now_iso()})
             log(f'Mirror complete: {dst}')
             mirrors = _checkpoints(self.mirror_dir, MIRROR_MARK)

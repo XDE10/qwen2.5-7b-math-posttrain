@@ -209,7 +209,15 @@ def main() -> None:
     write_json(final_local / 'p1_model_identity.json', {'identity': identity, 'steps': trainer.state.global_step,
                                                         'base': cfg.get('init_model', 'base'), 'exported': now_iso()})
     mirror.wait()
-    drive_io.upload_tree(final_local, drive_run / 'final', watch_path=str(local_root()))
+    for attempt in range(1, 4):
+        try:
+            drive_io.upload_tree(final_local, drive_run / 'final', watch_path=str(local_root()))
+            break
+        except Exception as error:
+            log(f'WARNING final upload attempt {attempt}/3 failed: {error}')
+            if attempt == 3:
+                raise
+            time.sleep(15 * attempt)
     summary = {'steps': trainer.state.global_step, 'metrics': result.metrics, 'tokenization': stats,
                'wall_hours_this_session': round((time.monotonic() - started) / 3600, 3),
                'final': str(drive_run / 'final'), 'resumed_from': resume, 'completed': now_iso()}

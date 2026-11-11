@@ -25,15 +25,15 @@ GRADER_VERSION = 'v93-final-segment-last-box/math-verify-0.9.0'
 _BOX = re.compile(r'\\(?:boxed|fbox)\s*\{')
 
 
-def final_segment(text: str) -> str:
+def final_segment(text: str, strict: bool = False) -> str:
     # Local copy keeps worker start-up light; must match formats.final_segment.
     i = text.rfind('<|im_start|>answer')
     if i >= 0:
         return text[i + len('<|im_start|>answer'):].lstrip('\n')
     j = text.rfind('</think>')
     if j >= 0:
-        return text[j + len('</think>'):]
-    return text
+        return text[j + len('</think>'):].lstrip('\n')
+    return "" if strict else text
 
 
 def boxed_contents(text: str) -> list:
@@ -42,6 +42,9 @@ def boxed_contents(text: str) -> list:
     for match in _BOX.finditer(text):
         i, depth = match.end(), 1
         while i < len(text) and depth:
+            if text[i] == '\\' and i + 1 < len(text) and text[i + 1] in '{}':
+                i += 2
+                continue
             depth += (text[i] == '{') - (text[i] == '}')
             i += 1
         if depth == 0:
@@ -90,7 +93,7 @@ def _parse_gold(mv, reference: str, t: float):
     return gold
 
 
-def grade_text(text: str, reference, inner_timeout: float = 5.0) -> dict:
+def grade_text(text: str, reference, inner_timeout: float = 5.0, strict: bool = False) -> dict:
     """Grade one output against one reference. Runs inside a worker process."""
     mv = _math_verify()
     t = _timeout(inner_timeout)
@@ -100,16 +103,21 @@ def grade_text(text: str, reference, inner_timeout: float = 5.0) -> dict:
     gold = _parse_gold(mv, ref, t)
     if not gold:
         return {'status': 'ref_unparsed'}
-    segment = final_segment(text or '')
+    segment = final_segment(text or '', strict=strict)
+    if strict and not segment:
+        return {'status': 'no_answer', 'how': 'missing_answer_tag', 'pred': None}
     boxes = [b.strip() for b in boxed_contents(segment) if b.strip()]
     if boxes:
         candidates = [boxes[-1]]
-        distinct = list(dict.fromkeys(boxes))
-        if len(distinct) > 1:
-            candidates.append(', '.join(distinct))
+        if not strict:
+            distinct = list(dict.fromkeys(boxes))
+            if len(distinct) > 1:
+                candidates.append(', '.join(distinct))
         predictions = [mv.parse('\\boxed{' + c + '}', extraction_config=[mv.LatexExtractionConfig()],
                                 parsing_timeout=t) for c in candidates]
         how, shown = 'last_box', boxes[-1]
+    elif strict:
+        return {'status': 'no_answer', 'how': 'missing_box', 'pred': None}
     else:
         tail = segment[-3000:]
         predictions = [mv.parse(tail, extraction_config=[mv.LatexExtractionConfig(boxed_match_priority=0),
@@ -147,9 +155,10 @@ def _ping():
 
 
 def _grade_task(args):
-    text, reference, inner = args
+    text, reference, inner, *rest = args
+    strict = rest[0] if rest else False
     try:
-        return grade_text(text, reference, inner)
+        return grade_text(text, reference, inner, strict=strict)
     except Exception as error:  # surfaced to the caller as an infrastructure status
         return {'status': 'error', 'error': f'{type(error).__name__}: {error}'[:300]}
 
@@ -227,9 +236,9 @@ class Grader:
                 self.restart()
         return results
 
-    def grade_many(self, items) -> list:
+    def grade_many(self, items, strict: bool = False) -> list:
         """items: iterable of (text, reference) -> list of grade dicts, same order."""
-        payloads = [(text, ref, self.inner_timeout) for text, ref in items]
+        payloads = [(text, ref, self.inner_timeout, strict) for text, ref in items]
         return self._map(_grade_task, payloads, {'status': 'timeout'})
 
     def equivalent_many(self, pairs) -> list:

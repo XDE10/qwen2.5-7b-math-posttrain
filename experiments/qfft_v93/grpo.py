@@ -81,7 +81,7 @@ class FinalAnswerReward:
             texts = [t.split('<|im_end|>')[0] for t in texts]
         else:
             texts = [c[-1]['content'] if isinstance(c, list) else c for c in completions]
-        results = self.grader.grade_many(list(zip(texts, reference_answer)))
+        results = self.grader.grade_many(list(zip(texts, reference_answer)), strict=True)
         counts = Counter(r['status'] for r in results)
         failures = counts['timeout'] + counts['error']
         self.calls += 1
