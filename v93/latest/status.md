@@ -1,4 +1,4 @@
-# v93 status (2026-11-11T03:48:59, session p1-1111-084149)
+# v93 status (2026-11-11T04:20:32, session p1-1111-084149)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -12,8 +12,8 @@ stage smoke-eval                                    complete  0.1
 stage smoke-grpo                                    complete  0.342 
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
-stage train:qfft_ds                                 running   on p1-1111-084149@cd5950f279e0, heartbeat 1 min ago 
-run qfft_ds_v93                  training step 204/378 updated 2026-11-11T11:48:28+08:00
+stage train:qfft_ds                                 running   on p1-1111-084149@cd5950f279e0, heartbeat 3 min ago 
+run qfft_ds_v93                  training step 240/378 updated 2026-11-11T12:19:52+08:00
 run smoke_grpo_v93               complete step 2/ updated 2026-11-09T19:11:43+08:00
 run smoke_peak_v93               smoke_done step 2/ updated 2026-11-09T18:45:06+08:00
 eval base/aime24     480/480 complete=True
