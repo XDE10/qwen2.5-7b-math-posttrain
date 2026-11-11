@@ -1,11 +1,11 @@
-# v93 status (2026-11-11T21:04:55, session p1-1111-231532)
+# v93 status (2026-11-11T21:36:24, session p1-1111-231532)
 
 ```
 stage benchmarks                                    complete  0.003 
 stage eval:base:full                                complete  0.394 
 stage eval:qfft_official:full                       complete  3.439 
 stage eval:qwen_math:full                           complete  0.171 
-stage eval:run:qfft_ds_v93:full                     running   on p1-1111-231532@321507151d58, heartbeat 2 min ago 
+stage eval:run:qfft_ds_v93:full                     running   on p1-1111-231532@321507151d58, heartbeat 4 min ago 
 stage eval:sft_repro:full                           complete  6.882 
 stage models:base,qwen_math,qfft_official,sft_repro complete  0.173 
 stage pilot                                         failed     ValueError: Unknown stage 'pilot'
