@@ -110,10 +110,10 @@
  "train__qfft_ds": {
   "stage": "train:qfft_ds",
   "state": "running",
-  "started": "2026-11-11T00:42:26.227006",
-  "code": "7e18a2c7bda6",
-  "host": "p1-1111-084149@cd5950f279e0",
-  "heartbeat": "2026-11-11T07:21:08.357314",
-  "heartbeat_ts": 1794381668.3573272
+  "started": "2026-11-11T15:19:45.106408",
+  "code": "0edbe8e5beea",
+  "host": "p1-1111-231532@321507151d58",
+  "heartbeat": "2026-11-11T15:49:49.410004",
+  "heartbeat_ts": 1794412189.4100163
  }
 }

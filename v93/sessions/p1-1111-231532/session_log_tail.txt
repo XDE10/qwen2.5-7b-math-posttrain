@@ -1,0 +1,69 @@
+P1_SESSION=p1-1111-231532 gpu=G4 auto_release=1
+/tmp/ipykernel_789/3294631629.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 0edbe8e5beea (git 3852a6929922+dirty); stages: ['train:qfft_ds', 'eval:run:qfft_ds_v93:full']
+[11-11 15:19:44] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-11 15:19:45] ===== STAGE train:qfft_ds =====
+[11-11 15:19:46] Taking over stage train:qfft_ds from p1-1111-222952@8cb612a2ba5b (heartbeat 30 min ago)
+[11-11 15:19:46] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-11 15:19:46] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-11 15:19:46] Host RAM 177 GiB (need >= 128)
+[11-11 15:19:46] Installing training extras (system torch/transformers kept): {'torch': '2.14.1+cu130', 'transformers': '5.22.1', 'accelerate': '1.15.0', 'tokenizers': '0.23.3', 'safetensors': '0.8.0', 'numpy': '2.4.6', 'triton': '3.8.0'}
+[11-11 15:20:37] TRAIN_ENV 2.14.1+cu130 5.22.1 0.19.9 True
+[11-11 15:20:37] RUN /usr/bin/python3 -m torch.distributed.run --standalone --nnodes=1 --nproc_per_node=1 -m experiments.qfft_v93.train_sft --config train/qfft_ds.json | log: /content/mydrive/runs/project1/v93/logs/20261111-152037_train_qfft_ds.log
+[11-11 23:21:45] rclone copy (58 s): 2026/11/11 15:21:45 NOTICE:    19.056 GiB / 19.056 GiB, 100%, 253.135 MiB/s, ETA 0s
+[11-11 23:21:45] Downloaded /content/mydrive/models/Qwen2.5-7B-Instruct--a09a35458c702b33eeacc393d103063234e8bc28 in 58 s
+[11-11 23:21:58] qfft_ds_v93: 1000 examples, 10,016,722 tokens (10,016,722 supervised), longest 32496
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 10698.63it/s]
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Hardware information collection, monitor, and terminal proxy have been 
+disabled in resume mode.
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/qfft_ds_v93/swanlog/run-20261111_152200-hwh5u6cr
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run qfft_ds_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/hwh5u6cr
+[11-11 23:22:03] SwanLab run hwh5u6cr https://swanlab.cn/@XDE10/project1-7b-math/runs/hwh5u6cr
+[11-11 23:22:04] Restoring checkpoint-126 from Drive (113.5GiB) ...
+[11-11 23:30:15] rclone copy (491 s): 2026/11/11 15:30:15 NOTICE:   113.482 GiB / 113.482 GiB, 100%, 53.975 KiB/s, ETA 0s
+[11-11 23:30:15] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_ds_v93/ckpt_mirror/checkpoint-126 in 491 s
+[11-11 23:30:15] Resuming from restored /content/p1/runs/qfft_ds_v93/checkpoint-126
+[RANK 0] Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 16. Using DeepSpeed's value.
+[11-11 23:35:16] HEARTBEAT 252
+[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!
+Backend impl 'liger_kernel.ops.backends._cutedsl.rope' for op 'rope' could not be imported: ImportError: cutedsl backend requires the NVIDIA CUTLASS Python DSL (CuTe DSL). Install it with `pip install nvidia-cutlass-dsl`, or when installing Liger-Kernel use `pip install 'liger-kernel[cutedsl]'`.
+Backend impl 'liger_kernel.ops.backends._ascend.rope' for op 'rope' could not be imported: ImportError: cannot import name 'tanh' from 'triton.language.math' (/usr/local/lib/python3.13/dist-packages/triton/language/math.py)
+/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: FutureWarning: `torch.distributed.all_gather_into_tensor` is deprecated. Please use `torch.distributed.all_gather_single` instead.
+  return func(*args, **kwargs)
+[11-11 23:38:44] step 127/378 epoch 2.02 loss 1.0166 lr 8.40e-06 s/step 46.5 eta 3.24h peakGPU 28.4GiB
+{'loss': '1.017', 'grad_norm': '1.227', 'learning_rate': '8.402e-06', 'epoch': '2.016', 'num_input_tokens_seen': 20143931, 'train_runtime': '46.5', 'train_tokens_per_second': '2376'}
+[11-11 23:39:44] step 128/378 epoch 2.03 loss 1.0427 lr 8.37e-06 s/step 60.1 eta 4.17h peakGPU 28.4GiB
+{'loss': '1.043', 'grad_norm': '1.386', 'learning_rate': '8.368e-06', 'epoch': '2.032', 'num_input_tokens_seen': 20341421, 'train_runtime': '106.6', 'train_tokens_per_second': '2889'}
+[11-11 23:40:16] HEARTBEAT 128
+[11-11 23:40:37] step 129/378 epoch 2.05 loss 1.0522 lr 8.33e-06 s/step 52.3 eta 3.62h peakGPU 28.4GiB
+{'loss': '1.052', 'grad_norm': '1.471', 'learning_rate': '8.334e-06', 'epoch': '2.048', 'num_input_tokens_seen': 20500454, 'train_runtime': '158.9', 'train_tokens_per_second': '2939'}
+[11-11 23:41:32] step 130/378 epoch 2.06 loss 0.9647 lr 8.30e-06 s/step 55.0 eta 3.79h peakGPU 28.4GiB
+{'loss': '0.9647', 'grad_norm': '1.45', 'learning_rate': '8.3e-06', 'epoch': '2.064', 'num_input_tokens_seen': 20674526, 'train_runtime': '213.9', 'train_tokens_per_second': '2997'}
+[11-11 23:42:27] step 131/378 epoch 2.08 loss 1.0201 lr 8.26e-06 s/step 55.1 eta 3.78h peakGPU 28.4GiB
+{'loss': '1.02', 'grad_norm': '1.333', 'learning_rate': '8.265e-06', 'epoch': '2.08', 'num_input_tokens_seen': 20840278, 'train_runtime': '269', 'train_tokens_per_second': '3000'}
+[11-11 23:43:19] step 132/378 epoch 2.10 loss 0.8869 lr 8.23e-06 s/step 51.7 eta 3.53h peakGPU 28.4GiB
+{'loss': '0.8869', 'grad_norm': '1.625', 'learning_rate': '8.23e-06', 'epoch': '2.096', 'num_input_tokens_seen': 20995004, 'train_runtime': '320.6', 'train_tokens_per_second': '2999'}
+[11-11 23:44:22] step 133/378 epoch 2.11 loss 1.1734 lr 8.19e-06 s/step 63.2 eta 4.30h peakGPU 28.6GiB
+{'loss': '1.173', 'grad_norm': '1.918', 'learning_rate': '8.194e-06', 'epoch': '2.112', 'num_input_tokens_seen': 21202152, 'train_runtime': '383.8', 'train_tokens_per_second': '3045'}
+[11-11 23:45:16] HEARTBEAT 133
+[11-11 23:45:20] step 134/378 epoch 2.13 loss 0.9837 lr 8.16e-06 s/step 58.3 eta 3.95h peakGPU 28.6GiB
+{'loss': '0.9837', 'grad_norm': '1.211', 'learning_rate': '8.159e-06', 'epoch': '2.128', 'num_input_tokens_seen': 21389792, 'train_runtime': '442.1', 'train_tokens_per_second': '3068'}
+[11-11 23:46:16] step 135/378 epoch 2.14 loss 1.0681 lr 8.12e-06 s/step 55.7 eta 3.76h peakGPU 28.7GiB
+{'loss': '1.068', 'grad_norm': '1.436', 'learning_rate': '8.123e-06', 'epoch': '2.144', 'num_input_tokens_seen': 21558878, 'train_runtime': '497.9', 'train_tokens_per_second': '3064'}
+[11-11 23:47:13] step 136/378 epoch 2.16 loss 1.0295 lr 8.09e-06 s/step 56.8 eta 3.82h peakGPU 28.7GiB
+{'loss': '1.029', 'grad_norm': '1.55', 'learning_rate': '8.086e-06', 'epoch': '2.16', 'num_input_tokens_seen': 21741500, 'train_runtime': '554.7', 'train_tokens_per_second': '3079'}
+[11-11 23:47:56] step 137/378 epoch 2.18 loss 1.0240 lr 8.05e-06 s/step 43.6 eta 2.92h peakGPU 28.7GiB
+{'loss': '1.024', 'grad_norm': '1.496', 'learning_rate': '8.05e-06', 'epoch': '2.176', 'num_input_tokens_seen': 21860217, 'train_runtime': '598.2', 'train_tokens_per_second': '3054'}
+[11-11 23:48:50] step 138/378 epoch 2.19 loss 0.9751 lr 8.01e-06 s/step 53.9 eta 3.59h peakGPU 28.7GiB
+{'loss': '0.9751', 'grad_norm': '1.128', 'learning_rate': '8.013e-06', 'epoch': '2.192', 'num_input_tokens_seen': 22029218, 'train_runtime': '652.1', 'train_tokens_per_second': '3061'}
+[11-11 23:49:30] step 139/378 epoch 2.21 loss 1.0219 lr 7.98e-06 s/step 40.2 eta 2.67h peakGPU 28.7GiB
+{'loss': '1.022', 'grad_norm': '1.539', 'learning_rate': '7.976e-06', 'epoch': '2.208', 'num_input_tokens_seen': 22132446, 'train_runtime': '692.3', 'train_tokens_per_second': '3032'}
