@@ -1,14 +1,4 @@
-[... first 15,350 bytes omitted ...]
-[11-12 00:17:46] step 171/378 epoch 2.72 loss 1.1314 lr 6.68e-06 s/step 60.1 eta 3.46h peakGPU 28.8GiB
-{'loss': '1.131', 'grad_norm': '2.42', 'learning_rate': '6.676e-06', 'epoch': '2.72', 'num_input_tokens_seen': 27308143, 'train_runtime': '2388', 'train_tokens_per_second': '3046'}
-[11-12 00:18:23] step 172/378 epoch 2.74 loss 0.8662 lr 6.63e-06 s/step 37.6 eta 2.15h peakGPU 28.8GiB
-{'loss': '0.8662', 'grad_norm': '1.496', 'learning_rate': '6.633e-06', 'epoch': '2.736', 'num_input_tokens_seen': 27393998, 'train_runtime': '2426', 'train_tokens_per_second': '3035'}
-[11-12 00:19:21] step 173/378 epoch 2.75 loss 1.0223 lr 6.59e-06 s/step 57.6 eta 3.28h peakGPU 28.8GiB
-{'loss': '1.022', 'grad_norm': '1.127', 'learning_rate': '6.589e-06', 'epoch': '2.752', 'num_input_tokens_seen': 27577712, 'train_runtime': '2483', 'train_tokens_per_second': '3038'}
-[11-12 00:20:18] HEARTBEAT 173
-[11-12 00:20:28] step 174/378 epoch 2.77 loss 1.1154 lr 6.55e-06 s/step 67.2 eta 3.81h peakGPU 28.8GiB
-{'loss': '1.115', 'grad_norm': '1.104', 'learning_rate': '6.545e-06', 'epoch': '2.768', 'num_input_tokens_seen': 27800919, 'train_runtime': '2550', 'train_tokens_per_second': '3046'}
-[11-12 00:21:17] step 175/378 epoch 2.78 loss 1.1010 lr 6.50e-06 s/step 49.0 eta 2.76h peakGPU 28.8GiB
+[... first 16,627 bytes omitted ...]
 {'loss': '1.101', 'grad_norm': '1.154', 'learning_rate': '6.501e-06', 'epoch': '2.784', 'num_input_tokens_seen': 27945136, 'train_runtime': '2599', 'train_tokens_per_second': '3044'}
 [11-12 00:22:16] step 176/378 epoch 2.80 loss 1.1350 lr 6.46e-06 s/step 58.8 eta 3.30h peakGPU 28.8GiB
 {'loss': '1.135', 'grad_norm': '1.565', 'learning_rate': '6.457e-06', 'epoch': '2.8', 'num_input_tokens_seen': 28127250, 'train_runtime': '2658', 'train_tokens_per_second': '3045'}
@@ -482,3 +472,19 @@ Writing model shards: 100%|██████████| 1/1 [01:13<00:00, 73.
 Writing model shards: 100%|██████████| 1/1 [01:13<00:00, 73.34s/it]
 /usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
   return func(*args, **kwargs)
+[11-12 03:30:25] HEARTBEAT 378
+[11-12 03:32:01] Saved checkpoint-378 locally: 113.5GiB in 443.4 s, 102.8 GiB free
+{'train_runtime': '1.404e+04', 'train_samples_per_second': '0.285', 'train_steps_per_second': '0.018', 'train_loss': '0.8326', 'epoch': '6', 'num_input_tokens_seen': 60100332}
+[11-12 03:32:01] qfft_ds_v93: training loop finished at step 378; exporting final weights
+
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
+Writing model shards: 100%|██████████| 1/1 [01:13<00:00, 73.71s/it]
+Writing model shards: 100%|██████████| 1/1 [01:13<00:00, 73.71s/it]
+[11-12 03:37:17] rclone copy (238 s): 2026/11/11 19:37:17 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 85.017 MiB/s, ETA 0s
+[11-12 03:37:18] rclone purge (2 s): 2026/11/11 19:37:18 Failed to purge: directory not found
+[11-12 03:37:20] Uploaded final to /content/mydrive/runs/project1/v93/runs/qfft_ds_v93/final (14.2GiB in 242 s, 60 MiB/s)
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run qfft_ds_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/hwh5u6cr
+swanlab: Upload complete: 2632 records
+[11-12 03:37:35] qfft_ds_v93: COMPLETE -> /content/mydrive/runs/project1/v93/runs/qfft_ds_v93/final

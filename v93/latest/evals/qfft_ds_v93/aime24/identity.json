@@ -1,0 +1,46 @@
+{
+  "protocol": {
+    "model": "run:qfft_ds_v93",
+    "model_identity": {
+      "identity": {
+        "run": "qfft_ds_v93",
+        "format": "qfft",
+        "teacher": "ds",
+        "data_sha256": "ffb9f7aec7b80a3c42b8554c5e0c7511465c0c694667120f02ae10a604c60276",
+        "init_model": "base",
+        "recipe": {
+          "max_length": 32768,
+          "num_train_epochs": 6,
+          "learning_rate": 1e-05,
+          "warmup_fraction": 0.1,
+          "lr_scheduler_type": "cosine",
+          "per_device_train_batch_size": 1,
+          "gradient_accumulation_steps": 16,
+          "weight_decay": 0.0001,
+          "adam_beta1": 0.9,
+          "adam_beta2": 0.999,
+          "max_grad_norm": 1.0,
+          "seed": 42
+        },
+        "smoke": false,
+        "max_steps_override": null
+      },
+      "steps": 378,
+      "base": "base",
+      "exported": "2026-11-12T03:33:18+08:00"
+    },
+    "benchmark": "aime24",
+    "benchmark_sha256": "9069a0f93b2e7116ff5f03409e047ce6f6115f763eb4541395857024c37df155",
+    "n": 16,
+    "limit": null,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "max_model_len": 32768,
+    "max_tokens_cap": null,
+    "seed": 42,
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "engine": "vllm"
+  },
+  "protocol_sha256": "d5ee3395bb3ace81d13ae21b1496ea58f39751232e2672fa58c4d7d8a81cccc6",
+  "updated": "2026-11-12T03:40:41+08:00"
+}

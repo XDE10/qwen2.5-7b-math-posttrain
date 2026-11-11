@@ -1,10 +1,11 @@
-# v93 status (2026-11-11T19:30:21, session p1-1111-231532)
+# v93 status (2026-11-11T20:01:53, session p1-1111-231532)
 
 ```
 stage benchmarks                                    complete  0.003 
 stage eval:base:full                                complete  0.394 
 stage eval:qfft_official:full                       complete  3.439 
 stage eval:qwen_math:full                           complete  0.171 
+stage eval:run:qfft_ds_v93:full                     running   on p1-1111-231532@321507151d58, heartbeat 4 min ago 
 stage eval:sft_repro:full                           complete  6.882 
 stage models:base,qwen_math,qfft_official,sft_repro complete  0.173 
 stage pilot                                         failed     ValueError: Unknown stage 'pilot'
@@ -13,8 +14,8 @@ stage smoke-eval                                    complete  0.1
 stage smoke-grpo                                    complete  0.342 
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
-stage train:qfft_ds                                 running   on p1-1111-231532@321507151d58, heartbeat 0 min ago 
-run qfft_ds_v93                  training step 378/378 updated 2026-11-12T03:24:38+08:00
+stage train:qfft_ds                                 complete  4.299 
+run qfft_ds_v93                  complete step 378/ updated 2026-11-12T03:37:21+08:00
 run smoke_grpo_v93               complete step 2/ updated 2026-11-09T19:11:43+08:00
 run smoke_peak_v93               smoke_done step 2/ updated 2026-11-09T18:45:06+08:00
 eval base/aime24     480/480 complete=True
