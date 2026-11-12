@@ -51,8 +51,6 @@ def test_r1_reference_truncates_only_when_enabled():
     assert reference['run_name'] != main['run_name']
     assert reference['max_length'] == 16384
     assert reference['gradient_accumulation_steps'] == 8
-    assert reference['save_steps'] == 250
-    assert reference['mirror_optimizer_state'] is True
 
     def tokenizer(text, *, add_special_tokens):
         assert text == 'response'

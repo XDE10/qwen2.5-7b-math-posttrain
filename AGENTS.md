@@ -29,7 +29,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`，并推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`）。2026-11-09 已在 G4 跑通（41 分钟）：32K 最坏长度全参 142 s/步、显存 28.9 GiB、主机 RSS 145.3 GiB / 177 GiB，GRPO 476 s/步、66.6 GiB。
 - 23 道缺口题（DeepSeek 在 high/max 下的轨迹一直跑出 32K 窗口）：预注册方案是先用 `reasoning_effort=low` 追加尝试、仍缺的成对剔除。实际（2026-11-10）：4 题补齐；剩下 19 题用户决定保留 1000 题、不做成对剔除，改为用已批准的 OpenR1 原题替换。不用 R1 补 DS，不训练只缺一边的数据。预览构建（`--allow-gaps`）不能上传，阶段 `d` 会拒收。
 - DS 思考段里关于隐藏参数 "oververbosity 5" 的句子由 `data_build.py` 的 `META` 删除，原文留在每行 `teacher_detail.meta_edits`。
-- **未完成**：阶段 0、1 已完成（2026-11-09）；DS 轨迹 1000/1000，数据已构建（2026-11-10）；阶段 2、3–7（锚点评测、正式训练、GRPO）均未运行。详见交接文档与 [docs/status/current_status.md](docs/status/current_status.md)。
+- **进度（2026-11-12）**：阶段 0、1、d、2 与 `qfft_ds_v93` 的正式训练和评测已完成。当前优先跑 R1、16K、batch 8 的自训对照，正式 GRPO 仍待运行。实测成绩和最新运行进度见 [docs/status/current_status.md](docs/status/current_status.md) 与 `colab-reports`。
 
 ## 仓库约定（必须遵守）
 
@@ -43,6 +43,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - 大体积数据/证据/报告只在本地：`data/`、`artifacts/`、`reports/`、`archive/data/`、`archive/reports/`、`.pilot_deps/`、`*.zip`、`.pytest_tmp/` 不入 git（各目录保留 README 例外）。详见 [.gitignore](.gitignore)。唯一例外是 Colab 推到 `colab-reports` 分支的小体积文本报告（有大小上限、去掉密钥，不进 main）。
 - 文档与代码保留来源和验证记录；**CPU 通过不等于 GPU 结果**，「已实现 / CPU 通过 / 真实 GPU 跑通 / 能力提升」要分开陈述。
 - 迁移/清理/重构的每次移动都留映射与记录（`docs/migration/`），移动后同步 `docs/metadata/migration_manifest.json` 并跑 `python tools/verification/verify_migration.py`。
+- **响应与防误杀硬约束**：(1) Agent 执行任何外部/Git 网络命令（如 `git fetch origin colab-reports`）必须加超时保护（`timeout 10s`）或先检查本地日志，严禁无超时阻塞让用户等待；(2) 给用户命令前必须核对精确参数（`launch.sh` 为 `--session` 而非 `-s`，`colab-cli 0.8.0` 为 `colab sessions`），绝不触碰用户并发运行的其他会话（如 `opd`、`p3`）；(3) `remote.py` 通过 `active_run_id` 令牌防止前一次报错的 120s 延迟 `runtime.unassign()` 销毁同一 VM 上复用的新任务，`launch.sh` 默认 `POLL_S=15` 秒且支持直接复用已存在的 `--session`。
 
 ## 目录地图
 

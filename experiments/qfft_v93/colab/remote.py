@@ -127,6 +127,9 @@ def _assemble(path: Path) -> None:
     meta.unlink()
 
 
+_run_id = f"{time.time_ns()}-{os.getpid()}"
+_run_id_file = _local / 'active_run_id'
+_run_id_file.write_text(_run_id, encoding='utf-8')
 _sink = _Sink(_local / 'session.log', _local / 'session_tail.json')
 _stdout, _stderr = sys.stdout, sys.stderr
 sys.stdout, sys.stderr = _Tee(_stdout, _sink), _Tee(_stderr, _sink)
@@ -180,8 +183,15 @@ finally:
         except OSError:
             pass
         time.sleep(_RELEASE_GRACE_S)
-        try:  # best effort; a connected launch.sh has usually stopped the VM already
-            from google.colab import runtime
-            runtime.unassign()
-        except Exception as _release_error:
-            print('auto-release not available here:', _release_error, flush=True)
+        try:
+            _current_id = _run_id_file.read_text(encoding='utf-8').strip() if _run_id_file.exists() else _run_id
+        except OSError:
+            _current_id = _run_id
+        if _current_id == _run_id:
+            try:  # best effort; a connected launch.sh has usually stopped the VM already
+                from google.colab import runtime
+                runtime.unassign()
+            except Exception as _release_error:
+                print('auto-release not available here:', _release_error, flush=True)
+        else:
+            print('skipping auto-release: a newer run has taken over this VM', flush=True)

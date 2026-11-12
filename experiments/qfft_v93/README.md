@@ -19,9 +19,9 @@ v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测�
 
 ### R1 原版配方对照
 
-11 月 12 日用户同意准备这个对照。它用 Drive 上已上传的 v93 去污 R1 集、固定底座和现有训练器，采用[原版配方](https://github.com/LWL-cpu/Question-Free-Fine-Tuning/blob/main/LLaMA-Factory/examples/train_qfft/train_s1_qfft.yaml)的 response 前 16,384 token、有效 batch 8 和 6 epoch。使用独立的 `qfft_r1_16k_b8_v93` run，训练数据文件不需要重建。题目替换和训练框架沿用 v93，所以这是原版配方对照。第 250、500 步镜像保留优化器状态，第 750 步后导出最终权重并跑 v93 全套评测。
+11 月 12 日用户同意准备这个对照。它用 Drive 上已上传的 v93 去污 R1 集、固定底座和现有训练器，采用[原版配方](https://github.com/LWL-cpu/Question-Free-Fine-Tuning/blob/main/LLaMA-Factory/examples/train_qfft/train_s1_qfft.yaml)的 response 前 16,384 token、有效 batch 8 和 6 epoch。使用独立的 `qfft_r1_16k_b8_v93` run，训练数据文件不需要重建。题目替换和训练框架沿用 v93，所以这是原版配方对照。第 750 步后导出最终权重并跑 v93 全套评测。
 
-本地用固定 tokenizer 核对了 1,000 条轨迹和数据 SHA-256。86 条触发截断，共移除 129,034 token，其中 57 条截断后没有最终回答段。这是原版截断配方在 v93 数据上的实际影响。Drive 模拟恢复测试通过，正式 GPU 结果待运行。
+本地用固定 tokenizer 核对了 1,000 条轨迹和数据 SHA-256。86 条触发截断，共移除 129,034 token，其中 57 条截断后没有最终回答段。这是原版截断配方在 v93 数据上的实际影响。当前配置每 125 步本地保存一次完整检查点，中间 Drive 镜像排除优化器状态。带优化器状态的镜像通过了模拟恢复测试，当前轻量镜像的完整跨 VM 续训尚未验证。
 
 由用户在 WSL2 仓库根目录启动：
 

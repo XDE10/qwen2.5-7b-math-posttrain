@@ -82,7 +82,7 @@ cd "$REPO"
 WORK="$(mktemp -d)"
 LOGDIR="$REPO/reports/colab_logs"; mkdir -p "$LOGDIR"
 CHUNK=$((8 * 1024 * 1024))   # each `colab upload` is one base64 HTTP request; keep requests small
-POLL_S="${P1_POLL_S:-60}"    # seconds between log polls while following a detached job
+POLL_S="${P1_POLL_S:-15}"    # seconds between log polls while following a detached job (matches 15s remote snapshot)
 STOP_ON_EXIT=0               # 1 only while this script owns the VM: before the job starts or after it ended
 DETACHED=0
 RESULT=""
@@ -272,6 +272,9 @@ colab usage || true
 
 DEADLINE=$(( $(date +%s) + WAIT_MIN * 60 ))
 GPU_USED=""; SHAPE=""
+if colab status -s "$SESSION" 2>/dev/null | grep -q "^\[$SESSION\]"; then
+  GPU_USED="G4"; SHAPE="existing"
+fi
 while [[ -z $GPU_USED ]]; do
   for g in "${GPUS[@]}"; do
     args=(new -s "$SESSION")
@@ -362,7 +365,13 @@ pathlib.Path(out).write_text(code, encoding='utf-8')
 PY
   MOUNT_LOG="$WORK/mount.log"
   echo "Mounting Google Drive ($RCLONE_REMOTE at $DRIVE_ROOT)..."
-  colab exec -s "$SESSION" --timeout 300 -f "$WORK/mount.py" 2>&1 | tee "$MOUNT_LOG" | grep -a -v '^\[colab\]' || true
+  for _mnt_try in 1 2 3 4 5; do
+    : > "$MOUNT_LOG"
+    colab exec -s "$SESSION" --timeout 300 -f "$WORK/mount.py" 2>&1 | tee "$MOUNT_LOG" | grep -a -v '^\[colab\]' || true
+    grep -q 'P1_MOUNT_OK' "$MOUNT_LOG" && break
+    echo "WARNING: Drive mount exec failed (attempt $_mnt_try/5, transient SSL/proxy error); retrying in 5s..." >&2
+    sleep 5
+  done
   if ! grep -q 'P1_MOUNT_OK' "$MOUNT_LOG"; then
     echo "rclone could not mount $RCLONE_REMOTE at $DRIVE_ROOT on $SESSION (see log above); the VM is released."
     echo "To debug by hand: rerun with --keep, then 'colab console -s SESSION' (a bash shell) and run the"
