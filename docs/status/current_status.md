@@ -65,6 +65,7 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 
 ## 当前优先目标（2026-11-12）
 
-- 实习项目优先拿到一组可复现的自训增益。先用 `qfft_r1_16k_b8_v93` 在固定 Qwen2.5-7B-Instruct 底座上做全参 QFFT，使用已上传的 v93 去污 R1 数据、16K 截断、有效 batch 8、6 epoch。用第 750 步最终权重完成五项评测，再根据结果决定是否投入 GRPO。这轮命令只包含监督训练和评测，由用户启动 GPU。[训练配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8.json)
+- 2026-11-12 用户授权修复合并后启动一轮 R1 监督训练与五项评测。旧会话已不在 Colab 会话列表，Drive 的 checkpoint-125 不含优化器。使用独立的 `qfft_r1_16k_b8_restart_v93` 从固定底座重跑，沿用 R1 对照配方，旧记录留存。[重跑配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8_restart.json)
+- 实习项目优先拿到一组可复现的自训增益。先用 `qfft_r1_16k_b8_v93` 在固定 Qwen2.5-7B-Instruct 底座上做全参 QFFT，使用已上传的 v93 去污 R1 数据、16K 截断、有效 batch 8、6 epoch。用第 750 步最终权重完成五项评测，再根据结果决定是否投入 GRPO。这轮命令只包含监督训练和评测。[训练配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8.json)
 - 主指标是 AIME24 + AIME25 + AMC23 的 100 题按题平均分。当前基座 **26.0625%**，建议目标是比基座高至少 **5 个百分点**（约 **31.1%**），且按题配对 bootstrap 的 95% 置信区间下界高于 0。同步报告 MATH-500、GSM8K、平均输出 token 和截断率。目标待实测，简历只引用实测成绩和明确的评测口径。
 - RomEscape 的 `qfft_repro` 是独立复现权重，作为复现参考。`qfft_official` 是 QFFT 作者权重。自训增益以同一 v93 评测下的 `base` 为基准。[模型配置](../../experiments/qfft_v93/configs/pipeline.json)

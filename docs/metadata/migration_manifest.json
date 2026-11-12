@@ -28754,11 +28754,11 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 10286,
+      "bytes": 10630,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-12 交接材料归档后同步",
-      "sha256": "c359fec73db472d50c3fc3c711448ddc307bb0543f4eb2ca7bb7163839354035"
+      "refactor_note": "2026-11-12 同步 R1 重跑配置及授权范围",
+      "sha256": "3a73ee6be6f2ce32512734dee9cfc715644463f57623b18254d753fa87d362cb"
     },
     {
       "bytes": 87855,
