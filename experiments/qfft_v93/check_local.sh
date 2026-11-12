@@ -161,7 +161,7 @@ if [[ $DATA == 1 ]] && command -v "$PY" >/dev/null; then
   if [[ $rc != 0 || -z $line ]]; then
     bad "data_build status failed: $(tail -n 2 <<< "$status_out" | tr '\n' ' ' | cut -c1-300)"
   elif grep -q 'gaps: 0$' <<< "$line"; then ok "$line"
-  else warn "$line (see docs/handover/kiro_ide_onboarding.md: the remaining gaps)"; fi
+  else warn "$line (see docs/status/current_status.md for the data status)"; fi
 elif [[ $DATA == 0 ]]; then
   echo "  skip  --no-data"
 fi

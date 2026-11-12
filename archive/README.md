@@ -1,6 +1,6 @@
 # archive/ —— 只读历史快照
 
-本目录存放 **v1…v92 被取代的脚本、测试、配置、实验、数据与报告**。目录重构 v2（2026-11-08）的原则是：**不删除任何文件**，只把不再属于现行主线的部分整体移到这里，让顶层目录只保留现行主线。
+本目录存放被取代的脚本、测试、配置、实验、数据、报告与交接材料。目录重构 v2（2026-11-08）把不再属于现行主线的内容移到这里保存。
 
 > **archive/ 是只读历史快照，不保证可直接运行。** 内部相对路径、数据位置、配置键名都可能与当前结构不一致；需要运行旧代码时，请先按 mapping 找回原名并自行判断依赖是否还存在。
 
@@ -16,6 +16,7 @@
 | `experiments/` | `aimo_sft_v25/`、`projection_pilot_v21/v23/v24/` 等旧实验包 | 4 个目录 / 23 个文件 |
 | `data/` | 25 个历史数据批次（project1/2/3、旧 distillation/strict/topup 等） | 2867 个文件，**不进 git** |
 | `reports/` | 63 个按日期分组的报告目录 + `_loose/{audits,logs,snapshots}` 共 87 个散落文件 | 1174 个文件，**不进 git** |
+| `docs/` | [旧交接包](docs/handover/)和 [Kiro 配置快照](docs/kiro/steering/v93-local-execution.md) | [2026-11-12 移动记录](../docs/migration/handover_cleanup_20261112.json) |
 | `mapping/` | `restructure_v2_mapping.json`：本次 570 次移动的 `from` / `to` / `tracked` | 1 个文件 |
 
 ## 如何找回原路径

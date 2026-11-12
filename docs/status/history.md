@@ -6,7 +6,7 @@
 >
 > - 映射表：`archive/mapping/restructure_v2_mapping.json`（570 条，每条 `from` / `to` / `tracked`），同内容副本在 `docs/migration/restructure_v2_plan.json`；
 > - 归档结构说明与检索示例：`archive/README.md`；
-> - 正文中两处「完整接手提示词」链接（`reports/handover_20261028_v49/…`、`reports/handover_20261028_v53/…`）现位于 `docs/handover/handover_20261028_v49/` 与 `docs/handover/handover_20261028_v53/`；
+> - 正文中两处「完整接手提示词」链接（`reports/handover_20261028_v49/…`、`reports/handover_20261028_v53/…`）现归档到 `archive/docs/handover/handover_20261028_v49/` 与 `archive/docs/handover/handover_20261028_v53/`；
 > - 当前状态不要从这里读，见 `docs/status/current_status.md` 与根目录 `AGENTS.md`。
 
 ---
@@ -111,11 +111,11 @@
 
 - 2026-10-28 最新任务v58：用户要求先测RomEscape独立QFFT成品MATH500，每题一次，再决定路线。`tools/evaluate_public_romescape_qfft_math500_v58.py`已上传Drive projects/project1同名并字节读回一致，SHA09799d9eeec9771b24df109c10e90fc092a6bcf540775525cb4e7214fecb3370；8项CPU通过，真实QFFT tokenizer全部500题prompt IDs与SFT v52第一轮一致，GPU未启动。模型PJiNH/QFFT-repro-S1.1-QFFT-7B固定e8a801fb66a54b86f4219689a6d9973d91330d25，正常system/user推理，QFFT去题目仅发生在训练。7936+256/context16384/temp.6/top_p.95/rp1.0/n1，保存原生/收尾与全500题tokens统计；输出evaluations/public_romescape_s1_qfft_7b_math500_v58，标记ROMESCAPE_S1_QFFT_MATH500_V58_ALL_GENERATION_COMPLETE后可停GPU、本地评分。只准备未远端启动，不杀旧任务。作者80.2/平均3.1K为32K×16协议，不是本地成绩。v52 SFT第一轮已实测389原生、DS新增17逐条核对后406/500=81.2%；E0八轮原生3065/4000=76.625%，只DS复核最高sample_06，仍保守388/500=77.6%(原DS接受1条近似值，另留原分77.8%)。v57按用户要求CPU准备994+旧批准raw池同类别6条=1000，750步/75预热，旧manifest不改；完整训练主入口及自动释放集成尚未完成，不自动启动正式训练。当前优先完成v58评测。说明reports/romescape_qfft_eval_20261028_v58/README.md。
 
-- 2026-10-28 最新接手入口：[第五次对话完整接手提示词 v53](reports/handover_20261028_v53/第五次对话_完整接手提示词.md)，前部新增本轮、后部完整保留v49。用户明确批准新E0对照：`evaluate_e0_romescape_avg8_v52.py`一条命令先E0再RomEscape，各500题×8次，平均单次正确率非pass@8，统一7936+256预算；8项CPU通过，Drive字节读回一致，SHA8df5a658af6a264c7195c79c1944f8e7f85b9f06c298f39c4ffb0da9706b9fb6。尚无本轮GPU日志，不自动重复启动。输出e0_math500_avg8_v52、romescape_math500_avg8_v52；总结束标记E0_ROMESCAPE_AVG8_V52_ALL_GENERATION_COMPLETE。v51单次入口保留但非最新任务。用户希望尽快收尾以推进项目二三；三天窗口/24～36GPU小时/正式SFT/小批DS造数均仅助手建议，未获执行批准。v46依赖/加载/在线SwanLab已通过，旧RoPE检查已修；8更新仍待确认。不重装、不杀任务、先看当前状态。
+- 2026-10-28 最新接手入口：[第五次对话完整接手提示词 v53](../../archive/docs/handover/handover_20261028_v53/第五次对话_完整接手提示词.md)，前部新增本轮、后部完整保留v49。用户明确批准新E0对照：`evaluate_e0_romescape_avg8_v52.py`一条命令先E0再RomEscape，各500题×8次，平均单次正确率非pass@8，统一7936+256预算；8项CPU通过，Drive字节读回一致，SHA8df5a658af6a264c7195c79c1944f8e7f85b9f06c298f39c4ffb0da9706b9fb6。尚无本轮GPU日志，不自动重复启动。输出e0_math500_avg8_v52、romescape_math500_avg8_v52；总结束标记E0_ROMESCAPE_AVG8_V52_ALL_GENERATION_COMPLETE。v51单次入口保留但非最新任务。用户希望尽快收尾以推进项目二三；三天窗口/24～36GPU小时/正式SFT/小批DS造数均仅助手建议，未获执行批准。v46依赖/加载/在线SwanLab已通过，旧RoPE检查已修；8更新仍待确认。不重装、不杀任务、先看当前状态。
 
 - 2026-10-28 v46后续实跑已通过依赖、模型加载、在线SwanLab(n54ce1mn)，但在旧RoPE非空检查报Unexpected RoPE override；Drive核实ValueError、completed_updates0，非OOM。最新入口检查rope_scaling与rope_parameters的实际type/factor/theta，允许原生default字典与None，仍拒绝YaRN，打印并保存rope_config.json，不改底座配置。仅对已知旧SHA d1f9f6...、同其余身份、精确旧错误、零更新且无progress/COMPLETE/checkpoint时留档迁移初始化身份，不删训练状态。12项CPU检查及编译通过，最新Drive入口读回一致，SHA4542283af0a51d8c5af7f0d2ece87ee943c85ded1ee42d1c74359a3372cc7a38；仍同命令重试，8步GPU更新待验证。v49交接已补最新状态。
 
-- 2026-10-28 最新完整接手入口为[第四次对话完整接手提示词 v49](reports/handover_20261028_v49/第四次对话_完整接手提示词.md)，35节整合本轮与两段已完整读取的引用旧对话；同目录有可复制的新对话首条消息。当前先执行v46的64条/8步全参容量速度短测，最新pwinput例外修复已上传并读回，远端训练仍待新日志确认；不要按旧v4/README重启AIMO训练或已完成评测。
+- 2026-10-28 最新完整接手入口为[第四次对话完整接手提示词 v49](../../archive/docs/handover/handover_20261028_v49/第四次对话_完整接手提示词.md)，35节整合本轮与两段已完整读取的引用旧对话；同目录有可复制的新对话首条消息。当前先执行v46的64条/8步全参容量速度短测，最新pwinput例外修复已上传并读回，远端训练仍待新日志确认；不要按旧v4/README重启AIMO训练或已完成评测。
 
 - 2026-10-28 v46第三次安装报错已定位：新日志确认实际NumPy2.1.3可导入，上一轮NumPy修复已生效；现在是SwanLab依赖pwinput>=1.0.3仅发布sdist，被入口--only-binary=:all:误拦，并非训练/OOM。已仅给pwinput增加--no-binary=pwinput例外，其余包仍wheel-only，DeepSpeed仍独立安装。核实PyPI1.0.3只有4.4KB源码、无运行依赖；本地禁缓存真实构建出py3-none-any wheel成功，9项CPU测试通过，含pip真实FormatControl语义确认NumPy/SciPy仍拒绝源码。Drive同名入口读回字节一致，SHA256 d1f9f6a44359796cae68fd78028b21d13af7e56da18c0a6d7cfe887942f184ae。用户同命令重试，不删server、不重装核心栈、不改Key。远端SwanLab/DeepSpeed安装和8步GPU仍待用户实跑验证；交接总结仍待继续。
 

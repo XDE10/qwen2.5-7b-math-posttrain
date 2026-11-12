@@ -5,7 +5,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - **当前状态**：[docs/status/current_status.md](docs/status/current_status.md)
 - **协作约定与阅读入口**：[AGENTS.md](AGENTS.md)
 - **逐版本历史（v1…v93）**：[docs/status/history.md](docs/status/history.md)
-- **接手当前工作（本机 Kiro IDE / WSL2）**：[docs/handover/kiro_ide_onboarding.md](docs/handover/kiro_ide_onboarding.md)
+- **WSL2 启动与恢复**：[v93 运行手册](experiments/qfft_v93/README.md)、[凭据文件模板](docs/operations/credential_templates/README.md)
 - **v93 方案与面试材料**：[docs/blueprints/三周冲刺方案_v93.md](docs/blueprints/三周冲刺方案_v93.md)、[docs/interview/面试追问与参考答案.md](docs/interview/面试追问与参考答案.md)
 
 ## 当前主线从哪开始读（v93）
@@ -42,8 +42,8 @@ v26（LoRA、8K 窗口、静态 YaRN、并发 4 评测）保留为历史：[conf
 ├── reports/
 │   ├── current/  runs/     # 现行 7 个报告目录，git 忽略（仅 README 入库）
 ├── docs/
-│   ├── status/  blueprints/  handover/  migration/  metadata/  operations/
-├── archive/                # 只读历史快照：configs/ data/ experiments/ mapping/ reports/ scripts/ src/ tests/ tools/
+│   ├── status/  blueprints/  migration/  metadata/  operations/
+├── archive/                # 只读历史快照：configs/ data/ docs/ experiments/ mapping/ reports/ scripts/ src/ tests/ tools/
 └── .pilot_deps/            # 数学验证器纯 Python 依赖，git 忽略
 ```
 
@@ -91,7 +91,7 @@ D:/anaconda3/envs/genai-test/python.exe -m pytest -q
 
 ## archive 与历史
 
-`archive/` 是**只读历史快照**：v1…v92 被取代的脚本/测试/配置/实验/报告不删除，统一移入此处；内部相对路径可能已变，**不保证可直接运行**。
+`archive/` 保存被取代的脚本、测试、配置、实验、报告和交接材料。归档是只读历史快照，内部相对路径可能已变。
 
 - 找回原路径：`archive/mapping/restructure_v2_mapping.json`（570 条 `from` / `to` / `tracked`）。
 - 归档结构、检索示例与「不删除任何文件」原则：[archive/README.md](archive/README.md)。

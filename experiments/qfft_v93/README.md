@@ -64,7 +64,7 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
   - 还有题用完额度仍没有可用轨迹时退出码为 3，并列出这些题；加大 `--max-attempts` 重跑。
 - s1K-1.1 parquet 与 tokenizer 先用本地旧副本；本地副本缺失或哈希不对时，自动改用第 1 步按固定 revision 下载并核对过的 `data/benchmarks_v93/_sources/` 副本（同一 revision、同样的字节）。
 - `data_build status` 的预期量级（按 history 里 v66/v86/v91 的记录推算）：v66 最多约 911 题可用（747 + 164 道完整轨迹，按 Qwen tokenizer 超过 32,768 的会被拒），v86 最多 25 题（补全的 27 题里有 2 题超过 32K），v91 最多 62 题；缺口至少 1 题（第 918 题已换成新题，旧轨迹判为 `different_question`）。如果大量出现 `different_question` 或 `missing_reasoning`，说明文件对不上，先不要跑第 4 步。
-- 用完额度、轨迹一直跑出窗口的题（2026-11-09 实测还剩 23 题）：先用同一模型、同一提示词的最低思考档追加尝试，`teacher fill --provider official --efforts low --max-attempts N`（DeepSeek 文档：effort 有 low、high、max 三档，medium 映射为 high）；之后仍没有可用轨迹的题用 `data_build build --ds-verified --paired-exclusion` 从两位教师的训练集里一起去掉（记在 manifest 的 `paired_exclusions`，教师报告列出），保证四个训练臂题目相同。不用 R1 轨迹补 DS 臂，也不训练只缺一边的数据。理由和完整命令见 [交接文档第 2 节](../../docs/handover/kiro_ide_onboarding.md)。`--allow-gaps` 只做预览：两位教师题目不同，阶段 `d` 会拒收。2026-11-10 实际处理：4 题补齐，剩下 19 题按用户决定用 OpenR1 原题替换、没有成对剔除（`V93_REPLACE` 固定了这 19 个 raw id；选题看过 Flash 输出，是对上述规则的偏离），经过见交接文档 2.1。
+- 用完额度、轨迹一直跑出窗口的题（2026-11-09 实测还剩 23 题）：先用同一模型、同一提示词的最低思考档追加尝试，`teacher fill --provider official --efforts low --max-attempts N`（DeepSeek 文档：effort 有 low、high、max 三档，medium 映射为 high）；之后仍没有可用轨迹的题用 `data_build build --ds-verified --paired-exclusion` 从两位教师的训练集里一起去掉（记在 manifest 的 `paired_exclusions`，教师报告列出），保证四个训练臂题目相同。不用 R1 轨迹补 DS 臂，也不训练只缺一边的数据。理由和完整命令见 [交接文档第 2 节](../../archive/docs/handover/kiro_ide_onboarding.md)。`--allow-gaps` 只做预览：两位教师题目不同，阶段 `d` 会拒收。2026-11-10 实际处理：4 题补齐，剩下 19 题按用户决定用 OpenR1 原题替换、没有成对剔除（`V93_REPLACE` 固定了这 19 个 raw id；选题看过 Flash 输出，是对上述规则的偏离），经过见交接文档 2.1。
 - 教师报告的"DeepSeek 轨迹来源"一节按轮次（v66/v86/v91/v93）、effort、提示词和接口统计每一行轨迹的来历。
 - 可选的 `teacher verify` 会为"可用但答案可核对且错误"的题继续采样，`build --ds-verified` 再用第一条答对的可用尝试替换；主矩阵仍用 `ds`。
 - `data/qfft1000_v93/teacher_report.md` 给出两位教师在同一批可核对题上的正确率、对错矩阵、长度和反思词频率。参照值：R1 在 s1K-1.1 的 742 道可核对题上答对 62.7%。
@@ -92,7 +92,7 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 - `v93/sessions/<session>/`：`README.md`（跑了什么、GPU、代码版本、结果）、`session_log_tail.txt`、各阶段日志的末尾、`smoke_summary.txt`；`v93/latest_smoke_summary.txt` 是最近一次冒烟总结。
 - 只传文本，单个文件有大小上限，内容里的 token、`Bearer ...`、URL 里的账号密码都会被替换成 `[REDACTED]`。
 
-一次性准备：运行 `bash experiments/qfft_v93/colab/setup_wsl.sh`，这个文件不存在时它会提示输入 token（不回显）并按下面的格式写好；也可以在 zsh 里手动写（建议用只授权本仓库、Contents 读写的 fine-grained token）：
+凭据格式见 [凭据文件模板](../../docs/operations/credential_templates/README.md)。一次性准备：运行 `bash experiments/qfft_v93/colab/setup_wsl.sh`，这个文件不存在时它会提示输入 token（不回显）并按下面的格式写好；也可以在 zsh 里手动写（建议用只授权本仓库、Contents 读写的 fine-grained token）：
 
 ```zsh
 mkdir -p ~/.config/p1 && chmod 700 ~/.config/p1
@@ -191,4 +191,4 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 
 - CPU 上已实跑：模板与官方 S1_QFFT 数据逐字一致（1000/1000）；SFT/QFFT 编码不变量；判分器 10 个边界用例；微型 Qwen2 上的全参训练、模拟 VM 丢失后从 Drive 镜像恢复并续跑到结束、SFT 格式、身份校验；假引擎生成的按采样粒度续跑与判分汇总；TRL 1.17.1 GRPO + LoRA + 奖励 + 镜像 + 恢复 + 合并；合成数据上的 plan/status/fill/build 全流程；launch.sh 与 remote.py 的调度流程（按 google-colab-cli 0.7.5 行为写的模拟 CLI）；冒烟序列用真实 Qwen tokenizer 生成，QFFT 32 条、SFT 4 条都恰好 32,768 token。
 - 模拟测试在 [tests/v93_harness/](../../tests/v93_harness/README.md)：`bash tests/v93_harness/run_all.sh`（8 组 214 项：launcher 场景、Drive 传输、冒烟总结、teacher、固定输入、data_build、setup_wsl.sh、check_local.sh），在工作区的临时快照上运行。
-- G4 上已实测（2026-11-09 阶段 1 冒烟，数字见[交接文档第 1 节](../../docs/handover/kiro_ide_onboarding.md)）：32K 最坏长度全参 142 s/步、显存峰值 28.9 GiB 已分配、主机 RSS 145.3 GiB、本地存检查点 113.5 GiB 用 386 s；GRPO 最坏长度 476 s/步、66.6 GiB。还没测：真实数据下的 s/step（每个微批变短后 ZeRO-2 offload 的梯度搬运开销）、正式评测的生成吞吐、113.5 GiB 镜像的上传耗时、H100 上的 GRPO 显存。
+- G4 上已实测（2026-11-09 阶段 1 冒烟，数字见[交接文档第 1 节](../../archive/docs/handover/kiro_ide_onboarding.md)）：32K 最坏长度全参 142 s/步、显存峰值 28.9 GiB 已分配、主机 RSS 145.3 GiB、本地存检查点 113.5 GiB 用 386 s；GRPO 最坏长度 476 s/步、66.6 GiB。还没测：真实数据下的 s/step（每个微批变短后 ZeRO-2 offload 的梯度搬运开销）、正式评测的生成吞吐、113.5 GiB 镜像的上传耗时、H100 上的 GRPO 显存。

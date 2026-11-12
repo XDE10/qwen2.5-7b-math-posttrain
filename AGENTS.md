@@ -10,10 +10,10 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 ## 阅读入口（按顺序）
 
-1. 本文件 → [docs/handover/kiro_ide_onboarding.md](docs/handover/kiro_ide_onboarding.md)（2026-11-09 迁到本机 Kiro IDE 的交接：状态、23 题方案与 11-10 的实际处理、初始化清单、下一步命令）→ [docs/status/current_status.md](docs/status/current_status.md)：当前做到哪、哪些未完成。本机执行约束在 [.kiro/steering/v93-local-execution.md](.kiro/steering/v93-local-execution.md)。
+1. 本文件 → [docs/status/current_status.md](docs/status/current_status.md)：当前目标、实测结果和下一步。
 2. [README.md](README.md)：目录职责、数据边界、命令。
 3. 当前任务读 [experiments/qfft_v93/README.md](experiments/qfft_v93/README.md) 与 [三周冲刺方案 v93](docs/blueprints/三周冲刺方案_v93.md)；v26 的[训练配置](configs/project1_aimo_sft_v26.json)、[实验包](experiments/aimo_sft_v26/) 与[启动入口](tools/aimo/start_aimo_sft_v28.py) 只作历史。
-4. 需要某个版本（v1…v93）的细节时再查 [docs/status/history.md](docs/status/history.md)；查旧路径用 `archive/mapping/restructure_v2_mapping.json`。
+4. 需要某个版本（v1…v93）的细节时再查 [docs/status/history.md](docs/status/history.md)；旧交接材料在 [archive/docs/handover/](archive/docs/handover/)，迁移路径见 [docs/migration/handover_cleanup_20261112.json](docs/migration/handover_cleanup_20261112.json)。
 5. 不需要先遍历数据、缓存和全部历史报告。
 
 ## 当前主线（摘要，v93）
@@ -43,6 +43,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - 大体积数据/证据/报告只在本地：`data/`、`artifacts/`、`reports/`、`archive/data/`、`archive/reports/`、`.pilot_deps/`、`*.zip`、`.pytest_tmp/` 不入 git（各目录保留 README 例外）。详见 [.gitignore](.gitignore)。唯一例外是 Colab 推到 `colab-reports` 分支的小体积文本报告（有大小上限、去掉密钥，不进 main）。
 - 文档与代码保留来源和验证记录；**CPU 通过不等于 GPU 结果**，「已实现 / CPU 通过 / 真实 GPU 跑通 / 能力提升」要分开陈述。
 - 迁移/清理/重构的每次移动都留映射与记录（`docs/migration/`），移动后同步 `docs/metadata/migration_manifest.json` 并跑 `python tools/verification/verify_migration.py`。
+- WSL2 下多步或带嵌套引号的操作写进 `.sh` 再用 `bash` 执行。远程短步骤设超时并流式输出，长任务用 `launch.sh --attach` 重连。改动 Colab 调度、教师调用或 Drive 传输后，运行 `bash tests/v93_harness/run_all.sh` 中对应的套件。
 - **响应与防误杀硬约束**：(1) Agent 执行任何外部/Git 网络命令（如 `git fetch origin colab-reports`）必须加超时保护（`timeout 10s`）或先检查本地日志，严禁无超时阻塞让用户等待；(2) 给用户命令前必须核对精确参数（`launch.sh` 为 `--session` 而非 `-s`，`colab-cli 0.8.0` 为 `colab sessions`），绝不触碰用户并发运行的其他会话（如 `opd`、`p3`）；(3) `remote.py` 通过 `active_run_id` 令牌防止前一次报错的 120s 延迟 `runtime.unassign()` 销毁同一 VM 上复用的新任务，`launch.sh` 默认 `POLL_S=15` 秒且支持直接复用已存在的 `--session`。
 
 ## 目录地图
@@ -58,8 +59,8 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 | `data/` | 本地数据（`aimo_sft_v26/`、`math/`、`portable_release/`、`tokenizers/`），git 忽略 |
 | `artifacts/` | 造数与评测原始证据，git 忽略 |
 | `reports/{current,runs}/` | 现行报告（7 个目录），git 忽略（仅 README）；历史报告在 `archive/reports/` |
-| `docs/` | `status/`、`blueprints/`、`handover/`、`migration/`、`metadata/`、`operations/` |
-| `archive/` | 只读历史快照：`configs/ data/ experiments/ mapping/ reports/ scripts/ src/ tests/ tools/` |
+| `docs/` | `status/`、`blueprints/`、`migration/`、`metadata/`、`operations/` |
+| `archive/` | 只读历史快照：`configs/ data/ docs/ experiments/ mapping/ reports/ scripts/ src/ tests/ tools/` |
 | `.pilot_deps/` | 数学验证器（math_verify 0.9.0 等）纯 Python 运行时依赖，git 忽略 |
 
 ## 路径、启动与恢复
