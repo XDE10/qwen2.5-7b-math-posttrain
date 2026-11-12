@@ -17,6 +17,22 @@ v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测�
 
 固定配方（[configs/train/_defaults.json](configs/train/_defaults.json)）：全参、LR 1e-5、cosine、warmup 10%、6 epoch、wd 1e-4、AdamW(0.9, 0.999)，与 QFFT 官方 yaml 相同；只改两处：有效 batch 16（官方 8，取 s1.1-7B 的值，CPU-Adam 步数减半）和 32K 窗口不截断（官方 16K 截断）。系统实现为 DeepSpeed ZeRO-2 + CPU AdamW offload、梯度检查点、Liger。
 
+### R1 原版配方对照
+
+11 月 12 日用户同意准备这个对照。它用 Drive 上已上传的 v93 去污 R1 集、固定底座和现有训练器，采用[原版配方](https://github.com/LWL-cpu/Question-Free-Fine-Tuning/blob/main/LLaMA-Factory/examples/train_qfft/train_s1_qfft.yaml)的 response 前 16,384 token、有效 batch 8 和 6 epoch。使用独立的 `qfft_r1_16k_b8_v93` run，训练数据文件不需要重建。题目替换和训练框架沿用 v93，所以这是原版配方对照。第 250、500 步镜像保留优化器状态，第 750 步后导出最终权重并跑 v93 全套评测。
+
+本地用固定 tokenizer 核对了 1,000 条轨迹和数据 SHA-256。86 条触发截断，共移除 129,034 token，其中 57 条截断后没有最终回答段。这是原版截断配方在 v93 数据上的实际影响。Drive 模拟恢复测试通过，正式 GPU 结果待运行。
+
+由用户在 WSL2 仓库根目录启动：
+
+```zsh
+source ~/.proxy_env.sh
+bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 \
+  train:qfft_r1_16k_b8 eval:run:qfft_r1_16k_b8_v93:full
+```
+
+报告用同一版本的评分器核对 `base`、`qfft_official` 和新模型，同时给出 AIME24+25+AMC23 合并成绩及相对基座的按题配对 95% CI、MATH-500、GSM8K、平均输出长度与截断率。最终成绩以 `TRAIN_COMPLETE.json` 和五个评测集全部完成为准，和 `qfft_official` 的差距用于判断复现程度。
+
 ## 一、本地（WSL2，CPU）：把 1000 题数据做完
 
 项目在 WSL2 Ubuntu 的 `/home/xde10/projects/qwen2.5-7b-math-posttrain`，交互 shell 是 zsh；仓库脚本都是 bash，用 `bash 脚本` 运行即可。`reports/`、`artifacts/`、`data/` 这些本地数据 git 不管，要在这份目录里。

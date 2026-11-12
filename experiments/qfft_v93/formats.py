@@ -90,18 +90,26 @@ def encode_sft(tokenizer, question: str, response: str, max_length: int) -> dict
             'prompt_tokens': len(prefix), 'supervised_tokens': len(target)}
 
 
-def encode_qfft(tokenizer, response: str, max_length: int) -> dict:
+def encode_qfft(tokenizer, response: str, max_length: int, *, truncate: bool = False) -> dict:
     ids = response_ids(tokenizer, response)
-    if len(ids) > max_length:
+    if len(ids) > max_length and not truncate:
         raise OverflowError(f'QFFT example has {len(ids)} tokens > {max_length}; never truncated')
-    return {'input_ids': ids, 'labels': list(ids), 'prompt_tokens': 0, 'supervised_tokens': len(ids)}
+    original_length = len(ids)
+    if truncate:
+        ids = ids[:max_length]
+    encoded = {'input_ids': ids, 'labels': list(ids), 'prompt_tokens': 0, 'supervised_tokens': len(ids)}
+    if truncate:
+        encoded['truncated_tokens'] = original_length - len(ids)
+    return encoded
 
 
-def encode(tokenizer, fmt: str, question: str, response: str, max_length: int) -> dict:
+def encode(tokenizer, fmt: str, question: str, response: str, max_length: int, *, truncate: bool = False) -> dict:
     if fmt == 'sft':
+        if truncate:
+            raise ValueError('Truncation is only supported for QFFT reference runs')
         return encode_sft(tokenizer, question, response, max_length)
     if fmt == 'qfft':
-        return encode_qfft(tokenizer, response, max_length)
+        return encode_qfft(tokenizer, response, max_length, truncate=truncate)
     raise ValueError(f'Unknown training format: {fmt}')
 
 

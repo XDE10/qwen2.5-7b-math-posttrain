@@ -63,10 +63,12 @@ def resolve_resume(local_dir: Path, drive_dir: Path):
 
 class CheckpointMirror(TrainerCallback):
     def __init__(self, local_dir: Path, drive_dir: Path, every: int = 1, keep: int = 2,
-                 watch_path: str = '/content', min_free_gib: float = 24, mirror_final: bool = False):
+                 watch_path: str = '/content', min_free_gib: float = 24, mirror_final: bool = False,
+                 mirror_optimizer_state: bool = False):
         self.local_dir, self.mirror_dir = Path(local_dir), Path(drive_dir) / 'ckpt_mirror'
         self.every, self.keep = max(1, every), max(1, keep)
         self.mirror_final = mirror_final  # the final model export is the deliverable, not the last ckpt
+        self.mirror_optimizer_state = mirror_optimizer_state
         self.watch_path, self.min_free = watch_path, int(min_free_gib * GIB)
         self.saves, self.thread, self.error = 0, None, None
         self.lock = threading.Lock()
@@ -147,8 +149,9 @@ class CheckpointMirror(TrainerCallback):
             size = tree_bytes(ckpt)
             log(f'Mirroring {ckpt.name} to Drive ({human_bytes(size)}) in the background')
             files = sum(1 for p in ckpt.rglob('*') if p.is_file())
+            exclude = None if self.mirror_optimizer_state else ['*optim*']
             drive_io.upload_tree(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free,
-                                 exclude=['*optim*'])
+                                 exclude=exclude)
             drive_io.put_json(dst / MIRROR_MARK, {'bytes': size, 'files': files, 'at': now_iso()})
             log(f'Mirror complete: {dst}')
             mirrors = _checkpoints(self.mirror_dir, MIRROR_MARK)

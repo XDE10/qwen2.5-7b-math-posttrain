@@ -1,0 +1,11 @@
+{
+  "base": "qfft_r1.json",
+  "run_name": "qfft_r1_16k_b8_v93",
+  "max_length": 16384,
+  "truncate": true,
+  "gradient_accumulation_steps": 8,
+  "save_steps": 250,
+  "mirror_optimizer_state": true,
+  "save_note": "1000 rows / 8 = 125 steps per epoch, 750 total. Full-state Drive mirrors at steps 250 and 500, then the final weights export.",
+  "recipe_note": "Reference arm matching the public QFFT S1.1 cutoff and effective batch, with the decontaminated v93 R1 data and the v93 trainer."
+}
