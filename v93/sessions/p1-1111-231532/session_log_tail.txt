@@ -1057,3 +1057,25 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:39<
 [11-12 09:45:11] qfft_ds_v93: 4559/4599 new generations, 1348 output tok/s
 [11-12 09:46:14] qfft_ds_v93: 4563/4599 new generations, 1348 output tok/s
 [11-12 09:47:38] qfft_ds_v93: 4566/4599 new generations, 1347 output tok/s
+[11-12 09:49:11] qfft_ds_v93: 4572/4599 new generations, 1347 output tok/s
+[report] pushed to colab-reports: colab p1-1111-231532: progress
+[11-12 09:51:08] qfft_ds_v93: 4577/4599 new generations, 1346 output tok/s
+[11-12 09:52:12] qfft_ds_v93: 4580/4599 new generations, 1345 output tok/s
+[11-12 09:54:07] qfft_ds_v93: 4581/4599 new generations, 1340 output tok/s
+[11-12 09:55:22] qfft_ds_v93: 4584/4599 new generations, 1340 output tok/s
+[11-12 09:56:29] qfft_ds_v93: 4593/4599 new generations, 1349 output tok/s
+[11-12 09:57:31] qfft_ds_v93: 4596/4599 new generations, 1350 output tok/s
+[11-12 09:57:48] qfft_ds_v93: 4599 new generations, 30,419,274 output tokens in 22485 s (1353 tok/s; engine start 135 s)
+[11-12 09:57:48] qfft_ds_v93: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=66831) INFO 11-12 01:57:48 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=67296) INFO 11-12 01:57:48 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=67296) INFO 11-12 01:57:48 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=67296) INFO 11-12 01:57:48 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=67296) INFO 11-12 01:57:48 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-12 01:57:54] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --tags qfft_ds_v93 | log: /content/mydrive/runs/project1/v93/logs/20261112-015754_score_qfft_ds_v93.log
+[11-12 09:58:01] qfft_ds_v93/aime24: mean@n=0.050 CI=[0.016666666666666666, 0.09375] tokens=19566 trunc=0.446
+[11-12 09:58:03] qfft_ds_v93/aime25: mean@n=0.040 CI=[0.008333333333333333, 0.08125] tokens=18567 trunc=0.419
+[11-12 09:58:04] qfft_ds_v93/amc23: mean@n=0.416 CI=[0.296875, 0.5375] tokens=8694 trunc=0.172
+[11-12 09:58:06] qfft_ds_v93/gsm8k: mean@n=0.887 CI=[0.869598180439727, 0.9037149355572404] tokens=444 trunc=0.004
+[11-12 09:58:12] qfft_ds_v93/math500: mean@n=0.670 CI=[0.6365, 0.7035] tokens=4374 trunc=0.080
+[11-12 09:58:12] Wrote /content/mydrive/runs/project1/v93/evals/results.md

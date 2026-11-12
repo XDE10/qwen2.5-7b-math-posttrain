@@ -1,0 +1,15 @@
+{
+  "expected": 2000,
+  "saved": 2000,
+  "complete": true,
+  "updated": "2026-11-12T09:57:48+08:00",
+  "last_session": {
+    "new_generations": 4599,
+    "output_tokens": 30419274,
+    "seconds": 22484.8,
+    "engine_start_s": 134.6,
+    "output_tokens_per_s": 1352.9,
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "ended": "2026-11-12T09:57:48+08:00"
+  }
+}
