@@ -50,8 +50,8 @@
   "started": "2026-11-12T21:49:42.101217",
   "code": "fa6fc71edeae",
   "host": "p1-r1-16k-restart-1112@b8e654fbf873",
-  "heartbeat": "2026-11-12T21:54:42.101954",
-  "heartbeat_ts": 1794520482.1019697
+  "heartbeat": "2026-11-12T22:29:43.111301",
+  "heartbeat_ts": 1794522583.1113129
  },
  "eval__sft_repro__full": {
   "stage": "eval:sft_repro:full",
