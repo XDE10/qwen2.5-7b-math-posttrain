@@ -124,5 +124,14 @@
   "started": "2026-11-12T02:27:54.921896",
   "code": "d6e14dde669a",
   "host": "p1-1112-102354@ac4690328645"
+ },
+ "train__qfft_r1_16k_b8": {
+  "stage": "train:qfft_r1_16k_b8",
+  "state": "running",
+  "started": "2026-11-12T02:55:47.286016",
+  "code": "ecfd6be711a9",
+  "host": "p1-1112-105506@0d335e26f4bf",
+  "heartbeat": "2026-11-12T03:25:50.797741",
+  "heartbeat_ts": 1794453950.7977521
  }
 }
