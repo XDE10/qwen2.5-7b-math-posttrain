@@ -3,6 +3,7 @@
 
 MOCK_RCLONE_MOUNT_FAIL=1 makes `mount` fail; MOCK_RCLONE_UPLOAD_LIMIT=1 makes uploads hit the Drive daily limit.
 """
+import fnmatch
 import os
 import shutil
 import sys
@@ -16,7 +17,8 @@ cmd = args[0] if args else ''
 pos = [a for a in args[1:] if not a.startswith('-')]
 # drop values of flags that take one
 for flag in ('--transfers', '--checkers', '--drive-chunk-size', '--retries', '--low-level-retries', '--stats',
-             '--stats-log-level', '--multi-thread-streams', '--vfs-cache-mode', '--vfs-cache-max-size', '--poll-interval'):
+             '--stats-log-level', '--multi-thread-streams', '--vfs-cache-mode', '--vfs-cache-max-size', '--poll-interval',
+             '--exclude'):
     if flag in args:
         value = args[args.index(flag) + 1]
         if value in pos:
@@ -52,7 +54,12 @@ elif cmd == 'copy':
     if not src.exists():
         print(f'directory not found: {pos[0]}', file=sys.stderr)
         sys.exit(3)
-    shutil.copytree(src, dst, dirs_exist_ok=True)
+    patterns = [args[i + 1] for i, flag in enumerate(args) if flag == '--exclude']
+
+    def ignored(directory, names):
+        return [name for name in names if any(fnmatch.fnmatch(name, pat) for pat in patterns)]
+
+    shutil.copytree(src, dst, dirs_exist_ok=True, ignore=ignored)
 elif cmd == 'copyto':
     src, dst = local(pos[0]), local(pos[1])
     dst.parent.mkdir(parents=True, exist_ok=True)

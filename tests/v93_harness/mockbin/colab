@@ -64,6 +64,14 @@ def calls(entry):
 calls(' '.join(args))
 if cmd == 'usage':
     print('mock: 100 compute units left')
+elif cmd == 'status':
+    if os.environ.get('MOCK_STATUS_UNAVAILABLE'):
+        sys.exit(1)
+    if alive(session):
+        status = 'BUSY (entry.py)' if os.environ.get('MOCK_BUSY_SESSION') == session else 'IDLE'
+        print(f'[{session}] mock-endpoint | Hardware: {state(session)["gpu"]} | Shape: High-RAM | Variant: default | Status: {status}')
+    else:
+        print(f"[colab] Session '{session}' not found.")
 elif cmd == 'new':
     gpu = (opt('--gpu') or 'CPU').upper()
     if gpu in os.environ.get('MOCK_FAIL_GPUS', '').upper().split(','):
@@ -96,6 +104,11 @@ elif cmd in ('upload', 'download'):
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_bytes(Path(a).read_bytes())
     else:
+        stalls = int(os.environ.get('MOCK_POLL_STALLS', '0'))
+        if a.endswith('/session_tail.json') and stalls:
+            count = sum(line.startswith(f'download -s {session} ') for line in (ROOT / 'calls.log').read_text().splitlines())
+            if count <= stalls:
+                time.sleep(60)
         src = vm(session) / a.lstrip('/')
         if not src.exists():
             sys.exit(1)

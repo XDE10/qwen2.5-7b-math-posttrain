@@ -116,12 +116,6 @@ def main() -> None:
     data_path = Path(a.data) if a.data else layout.data / cfg['data']
     data_sha = sha256_file(data_path)
     truncate = cfg.get('truncate', False)
-    if a.model_path:
-        model_path = Path(a.model_path)
-    else:
-        from experiments.qfft_v93.models import ensure_local, verify_base_tokenizer
-        model_path = ensure_local(cfg.get('init_model', 'base'), layout)
-        verify_base_tokenizer(model_path)
     identity = {'run': run, 'format': cfg['format'], 'teacher': cfg['teacher'], 'data_sha256': data_sha,
                 'init_model': cfg.get('init_model', 'base'),
                 'recipe': {k: cfg[k] for k in ('max_length', 'num_train_epochs', 'learning_rate', 'warmup_fraction',
@@ -134,6 +128,13 @@ def main() -> None:
     id_path = drive_run / 'run_identity.json'
     if id_path.exists() and read_json(id_path)['identity'] != identity and not a.new_run:
         raise RuntimeError(f'{id_path} describes a different experiment; use a new run_name or --new-run')
+    resume = resolve_resume(local_run, drive_run)
+    if a.model_path:
+        model_path = Path(a.model_path)
+    else:
+        from experiments.qfft_v93.models import ensure_local, verify_base_tokenizer
+        model_path = ensure_local(cfg.get('init_model', 'base'), layout)
+        verify_base_tokenizer(model_path)
     write_json(id_path, {'identity': identity, 'identity_sha256': sha256_json(identity),
                          'code_bundle': os.environ.get('P1_CODE_SHA'), 'updated': now_iso()})
 
@@ -192,7 +193,6 @@ def main() -> None:
 
     trainer = Trainer(model=model, args=args, train_dataset=Rows(), data_collator=Collator(tok.pad_token_id),
                       callbacks=callbacks)
-    resume = resolve_resume(local_run, drive_run)
     beat = Heartbeat(lambda: read_json(drive_run / 'status.json').get('step') if (drive_run / 'status.json').exists()
                      else 'starting', interval=300)
     beat.start()

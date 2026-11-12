@@ -11,7 +11,8 @@ T="${P1_HARNESS_DIR:?run this through tests/v93_harness/run_all.sh}"
 export PATH="$T/mockbin:$PATH" MOCK_PYPATH="$T/pypath" P1_POLL_S=1
 L="$REPO/experiments/qfft_v93/colab/launch.sh"
 fresh() { export MOCK_ROOT; MOCK_ROOT="$(mktemp -d)"; unset MOCK_FAIL_GPUS MOCK_FAIL_HIGHMEM MOCK_DISCONNECT_AFTER MOCK_NO_DRIVE MOCK_GRACE P1_DATA_ROOT \
-    MOCK_RCLONE_MOUNT_FAIL P1_RCLONE_REMOTE P1_REPORT_REPO P1_REPORT_MINUTES P1_REPORT_BRANCH; \
+    MOCK_RCLONE_MOUNT_FAIL P1_RCLONE_REMOTE P1_REPORT_REPO P1_REPORT_MINUTES P1_REPORT_BRANCH \
+    MOCK_POLL_STALLS P1_POLL_TIMEOUT_S MOCK_STATUS_UNAVAILABLE MOCK_BUSY_SESSION; \
   export P1_DRIVE_MODE=colab P1_RCLONE_CONF=$T/fake_rclone.conf P1_GH_CREDENTIALS=/nonexistent/gh_credentials; }
 st() { python3 -c "import json,sys; s=json.load(open('$MOCK_ROOT/vms/$1/state.json')); print(s.get('alive'), s.get('stopped_by'), s.get('gpu'))"; }
 marker() { cat "$MOCK_ROOT/drive/runs/project1/v93/stages/$1.json" 2>/dev/null | python3 -c "import json,sys; s=json.load(sys.stdin); print(s['state'], s.get('host'), (s.get('error') or '')[:150])"; }
@@ -43,13 +44,31 @@ C() {  # unknown GPU name is rejected before any VM is requested
 }
 
 D() {  # live connection drops: job keeps running, launch.sh follows the tail file and still gets the result
-  fresh; export MOCK_DISCONNECT_AFTER=3 MOCK_GRACE=30
+  fresh; export MOCK_DISCONNECT_AFTER=3 MOCK_GRACE=30 MOCK_POLL_STALLS=1 P1_POLL_TIMEOUT_S=1
   out="$("$L" --gpu cpu --session tD ping:8 2>&1)"; rc=$?
   echo "$out" | grep -E 'Lost|Following|SUCCESS|FAILED|released' | head
   check "D exit 0" "[[ $rc == 0 ]]"
   check "D switched to polling" "grep -q 'switching to log polling' <<< \"\$out\""
+  check "D stalled poll times out and reconnects" "grep -q 'unsuccessful polls' <<< \"\$out\" && grep -q 'Log polling reconnected to tD' <<< \"\$out\""
   check "D success" "grep -q '^SUCCESS' <<< \"\$out\""
   check "D VM released by launch.sh" "[[ \"\$(st tD)\" == 'False colab stop CPU' ]]"
+}
+
+DR() {  # a transient or busy same-session lookup must not allocate or stop a runtime
+  fresh
+  colab new -s tDR >/dev/null
+  export MOCK_STATUS_UNAVAILABLE=1
+  out="$("$L" --gpu cpu --session tDR ping:1 2>&1)"; rc=$?
+  check "DR failed status does not allocate another VM" "[[ $rc == 1 ]] && grep -q 'Cannot verify existing session' <<< \"\$out\" && [[ \$(grep -c '^new' $MOCK_ROOT/calls.log) == 1 ]]"
+  unset MOCK_STATUS_UNAVAILABLE
+  export MOCK_BUSY_SESSION=tDR
+  out="$("$L" --gpu cpu --session tDR ping:1 2>&1)"; rc=$?
+  check "DR busy session tells the user to attach" "[[ $rc == 1 ]] && grep -q 'Session tDR is busy. Use --attach' <<< \"\$out\""
+  unset MOCK_BUSY_SESSION
+  out="$("$L" --attach tDR 2>&1)"; rc=$?
+  check "DR missed polls keep session state unknown and the VM alive" "[[ $rc == 1 ]] && grep -q 'VM and job status are unknown' <<< \"\$out\" && [[ \"\$(st tDR)\" == True* ]] && ! grep -q '^stop' $MOCK_ROOT/calls.log"
+  out="$("$L" --gpu cpu --session tDR ping:1 2>&1)"; rc=$?
+  check "DR idle session is reused without a second allocation" "[[ $rc == 0 ]] && grep -q 'Allocated CPU (existing shape)' <<< \"\$out\" && [[ \$(grep -c '^new' $MOCK_ROOT/calls.log) == 1 ]] && ! grep -q '^stop' $MOCK_ROOT/calls.log"
 }
 
 E() {  # a second VM refuses a stage that is still running elsewhere
@@ -78,7 +97,7 @@ F() {  # detach (SIGTERM/HUP like closing the terminal), then --attach picks the
   echo "$out" | tail -n 3
   check "F attach exit 0" "[[ $rc == 0 ]]"
   check "F attach saw success" "grep -q '^SUCCESS' <<< \"\$out\""
-  check "F VM released after attach" "[[ \"\$(st tF)\" == 'False'* ]]"
+  check "F attach observes completion without issuing stop" "! grep -q '^stop' $MOCK_ROOT/calls.log"
 }
 
 G() {  # data bundle larger than one upload request: split, reassembled and hash-checked on the VM

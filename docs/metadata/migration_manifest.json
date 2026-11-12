@@ -964,11 +964,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 16704,
+      "bytes": 16744,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-12 交接材料归档后同步",
-      "sha256": "3ab9f93a05a7e733eed9533f5e21af4a35445f06962c381baf0ccbf7820c1d3a"
+      "refactor_note": "2026-11-12 同步 v93 检查点续训规则",
+      "sha256": "d7ba487e2c25c120dbaaae97bd4c54c03c9b6185a85f9855f8c3da7117edf5bf"
     },
     {
       "bytes": 4434,

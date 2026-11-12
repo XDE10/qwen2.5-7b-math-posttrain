@@ -56,7 +56,7 @@ for suite in "${SUITES[@]}"; do
   echo; echo "########## $suite"
   log="$WORK/$suite.out"
   case "$suite" in
-    scenarios) bash "$H/scenarios.sh" ${P1_SCENARIOS:-A B C D E F G H I J K Ldata M N P R1 R2 R3 RP SD} 2>&1 | tee "$log" ;;
+    scenarios) bash "$H/scenarios.sh" ${P1_SCENARIOS:-A B C D DR E F G H I J K Ldata M N P R1 R2 R3 RP SD} 2>&1 | tee "$log" ;;
     drive) python3 "$H/drive_units.py" 2>&1 | tee "$log" ;;
     smoke) python3 "$H/smoke_report_check.py" 2>&1 | tee "$log" ;;
     teacher) needs_ml teacher && "$PY" "$H/teacher_scenarios.py" 2>&1 | tee "$log" ;;

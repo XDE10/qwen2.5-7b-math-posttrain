@@ -73,7 +73,9 @@ for step in (2, 4, 6):
     ckpt = local_run / f'checkpoint-{step}'
     ckpt.mkdir(parents=True)
     (ckpt / 'trainer_state.json').write_text(json.dumps({'global_step': step}))
-    (ckpt / 'optim.pt').write_bytes(os.urandom(2000))
+    (ckpt / 'optimizer.pt').write_bytes(os.urandom(2000))
+    for filename in ('model.safetensors', 'scheduler.pt', 'rng_state.pth'):
+        (ckpt / filename).write_bytes(b'test payload')
     mirror.on_save(None, state, SimpleNamespace(should_save=False))
     mirror.wait()
 names = sorted(p.name for p in (drive_run / 'ckpt_mirror').iterdir())
@@ -83,9 +85,62 @@ check('saves.jsonl has one record per save', [r['step'] for r in read_jsonl(driv
 check('mirror error is empty', mirror.error is None, mirror.error)
 resume = resolve_resume(tmp / 'vm2/runs/r', drive_run)
 check('resume on a new VM restores the newest mirror', resume and resume.endswith('checkpoint-6')
-      and (Path(resume) / 'optim.pt').stat().st_size == 2000 and (Path(resume) / SAVED_MARK).is_file(), resume)
+      and (Path(resume) / 'optimizer.pt').stat().st_size == 2000 and (Path(resume) / SAVED_MARK).is_file(), resume)
 prune_all_mirrors(drive_run)
 check('prune_all_mirrors empties the mirror folder', not any((drive_run / 'ckpt_mirror').iterdir()))
+
+# --- Real single-GPU ZeRO-2 layout, with an older full mirror and a newer lightweight one.
+def zero_checkpoint(path, step):
+    shard = path / f'global_step{step}'
+    shard.mkdir(parents=True)
+    (path / 'latest').write_text(shard.name)
+    (path / 'trainer_state.json').write_text(json.dumps({'global_step': step}))
+    for f in (path / 'rng_state.pth', path / 'model.safetensors', shard / 'mp_rank_00_model_states.pt',
+              shard / 'bf16_zero_pp_rank_0_mp_rank_00_optim_states.pt'):
+        f.write_bytes(b'test payload')
+
+
+local_run, drive_run = tmp / 'vm5/runs/r1', mount / 'runs/project1/v93/runs/r1'
+drive_full = drive_run / 'ckpt_mirror/checkpoint-125'
+zero_checkpoint(drive_full, 125)
+(drive_full / MIRROR_MARK).write_text('{}')  # legacy marker without an artifact type
+light = CheckpointMirror(local_run, drive_run, keep=1, watch_path=str(tmp))
+zero_checkpoint(local_run / 'checkpoint-125', 125)
+light.on_save(None, SimpleNamespace(global_step=125, epoch=1, max_steps=750), None)
+light.wait()
+check('weights-only publish at the same step leaves a full legacy mirror intact',
+      bool(list(drive_full.rglob('*_optim_states.pt'))))
+ckpt = local_run / 'checkpoint-250'
+zero_checkpoint(ckpt, 250)
+drive_light = drive_run / 'ckpt_mirror/checkpoint-250'
+stale_partial = drive_light.with_name('checkpoint-250.partial')
+zero_checkpoint(stale_partial, 250)
+light.on_save(None, SimpleNamespace(global_step=250, epoch=2, max_steps=750), None)
+light.wait()
+marker = json.loads((drive_light / MIRROR_MARK).read_text())
+check('weights-only publish excludes optimizer files even after a stale partial upload',
+      marker['artifact_type'] == 'weights_only' and not list(drive_light.rglob('*optim*'))
+      and (drive_light / 'model.safetensors').is_file())
+check('lightweight mirror marker reports the bytes actually uploaded',
+      marker['bytes'] == sum(p.stat().st_size for p in drive_light.rglob('*') if p.is_file() and p.name != MIRROR_MARK))
+check('same VM resumes the newer complete local ZeRO checkpoint', resolve_resume(local_run, drive_run) == str(ckpt))
+restored = resolve_resume(tmp / 'vm6/runs/r1', drive_run)
+check('new VM restores an older full legacy mirror ahead of a newer lightweight mirror',
+      restored and Path(restored).name == 'checkpoint-125' and drive_full.is_dir())
+drive_io.purge(drive_full)
+for old_marker in (False, True):
+    if old_marker:
+        (drive_light / MIRROR_MARK).write_text('{}')
+    before = len(calls())
+    try:
+        resolve_resume(tmp / 'vm7/runs/r1', drive_run)
+    except RuntimeError as error:
+        check(f'new VM refuses weights-only exact resume without download (legacy={old_marker})',
+              'No full-state checkpoint' in str(error) and len(calls()) == before)
+    else:
+        check(f'new VM refuses weights-only exact resume (legacy={old_marker})', False)
+check('fresh run with no checkpoints can initialize normally',
+      resolve_resume(tmp / 'vm7/runs/fresh', mount / 'runs/project1/v93/runs/fresh') is None)
 
 # --- JsonlAppender with a Drive mirror
 local_j, drive_j = tmp / 'vm1/metrics.jsonl', mount / 'runs/project1/v93/runs/r/metrics.jsonl'

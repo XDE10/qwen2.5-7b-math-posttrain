@@ -4,10 +4,9 @@ Layout per run:
     <local>/runs/<run>/checkpoint-N/          written by the HF Trainer (fast SSD)
     <drive>/runs/<run>/ckpt_mirror/checkpoint-N/ + MIRROR_COMPLETE.json   (survives the VM)
 
-On start, `resolve_resume()` picks the newest complete checkpoint: local if present, otherwise the
-newest Drive mirror (copied back to local first). A mirror without MIRROR_COMPLETE.json is ignored.
-Transfers go through drive_io: the rclone CLI with an rclone Drive mount (streams the 91 GB optimizer file,
-deletes superseded mirrors permanently), throttled file copies with Colab's own Drive mount.
+On start, `resolve_resume()` uses the newest complete local checkpoint, then tries Drive.
+Drive mirrors omit the optimizer by default and are usable only for weight initialization. Legacy
+mirrors are classified using the files they actually contain.
 Local disk holds at most one checkpoint plus the one being written: before a save we wait for the
 previous mirror and delete older local checkpoints when free space would not fit another one.
 """
@@ -31,6 +30,8 @@ except ImportError:
 _STEP = re.compile(r'^checkpoint-(\d+)$')
 SAVED_MARK = 'P1_SAVED.json'
 MIRROR_MARK = 'MIRROR_COMPLETE.json'
+FULL_STATE = 'full_state'
+WEIGHTS_ONLY = 'weights_only'
 
 
 def _checkpoints(folder: Path, marker: str):
@@ -43,21 +44,64 @@ def _checkpoints(folder: Path, marker: str):
     return sorted(out)
 
 
+def _nonempty(path: Path) -> bool:
+    return path.is_file() and path.stat().st_size > 0
+
+
+def _has_training_state(path: Path) -> bool:
+    """Recognize the one-GPU ZeRO-2 and ordinary Trainer checkpoint layouts."""
+    if not any(_nonempty(p) for p in path.glob('rng_state*.pth')):
+        return False
+    if (path / 'latest').exists() or any(path.glob('global_step*')):
+        latest = path / 'latest'
+        if not _nonempty(latest):
+            return False
+        tag = latest.read_text(encoding='utf-8').strip()
+        if not re.fullmatch(r'global_step\d+', tag):
+            return False
+        # DeepSpeed stores the LR scheduler in the model-state shard when the engine owns it.
+        shard_dir = path / tag
+        return all(any(_nonempty(p) for p in shard_dir.glob(pattern))
+                   for pattern in ('*_model_states.pt', '*_optim_states.pt'))
+    weights = ('model.safetensors', 'pytorch_model.bin', 'model.safetensors.index.json',
+               'pytorch_model.bin.index.json', 'adapter_model.safetensors', 'adapter_model.bin')
+    return (all(_nonempty(path / name) for name in ('optimizer.pt', 'scheduler.pt'))
+            and any(_nonempty(path / name) for name in weights))
+
+
+def _resumable(path: Path, marker: str) -> bool:
+    try:
+        metadata = read_json(path / marker)
+        # Old markers had no artifact_type. Inspect those files as well as newly labeled full mirrors.
+        return (isinstance(metadata, dict) and metadata.get('artifact_type', FULL_STATE) == FULL_STATE
+                and _nonempty(path / 'trainer_state.json') and _has_training_state(path))
+    except (OSError, ValueError):
+        return False
+
+
 def resolve_resume(local_dir: Path, drive_dir: Path):
-    """Return a local checkpoint path to resume from, restoring from the Drive mirror if needed."""
+    """Restore a full training state or stop clearly if only incomplete checkpoints exist."""
     local = _checkpoints(Path(local_dir), SAVED_MARK)
+    for _, path in reversed(local):
+        if _resumable(path, SAVED_MARK):
+            log(f'Resuming from local {path}')
+            return str(path)
     mirror = _checkpoints(Path(drive_dir) / 'ckpt_mirror', MIRROR_MARK)
-    if local and (not mirror or local[-1][0] >= mirror[-1][0]):
-        log(f'Resuming from local {local[-1][1]}')
-        return str(local[-1][1])
-    if mirror:
-        step, src = mirror[-1]
+    for step, src in reversed(mirror):
+        if not _resumable(src, MIRROR_MARK):
+            continue
         dst = Path(local_dir) / src.name
         log(f'Restoring checkpoint-{step} from Drive ({human_bytes(tree_bytes(src))}) ...')
         drive_io.download_tree(src, dst)
+        if not _resumable(dst, MIRROR_MARK):
+            raise RuntimeError(f'Downloaded checkpoint-{step} is missing full training state')
         write_json(dst / SAVED_MARK, {'restored_from': str(src), 'at': now_iso()})
         log(f'Resuming from restored {dst}')
         return str(dst)
+    if local or mirror:
+        raise RuntimeError('No full-state checkpoint is available for exact resume. '
+                           'Drive weights-only mirrors are initialization artifacts. '
+                           'Use the original VM with a complete local checkpoint or start a new run.')
     return None
 
 
@@ -146,16 +190,24 @@ class CheckpointMirror(TrainerCallback):
     def _mirror(self, ckpt: Path) -> None:
         try:
             dst = self.mirror_dir / ckpt.name
-            size = tree_bytes(ckpt)
-            log(f'Mirroring {ckpt.name} to Drive ({human_bytes(size)}) in the background')
-            files = sum(1 for p in ckpt.rglob('*') if p.is_file())
             exclude = None if self.mirror_optimizer_state else ['*optim*']
-            drive_io.upload_tree(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free,
-                                 exclude=exclude)
-            drive_io.put_json(dst / MIRROR_MARK, {'bytes': size, 'files': files, 'at': now_iso()})
+            artifact_type = FULL_STATE if self.mirror_optimizer_state else WEIGHTS_ONLY
+            if artifact_type == WEIGHTS_ONLY and _resumable(dst, MIRROR_MARK):
+                log(f'Keeping the existing full-state mirror for {ckpt.name}')
+                return
+            log(f'Mirroring {ckpt.name} to Drive ({artifact_type}) in the background')
+            if self.mirror_optimizer_state and not _resumable(ckpt, SAVED_MARK):
+                raise RuntimeError(f'{ckpt.name} is missing full training state; cannot publish a resumable mirror')
+            files = drive_io.upload_tree(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free,
+                                         exclude=exclude)
+            drive_io.put_json(dst / MIRROR_MARK, {'artifact_type': artifact_type,
+                                                 'bytes': sum(files.values()), 'files': len(files), 'at': now_iso()})
             log(f'Mirror complete: {dst}')
             mirrors = _checkpoints(self.mirror_dir, MIRROR_MARK)
-            for _, old in mirrors[:-self.keep]:
+            full, light = [], []
+            for _, path in mirrors:
+                (full if _resumable(path, MIRROR_MARK) else light).append(path)
+            for old in full[:-self.keep] + light[:-self.keep]:
                 drive_io.purge(old)
             for partial in self.mirror_dir.glob('*.partial'):
                 if partial.name != dst.name + '.partial':

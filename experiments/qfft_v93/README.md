@@ -1,6 +1,6 @@
 # experiments/qfft_v93：1000 题双教师 × SFT/QFFT 全参 × LoRA-GRPO 管线
 
-v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测）。一条命令在一台全新的 Colab VM 上跑一个或多个阶段，所有状态都在 Google Drive 上：VM 随时可以被回收，重跑同一条命令就从最近的检查点或已保存的生成继续。
+v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测）。一条命令在 Colab VM 上跑一个或多个阶段。评测可从 Drive 已保存的生成继续，训练续跑需要完整训练状态。
 
 方案和面试材料见 [docs/blueprints/三周冲刺方案_v93.md](../../docs/blueprints/三周冲刺方案_v93.md) 和 [docs/interview/面试追问与参考答案.md](../../docs/interview/面试追问与参考答案.md)。
 
@@ -21,7 +21,7 @@ v93 取代 `aimo_sft_v26`（LoRA、8K 窗口、静态 YaRN、并发 4 的评测�
 
 11 月 12 日用户同意准备这个对照。它用 Drive 上已上传的 v93 去污 R1 集、固定底座和现有训练器，采用[原版配方](https://github.com/LWL-cpu/Question-Free-Fine-Tuning/blob/main/LLaMA-Factory/examples/train_qfft/train_s1_qfft.yaml)的 response 前 16,384 token、有效 batch 8 和 6 epoch。使用独立的 `qfft_r1_16k_b8_v93` run，训练数据文件不需要重建。题目替换和训练框架沿用 v93，所以这是原版配方对照。第 750 步后导出最终权重并跑 v93 全套评测。
 
-本地用固定 tokenizer 核对了 1,000 条轨迹和数据 SHA-256。86 条触发截断，共移除 129,034 token，其中 57 条截断后没有最终回答段。这是原版截断配方在 v93 数据上的实际影响。当前配置每 125 步本地保存一次完整检查点，中间 Drive 镜像排除优化器状态。带优化器状态的镜像通过了模拟恢复测试，当前轻量镜像的完整跨 VM 续训尚未验证。
+本地用固定 tokenizer 核对了 1,000 条轨迹和数据 SHA-256。86 条触发截断，共移除 129,034 token，其中 57 条截断后没有最终回答段。当前配置每 125 步本地保存一次完整检查点，中间 Drive 镜像排除优化器状态。只有轻量镜像时，训练入口会提示缺少完整状态并退出。
 
 由用户在 WSL2 仓库根目录启动：
 
@@ -84,7 +84,7 @@ python -m experiments.qfft_v93.data_build build --ds-verified     # 生成 r1/�
 
 大文件不经过挂载点：挂载的写缓存要先把整个文件存到 VM 本地盘，等文件关闭后才上传，而一个全参检查点里有一个约 91 GB 的优化器文件，和 122 GB 的本地检查点加起来放不进约 235 GB 的盘。所以检查点、导出权重、模型、环境快照都用 `rclone copy` 直接流式上传（`drive_io.py`），被新镜像取代的检查点用 `rclone purge --drive-use-trash=false` 永久删除（每份 122 GB，进回收站会占 30 天空间）。`--drive colab` 改用 Colab 自带的挂载（`/content/drive/MyDrive`，第一次要在浏览器里同意）。
 
-**Drive 每日上传上限**：Google Drive 每个账号每 24 小时约 750 GiB（[rclone 文档](https://rclone.org/drive/) 的 `--drive-stop-on-upload-limit`）。所以全参每 2 个 epoch 存一次（`save_steps` 126：第 126、252、378 步），每个 run 上传两份 113.5 GiB 镜像加 14 GiB 导出，约 241 GiB；24 小时内最多跑 2 个全参 run。上传带 `--drive-stop-on-upload-limit`，撞上限时立即报错并给出说明：镜像失败只记警告、训练继续；撞在最后的导出上传上时训练阶段失败，过了 24 小时重跑从最近的完整镜像续训再导出。
+**Drive 每日上传上限**：Google Drive 每个账号每 24 小时约 750 GiB（[rclone 文档](https://rclone.org/drive/) 的 `--drive-stop-on-upload-limit`）。默认镜像排除优化器状态。撞上限时镜像报错并记录警告，训练继续。最终导出上传失败会使训练阶段失败。
 
 **结果推到 GitHub**：VM 把小体积文本报告推到本仓库的 `colab-reports` 分支（不推 main），每 30 分钟一次（`P1_REPORT_MINUTES`），结束时（成功或失败、在释放 VM 之前）再推一次。我直接从 GitHub 读，不用你下载再上传：
 
@@ -137,7 +137,7 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 
 **断线与重复启动**：任务跑在 VM 的 kernel 里，不依赖本地终端。
 
-- 网络断开时，launch.sh 改为每分钟用 `colab download` 读 VM 上的 `session_tail.json`，直到拿到结果。
+- 网络断开时，`launch.sh` 每 15 秒重试读取 VM 的 `session_tail.json`。单次读取默认最多 10 秒。连续五次读取失败会报告状态未知，可稍后用 `--attach` 再读。`--attach` 只读取日志，由 VM 按启动配置处理释放。
 - 关掉终端或按 Ctrl+C 只是脱离（退出码 75，pipeline.sh 不会接着开下一台 VM）：任务继续，结束后 VM 自己释放。重新跟踪用 `launch.sh --attach <session>`，中止用 `colab stop -s <session>`。
 - 每个阶段在 Drive 上有带心跳的标记文件。另一台 VM 想跑同一阶段时，若心跳在 15 分钟内就拒绝，避免两台 VM 同时写一个 run 目录；确认原 VM 已不在时可加 `--force`。
 
@@ -145,13 +145,14 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 
 | 对象 | 本地（VM SSD） | Drive（持久） | 新 VM 上怎么继续 |
 |---|---|---|---|
-| 全参训练 | `checkpoint-N`（约 122 GB：bf16 权重 + fp32 主权重 + Adam 状态） | `ckpt_mirror/checkpoint-N` + `MIRROR_COMPLETE.json`，后台用 `rclone copy` 流式上传（`--drive colab` 时限速复制） | 自动从最新完整镜像拷回本地（`rclone copy` 多线程下载），`resume_from_checkpoint` 续跑，LR 调度与数据顺序不变 |
+| 全参训练 | `checkpoint-N`，包含优化器及训练状态 | `ckpt_mirror/checkpoint-N`，`MIRROR_COMPLETE.json` 标记 `weights_only` 或 `full_state` | 仅完整状态参与续训。旧镜像按文件检查，完整镜像可下载续跑 |
 | GRPO | adapter 检查点（约 1 GB），每 10 步 | 同上，保留 3 个 | 同上 |
 | 评测生成 | 每条请求结束即追加 `raw.jsonl` | 每分钟同步一次 | 合并本地与 Drive 记录，只补缺失的 (题, 第几次采样) |
 | 判分 | — | `scored.jsonl`（带判分器版本） | 增量判分，`--rescore` 全部重判 |
 | 环境 | `/content/p1/venvs/{infer,rl}` | `envcache/venvs/*.tar` 快照 + 冻结版本清单 | 约 1 分钟恢复 |
 
-- 全参每 126 步（2 个 epoch）存一次检查点并镜像到 Drive（见上文的 Drive 每日上传上限），在后台进行：先传到 `checkpoint-N.partial`，再在 Drive 端改名，最后写完成标记；被取代的旧镜像永久删除。`--drive colab` 时改为限速复制（本地剩余空间低于 24 GB 时暂停，等 Drive 客户端腾出缓存）。镜像失败只记警告，训练继续，上一份完整镜像仍有效。
+- 镜像先写 `.partial`，发布成功后写完成标记。完整镜像与轻量镜像各自保留，新的轻量镜像不会淘汰旧的完整镜像。`--drive colab` 时使用限速复制。
+- 原 VM 仍可用且会话空闲时，用原来的 `--session` 和训练阶段重启，同一 VM 会使用完整本地检查点。会话繁忙时用 `--attach`。如果换 VM 后只剩轻量镜像，要从底座重跑或做权重 warm-start，应使用独立的 run 名称。
 - 训练日志（`metrics.jsonl`）、GRPO 的判分记录和各阶段日志都先写 VM 本地，再每 30–60 秒整体替换 Drive 上的副本：挂载点上一直打开着的文件要到关闭时才会上传。
 - run 目录里的 `run_identity.json` 记录配方与数据 SHA；配方或数据变了会拒绝在同名 run 上续跑。
 - 训练完成后导出 bf16 safetensors 到 `runs/<run>/final/`，写 `TRAIN_COMPLETE.json`，删除镜像，并把权重留在本地 SSD 上供同一 VM 的评测直接使用。
