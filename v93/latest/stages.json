@@ -44,6 +44,15 @@
   "code": "d6e14dde669a",
   "host": "p1-1112-102354@ac4690328645"
  },
+ "eval__run__qfft_r1_16k_b8_restart_v93__full": {
+  "stage": "eval:run:qfft_r1_16k_b8_restart_v93:full",
+  "state": "running",
+  "started": "2026-11-12T21:49:42.101217",
+  "code": "fa6fc71edeae",
+  "host": "p1-r1-16k-restart-1112@b8e654fbf873",
+  "heartbeat": "2026-11-12T21:54:42.101954",
+  "heartbeat_ts": 1794520482.1019697
+ },
  "eval__sft_repro__full": {
   "stage": "eval:sft_repro:full",
   "state": "complete",
@@ -136,11 +145,11 @@
  },
  "train__qfft_r1_16k_b8_restart": {
   "stage": "train:qfft_r1_16k_b8_restart",
-  "state": "running",
+  "state": "complete",
+  "hours": 6.252,
+  "finished": "2026-11-12T21:49:41.976641",
   "started": "2026-11-12T15:34:34.997273",
   "code": "fa6fc71edeae",
-  "host": "p1-r1-16k-restart-1112@b8e654fbf873",
-  "heartbeat": "2026-11-12T21:24:50.543380",
-  "heartbeat_ts": 1794518690.5433934
+  "host": "p1-r1-16k-restart-1112@b8e654fbf873"
  }
 }

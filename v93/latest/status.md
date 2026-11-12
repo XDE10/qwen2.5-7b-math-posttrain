@@ -1,4 +1,4 @@
-# v93 status (2026-11-12T21:24:59, session p1-r1-16k-restart-1112)
+# v93 status (2026-11-12T21:57:04, session p1-r1-16k-restart-1112)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -6,6 +6,7 @@ stage eval:base:full                                complete  0.394
 stage eval:qfft_official:full                       complete  3.439 
 stage eval:qwen_math:full                           complete  0.171 
 stage eval:run:qfft_ds_v93:full                     complete  0.058 
+stage eval:run:qfft_r1_16k_b8_restart_v93:full      running   on p1-r1-16k-restart-1112@b8e654fbf873, heartbeat 2 min ago 
 stage eval:sft_repro:full                           complete  6.882 
 stage models:base,qwen_math,qfft_official,sft_repro complete  0.173 
 stage pilot                                         failed     ValueError: Unknown stage 'pilot'
@@ -15,10 +16,10 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 549 min ago (stale) 
-stage train:qfft_r1_16k_b8_restart                  running   on p1-r1-16k-restart-1112@b8e654fbf873, heartbeat 0 min ago 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 581 min ago (stale) 
+stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run qfft_ds_v93                  complete step 378/ updated 2026-11-12T03:37:21+08:00
-run qfft_r1_16k_b8_restart_v93   training step 722/750 updated 2026-11-13T05:25:08+08:00
+run qfft_r1_16k_b8_restart_v93   complete step 750/ updated 2026-11-13T05:49:15+08:00
 run qfft_r1_16k_b8_v93           training step 209/750 updated 2026-11-12T20:20:25+08:00
 run smoke_grpo_v93               complete step 2/ updated 2026-11-09T19:11:43+08:00
 run smoke_peak_v93               smoke_done step 2/ updated 2026-11-09T18:45:06+08:00

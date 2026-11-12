@@ -1,28 +1,26 @@
 {
-  "state": "training",
-  "step": 723,
-  "max_steps": 750,
-  "epoch": 5.784,
-  "updated": "2026-11-13T05:25:35+08:00",
-  "last_log": {
-    "step": 723,
-    "time": "2026-11-13T05:25:34+08:00",
-    "loss": 0.32975053787231445,
-    "grad_norm": 1.1376557350158691,
-    "learning_rate": 3.9426493427611177e-08,
-    "epoch": 5.784,
-    "num_input_tokens_seen": 54918369,
-    "train_runtime": 20897.5265,
-    "train_tokens_per_second": 2627.984,
-    "time/seconds_per_step": 26.305829332999565,
-    "throughput/tokens_per_second": 2981.1263126239523,
-    "time/eta_hours": 0.19729371999749673,
-    "gpu/allocated_gib": 15.264584064483643,
-    "gpu/peak_allocated_gib": 28.370383262634277,
-    "gpu/peak_reserved_gib": 42.568359375,
-    "host/rss_gib": 145.1653938293457,
-    "host/available_gib": 27.976810455322266,
-    "train/epoch": 5.784
+  "state": "complete",
+  "steps": 750,
+  "metrics": {
+    "train_runtime": 22061.6336,
+    "train_samples_per_second": 0.272,
+    "train_steps_per_second": 0.034,
+    "train_loss": 0.6461870267987251,
+    "epoch": 6.0,
+    "num_input_tokens_seen": 57042078
   },
-  "run": "qfft_r1_16k_b8_restart_v93"
+  "tokenization": {
+    "examples": 1000,
+    "format": "qfft",
+    "total_tokens": 9507013,
+    "supervised_tokens": 9507013,
+    "max_tokens": 16384,
+    "loss": "every response token, no EOS",
+    "truncated_examples": 86,
+    "truncated_tokens": 129034
+  },
+  "wall_hours_this_session": 6.209,
+  "final": "/content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final",
+  "resumed_from": null,
+  "completed": "2026-11-13T05:49:15+08:00"
 }
