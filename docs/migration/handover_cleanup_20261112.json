@@ -1,0 +1,100 @@
+{
+  "date": "2026-11-12",
+  "purpose": "归档被现行状态和运行手册取代的旧 Kiro 交接、历史交接包及本地审查临时材料，保留仍在使用的凭据模板和执行约定。",
+  "tracked_archive_files": 105,
+  "tracked_active_template_files": 5,
+  "local_only_files": 487,
+  "moves": [
+    {
+      "from": ".agents",
+      "to": "archive/reports/local_cleanup_20261112/.agents",
+      "tracked": false,
+      "files": 106
+    },
+    {
+      "from": ".kiro/steering/v93-local-execution.md",
+      "to": "archive/docs/kiro/steering/v93-local-execution.md",
+      "tracked": true,
+      "files": 1
+    },
+    {
+      "from": "docs/handover/handover_20261024_v1",
+      "to": "archive/docs/handover/handover_20261024_v1",
+      "tracked": false,
+      "files": 1
+    },
+    {
+      "from": "docs/handover/handover_20261024_v1",
+      "to": "archive/docs/handover/handover_20261024_v1",
+      "tracked": true,
+      "files": 8
+    },
+    {
+      "from": "docs/handover/handover_20261024_v2",
+      "to": "archive/docs/handover/handover_20261024_v2",
+      "tracked": false,
+      "files": 15
+    },
+    {
+      "from": "docs/handover/handover_20261024_v2",
+      "to": "archive/docs/handover/handover_20261024_v2",
+      "tracked": true,
+      "files": 44
+    },
+    {
+      "from": "docs/handover/handover_20261024_v3",
+      "to": "archive/docs/handover/handover_20261024_v3",
+      "tracked": false,
+      "files": 2
+    },
+    {
+      "from": "docs/handover/handover_20261024_v3",
+      "to": "archive/docs/handover/handover_20261024_v3",
+      "tracked": true,
+      "files": 11
+    },
+    {
+      "from": "docs/handover/handover_20261026_v4",
+      "to": "archive/docs/handover/handover_20261026_v4",
+      "tracked": true,
+      "files": 14
+    },
+    {
+      "from": "docs/handover/handover_20261028_v49",
+      "to": "archive/docs/handover/handover_20261028_v49",
+      "tracked": true,
+      "files": 20
+    },
+    {
+      "from": "docs/handover/handover_20261028_v53",
+      "to": "archive/docs/handover/handover_20261028_v53",
+      "tracked": true,
+      "files": 6
+    },
+    {
+      "from": "docs/handover/kiro_ide_onboarding.md",
+      "to": "archive/docs/handover/kiro_ide_onboarding.md",
+      "tracked": true,
+      "files": 1
+    },
+    {
+      "from": "docs/handover/templates",
+      "to": "docs/operations/credential_templates",
+      "tracked": true,
+      "files": 5
+    },
+    {
+      "from": "scratch",
+      "to": "archive/reports/local_cleanup_20261112/scratch",
+      "tracked": false,
+      "files": 362
+    },
+    {
+      "from": "tools/review/build_review_zip_v93.py",
+      "to": "archive/reports/local_cleanup_20261112/tools/review/build_review_zip_v93.py",
+      "tracked": false,
+      "files": 1
+    }
+  ],
+  "note": "目录移动记录适用于目录下所有相对路径。本地文件的逐项清单保存在 archive/reports/local_cleanup_20261112/mapping.json。"
+}

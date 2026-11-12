@@ -964,11 +964,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 16618,
+      "bytes": 16704,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-12 同步 v93 协作约定和运行状态后重算",
-      "sha256": "c8ad172a41145088f656ea6847f0133e066d422bbc942905778c9c4c05d1bfb5"
+      "refactor_note": "2026-11-12 交接材料归档后同步",
+      "sha256": "3ab9f93a05a7e733eed9533f5e21af4a35445f06962c381baf0ccbf7820c1d3a"
     },
     {
       "bytes": 4434,
@@ -980,11 +980,11 @@
       "source_sha256": "af9fa4d5f8526bc62685c2a9f8ff2413a2aaba4bbc6ce715cc8fcff360e496b2"
     },
     {
-      "bytes": 8797,
+      "bytes": 8772,
       "note": "size synced 2026-11-08 doc update",
       "path": "README.md",
-      "refactor_note": "2026-11-09 v93-P7：内容更新后重算",
-      "sha256": "34a369f49f840a2770743e24c50705a9c9473aeb936402efc463eb122a2c7fa7"
+      "refactor_note": "2026-11-12 交接材料归档后同步",
+      "sha256": "5d9442fbe436de847f058211403da58e6ce40c6efcc289c1242b863aebf447ef"
     },
     {
       "bytes": 745,
@@ -28754,18 +28754,18 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 10182,
+      "bytes": 10286,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-12 同步 v93 协作约定和运行状态后重算",
-      "sha256": "75e5f117b77fd43d3bb1ae96d5bd238ceaf88f56be045fdfcc8bfc34e0f95c17"
+      "refactor_note": "2026-11-12 交接材料归档后同步",
+      "sha256": "c359fec73db472d50c3fc3c711448ddc307bb0543f4eb2ca7bb7163839354035"
     },
     {
-      "bytes": 87796,
+      "bytes": 87855,
       "changed_for_portability": false,
       "path": "docs/status/history.md",
-      "refactor_note": "2026-11-10 v93-P8：内容更新后重算",
-      "sha256": "3e63fed67f2dc3d3436feb0052e6a0cedb42976adf7f86b3d6435fb4b2f3eb99"
+      "refactor_note": "2026-11-12 交接材料归档后同步",
+      "sha256": "00d4ced5170f3a7d464de61ad0f4da4f6658fa0a7b41c8b32f6a9fea4489a80a"
     },
     {
       "bytes": 77,
