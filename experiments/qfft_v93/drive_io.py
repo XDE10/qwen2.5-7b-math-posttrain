@@ -16,9 +16,8 @@ that remote. After every CLI upload we wait until the mount shows the new files,
 through the mount never create a second folder with the same name (Drive allows duplicate names).
 
 Google Drive accepts about 750 GiB of uploads per account per 24 hours (rclone docs,
---drive-stop-on-upload-limit). One full-FT run uploads about 241 GiB (two 113.5 GiB checkpoint mirrors with
-save_steps 126, plus the 14 GiB export), so at most two such runs fit in 24 hours. Uploads stop with an
-error at the limit instead of retrying for hours, which would leave the trainer waiting for its mirror.
+--drive-stop-on-upload-limit). Uploads stop with an error at the limit instead of retrying for hours,
+which would leave the trainer waiting for its mirror.
 """
 from __future__ import annotations
 
@@ -35,8 +34,7 @@ UPLOAD_FLAGS = ['--transfers', '4', '--checkers', '8', '--drive-chunk-size', '12
                 '--low-level-retries', '20', '--stats', '5m', '--stats-one-line', '--stats-log-level', 'NOTICE',
                 '--drive-stop-on-upload-limit']  # supported since rclone 1.51; Ubuntu 22.04 ships 1.53.3
 UPLOAD_LIMIT_HINT = ('Google Drive allows about 750 GiB of uploads per account per 24 hours and this account '
-                     'reached it; a full-FT run uploads about 241 GiB. Wait until the limit resets, then rerun the '
-                     'same command (it resumes from the last complete mirror).')
+                     'reached it. Wait until the limit resets. Exact training resume requires a full-state checkpoint.')
 DOWNLOAD_FLAGS = ['--transfers', '8', '--checkers', '8', '--multi-thread-streams', '4', '--retries', '10',
                   '--low-level-retries', '20', '--stats', '5m', '--stats-one-line', '--stats-log-level', 'NOTICE']
 
@@ -108,18 +106,20 @@ def wait_visible(path, expect: dict | None = None, timeout: float = 900, gone: b
         time.sleep(5)
 
 
-def upload_tree(src, dst, exclude=None, **throttle) -> None:
-    """Publish local directory `src` as Drive directory `dst` (replacing it); never leaves a half tree at `dst`."""
+def upload_tree(src, dst, exclude=None, **throttle) -> dict:
+    """Publish a local tree on Drive and return the uploaded relative file paths and sizes."""
     src, dst = Path(src), Path(dst)
+    files = _files(src, exclude=exclude)
     if not rclone_remote():
         copy_tree_throttled(src, dst, exclude=exclude, **throttle)
-        return
-    files = _files(src, exclude=exclude)
+        return files
     size = sum(files.values())
     partial = dst.with_name(dst.name + '.partial')
     started = time.monotonic()
     flags = list(UPLOAD_FLAGS)
     if exclude:
+        # An earlier full-state upload may have left excluded files in the staging directory.
+        purge(partial, wait=False)
         for pat in exclude:
             flags.extend(['--exclude', pat])
     _rclone('copy', str(src), remote_path(partial), *flags)
@@ -129,6 +129,7 @@ def upload_tree(src, dst, exclude=None, **throttle) -> None:
     log(f'Uploaded {src.name} to {dst} ({human_bytes(size)} in {seconds:.0f} s, '
         f'{size / max(seconds, 1e-6) / 2 ** 20:.0f} MiB/s)')
     wait_visible(dst, files)
+    return files
 
 
 def upload_file(src, dst) -> None:

@@ -36,8 +36,8 @@
 #
 # The job runs inside the VM's kernel. Closing this terminal or Ctrl+C only detaches (exit code 75): the
 # stages keep running and the VM releases itself when they finish (abort with: colab stop -s SESSION). A
-# dropped connection switches to polling the VM's log. All state lives on Google Drive, so re-running a
-# command later resumes from the last checkpoint; a stage still running on another VM is refused.
+# dropped connection switches to polling the VM's log. Training resumes from complete training state;
+# a weights-only Drive mirror cannot resume training. A stage still running on another VM is refused.
 set -euo pipefail
 
 GPU_LIST="G4"; KEEP=0; FORCE=0; SESSION=""; WITH_DATA=0; WAIT_MIN=0; ATTACH=""; DATA_ROOT="${P1_DATA_ROOT:-}"
@@ -91,8 +91,11 @@ LOG=""
 finish() {
   local code=$?
   if [[ $STOP_ON_EXIT == 1 && $KEEP == 0 && -n $SESSION ]]; then
-    colab stop -s "$SESSION" >/dev/null 2>&1 || true
-    echo "VM $SESSION released."
+    if timeout -k 2s 10s colab stop -s "$SESSION" >/dev/null 2>&1; then
+      echo "VM $SESSION released."
+    else
+      echo "Could not confirm release of $SESSION from the client."
+    fi
   fi
   rm -rf "$WORK"
   exit "$code"
@@ -137,11 +140,11 @@ hhmm() { python3 -c 'import sys, time; print(time.strftime("%H:%M", time.localti
 # disappears or the user detaches. The Jupyter contents API answers while the kernel is busy.
 follow() {
   local seen=0 misses=0 out line
+  local poll_timeout="${P1_POLL_TIMEOUT_S:-10}"
   echo "Following $SESSION through its session log (Ctrl+C detaches; the job keeps running)."
   while [[ $DETACHED == 0 ]]; do
-    if colab download -s "$SESSION" /content/p1/session_tail.json "$WORK/tail.json" >/dev/null 2>&1; then
-      misses=0
-      out="$(python3 - "$WORK/tail.json" "$seen" <<'PY'
+    if timeout -k 2s "$poll_timeout" colab download -s "$SESSION" /content/p1/session_tail.json \
+         "$WORK/tail.json" >/dev/null 2>&1 && out="$(python3 - "$WORK/tail.json" "$seen" 2>/dev/null <<'PY'
 import json, sys
 tail = json.load(open(sys.argv[1], encoding='utf-8'))
 seen, first = int(sys.argv[2]), tail['first_index']
@@ -154,7 +157,9 @@ print(f"@@P1SEEN={tail['lines_total']}")
 if tail.get('result'):
     print('@@P1RESULT=' + tail['result'])
 PY
-)" || out=""
+)"; then
+      if (( misses > 0 )); then echo "Log polling reconnected to $SESSION."; fi
+      misses=0
       while IFS= read -r line; do
         case "$line" in
           @@P1SEEN=*) seen="${line#@@P1SEEN=}" ;;
@@ -165,26 +170,28 @@ PY
       done <<< "$out"
       [[ -n $RESULT ]] && return 0
     else
+      [[ $DETACHED == 0 ]] || return 130
       misses=$((misses + 1))
       if (( misses >= 5 )); then
-        echo "Session $SESSION no longer answers (released, reclaimed or never created)."
+        echo "Unable to read $SESSION after $misses polls. VM and job status are unknown."
         return 2
       fi
+      echo "Waiting for $SESSION log ($misses/5 unsuccessful polls). Retrying in ${POLL_S}s."
     fi
     sleep "$POLL_S" || true
   done
   return 130
 }
 
-report() {  # interpret RESULT; once the job has ended the VM is released on exit (unless --keep)
+report() {  # Only the launcher that allocated this VM can release it from the client.
   if [[ -n $RESULT ]]; then
-    STOP_ON_EXIT=1
+    if [[ -z $ATTACH && ${SHAPE:-} != existing ]]; then STOP_ON_EXIT=1; fi
     if [[ $RESULT == P1_RESULT=OK* ]]; then
       echo "SUCCESS: ${STAGES[*]:-attached job}  (log: $LOG)"
       return 0
     fi
     echo "FAILED: ${RESULT#P1_RESULT=FAILED }"
-    echo "Log: $LOG and Drive runs/project1/v93/logs/. Re-running the same command resumes from Drive."
+    echo "Log: $LOG and Drive runs/project1/v93/logs/. Exact resume requires a full-state checkpoint."
     return 1
   fi
   if [[ $DETACHED == 1 ]]; then
@@ -195,7 +202,7 @@ report() {  # interpret RESULT; once the job has ended the VM is released on exi
     echo "  progress:      experiments/qfft_v93/colab/launch.sh --gpu cpu status   (logs: Drive runs/project1/v93/logs/)"
     return 75   # not success: pipeline.sh must not start its next launch while this job is still running
   fi
-  echo "No result received from $SESSION. Check: launch.sh --gpu cpu status (and Drive runs/project1/v93/logs/)."
+  echo "No result received from $SESSION. Reattach with launch.sh --attach $SESSION, or check the Drive logs."
   return 1
 }
 
@@ -265,6 +272,7 @@ upload() {  # upload LOCAL REMOTE, in parts when larger than CHUNK (reassembled 
 }
 
 # ------------------------------------------------------------------ allocate
+REQUESTED_SESSION="$SESSION"
 SESSION="${SESSION:-p1-$(date +%m%d-%H%M%S)}"
 LOG="$LOGDIR/$SESSION.log"
 echo "Session $SESSION | GPU ${GPUS[*]} | code $CODE_SHA (git $GIT_HEAD) | stages: ${STAGES[*]}"
@@ -272,8 +280,23 @@ colab usage || true
 
 DEADLINE=$(( $(date +%s) + WAIT_MIN * 60 ))
 GPU_USED=""; SHAPE=""
-if colab status -s "$SESSION" 2>/dev/null | grep -q "^\[$SESSION\]"; then
-  GPU_USED="G4"; SHAPE="existing"
+if [[ -n $REQUESTED_SESSION ]]; then
+  if ! SESSION_STATUS="$(timeout -k 2s 10s colab status -s "$SESSION" 2>/dev/null)"; then
+    echo "Cannot verify existing session $SESSION. Try --attach $SESSION before launching again." >&2
+    exit 1
+  fi
+  if [[ $SESSION_STATUS == "[$SESSION] "* ]]; then
+    if [[ $SESSION_STATUS == *' | Status: BUSY'* ]]; then
+      echo "Session $SESSION is busy. Use --attach $SESSION to follow it." >&2
+      exit 1
+    fi
+    GPU_USED="${SESSION_STATUS#* | Hardware: }"
+    GPU_USED="${GPU_USED%% | *}"
+    SHAPE="existing"
+  elif [[ $SESSION_STATUS != *"Session '$SESSION' not found."* ]]; then
+    echo "Cannot determine whether session $SESSION exists. No runtime was requested." >&2
+    exit 1
+  fi
 fi
 while [[ -z $GPU_USED ]]; do
   for g in "${GPUS[@]}"; do
@@ -292,7 +315,7 @@ while [[ -z $GPU_USED ]]; do
   echo "Retrying in 5 minutes (until $(hhmm "$DEADLINE"))."
   sleep 300 || true
 done
-STOP_ON_EXIT=1
+if [[ $SHAPE != existing ]]; then STOP_ON_EXIT=1; fi
 echo "Allocated $GPU_USED ($SHAPE shape) as $SESSION."
 
 if [[ $DRIVE_MODE == colab ]]; then
@@ -373,7 +396,7 @@ PY
     sleep 5
   done
   if ! grep -q 'P1_MOUNT_OK' "$MOUNT_LOG"; then
-    echo "rclone could not mount $RCLONE_REMOTE at $DRIVE_ROOT on $SESSION (see log above); the VM is released."
+    echo "rclone could not mount $RCLONE_REMOTE at $DRIVE_ROOT on $SESSION (see log above)."
     echo "To debug by hand: rerun with --keep, then 'colab console -s SESSION' (a bash shell) and run the"
     echo "mount steps from experiments/qfft_v93/README.md; or use --drive colab."
     exit 1

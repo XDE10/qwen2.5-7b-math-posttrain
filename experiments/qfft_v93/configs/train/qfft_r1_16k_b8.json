@@ -6,6 +6,6 @@
   "gradient_accumulation_steps": 8,
   "save_steps": 125,
   "mirror_optimizer_state": false,
-  "save_note": "1000 rows / 8 = 125 steps per epoch, 750 total. Weights-only Drive mirrors (~14.5 GiB) every epoch (125 steps) to prevent lost progress on Colab preemption without exhausting upload quota.",
+  "save_note": "1000 rows / 8 = 125 steps per epoch, 750 total. Keep full training state locally and upload weights-only mirrors. Exact cross-VM resume requires a previously published full-state checkpoint.",
   "recipe_note": "Reference arm matching the public QFFT S1.1 cutoff and effective batch, with the decontaminated v93 R1 data and the v93 trainer."
 }
