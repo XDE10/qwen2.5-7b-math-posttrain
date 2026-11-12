@@ -115,6 +115,7 @@ def main() -> None:
         return
     data_path = Path(a.data) if a.data else layout.data / cfg['data']
     data_sha = sha256_file(data_path)
+    truncate = cfg.get('truncate', False)
     if a.model_path:
         model_path = Path(a.model_path)
     else:
@@ -128,6 +129,8 @@ def main() -> None:
                                               'gradient_accumulation_steps', 'weight_decay', 'adam_beta1',
                                               'adam_beta2', 'max_grad_norm', 'seed')},
                 'smoke': a.smoke, 'max_steps_override': a.max_steps}
+    if truncate:
+        identity['recipe']['truncate'] = True
     id_path = drive_run / 'run_identity.json'
     if id_path.exists() and read_json(id_path)['identity'] != identity and not a.new_run:
         raise RuntimeError(f'{id_path} describes a different experiment; use a new run_name or --new-run')
@@ -143,12 +146,16 @@ def main() -> None:
     rows = sorted(read_jsonl(data_path), key=lambda r: r['index'])
     if len({r['sample_id'] for r in rows}) != len(rows):
         raise RuntimeError('Duplicate sample ids in training data')
-    encoded = [encode(tok, cfg['format'], r['question'], r['response'], cfg['max_length']) for r in rows]
+    encoded = [encode(tok, cfg['format'], r['question'], r['response'], cfg['max_length'], truncate=truncate)
+               for r in rows]
     stats = {'examples': len(encoded), 'format': cfg['format'],
              'total_tokens': sum(len(e['input_ids']) for e in encoded),
              'supervised_tokens': sum(e['supervised_tokens'] for e in encoded),
              'max_tokens': max(len(e['input_ids']) for e in encoded),
              'loss': 'assistant response + <|im_end|>' if cfg['format'] == 'sft' else 'every response token, no EOS'}
+    if truncate:
+        stats['truncated_examples'] = sum(e['truncated_tokens'] > 0 for e in encoded)
+        stats['truncated_tokens'] = sum(e['truncated_tokens'] for e in encoded)
     write_json(drive_run / 'tokenization.json', stats)
     log(f"{run}: {stats['examples']} examples, {stats['total_tokens']:,} tokens "
         f"({stats['supervised_tokens']:,} supervised), longest {stats['max_tokens']}")
@@ -169,7 +176,8 @@ def main() -> None:
                    tags=['v93', cfg['format'], cfg['teacher'], 'full-ft'], enabled=not (a.no_swanlab or a.smoke),
                    log_dir=local_run / 'swanlog')
     mirror = CheckpointMirror(local_run, drive_run, every=cfg.get('mirror_every_saves', 1),
-                              keep=cfg.get('mirror_keep', 2), watch_path=str(local_root()))
+                              keep=cfg.get('mirror_keep', 2), watch_path=str(local_root()),
+                              mirror_optimizer_state=cfg.get('mirror_optimizer_state', False))
     callbacks = [ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror]
     if a.stop_after:
         callbacks.append(stop_after_callback(a.stop_after, mirror))
@@ -209,7 +217,15 @@ def main() -> None:
     write_json(final_local / 'p1_model_identity.json', {'identity': identity, 'steps': trainer.state.global_step,
                                                         'base': cfg.get('init_model', 'base'), 'exported': now_iso()})
     mirror.wait()
-    drive_io.upload_tree(final_local, drive_run / 'final', watch_path=str(local_root()))
+    for attempt in range(1, 4):
+        try:
+            drive_io.upload_tree(final_local, drive_run / 'final', watch_path=str(local_root()))
+            break
+        except Exception as error:
+            log(f'WARNING final upload attempt {attempt}/3 failed: {error}')
+            if attempt == 3:
+                raise
+            time.sleep(15 * attempt)
     summary = {'steps': trainer.state.global_step, 'metrics': result.metrics, 'tokenization': stats,
                'wall_hours_this_session': round((time.monotonic() - started) / 3600, 3),
                'final': str(drive_run / 'final'), 'resumed_from': resume, 'completed': now_iso()}

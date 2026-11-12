@@ -964,11 +964,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 15923,
+      "bytes": 16618,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-10 v93-P8：内容更新后重算",
-      "sha256": "ea1ab9f811b35e587354cde3c8bc781af7144d0e757cfa13a0a481082c0208b4"
+      "refactor_note": "2026-11-12 同步 v93 协作约定和运行状态后重算",
+      "sha256": "c8ad172a41145088f656ea6847f0133e066d422bbc942905778c9c4c05d1bfb5"
     },
     {
       "bytes": 4434,
@@ -28754,11 +28754,11 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 6607,
+      "bytes": 10182,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-10 v93-P8：内容更新后重算",
-      "sha256": "eb34febecb1a9db1f626354cd48180b4d3d689774dc35bdd2cb8e7b47bd4adae"
+      "refactor_note": "2026-11-12 同步 v93 协作约定和运行状态后重算",
+      "sha256": "75e5f117b77fd43d3bb1ae96d5bd238ceaf88f56be045fdfcc8bfc34e0f95c17"
     },
     {
       "bytes": 87796,

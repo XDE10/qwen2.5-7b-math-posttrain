@@ -354,13 +354,17 @@ def copy_file_throttled(src, dst, *, watch_path='/content', min_free=24 * GIB,
     os.replace(tmp, dst)
 
 
-def copy_tree_throttled(src, dst, **kwargs) -> None:
+def copy_tree_throttled(src, dst, exclude=None, **kwargs) -> None:
     """Copy a directory to `dst` via `dst.partial`, then rename; never leaves a half tree at `dst`."""
+    import fnmatch
     src, dst = Path(src), Path(dst)
     staging = dst.with_name(dst.name + '.partial')
     if staging.exists():
         shutil.rmtree(staging)
     for path in sorted(p for p in src.rglob('*') if p.is_file()):
+        rel = path.relative_to(src).as_posix()
+        if exclude and any(fnmatch.fnmatch(path.name, pat) or fnmatch.fnmatch(rel, pat) for pat in exclude):
+            continue
         copy_file_throttled(path, staging / path.relative_to(src), **kwargs)
     if dst.exists():
         shutil.rmtree(dst)

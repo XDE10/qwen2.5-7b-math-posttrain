@@ -73,8 +73,17 @@ def _rclone(*args, timeout=None, check=True):
     return result
 
 
-def _files(folder: Path) -> dict:
-    return {p.relative_to(folder).as_posix(): p.stat().st_size for p in folder.rglob('*') if p.is_file()}
+def _files(folder: Path, exclude=None) -> dict:
+    import fnmatch
+    files = {}
+    for p in folder.rglob('*'):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(folder).as_posix()
+        if exclude and any(fnmatch.fnmatch(p.name, pat) or fnmatch.fnmatch(rel, pat) for pat in exclude):
+            continue
+        files[rel] = p.stat().st_size
+    return files
 
 
 def wait_visible(path, expect: dict | None = None, timeout: float = 900, gone: bool = False) -> bool:
@@ -99,17 +108,21 @@ def wait_visible(path, expect: dict | None = None, timeout: float = 900, gone: b
         time.sleep(5)
 
 
-def upload_tree(src, dst, **throttle) -> None:
+def upload_tree(src, dst, exclude=None, **throttle) -> None:
     """Publish local directory `src` as Drive directory `dst` (replacing it); never leaves a half tree at `dst`."""
     src, dst = Path(src), Path(dst)
     if not rclone_remote():
-        copy_tree_throttled(src, dst, **throttle)
+        copy_tree_throttled(src, dst, exclude=exclude, **throttle)
         return
-    files = _files(src)
+    files = _files(src, exclude=exclude)
     size = sum(files.values())
     partial = dst.with_name(dst.name + '.partial')
     started = time.monotonic()
-    _rclone('copy', str(src), remote_path(partial), *UPLOAD_FLAGS)
+    flags = list(UPLOAD_FLAGS)
+    if exclude:
+        for pat in exclude:
+            flags.extend(['--exclude', pat])
+    _rclone('copy', str(src), remote_path(partial), *flags)
     purge(dst, wait=False)
     _rclone('moveto', remote_path(partial), remote_path(dst))
     seconds = time.monotonic() - started

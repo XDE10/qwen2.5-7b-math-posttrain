@@ -66,7 +66,7 @@ check('purge of a missing folder is not an error', True)
 
 # --- CheckpointMirror over rclone: three mirrored saves, keep 1, then resume from Drive on a "new VM"
 local_run, drive_run = tmp / 'vm1/runs/r', mount / 'runs/project1/v93/runs/r'
-mirror = CheckpointMirror(local_run, drive_run, every=1, keep=1, watch_path=str(tmp))
+mirror = CheckpointMirror(local_run, drive_run, every=1, keep=1, watch_path=str(tmp), mirror_optimizer_state=True)
 for step in (2, 4, 6):
     state = SimpleNamespace(global_step=step, epoch=step / 10, max_steps=10)
     mirror.on_step_end(None, state, SimpleNamespace(should_save=True))

@@ -82,7 +82,7 @@ cd "$REPO"
 WORK="$(mktemp -d)"
 LOGDIR="$REPO/reports/colab_logs"; mkdir -p "$LOGDIR"
 CHUNK=$((8 * 1024 * 1024))   # each `colab upload` is one base64 HTTP request; keep requests small
-POLL_S="${P1_POLL_S:-60}"    # seconds between log polls while following a detached job
+POLL_S="${P1_POLL_S:-15}"    # seconds between log polls while following a detached job (matches 15s remote snapshot)
 STOP_ON_EXIT=0               # 1 only while this script owns the VM: before the job starts or after it ended
 DETACHED=0
 RESULT=""
@@ -228,22 +228,39 @@ if [[ $WITH_DATA == 1 ]]; then
     data/qfft1000_v93 data/benchmarks_v93
 fi
 
+colab_upload_retry() {
+  local src="$1" dst="$2" retries=5 delay=3 attempt=1
+  while true; do
+    if colab upload -s "$SESSION" "$src" "$dst"; then
+      return 0
+    fi
+    if (( attempt >= retries )); then
+      echo "ERROR: Failed to upload $src to $dst after $retries attempts." >&2
+      return 1
+    fi
+    echo "WARNING: Upload of $(basename "$src") failed (attempt $attempt/$retries); retrying in ${delay}s..." >&2
+    sleep "$delay"
+    delay=$(( delay * 2 ))
+    attempt=$(( attempt + 1 ))
+  done
+}
+
 upload() {  # upload LOCAL REMOTE, in parts when larger than CHUNK (reassembled and hash-checked on the VM)
   local src="$1" dst="$2" size n=0 part
   size=$(wc -c < "$src")
   if (( size <= CHUNK )); then
-    colab upload -s "$SESSION" "$src" "$dst"
+    colab_upload_retry "$src" "$dst"
     return
   fi
   mkdir -p "$WORK/parts"; rm -f "$WORK"/parts/*
   split -b "$CHUNK" -d -a 3 "$src" "$WORK/parts/p"
   for part in "$WORK"/parts/p*; do
-    colab upload -s "$SESSION" "$part" "$dst.part${part##*/p}"
+    colab_upload_retry "$part" "$dst.part${part##*/p}"
     n=$((n + 1))
   done
   printf '{"parts": %d, "bytes": %d, "sha256": "%s"}\n' "$n" "$size" "$(sha256sum "$src" | cut -c1-64)" \
     > "$WORK/parts.json"
-  colab upload -s "$SESSION" "$WORK/parts.json" "$dst.parts.json"
+  colab_upload_retry "$WORK/parts.json" "$dst.parts.json"
   echo "Uploaded $(basename "$src") in $n parts ($((size / 1048576)) MiB)."
 }
 
@@ -255,6 +272,9 @@ colab usage || true
 
 DEADLINE=$(( $(date +%s) + WAIT_MIN * 60 ))
 GPU_USED=""; SHAPE=""
+if colab status -s "$SESSION" 2>/dev/null | grep -q "^\[$SESSION\]"; then
+  GPU_USED="G4"; SHAPE="existing"
+fi
 while [[ -z $GPU_USED ]]; do
   for g in "${GPUS[@]}"; do
     args=(new -s "$SESSION")
@@ -287,7 +307,7 @@ if [[ $DRIVE_MODE == colab ]]; then
 else
   # The same steps as mounting by hand in `colab console` (rclone.conf -> ~/.config/rclone, apt-get rclone
   # fuse3 only if missing, rclone mount --daemon), run without prompts and with time limits.
-  colab upload -s "$SESSION" "$RCLONE_CONF" /content/.colab-drive-rclone-upload.conf
+  colab_upload_retry "$RCLONE_CONF" /content/.colab-drive-rclone-upload.conf
   python3 - "$WORK/mount.py" "$DRIVE_ROOT" "$RCLONE_REMOTE" <<'PY'
 import pathlib, sys
 out, mnt, remote = sys.argv[1:]
@@ -345,7 +365,13 @@ pathlib.Path(out).write_text(code, encoding='utf-8')
 PY
   MOUNT_LOG="$WORK/mount.log"
   echo "Mounting Google Drive ($RCLONE_REMOTE at $DRIVE_ROOT)..."
-  colab exec -s "$SESSION" --timeout 300 -f "$WORK/mount.py" 2>&1 | tee "$MOUNT_LOG" | grep -a -v '^\[colab\]' || true
+  for _mnt_try in 1 2 3 4 5; do
+    : > "$MOUNT_LOG"
+    colab exec -s "$SESSION" --timeout 300 -f "$WORK/mount.py" 2>&1 | tee "$MOUNT_LOG" | grep -a -v '^\[colab\]' || true
+    grep -q 'P1_MOUNT_OK' "$MOUNT_LOG" && break
+    echo "WARNING: Drive mount exec failed (attempt $_mnt_try/5, transient SSL/proxy error); retrying in 5s..." >&2
+    sleep 5
+  done
   if ! grep -q 'P1_MOUNT_OK' "$MOUNT_LOG"; then
     echo "rclone could not mount $RCLONE_REMOTE at $DRIVE_ROOT on $SESSION (see log above); the VM is released."
     echo "To debug by hand: rerun with --keep, then 'colab console -s SESSION' (a bash shell) and run the"
@@ -356,7 +382,7 @@ fi
 upload "$BUNDLE" /content/p1_bundle.tgz
 if [[ $WITH_DATA == 1 ]]; then upload "$WORK/p1_data.tgz" /content/p1_data.tgz; fi
 if [[ -n $REPORT_REPO && -f $GH_CREDENTIALS ]]; then
-  colab upload -s "$SESSION" "$GH_CREDENTIALS" /content/gh_credentials >/dev/null   # remote.py sets mode 600
+  colab_upload_retry "$GH_CREDENTIALS" /content/gh_credentials >/dev/null   # remote.py sets mode 600
 fi
 
 ENTRY="$WORK/entry.py"
