@@ -128,10 +128,10 @@
  "train__qfft_r1_16k_b8": {
   "stage": "train:qfft_r1_16k_b8",
   "state": "running",
-  "started": "2026-11-12T02:55:47.286016",
+  "started": "2026-11-12T06:32:33.997090",
   "code": "ecfd6be711a9",
-  "host": "p1-1112-105506@0d335e26f4bf",
-  "heartbeat": "2026-11-12T03:55:51.876836",
-  "heartbeat_ts": 1794455751.8768525
+  "host": "p1-1112-142829@da0b18178562",
+  "heartbeat": "2026-11-12T07:02:37.992636",
+  "heartbeat_ts": 1794466957.9926567
  }
 }
