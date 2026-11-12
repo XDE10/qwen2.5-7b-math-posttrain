@@ -1,167 +1,4 @@
-[... first 138,328 bytes omitted ...]
-[11-13 03:11:50] HEARTBEAT 447
-[11-13 03:11:55] step 448/750 epoch 3.58 loss 0.5379 lr 4.18e-06 s/step 24.3 eta 2.04h peakGPU 28.4GiB
-{'loss': '0.5379', 'grad_norm': '1.177', 'learning_rate': '4.178e-06', 'epoch': '3.584', 'num_input_tokens_seen': 33993302, 'train_runtime': '1.288e+04', 'train_tokens_per_second': '2640'}
-[11-13 03:12:23] step 449/750 epoch 3.59 loss 0.6046 lr 4.15e-06 s/step 27.5 eta 2.30h peakGPU 28.4GiB
-{'loss': '0.6046', 'grad_norm': '1.173', 'learning_rate': '4.155e-06', 'epoch': '3.592', 'num_input_tokens_seen': 34080122, 'train_runtime': '1.291e+04', 'train_tokens_per_second': '2641'}
-[11-13 03:12:48] step 450/750 epoch 3.60 loss 0.5593 lr 4.13e-06 s/step 25.3 eta 2.10h peakGPU 28.4GiB
-{'loss': '0.5593', 'grad_norm': '1.257', 'learning_rate': '4.132e-06', 'epoch': '3.6', 'num_input_tokens_seen': 34154265, 'train_runtime': '1.293e+04', 'train_tokens_per_second': '2641'}
-[11-13 03:13:14] step 451/750 epoch 3.61 loss 0.5548 lr 4.11e-06 s/step 25.5 eta 2.12h peakGPU 28.4GiB
-{'loss': '0.5548', 'grad_norm': '1.339', 'learning_rate': '4.109e-06', 'epoch': '3.608', 'num_input_tokens_seen': 34229621, 'train_runtime': '1.296e+04', 'train_tokens_per_second': '2642'}
-[11-13 03:13:39] step 452/750 epoch 3.62 loss 0.5746 lr 4.09e-06 s/step 25.5 eta 2.11h peakGPU 28.4GiB
-{'loss': '0.5746', 'grad_norm': '1.169', 'learning_rate': '4.086e-06', 'epoch': '3.616', 'num_input_tokens_seen': 34305502, 'train_runtime': '1.298e+04', 'train_tokens_per_second': '2642'}
-[11-13 03:14:05] step 453/750 epoch 3.62 loss 0.5972 lr 4.06e-06 s/step 25.6 eta 2.11h peakGPU 28.4GiB
-{'loss': '0.5972', 'grad_norm': '1.278', 'learning_rate': '4.063e-06', 'epoch': '3.624', 'num_input_tokens_seen': 34381349, 'train_runtime': '1.301e+04', 'train_tokens_per_second': '2643'}
-[11-13 03:14:30] step 454/750 epoch 3.63 loss 0.4913 lr 4.04e-06 s/step 25.5 eta 2.10h peakGPU 28.4GiB
-{'loss': '0.4913', 'grad_norm': '1.15', 'learning_rate': '4.04e-06', 'epoch': '3.632', 'num_input_tokens_seen': 34456499, 'train_runtime': '1.303e+04', 'train_tokens_per_second': '2644'}
-[11-13 03:14:57] step 455/750 epoch 3.64 loss 0.5309 lr 4.02e-06 s/step 26.8 eta 2.19h peakGPU 28.4GiB
-{'loss': '0.5309', 'grad_norm': '1.168', 'learning_rate': '4.017e-06', 'epoch': '3.64', 'num_input_tokens_seen': 34538352, 'train_runtime': '1.306e+04', 'train_tokens_per_second': '2645'}
-[11-13 03:15:22] step 456/750 epoch 3.65 loss 0.6457 lr 3.99e-06 s/step 24.8 eta 2.02h peakGPU 28.4GiB
-{'loss': '0.6457', 'grad_norm': '1.444', 'learning_rate': '3.995e-06', 'epoch': '3.648', 'num_input_tokens_seen': 34610770, 'train_runtime': '1.308e+04', 'train_tokens_per_second': '2645'}
-[11-13 03:15:46] step 457/750 epoch 3.66 loss 0.5666 lr 3.97e-06 s/step 23.7 eta 1.92h peakGPU 28.4GiB
-{'loss': '0.5666', 'grad_norm': '1.308', 'learning_rate': '3.972e-06', 'epoch': '3.656', 'num_input_tokens_seen': 34675885, 'train_runtime': '1.311e+04', 'train_tokens_per_second': '2645'}
-[11-13 03:16:13] step 458/750 epoch 3.66 loss 0.5672 lr 3.95e-06 s/step 27.5 eta 2.23h peakGPU 28.4GiB
-{'loss': '0.5672', 'grad_norm': '1.233', 'learning_rate': '3.949e-06', 'epoch': '3.664', 'num_input_tokens_seen': 34763233, 'train_runtime': '1.314e+04', 'train_tokens_per_second': '2646'}
-[11-13 03:16:38] step 459/750 epoch 3.67 loss 0.4633 lr 3.93e-06 s/step 24.6 eta 1.99h peakGPU 28.4GiB
-{'loss': '0.4633', 'grad_norm': '1.164', 'learning_rate': '3.926e-06', 'epoch': '3.672', 'num_input_tokens_seen': 34834046, 'train_runtime': '1.316e+04', 'train_tokens_per_second': '2647'}
-[11-13 03:16:51] HEARTBEAT 459
-[11-13 03:17:04] step 460/750 epoch 3.68 loss 0.5952 lr 3.90e-06 s/step 26.8 eta 2.16h peakGPU 28.4GiB
-{'loss': '0.5952', 'grad_norm': '1.084', 'learning_rate': '3.904e-06', 'epoch': '3.68', 'num_input_tokens_seen': 34916299, 'train_runtime': '1.319e+04', 'train_tokens_per_second': '2648'}
-[11-13 03:17:29] step 461/750 epoch 3.69 loss 0.5275 lr 3.88e-06 s/step 24.0 eta 1.93h peakGPU 28.4GiB
-{'loss': '0.5275', 'grad_norm': '1.454', 'learning_rate': '3.881e-06', 'epoch': '3.688', 'num_input_tokens_seen': 34985021, 'train_runtime': '1.321e+04', 'train_tokens_per_second': '2648'}
-[11-13 03:17:53] step 462/750 epoch 3.70 loss 0.5118 lr 3.86e-06 s/step 24.8 eta 1.99h peakGPU 28.4GiB
-{'loss': '0.5118', 'grad_norm': '1.208', 'learning_rate': '3.858e-06', 'epoch': '3.696', 'num_input_tokens_seen': 35058180, 'train_runtime': '1.324e+04', 'train_tokens_per_second': '2649'}
-[11-13 03:18:21] step 463/750 epoch 3.70 loss 0.5214 lr 3.84e-06 s/step 27.1 eta 2.16h peakGPU 28.4GiB
-{'loss': '0.5214', 'grad_norm': '1.12', 'learning_rate': '3.836e-06', 'epoch': '3.704', 'num_input_tokens_seen': 35141005, 'train_runtime': '1.326e+04', 'train_tokens_per_second': '2649'}
-[11-13 03:18:49] step 464/750 epoch 3.71 loss 0.6156 lr 3.81e-06 s/step 28.8 eta 2.29h peakGPU 28.4GiB
-{'loss': '0.6156', 'grad_norm': '1.212', 'learning_rate': '3.813e-06', 'epoch': '3.712', 'num_input_tokens_seen': 35233739, 'train_runtime': '1.329e+04', 'train_tokens_per_second': '2651'}
-[11-13 03:19:16] step 465/750 epoch 3.72 loss 0.5402 lr 3.79e-06 s/step 26.3 eta 2.08h peakGPU 28.4GiB
-{'loss': '0.5402', 'grad_norm': '1.214', 'learning_rate': '3.79e-06', 'epoch': '3.72', 'num_input_tokens_seen': 35313561, 'train_runtime': '1.332e+04', 'train_tokens_per_second': '2651'}
-[11-13 03:19:44] step 466/750 epoch 3.73 loss 0.5797 lr 3.77e-06 s/step 28.2 eta 2.23h peakGPU 28.4GiB
-{'loss': '0.5797', 'grad_norm': '1.172', 'learning_rate': '3.768e-06', 'epoch': '3.728', 'num_input_tokens_seen': 35404488, 'train_runtime': '1.335e+04', 'train_tokens_per_second': '2653'}
-[11-13 03:20:13] step 467/750 epoch 3.74 loss 0.5868 lr 3.75e-06 s/step 29.0 eta 2.28h peakGPU 28.4GiB
-{'loss': '0.5868', 'grad_norm': '1.118', 'learning_rate': '3.745e-06', 'epoch': '3.736', 'num_input_tokens_seen': 35499337, 'train_runtime': '1.338e+04', 'train_tokens_per_second': '2654'}
-[11-13 03:20:41] step 468/750 epoch 3.74 loss 0.6744 lr 3.72e-06 s/step 28.3 eta 2.22h peakGPU 28.4GiB
-{'loss': '0.6744', 'grad_norm': '1.352', 'learning_rate': '3.723e-06', 'epoch': '3.744', 'num_input_tokens_seen': 35589724, 'train_runtime': '1.34e+04', 'train_tokens_per_second': '2655'}
-[11-13 03:21:07] step 469/750 epoch 3.75 loss 0.5078 lr 3.70e-06 s/step 25.4 eta 1.99h peakGPU 28.4GiB
-{'loss': '0.5078', 'grad_norm': '2.05', 'learning_rate': '3.7e-06', 'epoch': '3.752', 'num_input_tokens_seen': 35663698, 'train_runtime': '1.343e+04', 'train_tokens_per_second': '2656'}
-[11-13 03:21:31] step 470/750 epoch 3.76 loss 0.5256 lr 3.68e-06 s/step 24.7 eta 1.92h peakGPU 28.4GiB
-{'loss': '0.5256', 'grad_norm': '1.211', 'learning_rate': '3.678e-06', 'epoch': '3.76', 'num_input_tokens_seen': 35736023, 'train_runtime': '1.345e+04', 'train_tokens_per_second': '2656'}
-[11-13 03:21:51] HEARTBEAT 470
-[11-13 03:21:58] step 471/750 epoch 3.77 loss 0.4629 lr 3.66e-06 s/step 26.8 eta 2.08h peakGPU 28.4GiB
-{'loss': '0.4629', 'grad_norm': '1.19', 'learning_rate': '3.655e-06', 'epoch': '3.768', 'num_input_tokens_seen': 35819958, 'train_runtime': '1.348e+04', 'train_tokens_per_second': '2657'}
-[11-13 03:22:21] step 472/750 epoch 3.78 loss 0.4965 lr 3.63e-06 s/step 23.0 eta 1.78h peakGPU 28.4GiB
-{'loss': '0.4965', 'grad_norm': '1.31', 'learning_rate': '3.633e-06', 'epoch': '3.776', 'num_input_tokens_seen': 35882143, 'train_runtime': '1.35e+04', 'train_tokens_per_second': '2657'}
-[11-13 03:22:45] step 473/750 epoch 3.78 loss 0.4286 lr 3.61e-06 s/step 23.7 eta 1.83h peakGPU 28.4GiB
-{'loss': '0.4286', 'grad_norm': '1.241', 'learning_rate': '3.611e-06', 'epoch': '3.784', 'num_input_tokens_seen': 35948709, 'train_runtime': '1.353e+04', 'train_tokens_per_second': '2657'}
-[11-13 03:23:08] step 474/750 epoch 3.79 loss 0.5650 lr 3.59e-06 s/step 23.1 eta 1.77h peakGPU 28.4GiB
-{'loss': '0.565', 'grad_norm': '1.692', 'learning_rate': '3.588e-06', 'epoch': '3.792', 'num_input_tokens_seen': 36011536, 'train_runtime': '1.355e+04', 'train_tokens_per_second': '2657'}
-[11-13 03:23:34] step 475/750 epoch 3.80 loss 0.6474 lr 3.57e-06 s/step 26.1 eta 2.00h peakGPU 28.4GiB
-{'loss': '0.6474', 'grad_norm': '1.492', 'learning_rate': '3.566e-06', 'epoch': '3.8', 'num_input_tokens_seen': 36089703, 'train_runtime': '1.358e+04', 'train_tokens_per_second': '2658'}
-[11-13 03:23:56] step 476/750 epoch 3.81 loss 0.6016 lr 3.54e-06 s/step 21.3 eta 1.62h peakGPU 28.4GiB
-{'loss': '0.6016', 'grad_norm': '1.696', 'learning_rate': '3.544e-06', 'epoch': '3.808', 'num_input_tokens_seen': 36143270, 'train_runtime': '1.36e+04', 'train_tokens_per_second': '2658'}
-[11-13 03:24:22] step 477/750 epoch 3.82 loss 0.6386 lr 3.52e-06 s/step 26.4 eta 2.00h peakGPU 28.4GiB
-{'loss': '0.6386', 'grad_norm': '1.21', 'learning_rate': '3.521e-06', 'epoch': '3.816', 'num_input_tokens_seen': 36223172, 'train_runtime': '1.362e+04', 'train_tokens_per_second': '2659'}
-[11-13 03:24:47] step 478/750 epoch 3.82 loss 0.6197 lr 3.50e-06 s/step 25.6 eta 1.93h peakGPU 28.4GiB
-{'loss': '0.6197', 'grad_norm': '1.366', 'learning_rate': '3.499e-06', 'epoch': '3.824', 'num_input_tokens_seen': 36298710, 'train_runtime': '1.365e+04', 'train_tokens_per_second': '2659'}
-[11-13 03:25:14] step 479/750 epoch 3.83 loss 0.5229 lr 3.48e-06 s/step 26.6 eta 2.00h peakGPU 28.4GiB
-{'loss': '0.5229', 'grad_norm': '1.174', 'learning_rate': '3.477e-06', 'epoch': '3.832', 'num_input_tokens_seen': 36380299, 'train_runtime': '1.368e+04', 'train_tokens_per_second': '2660'}
-[11-13 03:25:37] step 480/750 epoch 3.84 loss 0.4844 lr 3.45e-06 s/step 23.4 eta 1.76h peakGPU 28.4GiB
-{'loss': '0.4844', 'grad_norm': '1.14', 'learning_rate': '3.455e-06', 'epoch': '3.84', 'num_input_tokens_seen': 36445168, 'train_runtime': '1.37e+04', 'train_tokens_per_second': '2660'}
-[11-13 03:26:03] step 481/750 epoch 3.85 loss 0.5557 lr 3.43e-06 s/step 25.2 eta 1.88h peakGPU 28.4GiB
-{'loss': '0.5557', 'grad_norm': '1.147', 'learning_rate': '3.433e-06', 'epoch': '3.848', 'num_input_tokens_seen': 36518970, 'train_runtime': '1.373e+04', 'train_tokens_per_second': '2661'}
-[11-13 03:26:28] step 482/750 epoch 3.86 loss 0.5655 lr 3.41e-06 s/step 25.1 eta 1.87h peakGPU 28.4GiB
-{'loss': '0.5655', 'grad_norm': '1.319', 'learning_rate': '3.411e-06', 'epoch': '3.856', 'num_input_tokens_seen': 36592465, 'train_runtime': '1.375e+04', 'train_tokens_per_second': '2661'}
-[11-13 03:26:53] HEARTBEAT 482
-[11-13 03:26:54] step 483/750 epoch 3.86 loss 0.4931 lr 3.39e-06 s/step 25.9 eta 1.92h peakGPU 28.4GiB
-{'loss': '0.4931', 'grad_norm': '1.133', 'learning_rate': '3.389e-06', 'epoch': '3.864', 'num_input_tokens_seen': 36669321, 'train_runtime': '1.378e+04', 'train_tokens_per_second': '2662'}
-[11-13 03:27:18] step 484/750 epoch 3.87 loss 0.5044 lr 3.37e-06 s/step 23.9 eta 1.76h peakGPU 28.4GiB
-{'loss': '0.5044', 'grad_norm': '1.354', 'learning_rate': '3.367e-06', 'epoch': '3.872', 'num_input_tokens_seen': 36735767, 'train_runtime': '1.38e+04', 'train_tokens_per_second': '2662'}
-[11-13 03:27:42] step 485/750 epoch 3.88 loss 0.5407 lr 3.34e-06 s/step 24.2 eta 1.78h peakGPU 28.4GiB
-{'loss': '0.5407', 'grad_norm': '1.362', 'learning_rate': '3.345e-06', 'epoch': '3.88', 'num_input_tokens_seen': 36804593, 'train_runtime': '1.382e+04', 'train_tokens_per_second': '2662'}
-[11-13 03:28:06] step 486/750 epoch 3.89 loss 0.5337 lr 3.32e-06 s/step 23.9 eta 1.75h peakGPU 28.4GiB
-{'loss': '0.5337', 'grad_norm': '1.297', 'learning_rate': '3.323e-06', 'epoch': '3.888', 'num_input_tokens_seen': 36871893, 'train_runtime': '1.385e+04', 'train_tokens_per_second': '2663'}
-[11-13 03:28:35] step 487/750 epoch 3.90 loss 0.6724 lr 3.30e-06 s/step 29.2 eta 2.13h peakGPU 28.4GiB
-{'loss': '0.6724', 'grad_norm': '1.16', 'learning_rate': '3.301e-06', 'epoch': '3.896', 'num_input_tokens_seen': 36966739, 'train_runtime': '1.388e+04', 'train_tokens_per_second': '2664'}
-[11-13 03:29:01] step 488/750 epoch 3.90 loss 0.6081 lr 3.28e-06 s/step 26.2 eta 1.90h peakGPU 28.4GiB
-{'loss': '0.6081', 'grad_norm': '1.233', 'learning_rate': '3.279e-06', 'epoch': '3.904', 'num_input_tokens_seen': 37046099, 'train_runtime': '1.39e+04', 'train_tokens_per_second': '2664'}
-[11-13 03:29:33] step 489/750 epoch 3.91 loss 0.6875 lr 3.26e-06 s/step 31.8 eta 2.31h peakGPU 28.4GiB
-{'loss': '0.6875', 'grad_norm': '1.014', 'learning_rate': '3.257e-06', 'epoch': '3.912', 'num_input_tokens_seen': 37153682, 'train_runtime': '1.394e+04', 'train_tokens_per_second': '2666'}
-[11-13 03:30:00] step 490/750 epoch 3.92 loss 0.4625 lr 3.24e-06 s/step 27.0 eta 1.95h peakGPU 28.4GiB
-{'loss': '0.4625', 'grad_norm': '1.131', 'learning_rate': '3.235e-06', 'epoch': '3.92', 'num_input_tokens_seen': 37237143, 'train_runtime': '1.396e+04', 'train_tokens_per_second': '2667'}
-[11-13 03:30:24] step 491/750 epoch 3.93 loss 0.5306 lr 3.21e-06 s/step 24.3 eta 1.75h peakGPU 28.4GiB
-{'loss': '0.5306', 'grad_norm': '1.201', 'learning_rate': '3.214e-06', 'epoch': '3.928', 'num_input_tokens_seen': 37306933, 'train_runtime': '1.399e+04', 'train_tokens_per_second': '2667'}
-[11-13 03:30:48] step 492/750 epoch 3.94 loss 0.5477 lr 3.19e-06 s/step 24.2 eta 1.74h peakGPU 28.4GiB
-{'loss': '0.5477', 'grad_norm': '1.26', 'learning_rate': '3.192e-06', 'epoch': '3.936', 'num_input_tokens_seen': 37375544, 'train_runtime': '1.401e+04', 'train_tokens_per_second': '2668'}
-[11-13 03:31:19] step 493/750 epoch 3.94 loss 0.5503 lr 3.17e-06 s/step 31.2 eta 2.23h peakGPU 28.4GiB
-{'loss': '0.5503', 'grad_norm': '1.061', 'learning_rate': '3.17e-06', 'epoch': '3.944', 'num_input_tokens_seen': 37480443, 'train_runtime': '1.404e+04', 'train_tokens_per_second': '2669'}
-[11-13 03:31:45] step 494/750 epoch 3.95 loss 0.5978 lr 3.15e-06 s/step 25.4 eta 1.80h peakGPU 28.4GiB
-{'loss': '0.5978', 'grad_norm': '1.301', 'learning_rate': '3.149e-06', 'epoch': '3.952', 'num_input_tokens_seen': 37555343, 'train_runtime': '1.407e+04', 'train_tokens_per_second': '2670'}
-[11-13 03:31:53] HEARTBEAT 494
-[11-13 03:32:09] step 495/750 epoch 3.96 loss 0.6484 lr 3.13e-06 s/step 24.5 eta 1.73h peakGPU 28.4GiB
-{'loss': '0.6484', 'grad_norm': '1.352', 'learning_rate': '3.127e-06', 'epoch': '3.96', 'num_input_tokens_seen': 37625447, 'train_runtime': '1.409e+04', 'train_tokens_per_second': '2670'}
-[11-13 03:32:35] step 496/750 epoch 3.97 loss 0.5637 lr 3.11e-06 s/step 25.2 eta 1.78h peakGPU 28.4GiB
-{'loss': '0.5637', 'grad_norm': '1.401', 'learning_rate': '3.105e-06', 'epoch': '3.968', 'num_input_tokens_seen': 37699336, 'train_runtime': '1.412e+04', 'train_tokens_per_second': '2670'}
-[11-13 03:33:00] step 497/750 epoch 3.98 loss 0.5154 lr 3.08e-06 s/step 26.0 eta 1.82h peakGPU 28.4GiB
-{'loss': '0.5154', 'grad_norm': '1.244', 'learning_rate': '3.084e-06', 'epoch': '3.976', 'num_input_tokens_seen': 37777618, 'train_runtime': '1.414e+04', 'train_tokens_per_second': '2671'}
-[11-13 03:33:27] step 498/750 epoch 3.98 loss 0.5047 lr 3.06e-06 s/step 26.2 eta 1.84h peakGPU 28.4GiB
-{'loss': '0.5047', 'grad_norm': '1.177', 'learning_rate': '3.062e-06', 'epoch': '3.984', 'num_input_tokens_seen': 37859115, 'train_runtime': '1.417e+04', 'train_tokens_per_second': '2672'}
-[11-13 03:33:51] step 499/750 epoch 3.99 loss 0.5374 lr 3.04e-06 s/step 23.8 eta 1.66h peakGPU 28.4GiB
-{'loss': '0.5374', 'grad_norm': '1.205', 'learning_rate': '3.041e-06', 'epoch': '3.992', 'num_input_tokens_seen': 37924936, 'train_runtime': '1.419e+04', 'train_tokens_per_second': '2672'}
-[11-13 03:34:21] Freeing local disk before saving step 500: removing checkpoint-375
-[11-13 03:34:22] step 500/750 epoch 4.00 loss 0.5660 lr 3.02e-06 s/step 31.7 eta 2.20h peakGPU 28.4GiB
-{'loss': '0.566', 'grad_norm': '1.319', 'learning_rate': '3.02e-06', 'epoch': '4', 'num_input_tokens_seen': 38028052, 'train_runtime': '1.423e+04', 'train_tokens_per_second': '2673'}
-
-Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]
-Writing model shards: 100%|██████████| 1/1 [01:05<00:00, 65.80s/it]
-Writing model shards: 100%|██████████| 1/1 [01:05<00:00, 65.80s/it]
-/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
-  return func(*args, **kwargs)
-[11-13 03:36:54] HEARTBEAT 500
-[11-13 03:41:54] HEARTBEAT 500
-[11-13 03:42:04] Saved checkpoint-500 locally: 113.5GiB in 462.0 s, 102.8 GiB free
-[11-13 03:42:04] Mirroring checkpoint-500 to Drive (weights_only) in the background
-/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: FutureWarning: `torch.distributed.all_gather_into_tensor` is deprecated. Please use `torch.distributed.all_gather_single` instead.
-  return func(*args, **kwargs)
-[11-13 03:42:06] rclone purge (2 s): 2026/11/12 19:42:06 Failed to purge: directory not found
-/usr/local/lib/python3.13/dist-packages/torch/distributed/c10d_logger.py:83: FutureWarning: `torch.distributed.all_gather_into_tensor` is deprecated. Please use `torch.distributed.all_gather_single` instead.
-  return func(*args, **kwargs)
-[11-13 03:42:25] step 501/750 epoch 4.01 loss 0.3773 lr 3.00e-06 s/step 482.6 eta 33.38h peakGPU 28.4GiB
-{'loss': '0.3773', 'grad_norm': '1.516', 'learning_rate': '2.998e-06', 'epoch': '4.008', 'num_input_tokens_seen': 38075885, 'train_runtime': '1.471e+04', 'train_tokens_per_second': '2589'}
-[11-13 03:42:54] step 502/750 epoch 4.02 loss 0.4785 lr 2.98e-06 s/step 28.7 eta 1.98h peakGPU 28.4GiB
-{'loss': '0.4785', 'grad_norm': '1.458', 'learning_rate': '2.977e-06', 'epoch': '4.016', 'num_input_tokens_seen': 38166841, 'train_runtime': '1.474e+04', 'train_tokens_per_second': '2590'}
-[11-13 03:43:22] step 503/750 epoch 4.02 loss 0.4143 lr 2.96e-06 s/step 28.6 eta 1.97h peakGPU 28.4GiB
-{'loss': '0.4143', 'grad_norm': '1.31', 'learning_rate': '2.956e-06', 'epoch': '4.024', 'num_input_tokens_seen': 38257220, 'train_runtime': '1.477e+04', 'train_tokens_per_second': '2591'}
-[11-13 03:43:52] step 504/750 epoch 4.03 loss 0.5230 lr 2.93e-06 s/step 29.8 eta 2.04h peakGPU 28.4GiB
-{'loss': '0.523', 'grad_norm': '1.06', 'learning_rate': '2.934e-06', 'epoch': '4.032', 'num_input_tokens_seen': 38353678, 'train_runtime': '1.48e+04', 'train_tokens_per_second': '2592'}
-[11-13 03:44:23] step 505/750 epoch 4.04 loss 0.4231 lr 2.91e-06 s/step 30.9 eta 2.10h peakGPU 28.4GiB
-{'loss': '0.4231', 'grad_norm': '1.039', 'learning_rate': '2.913e-06', 'epoch': '4.04', 'num_input_tokens_seen': 38456254, 'train_runtime': '1.483e+04', 'train_tokens_per_second': '2594'}
-[11-13 03:44:51] step 506/750 epoch 4.05 loss 0.4519 lr 2.89e-06 s/step 28.1 eta 1.90h peakGPU 28.4GiB
-{'loss': '0.4519', 'grad_norm': '1.235', 'learning_rate': '2.892e-06', 'epoch': '4.048', 'num_input_tokens_seen': 38544304, 'train_runtime': '1.485e+04', 'train_tokens_per_second': '2595'}
-[11-13 03:45:14] step 507/750 epoch 4.06 loss 0.4465 lr 2.87e-06 s/step 23.3 eta 1.57h peakGPU 28.4GiB
-{'loss': '0.4465', 'grad_norm': '1.775', 'learning_rate': '2.871e-06', 'epoch': '4.056', 'num_input_tokens_seen': 38607019, 'train_runtime': '1.488e+04', 'train_tokens_per_second': '2595'}
-[11-13 03:45:40] step 508/750 epoch 4.06 loss 0.5634 lr 2.85e-06 s/step 25.9 eta 1.74h peakGPU 28.4GiB
-{'loss': '0.5634', 'grad_norm': '2.307', 'learning_rate': '2.85e-06', 'epoch': '4.064', 'num_input_tokens_seen': 38686420, 'train_runtime': '1.49e+04', 'train_tokens_per_second': '2596'}
-[11-13 03:46:05] step 509/750 epoch 4.07 loss 0.4155 lr 2.83e-06 s/step 24.2 eta 1.62h peakGPU 28.4GiB
-{'loss': '0.4155', 'grad_norm': '2.053', 'learning_rate': '2.829e-06', 'epoch': '4.072', 'num_input_tokens_seen': 38755956, 'train_runtime': '1.493e+04', 'train_tokens_per_second': '2596'}
-[11-13 03:46:31] step 510/750 epoch 4.08 loss 0.4165 lr 2.81e-06 s/step 26.7 eta 1.78h peakGPU 28.4GiB
-{'loss': '0.4165', 'grad_norm': '1.789', 'learning_rate': '2.808e-06', 'epoch': '4.08', 'num_input_tokens_seen': 38838054, 'train_runtime': '1.495e+04', 'train_tokens_per_second': '2597'}
-[11-13 03:46:55] HEARTBEAT 510
-[11-13 03:47:00] step 511/750 epoch 4.09 loss 0.4967 lr 2.79e-06 s/step 28.9 eta 1.92h peakGPU 28.4GiB
-{'loss': '0.4967', 'grad_norm': '1.695', 'learning_rate': '2.787e-06', 'epoch': '4.088', 'num_input_tokens_seen': 38929651, 'train_runtime': '1.498e+04', 'train_tokens_per_second': '2598'}
-[11-13 03:47:26] step 512/750 epoch 4.10 loss 0.3077 lr 2.77e-06 s/step 25.4 eta 1.68h peakGPU 28.4GiB
-{'loss': '0.3077', 'grad_norm': '1.234', 'learning_rate': '2.766e-06', 'epoch': '4.096', 'num_input_tokens_seen': 39006477, 'train_runtime': '1.501e+04', 'train_tokens_per_second': '2599'}
-[11-13 03:47:50] step 513/750 epoch 4.10 loss 0.4406 lr 2.75e-06 s/step 24.2 eta 1.60h peakGPU 28.4GiB
-{'loss': '0.4406', 'grad_norm': '1.409', 'learning_rate': '2.746e-06', 'epoch': '4.104', 'num_input_tokens_seen': 39073990, 'train_runtime': '1.503e+04', 'train_tokens_per_second': '2599'}
-[11-13 03:48:16] step 514/750 epoch 4.11 loss 0.4481 lr 2.72e-06 s/step 26.3 eta 1.72h peakGPU 28.4GiB
-{'loss': '0.4481', 'grad_norm': '1.279', 'learning_rate': '2.725e-06', 'epoch': '4.112', 'num_input_tokens_seen': 39155357, 'train_runtime': '1.506e+04', 'train_tokens_per_second': '2600'}
-[11-13 03:48:41] step 515/750 epoch 4.12 loss 0.4012 lr 2.70e-06 s/step 25.1 eta 1.64h peakGPU 28.4GiB
-{'loss': '0.4012', 'grad_norm': '1.295', 'learning_rate': '2.704e-06', 'epoch': '4.12', 'num_input_tokens_seen': 39229347, 'train_runtime': '1.508e+04', 'train_tokens_per_second': '2601'}
-[11-13 03:49:10] step 516/750 epoch 4.13 loss 0.3990 lr 2.68e-06 s/step 29.3 eta 1.90h peakGPU 28.4GiB
-{'loss': '0.399', 'grad_norm': '1.165', 'learning_rate': '2.684e-06', 'epoch': '4.128', 'num_input_tokens_seen': 39324729, 'train_runtime': '1.511e+04', 'train_tokens_per_second': '2602'}
-[11-13 03:49:36] step 517/750 epoch 4.14 loss 0.4074 lr 2.66e-06 s/step 25.6 eta 1.65h peakGPU 28.4GiB
-{'loss': '0.4074', 'grad_norm': '1.276', 'learning_rate': '2.663e-06', 'epoch': '4.136', 'num_input_tokens_seen': 39399783, 'train_runtime': '1.514e+04', 'train_tokens_per_second': '2603'}
-[11-13 03:50:03] step 518/750 epoch 4.14 loss 0.4265 lr 2.64e-06 s/step 26.5 eta 1.71h peakGPU 28.4GiB
+[... first 160,378 bytes omitted ...]
 {'loss': '0.4265', 'grad_norm': '1.188', 'learning_rate': '2.642e-06', 'epoch': '4.144', 'num_input_tokens_seen': 39481252, 'train_runtime': '1.517e+04', 'train_tokens_per_second': '2603'}
 [11-13 03:50:26] rclone copy (500 s): 2026/11/12 19:50:26 NOTICE:    28.371 GiB / 28.371 GiB, 100%, 103.814 MiB/s, ETA 0s
 [11-13 03:50:28] rclone purge (2 s): 2026/11/12 19:50:28 Failed to purge: directory not found
@@ -468,3 +305,159 @@ Writing model shards: 100%|██████████| 1/1 [01:12<00:00, 72.
 {'loss': '0.3605', 'grad_norm': '1.074', 'learning_rate': '5.744e-07', 'epoch': '5.168', 'num_input_tokens_seen': 49130854, 'train_runtime': '1.894e+04', 'train_tokens_per_second': '2595'}
 [11-13 04:53:14] step 647/750 epoch 5.18 loss 0.2130 lr 5.64e-07 s/step 21.0 eta 0.60h peakGPU 28.4GiB
 {'loss': '0.213', 'grad_norm': '1.114', 'learning_rate': '5.636e-07', 'epoch': '5.176', 'num_input_tokens_seen': 49181960, 'train_runtime': '1.896e+04', 'train_tokens_per_second': '2594'}
+[11-13 04:53:39] step 648/750 epoch 5.18 loss 0.3543 lr 5.53e-07 s/step 25.3 eta 0.72h peakGPU 28.4GiB
+{'loss': '0.3543', 'grad_norm': '1.16', 'learning_rate': '5.529e-07', 'epoch': '5.184', 'num_input_tokens_seen': 49257125, 'train_runtime': '1.898e+04', 'train_tokens_per_second': '2595'}
+[11-13 04:54:05] step 649/750 epoch 5.19 loss 0.2960 lr 5.42e-07 s/step 25.2 eta 0.71h peakGPU 28.4GiB
+{'loss': '0.296', 'grad_norm': '1.109', 'learning_rate': '5.423e-07', 'epoch': '5.192', 'num_input_tokens_seen': 49330462, 'train_runtime': '1.901e+04', 'train_tokens_per_second': '2595'}
+[11-13 04:54:30] step 650/750 epoch 5.20 loss 0.2813 lr 5.32e-07 s/step 25.0 eta 0.70h peakGPU 28.4GiB
+{'loss': '0.2813', 'grad_norm': '1.085', 'learning_rate': '5.318e-07', 'epoch': '5.2', 'num_input_tokens_seen': 49404114, 'train_runtime': '1.903e+04', 'train_tokens_per_second': '2596'}
+[11-13 04:54:51] step 651/750 epoch 5.21 loss 0.2211 lr 5.21e-07 s/step 21.0 eta 0.58h peakGPU 28.4GiB
+{'loss': '0.2211', 'grad_norm': '1.11', 'learning_rate': '5.214e-07', 'epoch': '5.208', 'num_input_tokens_seen': 49454493, 'train_runtime': '1.905e+04', 'train_tokens_per_second': '2596'}
+[11-13 04:55:14] step 652/750 epoch 5.22 loss 0.2561 lr 5.11e-07 s/step 22.9 eta 0.62h peakGPU 28.4GiB
+{'loss': '0.2561', 'grad_norm': '1.169', 'learning_rate': '5.111e-07', 'epoch': '5.216', 'num_input_tokens_seen': 49517569, 'train_runtime': '1.908e+04', 'train_tokens_per_second': '2596'}
+[11-13 04:55:35] step 653/750 epoch 5.22 loss 0.2476 lr 5.01e-07 s/step 21.4 eta 0.58h peakGPU 28.4GiB
+{'loss': '0.2476', 'grad_norm': '1.128', 'learning_rate': '5.009e-07', 'epoch': '5.224', 'num_input_tokens_seen': 49570908, 'train_runtime': '1.91e+04', 'train_tokens_per_second': '2596'}
+[11-13 04:55:59] step 654/750 epoch 5.23 loss 0.2584 lr 4.91e-07 s/step 23.7 eta 0.63h peakGPU 28.4GiB
+{'loss': '0.2584', 'grad_norm': '1.077', 'learning_rate': '4.908e-07', 'epoch': '5.232', 'num_input_tokens_seen': 49638203, 'train_runtime': '1.912e+04', 'train_tokens_per_second': '2596'}
+[11-13 04:56:29] step 655/750 epoch 5.24 loss 0.3389 lr 4.81e-07 s/step 29.4 eta 0.78h peakGPU 28.4GiB
+{'loss': '0.3389', 'grad_norm': '1.025', 'learning_rate': '4.808e-07', 'epoch': '5.24', 'num_input_tokens_seen': 49733878, 'train_runtime': '1.915e+04', 'train_tokens_per_second': '2597'}
+[11-13 04:56:56] step 656/750 epoch 5.25 loss 0.3912 lr 4.71e-07 s/step 28.2 eta 0.74h peakGPU 28.4GiB
+{'loss': '0.3912', 'grad_norm': '1.149', 'learning_rate': '4.709e-07', 'epoch': '5.248', 'num_input_tokens_seen': 49818771, 'train_runtime': '1.918e+04', 'train_tokens_per_second': '2598'}
+[11-13 04:56:59] HEARTBEAT 656
+[11-13 04:57:22] step 657/750 epoch 5.26 loss 0.3153 lr 4.61e-07 s/step 25.2 eta 0.65h peakGPU 28.4GiB
+{'loss': '0.3153', 'grad_norm': '1.141', 'learning_rate': '4.611e-07', 'epoch': '5.256', 'num_input_tokens_seen': 49891758, 'train_runtime': '1.92e+04', 'train_tokens_per_second': '2598'}
+[11-13 04:57:46] step 658/750 epoch 5.26 loss 0.3131 lr 4.51e-07 s/step 24.0 eta 0.61h peakGPU 28.4GiB
+{'loss': '0.3131', 'grad_norm': '1.257', 'learning_rate': '4.514e-07', 'epoch': '5.264', 'num_input_tokens_seen': 49959456, 'train_runtime': '1.923e+04', 'train_tokens_per_second': '2598'}
+[11-13 04:58:12] step 659/750 epoch 5.27 loss 0.2646 lr 4.42e-07 s/step 26.0 eta 0.66h peakGPU 28.4GiB
+{'loss': '0.2646', 'grad_norm': '1.007', 'learning_rate': '4.418e-07', 'epoch': '5.272', 'num_input_tokens_seen': 50038587, 'train_runtime': '1.925e+04', 'train_tokens_per_second': '2599'}
+[11-13 04:58:38] step 660/750 epoch 5.28 loss 0.3279 lr 4.32e-07 s/step 26.3 eta 0.66h peakGPU 28.4GiB
+{'loss': '0.3279', 'grad_norm': '1.177', 'learning_rate': '4.323e-07', 'epoch': '5.28', 'num_input_tokens_seen': 50116283, 'train_runtime': '1.928e+04', 'train_tokens_per_second': '2599'}
+[11-13 04:59:05] step 661/750 epoch 5.29 loss 0.3423 lr 4.23e-07 s/step 26.8 eta 0.66h peakGPU 28.4GiB
+{'loss': '0.3423', 'grad_norm': '1.085', 'learning_rate': '4.229e-07', 'epoch': '5.288', 'num_input_tokens_seen': 50198223, 'train_runtime': '1.931e+04', 'train_tokens_per_second': '2600'}
+[11-13 04:59:33] step 662/750 epoch 5.30 loss 0.3974 lr 4.14e-07 s/step 28.0 eta 0.68h peakGPU 28.4GiB
+{'loss': '0.3974', 'grad_norm': '1.147', 'learning_rate': '4.135e-07', 'epoch': '5.296', 'num_input_tokens_seen': 50287556, 'train_runtime': '1.934e+04', 'train_tokens_per_second': '2601'}
+[11-13 05:00:03] step 663/750 epoch 5.30 loss 0.3299 lr 4.04e-07 s/step 30.6 eta 0.74h peakGPU 28.4GiB
+{'loss': '0.3299', 'grad_norm': '1.062', 'learning_rate': '4.043e-07', 'epoch': '5.304', 'num_input_tokens_seen': 50389709, 'train_runtime': '1.937e+04', 'train_tokens_per_second': '2602'}
+[11-13 05:00:26] step 664/750 epoch 5.31 loss 0.2559 lr 3.95e-07 s/step 22.6 eta 0.54h peakGPU 28.4GiB
+{'loss': '0.2559', 'grad_norm': '1.156', 'learning_rate': '3.952e-07', 'epoch': '5.312', 'num_input_tokens_seen': 50447917, 'train_runtime': '1.939e+04', 'train_tokens_per_second': '2602'}
+[11-13 05:00:51] step 665/750 epoch 5.32 loss 0.2238 lr 3.86e-07 s/step 25.1 eta 0.59h peakGPU 28.4GiB
+{'loss': '0.2238', 'grad_norm': '1.024', 'learning_rate': '3.862e-07', 'epoch': '5.32', 'num_input_tokens_seen': 50521221, 'train_runtime': '1.941e+04', 'train_tokens_per_second': '2602'}
+[11-13 05:01:19] step 666/750 epoch 5.33 loss 0.3889 lr 3.77e-07 s/step 27.8 eta 0.65h peakGPU 28.4GiB
+{'loss': '0.3889', 'grad_norm': '1.119', 'learning_rate': '3.773e-07', 'epoch': '5.328', 'num_input_tokens_seen': 50609476, 'train_runtime': '1.944e+04', 'train_tokens_per_second': '2603'}
+[11-13 05:01:41] step 667/750 epoch 5.34 loss 0.3122 lr 3.68e-07 s/step 21.9 eta 0.51h peakGPU 28.4GiB
+{'loss': '0.3122', 'grad_norm': '1.339', 'learning_rate': '3.685e-07', 'epoch': '5.336', 'num_input_tokens_seen': 50666758, 'train_runtime': '1.946e+04', 'train_tokens_per_second': '2603'}
+[11-13 05:01:59] HEARTBEAT 667
+[11-13 05:02:08] step 668/750 epoch 5.34 loss 0.3664 lr 3.60e-07 s/step 27.1 eta 0.62h peakGPU 28.4GiB
+{'loss': '0.3664', 'grad_norm': '1.173', 'learning_rate': '3.597e-07', 'epoch': '5.344', 'num_input_tokens_seen': 50749989, 'train_runtime': '1.949e+04', 'train_tokens_per_second': '2604'}
+[11-13 05:02:32] step 669/750 epoch 5.35 loss 0.3414 lr 3.51e-07 s/step 24.6 eta 0.55h peakGPU 28.4GiB
+{'loss': '0.3414', 'grad_norm': '1.285', 'learning_rate': '3.511e-07', 'epoch': '5.352', 'num_input_tokens_seen': 50821044, 'train_runtime': '1.952e+04', 'train_tokens_per_second': '2604'}
+[11-13 05:02:57] step 670/750 epoch 5.36 loss 0.3928 lr 3.43e-07 s/step 25.2 eta 0.56h peakGPU 28.4GiB
+{'loss': '0.3928', 'grad_norm': '1.246', 'learning_rate': '3.426e-07', 'epoch': '5.36', 'num_input_tokens_seen': 50895047, 'train_runtime': '1.954e+04', 'train_tokens_per_second': '2605'}
+[11-13 05:03:22] step 671/750 epoch 5.37 loss 0.3021 lr 3.34e-07 s/step 24.2 eta 0.53h peakGPU 28.4GiB
+{'loss': '0.3021', 'grad_norm': '1.124', 'learning_rate': '3.342e-07', 'epoch': '5.368', 'num_input_tokens_seen': 50964702, 'train_runtime': '1.956e+04', 'train_tokens_per_second': '2605'}
+[11-13 05:03:49] step 672/750 epoch 5.38 loss 0.4065 lr 3.26e-07 s/step 27.3 eta 0.59h peakGPU 28.4GiB
+{'loss': '0.4065', 'grad_norm': '1.357', 'learning_rate': '3.259e-07', 'epoch': '5.376', 'num_input_tokens_seen': 51048821, 'train_runtime': '1.959e+04', 'train_tokens_per_second': '2606'}
+[11-13 05:04:17] step 673/750 epoch 5.38 loss 0.3916 lr 3.18e-07 s/step 28.4 eta 0.61h peakGPU 28.4GiB
+{'loss': '0.3916', 'grad_norm': '1.121', 'learning_rate': '3.177e-07', 'epoch': '5.384', 'num_input_tokens_seen': 51139981, 'train_runtime': '1.962e+04', 'train_tokens_per_second': '2606'}
+[11-13 05:04:43] step 674/750 epoch 5.39 loss 0.3808 lr 3.10e-07 s/step 25.7 eta 0.54h peakGPU 28.4GiB
+{'loss': '0.3808', 'grad_norm': '1.172', 'learning_rate': '3.095e-07', 'epoch': '5.392', 'num_input_tokens_seen': 51216730, 'train_runtime': '1.965e+04', 'train_tokens_per_second': '2607'}
+[11-13 05:05:10] step 675/750 epoch 5.40 loss 0.3889 lr 3.02e-07 s/step 27.2 eta 0.57h peakGPU 28.4GiB
+{'loss': '0.3889', 'grad_norm': '1.209', 'learning_rate': '3.015e-07', 'epoch': '5.4', 'num_input_tokens_seen': 51301452, 'train_runtime': '1.967e+04', 'train_tokens_per_second': '2608'}
+[11-13 05:05:35] step 676/750 epoch 5.41 loss 0.2601 lr 2.94e-07 s/step 24.5 eta 0.50h peakGPU 28.4GiB
+{'loss': '0.2601', 'grad_norm': '1.118', 'learning_rate': '2.936e-07', 'epoch': '5.408', 'num_input_tokens_seen': 51371826, 'train_runtime': '1.97e+04', 'train_tokens_per_second': '2608'}
+[11-13 05:05:59] step 677/750 epoch 5.42 loss 0.3954 lr 2.86e-07 s/step 24.7 eta 0.50h peakGPU 28.4GiB
+{'loss': '0.3954', 'grad_norm': '1.305', 'learning_rate': '2.858e-07', 'epoch': '5.416', 'num_input_tokens_seen': 51442572, 'train_runtime': '1.972e+04', 'train_tokens_per_second': '2608'}
+[11-13 05:06:25] step 678/750 epoch 5.42 loss 0.2849 lr 2.78e-07 s/step 25.3 eta 0.51h peakGPU 28.4GiB
+{'loss': '0.2849', 'grad_norm': '1.066', 'learning_rate': '2.781e-07', 'epoch': '5.424', 'num_input_tokens_seen': 51515590, 'train_runtime': '1.975e+04', 'train_tokens_per_second': '2609'}
+[11-13 05:06:56] step 679/750 epoch 5.43 loss 0.2939 lr 2.71e-07 s/step 30.7 eta 0.61h peakGPU 28.4GiB
+{'loss': '0.2939', 'grad_norm': '0.8941', 'learning_rate': '2.705e-07', 'epoch': '5.432', 'num_input_tokens_seen': 51618625, 'train_runtime': '1.978e+04', 'train_tokens_per_second': '2610'}
+[11-13 05:06:59] HEARTBEAT 679
+[11-13 05:07:24] step 680/750 epoch 5.44 loss 0.3296 lr 2.63e-07 s/step 28.1 eta 0.55h peakGPU 28.4GiB
+{'loss': '0.3296', 'grad_norm': '1.116', 'learning_rate': '2.63e-07', 'epoch': '5.44', 'num_input_tokens_seen': 51708203, 'train_runtime': '1.981e+04', 'train_tokens_per_second': '2611'}
+[11-13 05:07:47] step 681/750 epoch 5.45 loss 0.3321 lr 2.56e-07 s/step 23.5 eta 0.45h peakGPU 28.4GiB
+{'loss': '0.3321', 'grad_norm': '1.227', 'learning_rate': '2.556e-07', 'epoch': '5.448', 'num_input_tokens_seen': 51772479, 'train_runtime': '1.983e+04', 'train_tokens_per_second': '2611'}
+[11-13 05:08:09] step 682/750 epoch 5.46 loss 0.3000 lr 2.48e-07 s/step 22.5 eta 0.42h peakGPU 28.4GiB
+{'loss': '0.3', 'grad_norm': '1.29', 'learning_rate': '2.483e-07', 'epoch': '5.456', 'num_input_tokens_seen': 51831720, 'train_runtime': '1.985e+04', 'train_tokens_per_second': '2611'}
+[11-13 05:08:34] step 683/750 epoch 5.46 loss 0.3858 lr 2.41e-07 s/step 24.2 eta 0.45h peakGPU 28.4GiB
+{'loss': '0.3858', 'grad_norm': '1.27', 'learning_rate': '2.411e-07', 'epoch': '5.464', 'num_input_tokens_seen': 51901010, 'train_runtime': '1.988e+04', 'train_tokens_per_second': '2611'}
+[11-13 05:09:03] step 684/750 epoch 5.47 loss 0.3569 lr 2.34e-07 s/step 29.8 eta 0.55h peakGPU 28.4GiB
+{'loss': '0.3569', 'grad_norm': '1.006', 'learning_rate': '2.34e-07', 'epoch': '5.472', 'num_input_tokens_seen': 51998537, 'train_runtime': '1.991e+04', 'train_tokens_per_second': '2612'}
+[11-13 05:09:30] step 685/750 epoch 5.48 loss 0.3686 lr 2.27e-07 s/step 27.0 eta 0.49h peakGPU 28.4GiB
+{'loss': '0.3686', 'grad_norm': '1.193', 'learning_rate': '2.271e-07', 'epoch': '5.48', 'num_input_tokens_seen': 52082055, 'train_runtime': '1.993e+04', 'train_tokens_per_second': '2613'}
+[11-13 05:09:52] step 686/750 epoch 5.49 loss 0.3398 lr 2.20e-07 s/step 21.9 eta 0.39h peakGPU 28.4GiB
+{'loss': '0.3398', 'grad_norm': '1.295', 'learning_rate': '2.202e-07', 'epoch': '5.488', 'num_input_tokens_seen': 52138802, 'train_runtime': '1.996e+04', 'train_tokens_per_second': '2613'}
+[11-13 05:10:22] step 687/750 epoch 5.50 loss 0.3649 lr 2.13e-07 s/step 29.4 eta 0.51h peakGPU 28.4GiB
+{'loss': '0.3649', 'grad_norm': '1.118', 'learning_rate': '2.134e-07', 'epoch': '5.496', 'num_input_tokens_seen': 52234596, 'train_runtime': '1.998e+04', 'train_tokens_per_second': '2614'}
+[11-13 05:10:46] step 688/750 epoch 5.50 loss 0.3832 lr 2.07e-07 s/step 23.9 eta 0.41h peakGPU 28.4GiB
+{'loss': '0.3832', 'grad_norm': '1.241', 'learning_rate': '2.067e-07', 'epoch': '5.504', 'num_input_tokens_seen': 52301264, 'train_runtime': '2.001e+04', 'train_tokens_per_second': '2614'}
+[11-13 05:11:11] step 689/750 epoch 5.51 loss 0.3485 lr 2.00e-07 s/step 25.5 eta 0.43h peakGPU 28.4GiB
+{'loss': '0.3485', 'grad_norm': '1.235', 'learning_rate': '2.002e-07', 'epoch': '5.512', 'num_input_tokens_seen': 52376726, 'train_runtime': '2.003e+04', 'train_tokens_per_second': '2614'}
+[11-13 05:11:32] step 690/750 epoch 5.52 loss 0.2760 lr 1.94e-07 s/step 21.1 eta 0.35h peakGPU 28.4GiB
+{'loss': '0.276', 'grad_norm': '1.184', 'learning_rate': '1.937e-07', 'epoch': '5.52', 'num_input_tokens_seen': 52428000, 'train_runtime': '2.006e+04', 'train_tokens_per_second': '2614'}
+[11-13 05:12:00] HEARTBEAT 690
+[11-13 05:12:00] step 691/750 epoch 5.53 loss 0.3514 lr 1.87e-07 s/step 28.5 eta 0.47h peakGPU 28.4GiB
+{'loss': '0.3514', 'grad_norm': '1.07', 'learning_rate': '1.873e-07', 'epoch': '5.528', 'num_input_tokens_seen': 52519432, 'train_runtime': '2.008e+04', 'train_tokens_per_second': '2615'}
+[11-13 05:12:25] step 692/750 epoch 5.54 loss 0.2989 lr 1.81e-07 s/step 24.5 eta 0.39h peakGPU 28.4GiB
+{'loss': '0.2989', 'grad_norm': '1.108', 'learning_rate': '1.811e-07', 'epoch': '5.536', 'num_input_tokens_seen': 52590342, 'train_runtime': '2.011e+04', 'train_tokens_per_second': '2615'}
+[11-13 05:12:50] step 693/750 epoch 5.54 loss 0.3625 lr 1.75e-07 s/step 25.0 eta 0.40h peakGPU 28.4GiB
+{'loss': '0.3625', 'grad_norm': '1.19', 'learning_rate': '1.749e-07', 'epoch': '5.544', 'num_input_tokens_seen': 52663793, 'train_runtime': '2.013e+04', 'train_tokens_per_second': '2616'}
+[11-13 05:13:10] step 694/750 epoch 5.55 loss 0.1658 lr 1.69e-07 s/step 19.9 eta 0.31h peakGPU 28.4GiB
+{'loss': '0.1658', 'grad_norm': '1.136', 'learning_rate': '1.689e-07', 'epoch': '5.552', 'num_input_tokens_seen': 52709237, 'train_runtime': '2.015e+04', 'train_tokens_per_second': '2615'}
+[11-13 05:13:34] step 695/750 epoch 5.56 loss 0.2952 lr 1.63e-07 s/step 23.9 eta 0.36h peakGPU 28.4GiB
+{'loss': '0.2952', 'grad_norm': '1.141', 'learning_rate': '1.629e-07', 'epoch': '5.56', 'num_input_tokens_seen': 52776742, 'train_runtime': '2.018e+04', 'train_tokens_per_second': '2616'}
+[11-13 05:13:57] step 696/750 epoch 5.57 loss 0.3467 lr 1.57e-07 s/step 23.3 eta 0.35h peakGPU 28.4GiB
+{'loss': '0.3467', 'grad_norm': '1.238', 'learning_rate': '1.571e-07', 'epoch': '5.568', 'num_input_tokens_seen': 52839636, 'train_runtime': '2.02e+04', 'train_tokens_per_second': '2616'}
+[11-13 05:14:25] step 697/750 epoch 5.58 loss 0.4978 lr 1.51e-07 s/step 27.9 eta 0.41h peakGPU 28.4GiB
+{'loss': '0.4978', 'grad_norm': '1.16', 'learning_rate': '1.513e-07', 'epoch': '5.576', 'num_input_tokens_seen': 52926536, 'train_runtime': '2.023e+04', 'train_tokens_per_second': '2617'}
+[11-13 05:14:46] step 698/750 epoch 5.58 loss 0.2158 lr 1.46e-07 s/step 20.8 eta 0.30h peakGPU 28.4GiB
+{'loss': '0.2158', 'grad_norm': '1.218', 'learning_rate': '1.457e-07', 'epoch': '5.584', 'num_input_tokens_seen': 52977408, 'train_runtime': '2.025e+04', 'train_tokens_per_second': '2616'}
+[11-13 05:15:16] step 699/750 epoch 5.59 loss 0.2981 lr 1.40e-07 s/step 30.3 eta 0.43h peakGPU 28.4GiB
+{'loss': '0.2981', 'grad_norm': '1.168', 'learning_rate': '1.402e-07', 'epoch': '5.592', 'num_input_tokens_seen': 53078164, 'train_runtime': '2.028e+04', 'train_tokens_per_second': '2617'}
+[11-13 05:15:39] step 700/750 epoch 5.60 loss 0.3398 lr 1.35e-07 s/step 23.4 eta 0.33h peakGPU 28.4GiB
+{'loss': '0.3398', 'grad_norm': '1.134', 'learning_rate': '1.348e-07', 'epoch': '5.6', 'num_input_tokens_seen': 53142901, 'train_runtime': '2.03e+04', 'train_tokens_per_second': '2618'}
+[11-13 05:16:04] step 701/750 epoch 5.61 loss 0.3356 lr 1.29e-07 s/step 24.8 eta 0.34h peakGPU 28.4GiB
+{'loss': '0.3356', 'grad_norm': '1.161', 'learning_rate': '1.295e-07', 'epoch': '5.608', 'num_input_tokens_seen': 53216135, 'train_runtime': '2.033e+04', 'train_tokens_per_second': '2618'}
+[11-13 05:16:34] step 702/750 epoch 5.62 loss 0.4333 lr 1.24e-07 s/step 29.3 eta 0.39h peakGPU 28.4GiB
+{'loss': '0.4333', 'grad_norm': '1.075', 'learning_rate': '1.243e-07', 'epoch': '5.616', 'num_input_tokens_seen': 53312304, 'train_runtime': '2.036e+04', 'train_tokens_per_second': '2619'}
+[11-13 05:16:57] step 703/750 epoch 5.62 loss 0.2655 lr 1.19e-07 s/step 23.4 eta 0.31h peakGPU 28.4GiB
+{'loss': '0.2655', 'grad_norm': '1.163', 'learning_rate': '1.192e-07', 'epoch': '5.624', 'num_input_tokens_seen': 53377416, 'train_runtime': '2.038e+04', 'train_tokens_per_second': '2619'}
+[11-13 05:17:00] HEARTBEAT 703
+[11-13 05:17:23] step 704/750 epoch 5.63 loss 0.2640 lr 1.14e-07 s/step 26.2 eta 0.33h peakGPU 28.4GiB
+{'loss': '0.264', 'grad_norm': '1.028', 'learning_rate': '1.142e-07', 'epoch': '5.632', 'num_input_tokens_seen': 53457748, 'train_runtime': '2.041e+04', 'train_tokens_per_second': '2620'}
+[11-13 05:17:52] step 705/750 epoch 5.64 loss 0.2950 lr 1.09e-07 s/step 29.1 eta 0.36h peakGPU 28.4GiB
+{'loss': '0.295', 'grad_norm': '0.9698', 'learning_rate': '1.093e-07', 'epoch': '5.64', 'num_input_tokens_seen': 53552572, 'train_runtime': '2.044e+04', 'train_tokens_per_second': '2621'}
+[11-13 05:18:19] step 706/750 epoch 5.65 loss 0.3223 lr 1.04e-07 s/step 26.6 eta 0.32h peakGPU 28.4GiB
+{'loss': '0.3223', 'grad_norm': '1.095', 'learning_rate': '1.045e-07', 'epoch': '5.648', 'num_input_tokens_seen': 53632839, 'train_runtime': '2.046e+04', 'train_tokens_per_second': '2621'}
+[11-13 05:18:44] step 707/750 epoch 5.66 loss 0.2982 lr 9.98e-08 s/step 25.3 eta 0.30h peakGPU 28.4GiB
+{'loss': '0.2982', 'grad_norm': '1.179', 'learning_rate': '9.98e-08', 'epoch': '5.656', 'num_input_tokens_seen': 53706930, 'train_runtime': '2.049e+04', 'train_tokens_per_second': '2621'}
+[11-13 05:19:10] step 708/750 epoch 5.66 loss 0.3602 lr 9.52e-08 s/step 25.9 eta 0.30h peakGPU 28.4GiB
+{'loss': '0.3602', 'grad_norm': '1.242', 'learning_rate': '9.522e-08', 'epoch': '5.664', 'num_input_tokens_seen': 53784711, 'train_runtime': '2.051e+04', 'train_tokens_per_second': '2622'}
+[11-13 05:19:34] step 709/750 epoch 5.67 loss 0.3207 lr 9.08e-08 s/step 23.4 eta 0.27h peakGPU 28.4GiB
+{'loss': '0.3207', 'grad_norm': '1.209', 'learning_rate': '9.076e-08', 'epoch': '5.672', 'num_input_tokens_seen': 53848728, 'train_runtime': '2.054e+04', 'train_tokens_per_second': '2622'}
+[11-13 05:19:57] step 710/750 epoch 5.68 loss 0.3281 lr 8.64e-08 s/step 23.0 eta 0.26h peakGPU 28.4GiB
+{'loss': '0.3281', 'grad_norm': '1.205', 'learning_rate': '8.64e-08', 'epoch': '5.68', 'num_input_tokens_seen': 53910955, 'train_runtime': '2.056e+04', 'train_tokens_per_second': '2622'}
+[11-13 05:20:21] step 711/750 epoch 5.69 loss 0.3521 lr 8.21e-08 s/step 24.9 eta 0.27h peakGPU 28.4GiB
+{'loss': '0.3521', 'grad_norm': '1.163', 'learning_rate': '8.214e-08', 'epoch': '5.688', 'num_input_tokens_seen': 53981432, 'train_runtime': '2.058e+04', 'train_tokens_per_second': '2622'}
+[11-13 05:20:43] step 712/750 epoch 5.70 loss 0.3277 lr 7.80e-08 s/step 22.1 eta 0.23h peakGPU 28.4GiB
+{'loss': '0.3277', 'grad_norm': '1.351', 'learning_rate': '7.8e-08', 'epoch': '5.696', 'num_input_tokens_seen': 54037553, 'train_runtime': '2.061e+04', 'train_tokens_per_second': '2622'}
+[11-13 05:21:09] step 713/750 epoch 5.70 loss 0.3583 lr 7.40e-08 s/step 25.5 eta 0.26h peakGPU 28.4GiB
+{'loss': '0.3583', 'grad_norm': '1.155', 'learning_rate': '7.395e-08', 'epoch': '5.704', 'num_input_tokens_seen': 54113102, 'train_runtime': '2.063e+04', 'train_tokens_per_second': '2623'}
+[11-13 05:21:38] step 714/750 epoch 5.71 loss 0.3185 lr 7.00e-08 s/step 29.4 eta 0.29h peakGPU 28.4GiB
+{'loss': '0.3185', 'grad_norm': '1.058', 'learning_rate': '7.002e-08', 'epoch': '5.712', 'num_input_tokens_seen': 54208918, 'train_runtime': '2.066e+04', 'train_tokens_per_second': '2624'}
+[11-13 05:22:00] HEARTBEAT 714
+[11-13 05:22:07] step 715/750 epoch 5.72 loss 0.2861 lr 6.62e-08 s/step 28.3 eta 0.27h peakGPU 28.4GiB
+{'loss': '0.2861', 'grad_norm': '1.023', 'learning_rate': '6.619e-08', 'epoch': '5.72', 'num_input_tokens_seen': 54298332, 'train_runtime': '2.069e+04', 'train_tokens_per_second': '2624'}
+[11-13 05:22:32] step 716/750 epoch 5.73 loss 0.3321 lr 6.25e-08 s/step 25.2 eta 0.24h peakGPU 28.4GiB
+{'loss': '0.3321', 'grad_norm': '1.308', 'learning_rate': '6.247e-08', 'epoch': '5.728', 'num_input_tokens_seen': 54372910, 'train_runtime': '2.071e+04', 'train_tokens_per_second': '2625'}
+[11-13 05:22:58] step 717/750 epoch 5.74 loss 0.2781 lr 5.89e-08 s/step 26.0 eta 0.24h peakGPU 28.4GiB
+{'loss': '0.2781', 'grad_norm': '1.118', 'learning_rate': '5.886e-08', 'epoch': '5.736', 'num_input_tokens_seen': 54449271, 'train_runtime': '2.074e+04', 'train_tokens_per_second': '2625'}
+[11-13 05:23:26] step 718/750 epoch 5.74 loss 0.3730 lr 5.54e-08 s/step 28.1 eta 0.25h peakGPU 28.4GiB
+{'loss': '0.373', 'grad_norm': '1.109', 'learning_rate': '5.535e-08', 'epoch': '5.744', 'num_input_tokens_seen': 54538613, 'train_runtime': '2.077e+04', 'train_tokens_per_second': '2626'}
+[11-13 05:23:51] step 719/750 epoch 5.75 loss 0.3828 lr 5.20e-08 s/step 25.3 eta 0.22h peakGPU 28.4GiB
+{'loss': '0.3828', 'grad_norm': '1.138', 'learning_rate': '5.195e-08', 'epoch': '5.752', 'num_input_tokens_seen': 54612773, 'train_runtime': '2.079e+04', 'train_tokens_per_second': '2626'}
+[11-13 05:24:17] step 720/750 epoch 5.76 loss 0.2697 lr 4.87e-08 s/step 25.7 eta 0.21h peakGPU 28.4GiB
+{'loss': '0.2697', 'grad_norm': '1.065', 'learning_rate': '4.866e-08', 'epoch': '5.76', 'num_input_tokens_seen': 54688043, 'train_runtime': '2.082e+04', 'train_tokens_per_second': '2627'}
+[11-13 05:24:43] step 721/750 epoch 5.77 loss 0.3783 lr 4.55e-08 s/step 26.6 eta 0.21h peakGPU 28.4GiB
+{'loss': '0.3783', 'grad_norm': '1.147', 'learning_rate': '4.547e-08', 'epoch': '5.768', 'num_input_tokens_seen': 54769313, 'train_runtime': '2.085e+04', 'train_tokens_per_second': '2627'}
+[11-13 05:25:08] step 722/750 epoch 5.78 loss 0.4333 lr 4.24e-08 s/step 24.8 eta 0.19h peakGPU 28.4GiB
+{'loss': '0.4333', 'grad_norm': '1.328', 'learning_rate': '4.24e-08', 'epoch': '5.776', 'num_input_tokens_seen': 54839948, 'train_runtime': '2.087e+04', 'train_tokens_per_second': '2628'}
