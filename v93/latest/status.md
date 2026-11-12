@@ -1,4 +1,4 @@
-# v93 status (2026-11-12T16:36:46, session p1-r1-16k-restart-1112)
+# v93 status (2026-11-12T17:08:48, session p1-r1-16k-restart-1112)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -15,10 +15,10 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 261 min ago (stale) 
-stage train:qfft_r1_16k_b8_restart                  running   on p1-r1-16k-restart-1112@b8e654fbf873, heartbeat 2 min ago 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 293 min ago (stale) 
+stage train:qfft_r1_16k_b8_restart                  running   on p1-r1-16k-restart-1112@b8e654fbf873, heartbeat 4 min ago 
 run qfft_ds_v93                  complete step 378/ updated 2026-11-12T03:37:21+08:00
-run qfft_r1_16k_b8_restart_v93   training step 125/750 updated 2026-11-13T00:30:45+08:00
+run qfft_r1_16k_b8_restart_v93   training step 195/750 updated 2026-11-13T01:08:39+08:00
 run qfft_r1_16k_b8_v93           training step 209/750 updated 2026-11-12T20:20:25+08:00
 run smoke_grpo_v93               complete step 2/ updated 2026-11-09T19:11:43+08:00
 run smoke_peak_v93               smoke_done step 2/ updated 2026-11-09T18:45:06+08:00
