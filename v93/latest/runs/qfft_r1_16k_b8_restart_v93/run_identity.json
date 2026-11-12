@@ -1,0 +1,29 @@
+{
+  "identity": {
+    "run": "qfft_r1_16k_b8_restart_v93",
+    "format": "qfft",
+    "teacher": "r1",
+    "data_sha256": "047df3c8a897ccdfb3f6c632e2aba172f52ee4438eaee61c65e1e23e93c5a4d9",
+    "init_model": "base",
+    "recipe": {
+      "max_length": 16384,
+      "num_train_epochs": 6,
+      "learning_rate": 1e-05,
+      "warmup_fraction": 0.1,
+      "lr_scheduler_type": "cosine",
+      "per_device_train_batch_size": 1,
+      "gradient_accumulation_steps": 8,
+      "weight_decay": 0.0001,
+      "adam_beta1": 0.9,
+      "adam_beta2": 0.999,
+      "max_grad_norm": 1.0,
+      "seed": 42,
+      "truncate": true
+    },
+    "smoke": false,
+    "max_steps_override": null
+  },
+  "identity_sha256": "49497e02393c4a33f0e0df70c0b9804a3ab7b22c1bdaf2b1f0bae451b8869fc9",
+  "code_bundle": "fa6fc71edeae",
+  "updated": "2026-11-12T23:36:27+08:00"
+}

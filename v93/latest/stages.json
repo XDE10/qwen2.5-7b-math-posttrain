@@ -133,5 +133,14 @@
   "host": "p1-1112-183656@ff2652a8744b",
   "heartbeat": "2026-11-12T12:16:03.313258",
   "heartbeat_ts": 1794485763.3132703
+ },
+ "train__qfft_r1_16k_b8_restart": {
+  "stage": "train:qfft_r1_16k_b8_restart",
+  "state": "running",
+  "started": "2026-11-12T15:34:34.997273",
+  "code": "fa6fc71edeae",
+  "host": "p1-r1-16k-restart-1112@b8e654fbf873",
+  "heartbeat": "2026-11-12T16:04:37.022376",
+  "heartbeat_ts": 1794499477.0224204
  }
 }

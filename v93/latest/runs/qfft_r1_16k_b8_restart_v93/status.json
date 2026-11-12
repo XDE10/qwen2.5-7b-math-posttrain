@@ -1,0 +1,28 @@
+{
+  "state": "training",
+  "step": 65,
+  "max_steps": 750,
+  "epoch": 0.52,
+  "updated": "2026-11-13T00:05:04+08:00",
+  "last_log": {
+    "step": 65,
+    "time": "2026-11-13T00:05:04+08:00",
+    "loss": 1.1161859035491943,
+    "grad_norm": 1.349690556526184,
+    "learning_rate": 8.666666666666668e-06,
+    "epoch": 0.52,
+    "num_input_tokens_seen": 4912812,
+    "train_runtime": 1666.9036,
+    "train_tokens_per_second": 2947.268,
+    "time/seconds_per_step": 25.329864478999752,
+    "throughput/tokens_per_second": 2978.42098849552,
+    "time/eta_hours": 4.8197103244763415,
+    "gpu/allocated_gib": 15.264522552490234,
+    "gpu/peak_allocated_gib": 28.370383262634277,
+    "gpu/peak_reserved_gib": 42.56640625,
+    "host/rss_gib": 145.6915397644043,
+    "host/available_gib": 27.432235717773438,
+    "train/epoch": 0.52
+  },
+  "run": "qfft_r1_16k_b8_restart_v93"
+}
