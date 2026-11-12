@@ -1,6 +1,6 @@
 # v93 results (mean@n %, ±95% CI half-width / mean output tokens)
 
-Grader: v93-final-segment-last-box/math-verify-0.9.0; generated 2026-11-12T09:58:12+08:00.
+Grader: v93-final-segment-last-box/math-verify-0.9.0; generated 2026-11-12T10:32:22+08:00.
 
 | model | math500 | aime24 | aime25 | amc23 | gsm8k | AIME24+25+AMC23 |
 |---|---|---|---|---|---|---|

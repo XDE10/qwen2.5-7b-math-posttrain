@@ -1,0 +1,9 @@
+[11-12 10:31:20] rclone copy (58 s): 2026/11/12 02:31:20 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 111.406 MiB/s, ETA 0s
+[11-12 10:31:20] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_ds_v93/final in 58 s
+[11-12 10:31:34] qfft_ds_v93/math500: 2000 generations planned, 2000 already saved
+[11-12 10:31:39] qfft_ds_v93/aime24: 480 generations planned, 480 already saved
+[11-12 10:31:43] qfft_ds_v93/aime25: 480 generations planned, 480 already saved
+[11-12 10:31:47] qfft_ds_v93/amc23: 320 generations planned, 320 already saved
+[11-12 10:31:51] qfft_ds_v93/gsm8k: 1319 generations planned, 1319 already saved
+[11-12 10:31:51] Nothing to generate; all requested generations exist
+[11-12 10:32:00] qfft_ds_v93: generation complete for math500, aime24, aime25, amc23, gsm8k

@@ -1,0 +1,34 @@
+P1_SESSION=p1-1112-102354 gpu=G4 auto_release=1
+/tmp/ipykernel_16884/3400099630.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle d6e14dde669a (git 3852a6929922+dirty); stages: ['train:qfft_ds', 'eval:run:qfft_ds_v93:full']
+[11-12 02:27:54] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-12 02:27:54] ===== STAGE train:qfft_ds =====
+[11-12 02:27:56] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-12 02:27:56] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-12 02:27:56] Host RAM 177 GiB (need >= 128)
+[11-12 02:27:56] Installing training extras (system torch/transformers kept): {'torch': '2.14.1+cu130', 'transformers': '5.22.1', 'accelerate': '1.15.0', 'tokenizers': '0.23.3', 'safetensors': '0.8.0', 'numpy': '2.4.6', 'triton': '3.8.0'}
+[11-12 02:28:45] TRAIN_ENV 2.14.1+cu130 5.22.1 0.19.9 True
+[11-12 02:28:45] RUN /usr/bin/python3 -m torch.distributed.run --standalone --nnodes=1 --nproc_per_node=1 -m experiments.qfft_v93.train_sft --config train/qfft_ds.json | log: /content/mydrive/runs/project1/v93/logs/20261112-022845_train_qfft_ds.log
+[11-12 10:28:51] qfft_ds_v93: already complete (/content/mydrive/runs/project1/v93/runs/qfft_ds_v93/TRAIN_COMPLETE.json); nothing to do
+[11-12 02:28:52] ===== STAGE eval:run:qfft_ds_v93:full =====
+[11-12 02:28:53] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-12 02:28:53] Host RAM: 177 GiB, CPUs: 48, local disk free: 235 GiB
+[11-12 02:28:53] Restoring infer venv from Drive snapshot infer-56ffd0b9476c.tar
+[11-12 02:30:22] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.generate --model run:qfft_ds_v93 --suite full --tag qfft_ds_v93 | log: /content/mydrive/runs/project1/v93/logs/20261112-023022_gen_qfft_ds_v93.log
+[11-12 10:31:20] rclone copy (58 s): 2026/11/12 02:31:20 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 111.406 MiB/s, ETA 0s
+[11-12 10:31:20] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_ds_v93/final in 58 s
+[11-12 10:31:34] qfft_ds_v93/math500: 2000 generations planned, 2000 already saved
+[11-12 10:31:39] qfft_ds_v93/aime24: 480 generations planned, 480 already saved
+[11-12 10:31:43] qfft_ds_v93/aime25: 480 generations planned, 480 already saved
+[11-12 10:31:47] qfft_ds_v93/amc23: 320 generations planned, 320 already saved
+[11-12 10:31:51] qfft_ds_v93/gsm8k: 1319 generations planned, 1319 already saved
+[11-12 10:31:51] Nothing to generate; all requested generations exist
+[11-12 10:32:00] qfft_ds_v93: generation complete for math500, aime24, aime25, amc23, gsm8k
+[11-12 02:32:01] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --tags qfft_ds_v93 | log: /content/mydrive/runs/project1/v93/logs/20261112-023201_score_qfft_ds_v93.log
+[11-12 10:32:07] qfft_ds_v93/aime24: mean@n=0.050 CI=[0.016666666666666666, 0.09375] tokens=19566 trunc=0.446
+[11-12 10:32:10] qfft_ds_v93/aime25: mean@n=0.040 CI=[0.008333333333333333, 0.08125] tokens=18567 trunc=0.419
+[11-12 10:32:12] qfft_ds_v93/amc23: mean@n=0.416 CI=[0.296875, 0.5375] tokens=8694 trunc=0.172
+[11-12 10:32:16] qfft_ds_v93/gsm8k: mean@n=0.887 CI=[0.869598180439727, 0.9037149355572404] tokens=444 trunc=0.004
+[11-12 10:32:22] qfft_ds_v93/math500: mean@n=0.670 CI=[0.6365, 0.7035] tokens=4374 trunc=0.080
+[11-12 10:32:22] Wrote /content/mydrive/runs/project1/v93/evals/results.md
