@@ -1,0 +1,8 @@
+{
+  "state": "complete",
+  "steps": 2,
+  "resumed_from": null,
+  "adapter": "/content/mydrive/runs/project1/v93/runs/diagnose_grpo_qfft_r1_8k_v93/adapter",
+  "wall_hours_this_session": 0.26,
+  "completed": "2026-11-13T10:55:24+08:00"
+}
