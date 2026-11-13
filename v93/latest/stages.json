@@ -98,6 +98,15 @@
   "code": "dad352384f53",
   "host": "p1-r1-grpo-diag8k-1113@58a344a3f853"
  },
+ "grpo__grpo_qfft_r1_16k_continue30": {
+  "stage": "grpo:grpo_qfft_r1_16k_continue30",
+  "state": "running",
+  "started": "2026-11-13T15:39:00.960052",
+  "code": "217f95dfe7d1",
+  "host": "p1-r1-16k-step30@bafe0dcab6ba",
+  "heartbeat": "2026-11-13T16:19:45.538773",
+  "heartbeat_ts": 1794586785.5387855
+ },
  "grpo__grpo_qfft_r1_16k_pilot": {
   "stage": "grpo:grpo_qfft_r1_16k_pilot",
   "state": "complete",

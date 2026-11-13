@@ -1,0 +1,77 @@
+P1_SESSION=p1-r1-16k-step30 gpu=G4 auto_release=1
+/tmp/ipykernel_7383/1790304919.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 217f95dfe7d1 (git c638bc4625b5+dirty); stages: ['grpo:grpo_qfft_r1_16k_continue30:resume', 'r1-grpo-dev:step30']
+[11-13 15:38:57] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-13 15:39:00] ===== STAGE grpo:grpo_qfft_r1_16k_continue30:resume =====
+[11-13 15:39:04] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-13 15:39:04] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-13 15:39:08] Restoring rl venv from Drive snapshot rl-366e0de0b57e.tar
+[11-13 15:40:27] RUN /content/p1/venvs/rl/bin/python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_16k_continue30.json --require-resume | log: /content/mydrive/runs/project1/v93/logs/20261113-154027_grpo_grpo_qfft_r1_16k_continue30.log
+[11-13 23:41:44] rclone copy (65 s): 2026/11/13 15:41:44 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 116.769 MiB/s, ETA 0s
+[11-13 23:41:44] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 65 s
+[11-13 23:42:11] RL pool: {'files': ['/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl', '/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl'], 'unique_questions': 1555, 'approval_manifest': 'grpo/r1_pool_approval.json', 'removed_benchmark_similar': 4, 'overlap_with_sft_questions': 0, 'final_questions': 1551}
+[11-13 23:42:31] Restoring checkpoint-10 from Drive (935.3MiB) ...
+[11-13 23:42:52] rclone copy (18 s): 2026/11/13 15:42:52 NOTICE:   935.317 MiB / 935.317 MiB, 100%, 186.295 MiB/s, ETA 0s
+[11-13 23:42:52] Downloaded /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-10 in 18 s
+[11-13 23:42:54] Resuming from restored /content/p1/runs/grpo_qfft_r1_16k_continue30_v93/checkpoint-10
+[11-13 23:42:54] grpo_qfft_r1_16k_continue30_v93: extending from step 10 to 30 with full training state
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/grpo_qfft_r1_16k_continue30_v93/swanlog/run-20261113_154302-1aa
+jvf4e
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run grpo_qfft_r1_16k_continue30_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/1aajvf4e
+[11-13 23:43:04] SwanLab run 1aajvf4e https://swanlab.cn/@XDE10/project1-7b-math/runs/1aajvf4e
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   1%|          | 2/339 [00:00<00:29, 11.49it/s]
+Loading weights:  12%|█▏        | 42/339 [00:00<00:01, 179.70it/s]
+Loading weights:  23%|██▎       | 78/339 [00:00<00:01, 247.36it/s]
+Loading weights:  37%|███▋      | 124/339 [00:00<00:00, 311.42it/s]
+Loading weights:  47%|████▋     | 160/339 [00:00<00:00, 320.73it/s]
+Loading weights:  58%|█████▊    | 198/339 [00:00<00:00, 333.79it/s]
+Loading weights:  69%|██████▉   | 234/339 [00:00<00:00, 340.49it/s]
+Loading weights:  80%|███████▉  | 270/339 [00:00<00:00, 345.36it/s]
+Loading weights:  90%|█████████ | 306/339 [00:01<00:00, 347.93it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 313.59it/s]
+
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.11s/it]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.11s/it]
+
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   5%|▌         | 1/19 [00:22<06:50, 22.81s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:22<00:36,  2.82s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:39<00:36,  2.82s/it]
+Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 9/19 [00:42<00:44,  4.43s/it]
+Capturing CUDA graphs (PIECEWISE):  74%|███████▎  | 14/19 [00:42<00:11,  2.20s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  1.29s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  2.25s/it]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  50%|█████     | 1/2 [00:38<00:38, 38.77s/it]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:38<00:00, 19.40s/it]
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  26%|██▋       | 5/19 [00:00<00:00, 44.26it/s]
+Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 10/19 [00:00<00:00, 45.03it/s]
+Capturing CUDA graphs (PIECEWISE):  79%|███████▉  | 15/19 [00:00<00:00, 45.88it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:00<00:00, 46.25it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/11 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  55%|█████▍    | 6/11 [00:00<00:00, 59.92it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<00:00, 61.70it/s]
+[11-13 23:50:15] HEARTBEAT starting
+[11-13 23:55:19] HEARTBEAT starting
+[11-14 00:00:24] HEARTBEAT starting
+[11-14 00:03:35] comparison step 11: length stops 3/64, mixed unmasked groups 5/8, generation 258.4s, update 702.2s, card peak 79.3 GiB, utilization 99.7%
+[11-14 00:03:35] step 11/30 epoch 0.06 loss -0.0058 lr 1.00e-05 s/step 1103.6 eta 5.82h peakGPU 77.2GiB
+{'loss': '-0.005835', 'grad_norm': '0.003515', 'learning_rate': '1e-05', 'num_tokens': '4.292e+06', 'completions/mean_length': '5350', 'completions/min_length': '397', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.04688', 'completions/mean_terminated_length': '4807', 'completions/min_terminated_length': '397', 'completions/max_terminated_length': '1.598e+04', 'rewards/final_answer/mean': '0.5625', 'rewards/final_answer/std': '0.5', 'reward': '0.5625', 'reward_std': '0.5', 'frac_reward_zero_std': '0.25', 'comparison/completion_tokens': '3.424e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '6', 'comparison/length_stop_frac': '0.04688', 'comparison/length_stops': '3', 'comparison/loss_masked': '3', 'comparison/loss_masked_frac': '0.04688', 'comparison/mean_completion_tokens': '5350', 'comparison/mixed_unmasked_reward_groups': '5', 'reward/correct_frac': '0.5625', 'reward/no_answer_frac': '0.03125', 'reward/wrong_frac': '0.4062', 'sampling/sampling_logp_difference/mean': '0.02634', 'sampling/sampling_logp_difference/max': '2.383', 'sampling/importance_sampling_ratio/min': '2.634e-31', 'sampling/importance_sampling_ratio/mean': '0.4735', 'sampling/importance_sampling_ratio/max': '2.814', 'entropy': '0.3427', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '1027', 'epoch': '0.05699', 'comparison/step_seconds': '1104', 'comparison/generation_seconds': '258.4', 'comparison/rollout_other_seconds': '142.9', 'comparison/update_seconds': '702.2', 'comparison/gpu_step_samples': 1084, 'comparison/gpu_step_peak_used_gib': '79.27', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.74', 'comparison/gpu_generation_samples': 253, 'comparison/gpu_generation_peak_used_gib': '57.94', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': 100, 'comparison/gpu_rollout_other_samples': 140, 'comparison/gpu_rollout_other_peak_used_gib': '65.13', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '98.56', 'comparison/gpu_update_samples': 691, 'comparison/gpu_update_peak_used_gib': '79.27', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.88'}
+[11-14 00:05:28] HEARTBEAT 11
