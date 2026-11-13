@@ -1,0 +1,98 @@
+[11-13 17:55:22] rclone copy (64 s): 2026/11/13 09:55:22 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 90.252 MiB/s, ETA 0s
+[11-13 17:55:22] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 64 s
+[11-13 17:55:33] RL pool: {'files': ['/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl', '/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl'], 'unique_questions': 1555, 'approval_manifest': 'grpo/r1_pool_approval.json', 'removed_benchmark_similar': 4, 'comparison_sample_ids': ['math/train/05084', 'math/train/02269', 'math/train/01851', 'math/train/06835', 'math/train/00588', 'math/train/02175', 'math/train/06058', 'math/train/07310', 'math/train/03147', 'math/train/04510', 'math/train/02890', 'math/train/02049', 'math/train/02597', 'math/train/01988', 'math/train/02021', 'math/train/02188'], 'comparison_sample_ids_sha256': 'efe35bafe79db53c48ab37d82b1260f64dd94882a8044c5059c765a42cd8f18d', 'comparison_source_counts': {'project1_rl_rollout_approved_v1.jsonl': 8, 'hard_candidates_e0_0of4.jsonl': 8}, 'overlap_with_sft_questions': 0, 'final_questions': 16}
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/compare_grpo_qfft_r1_12k_v93/swanlog/run-20261113_095539-6hxuuq
+ag
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run compare_grpo_qfft_r1_12k_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/6hxuuqag
+[11-13 17:55:41] SwanLab run 6hxuuqag https://swanlab.cn/@XDE10/project1-7b-math/runs/6hxuuqag
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<01:24,  4.01it/s]
+Loading weights:   5%|▌         | 18/339 [00:00<00:05, 62.21it/s]
+Loading weights:  12%|█▏        | 42/339 [00:00<00:02, 114.93it/s]
+Loading weights:  19%|█▉        | 64/339 [00:00<00:01, 147.47it/s]
+Loading weights:  26%|██▌       | 88/339 [00:00<00:01, 174.77it/s]
+Loading weights:  32%|███▏      | 108/339 [00:00<00:01, 181.80it/s]
+Loading weights:  38%|███▊      | 128/339 [00:00<00:01, 181.14it/s]
+Loading weights:  44%|████▍     | 149/339 [00:00<00:01, 189.03it/s]
+Loading weights:  51%|█████     | 173/339 [00:01<00:00, 195.17it/s]
+Loading weights:  58%|█████▊    | 197/339 [00:01<00:00, 200.77it/s]
+Loading weights:  65%|██████▍   | 219/339 [00:01<00:00, 198.57it/s]
+Loading weights:  72%|███████▏  | 245/339 [00:01<00:00, 206.34it/s]
+Loading weights:  79%|███████▉  | 269/339 [00:01<00:00, 207.55it/s]
+Loading weights:  86%|████████▌ | 292/339 [00:01<00:00, 211.22it/s]
+Loading weights:  93%|█████████▎| 316/339 [00:01<00:00, 210.55it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 180.35it/s]
+
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.08s/it]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.08s/it]
+
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   5%|▌         | 1/19 [00:22<06:48, 22.72s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:22<00:36,  2.81s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:38<00:36,  2.81s/it]
+Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 9/19 [00:42<00:43,  4.39s/it]
+Capturing CUDA graphs (PIECEWISE):  74%|███████▎  | 14/19 [00:42<00:10,  2.18s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  1.28s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  2.24s/it]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  50%|█████     | 1/2 [00:38<00:38, 38.69s/it]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:38<00:00, 19.36s/it]
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  26%|██▋       | 5/19 [00:00<00:00, 43.85it/s]
+Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 10/19 [00:00<00:00, 44.87it/s]
+Capturing CUDA graphs (PIECEWISE):  79%|███████▉  | 15/19 [00:00<00:00, 45.83it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:00<00:00, 46.12it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/11 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  55%|█████▍    | 6/11 [00:00<00:00, 59.87it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<00:00, 61.64it/s]
+[11-13 18:02:49] HEARTBEAT starting
+[11-13 18:07:49] HEARTBEAT starting
+[11-13 18:10:22] comparison step 1: length stops 18/64, mixed unmasked groups 5/8, generation 222.2s, update 436.2s, card peak 72.8 GiB, utilization 99.7%
+[11-13 18:10:22] step 1/2 epoch 0.50 loss -0.0027 lr 0.00e+00 s/step 754.2 eta 0.21h peakGPU 71.2GiB
+{'loss': '-0.002748', 'grad_norm': '0.001363', 'learning_rate': '0', 'num_tokens': '4.277e+05', 'completions/mean_length': '6581', 'completions/min_length': '654', 'completions/max_length': '1.229e+04', 'completions/clipped_ratio': '0.2812', 'completions/mean_terminated_length': '4348', 'completions/min_terminated_length': '654', 'completions/max_terminated_length': '1.201e+04', 'rewards/final_answer/mean': '0.3906', 'rewards/final_answer/std': '0.4917', 'reward': '0.3906', 'reward_std': '0.4917', 'frac_reward_zero_std': '0.25', 'comparison/completion_tokens': '4.212e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '6', 'comparison/length_stop_frac': '0.2812', 'comparison/length_stops': '18', 'comparison/loss_masked': '18', 'comparison/loss_masked_frac': '0.2812', 'comparison/mean_completion_tokens': '6581', 'comparison/mixed_unmasked_reward_groups': '5', 'reward/correct_frac': '0.3906', 'reward/no_answer_frac': '0.2344', 'reward/wrong_frac': '0.375', 'sampling/sampling_logp_difference/mean': '0.02557', 'sampling/sampling_logp_difference/max': '3.255', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.3903', 'sampling/importance_sampling_ratio/max': '1.782', 'entropy': '0.2997', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '708.5', 'epoch': '0.5', 'comparison/step_seconds': '754.2', 'comparison/generation_seconds': '222.2', 'comparison/rollout_other_seconds': '95.83', 'comparison/update_seconds': '436.2', 'comparison/gpu_step_samples': 739, 'comparison/gpu_step_peak_used_gib': '72.78', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.65', 'comparison/gpu_generation_samples': 217, 'comparison/gpu_generation_peak_used_gib': '57.41', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '99.97', 'comparison/gpu_rollout_other_samples': 94, 'comparison/gpu_rollout_other_peak_used_gib': '62.06', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '97.63', 'comparison/gpu_update_samples': 428, 'comparison/gpu_update_peak_used_gib': '72.78', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.94'}
+[11-13 18:10:23] Saved checkpoint-1 locally: 935.3MiB in 0.5 s, 212.0 GiB free
+[11-13 18:10:23] Mirroring checkpoint-1 to Drive (weights_only) in the background
+[11-13 18:10:27] rclone purge (4 s): 2026/11/13 10:10:27 Failed to purge: directory not found
+[11-13 18:10:41] rclone copy (14 s): 2026/11/13 10:10:41 NOTICE:   318.978 MiB / 318.978 MiB, 100%, 31.895 MiB/s, ETA 0s
+[11-13 18:10:45] rclone purge (4 s): 2026/11/13 10:10:45 Failed to purge: directory not found
+[11-13 18:10:52] Uploaded checkpoint-1 to /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/ckpt_mirror/checkpoint-1 (319.0MiB in 29 s, 11 MiB/s)
+[11-13 18:10:57] rclone copyto (4 s): 2026/11/13 10:10:57 NOTICE:         112 B / 112 B, 100%, 111 B/s, ETA 0s
+[11-13 18:11:02] Mirror complete: /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/ckpt_mirror/checkpoint-1
+[11-13 18:12:50] HEARTBEAT 1
+[11-13 18:17:50] HEARTBEAT 1
+[11-13 18:22:39] comparison step 2: length stops 13/64, mixed unmasked groups 4/8, generation 206.1s, update 435.2s, card peak 73.4 GiB, utilization 99.8%
+[11-13 18:22:39] step 2/2 epoch 1.00 loss 0.0036 lr 1.00e-05 s/step 736.9 eta 0.00h peakGPU 71.8GiB
+{'loss': '0.003595', 'grad_norm': '0.001965', 'learning_rate': '1e-05', 'num_tokens': '7.874e+05', 'completions/mean_length': '5513', 'completions/min_length': '582', 'completions/max_length': '1.229e+04', 'completions/clipped_ratio': '0.2031', 'completions/mean_terminated_length': '3786', 'completions/min_terminated_length': '582', 'completions/max_terminated_length': '1.167e+04', 'rewards/final_answer/mean': '0.5156', 'rewards/final_answer/std': '0.5037', 'reward': '0.5156', 'reward_std': '0.5037', 'frac_reward_zero_std': '0.5', 'comparison/completion_tokens': '3.528e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '4', 'comparison/length_stop_frac': '0.2031', 'comparison/length_stops': '13', 'comparison/loss_masked': '13', 'comparison/loss_masked_frac': '0.2031', 'comparison/mean_completion_tokens': '5513', 'comparison/mixed_unmasked_reward_groups': '4', 'reward/correct_frac': '0.5156', 'reward/no_answer_frac': '0.1562', 'reward/wrong_frac': '0.3281', 'sampling/sampling_logp_difference/mean': '0.02797', 'sampling/sampling_logp_difference/max': '5.779', 'sampling/importance_sampling_ratio/min': '1.849e-21', 'sampling/importance_sampling_ratio/mean': '0.4495', 'sampling/importance_sampling_ratio/max': '2.556', 'entropy': '0.3166', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '690.3', 'epoch': '1', 'comparison/step_seconds': '736.3', 'comparison/generation_seconds': '206.1', 'comparison/rollout_other_seconds': '95.01', 'comparison/update_seconds': '435.2', 'comparison/gpu_step_samples': 721, 'comparison/gpu_step_peak_used_gib': '73.42', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.82', 'comparison/gpu_generation_samples': 201, 'comparison/gpu_generation_peak_used_gib': '72.95', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': 100, 'comparison/gpu_rollout_other_samples': 93, 'comparison/gpu_rollout_other_peak_used_gib': '72.95', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '98.89', 'comparison/gpu_update_samples': 427, 'comparison/gpu_update_peak_used_gib': '73.42', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.94'}
+[11-13 18:22:40] Saved checkpoint-2 locally: 935.3MiB in 0.5 s, 211.1 GiB free
+{'train_runtime': '1492', 'train_samples_per_second': '0.086', 'train_steps_per_second': '0.001', 'train_loss': '0.0004235', 'epoch': '1'}
+[11-13 18:22:40] Waiting for the previous checkpoint mirror to finish ...
+[11-13 18:22:40] Mirroring checkpoint-2 to Drive (weights_only) in the background
+[11-13 18:22:45] rclone purge (5 s): 2026/11/13 10:22:45 Failed to purge: directory not found
+[11-13 18:22:51] HEARTBEAT 2
+[11-13 18:22:59] rclone copy (14 s): 2026/11/13 10:22:59 NOTICE:   318.980 MiB / 318.980 MiB, 100%, 31.896 MiB/s, ETA 0s
+[11-13 18:23:04] rclone purge (4 s): 2026/11/13 10:23:04 Failed to purge: directory not found
+[11-13 18:23:11] Uploaded checkpoint-2 to /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/ckpt_mirror/checkpoint-2 (319.0MiB in 31 s, 10 MiB/s)
+[11-13 18:23:15] rclone copyto (4 s): 2026/11/13 10:23:15 NOTICE:         112 B / 112 B, 100%, 111 B/s, ETA 0s
+[11-13 18:23:16] Mirror complete: /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/ckpt_mirror/checkpoint-2
+[11-13 18:23:31] rclone copy (12 s): 2026/11/13 10:23:31 NOTICE:   318.960 MiB / 318.960 MiB, 100%, 35.442 MiB/s, ETA 0s
+[11-13 18:23:34] rclone purge (4 s): 2026/11/13 10:23:34 Failed to purge: directory not found
+[11-13 18:23:40] Uploaded adapter to /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/adapter (319.0MiB in 22 s, 15 MiB/s)
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run compare_grpo_qfft_r1_12k_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/6hxuuqag
+swanlab: Upload complete: 2294 records
+[11-13 18:23:42] compare_grpo_qfft_r1_12k_v93: COMPLETE -> /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93
