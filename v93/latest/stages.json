@@ -62,6 +62,15 @@
   "code": "7e18a2c7bda6",
   "host": "p1-1110-234216@4b5c96d35876"
  },
+ "grpo__compare_grpo_qfft_r1_16k": {
+  "stage": "grpo:compare_grpo_qfft_r1_16k",
+  "state": "running",
+  "started": "2026-11-13T07:36:54.003575",
+  "code": "33440c8e9f13",
+  "host": "p1-r1-len16k@d07dd4d29e74",
+  "heartbeat": "2026-11-13T08:06:57.684294",
+  "heartbeat_ts": 1794557217.6843066
+ },
  "grpo__compare_grpo_qfft_r1_8k": {
   "stage": "grpo:compare_grpo_qfft_r1_8k",
   "state": "complete",

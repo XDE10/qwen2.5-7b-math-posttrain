@@ -1,0 +1,34 @@
+{
+  "files": [
+    "/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl",
+    "/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl"
+  ],
+  "unique_questions": 1555,
+  "approval_manifest": "grpo/r1_pool_approval.json",
+  "removed_benchmark_similar": 4,
+  "comparison_sample_ids": [
+    "math/train/05084",
+    "math/train/02269",
+    "math/train/01851",
+    "math/train/06835",
+    "math/train/00588",
+    "math/train/02175",
+    "math/train/06058",
+    "math/train/07310",
+    "math/train/03147",
+    "math/train/04510",
+    "math/train/02890",
+    "math/train/02049",
+    "math/train/02597",
+    "math/train/01988",
+    "math/train/02021",
+    "math/train/02188"
+  ],
+  "comparison_sample_ids_sha256": "efe35bafe79db53c48ab37d82b1260f64dd94882a8044c5059c765a42cd8f18d",
+  "comparison_source_counts": {
+    "project1_rl_rollout_approved_v1.jsonl": 8,
+    "hard_candidates_e0_0of4.jsonl": 8
+  },
+  "overlap_with_sft_questions": 0,
+  "final_questions": 16
+}
