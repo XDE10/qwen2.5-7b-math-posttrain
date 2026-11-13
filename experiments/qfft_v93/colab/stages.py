@@ -12,6 +12,7 @@ Stages (all idempotent; re-running resumes or skips completed work):
     warm-start:<config>:<source>:<destination>   train remaining steps from published weights
     eval:<model>[:<suite>]      generate + score, e.g. eval:base:full, eval:run:qfft_ds_v93:full
     grpo:<config>               LoRA-GRPO + merge, e.g. grpo:grpo_qfft_ds (configs/grpo/<config>.json)
+    grpo:<config>:pause-after=<step> / grpo:<config>:resume   verify a full checkpoint across VMs
     score[:<tags>]              re-score saved generations and rebuild results.md
     analyze:<tags>[:<grpo_runs>] figures into Drive runs/project1/v93/figures
     status                      print stage markers, run progress, eval completeness and results.md
@@ -454,6 +455,8 @@ def run_stage(ctx: Context, stage: str, force: bool = False) -> None:
         _dispatch(ctx, stage)
         return
     lease_stage = stage
+    if kind == 'grpo':
+        lease_stage = f"grpo:{rest.partition(':')[0]}"
     if kind == 'warm-start':
         parts = rest.split(':')
         if len(parts) != 3 or not all(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*', part) for part in parts):
@@ -535,8 +538,16 @@ def _dispatch(ctx: Context, stage: str) -> None:
         ctx.run(ctx.py_module('infer', m + 'generate', '--model', model, '--suite', suite, '--tag', tag), f'gen_{tag}')
         ctx.run(ctx.py_module('infer', m + 'score', '--tags', tag), f'score_{tag}')
     elif kind == 'grpo':
+        config, _, operation = rest.partition(':')
+        extra = []
+        if operation == 'resume':
+            extra = ['--require-resume']
+        elif re.fullmatch(r'pause-after=[1-9][0-9]*', operation):
+            extra = ['--pause-after', operation.split('=', 1)[1]]
+        elif operation:
+            raise ValueError(f'Unknown GRPO operation: {operation}')
         gpu_banner()
-        ctx.run(ctx.py_module('rl', m + 'grpo', '--config', f'grpo/{rest}.json'), f'grpo_{rest}')
+        ctx.run(ctx.py_module('rl', m + 'grpo', '--config', f'grpo/{config}.json', *extra), f'grpo_{config}')
     elif kind == 'score':
         args = ['--tags', rest] if rest else []
         ctx.run(ctx.py_module('score', m + 'score', *args), 'score')

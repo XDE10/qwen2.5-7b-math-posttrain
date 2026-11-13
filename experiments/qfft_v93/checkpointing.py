@@ -257,6 +257,9 @@ class CheckpointMirror(TrainerCallback):
     def on_train_end(self, args, state, control, **kwargs):
         self.wait()
 
+    def has_full_mirror(self, step: int) -> bool:
+        return _resumable(self.mirror_dir / f'checkpoint-{step}', MIRROR_MARK)
+
 
 def latest_mirror_step(drive_dir: Path):
     mirrors = _checkpoints(Path(drive_dir) / 'ckpt_mirror', MIRROR_MARK)
