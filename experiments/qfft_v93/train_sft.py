@@ -27,6 +27,7 @@ from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, drive_layout, lo
                                          write_json)
 from experiments.qfft_v93.formats import IGNORE_INDEX, encode
 from experiments.qfft_v93.telemetry import ProgressCallback, SwanLab
+from experiments.qfft_v93.warm_start import plan_warm_start, run_name, warm_start_scheduler
 
 
 def parse_args():
@@ -35,12 +36,21 @@ def parse_args():
     p.add_argument('--model-path', help='Override the local model directory (default: prepared base model)')
     p.add_argument('--data', help='Override the training JSONL path')
     p.add_argument('--max-steps', type=int, help='Override for smoke tests')
+    p.add_argument('--warm-start-from', type=run_name, help='Source run with a completed weights-only Drive mirror')
+    p.add_argument('--run-name', type=run_name, help='New destination run name for --warm-start-from')
     p.add_argument('--smoke', action='store_true', help='CPU/fp32/no DeepSpeed plumbing test with a tiny model')
     p.add_argument('--no-swanlab', action='store_true')
     p.add_argument('--stop-after', type=int, help='Test hook: exit after this optimizer step (simulated crash)')
     p.add_argument('--new-run', action='store_true', help='Allow a different identity in an existing run dir')
     p.add_argument('--no-export', action='store_true', help='Smoke tests: skip exporting final weights')
-    return p.parse_args()
+    args = p.parse_args()
+    if bool(args.warm_start_from) != bool(args.run_name):
+        p.error('--warm-start-from and --run-name must be used together')
+    if args.warm_start_from and (args.new_run or args.model_path or args.max_steps is not None):
+        p.error('warm-start selects its own weights and step budget and requires a separate run')
+    if args.warm_start_from and args.warm_start_from == args.run_name:
+        p.error('warm-start requires a separate destination run')
+    return args
 
 
 class Collator:
@@ -69,15 +79,22 @@ def stop_after_callback(step: int, mirror: CheckpointMirror):
     return _Stop()
 
 
-def training_arguments(cfg: dict, out: Path, rows: int, smoke: bool, max_steps: int | None):
+def training_steps(cfg: dict, rows: int) -> int:
+    return math.ceil(rows / (cfg['per_device_train_batch_size'] * cfg['gradient_accumulation_steps'])) * cfg['num_train_epochs']
+
+
+def training_arguments(cfg: dict, out: Path, rows: int, smoke: bool, max_steps: int | None, warm_start=None):
     from transformers import TrainingArguments
     fields = set(inspect.signature(TrainingArguments).parameters)
-    per_epoch = math.ceil(rows / (cfg['per_device_train_batch_size'] * cfg['gradient_accumulation_steps']))
-    total = max_steps or per_epoch * cfg['num_train_epochs']
+    total = training_steps(cfg, rows)
+    warmup_steps = max(1, math.ceil((max_steps or total) * cfg['warmup_fraction']))
+    if warm_start:
+        max_steps = warm_start['remaining_steps']
+        warmup_steps = warm_start['learning_rate']['warmup_steps']
     kwargs = dict(
         output_dir=str(out), num_train_epochs=cfg['num_train_epochs'], max_steps=max_steps or -1,
         learning_rate=cfg['learning_rate'], lr_scheduler_type=cfg['lr_scheduler_type'],
-        warmup_steps=max(1, math.ceil(total * cfg['warmup_fraction'])),
+        warmup_steps=warmup_steps,
         per_device_train_batch_size=cfg['per_device_train_batch_size'],
         gradient_accumulation_steps=cfg['gradient_accumulation_steps'],
         weight_decay=cfg['weight_decay'], adam_beta1=cfg['adam_beta1'], adam_beta2=cfg['adam_beta2'],
@@ -98,20 +115,23 @@ def training_arguments(cfg: dict, out: Path, rows: int, smoke: bool, max_steps: 
     unsupported = set(kwargs) - fields
     if unsupported:
         raise TypeError('Unsupported TrainingArguments fields for this Transformers version: ' + ', '.join(sorted(unsupported)))
-    return TrainingArguments(**kwargs), total
+    return TrainingArguments(**kwargs), max_steps or total
 
 
 def main() -> None:
     a = parse_args()
     cfg = load_config(a.config)
     layout = drive_layout()
-    run = cfg['run_name']
+    run = a.run_name or cfg['run_name']
     drive_run = layout.runs / run
     local_run = local_root() / 'runs' / run
     drive_run.mkdir(parents=True, exist_ok=True)
     local_run.mkdir(parents=True, exist_ok=True)
-    if (drive_run / 'TRAIN_COMPLETE.json').exists():
-        log(f'{run}: already complete ({drive_run / "TRAIN_COMPLETE.json"}); nothing to do')
+    complete = drive_run / 'TRAIN_COMPLETE.json'
+    if complete.exists():
+        if a.warm_start_from and read_json(complete).get('warm_start', {}).get('source_run') != a.warm_start_from:
+            raise RuntimeError(f'{run} is already complete. Choose a separate warm-start destination.')
+        log(f'{run}: already complete ({complete}); nothing to do')
         return
     data_path = Path(a.data) if a.data else layout.data / cfg['data']
     data_sha = sha256_file(data_path)
@@ -126,27 +146,54 @@ def main() -> None:
     if truncate:
         identity['recipe']['truncate'] = True
     id_path = drive_run / 'run_identity.json'
-    if id_path.exists() and read_json(id_path)['identity'] != identity and not a.new_run:
+    existing = read_json(id_path)['identity'] if id_path.exists() else None
+    rows = sorted(read_jsonl(data_path), key=lambda r: r['index'])
+    if len({r['sample_id'] for r in rows}) != len(rows):
+        raise RuntimeError('Duplicate sample ids in training data')
+    warm_start = None
+    if a.warm_start_from:
+        if existing is None:
+            warm_start = plan_warm_start(layout.runs, a.warm_start_from, identity, training_steps(cfg, len(rows)))
+        else:
+            warm_start = existing.get('warm_start')
+            if not warm_start or warm_start['source_run'] != a.warm_start_from:
+                raise RuntimeError(f'{id_path} belongs to a different run. Choose a new destination name.')
+        identity['warm_start'] = warm_start
+    if existing is not None and existing != identity and not a.new_run:
         raise RuntimeError(f'{id_path} describes a different experiment; use a new run_name or --new-run')
+    identity_record = {'identity': identity, 'identity_sha256': sha256_json(identity),
+                       'code_bundle': os.environ.get('P1_CODE_SHA'), 'updated': now_iso()}
+    if warm_start:
+        # Pin the source before downloading so retries cannot silently move to a newer mirror.
+        write_json(id_path, identity_record)
     resume = resolve_resume(local_run, drive_run)
-    if a.model_path:
-        model_path = Path(a.model_path)
+    if warm_start:
+        from experiments.qfft_v93.models import ensure_tokenizer
+        tokenizer_path = ensure_tokenizer(layout=layout)
+        if resume:
+            model_path = Path(resume)
+        else:
+            log(f"Warm-start from {warm_start['source_run']}/{warm_start['source_checkpoint']}: "
+                f"{warm_start['remaining_steps']} updates, new optimizer, "
+                f"first-update LR {warm_start['learning_rate']['first_update_lr']:.8g} on the original cosine schedule")
+            source = layout.runs / warm_start['source_run'] / 'ckpt_mirror' / warm_start['source_checkpoint']
+            model_path = local_run / 'warm_start_weights'
+            drive_io.download_tree(source, model_path, files=warm_start['source_weight_files'])
+    elif a.model_path:
+        model_path = tokenizer_path = Path(a.model_path)
     else:
         from experiments.qfft_v93.models import ensure_local, verify_base_tokenizer
-        model_path = ensure_local(cfg.get('init_model', 'base'), layout)
+        model_path = tokenizer_path = ensure_local(cfg.get('init_model', 'base'), layout)
         verify_base_tokenizer(model_path)
-    write_json(id_path, {'identity': identity, 'identity_sha256': sha256_json(identity),
-                         'code_bundle': os.environ.get('P1_CODE_SHA'), 'updated': now_iso()})
+    if not warm_start:
+        write_json(id_path, identity_record)
 
     import torch
     import transformers
     from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer
     if not a.smoke and not torch.cuda.is_available():
         raise RuntimeError('CUDA GPU required (use --smoke for a CPU plumbing test)')
-    tok = AutoTokenizer.from_pretrained(model_path)
-    rows = sorted(read_jsonl(data_path), key=lambda r: r['index'])
-    if len({r['sample_id'] for r in rows}) != len(rows):
-        raise RuntimeError('Duplicate sample ids in training data')
+    tok = AutoTokenizer.from_pretrained(tokenizer_path)
     encoded = [encode(tok, cfg['format'], r['question'], r['response'], cfg['max_length'], truncate=truncate)
                for r in rows]
     stats = {'examples': len(encoded), 'format': cfg['format'],
@@ -161,7 +208,7 @@ def main() -> None:
     log(f"{run}: {stats['examples']} examples, {stats['total_tokens']:,} tokens "
         f"({stats['supervised_tokens']:,} supervised), longest {stats['max_tokens']}")
 
-    args, total_steps = training_arguments(cfg, local_run, len(encoded), a.smoke, a.max_steps)
+    args, _ = training_arguments(cfg, local_run, len(encoded), a.smoke, a.max_steps, warm_start)
     dtype = torch.float32 if a.smoke else torch.bfloat16
     load_kwargs = {'attn_implementation': cfg.get('attn_implementation', 'sdpa')}
     major, minor = (int(x) for x in transformers.__version__.split('.')[:2])
@@ -179,7 +226,10 @@ def main() -> None:
     mirror = CheckpointMirror(local_run, drive_run, every=cfg.get('mirror_every_saves', 1),
                               keep=cfg.get('mirror_keep', 2), watch_path=str(local_root()),
                               mirror_optimizer_state=cfg.get('mirror_optimizer_state', False))
-    callbacks = [ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror]
+    progress = {'run': run}
+    if warm_start:
+        progress['warm_start'] = warm_start
+    callbacks = [ProgressCallback(local_run, drive_run, swan, progress), mirror]
     if a.stop_after:
         callbacks.append(stop_after_callback(a.stop_after, mirror))
     from torch.utils.data import Dataset
@@ -191,8 +241,16 @@ def main() -> None:
         def __getitem__(self, i):
             return encoded[i]
 
-    trainer = Trainer(model=model, args=args, train_dataset=Rows(), data_collator=Collator(tok.pad_token_id),
-                      callbacks=callbacks)
+    class WarmStartTrainer(Trainer):
+        def create_scheduler(self, num_training_steps, optimizer=None):
+            if self.lr_scheduler is None:
+                self.lr_scheduler = warm_start_scheduler(optimizer if optimizer is not None else self.optimizer, warm_start)
+                self._created_lr_scheduler = True
+            return self.lr_scheduler
+
+    trainer_class = WarmStartTrainer if warm_start else Trainer
+    trainer = trainer_class(model=model, args=args, train_dataset=Rows(),
+                            data_collator=Collator(tok.pad_token_id), callbacks=callbacks)
     beat = Heartbeat(lambda: read_json(drive_run / 'status.json').get('step') if (drive_run / 'status.json').exists()
                      else 'starting', interval=300)
     beat.start()
@@ -205,7 +263,7 @@ def main() -> None:
     if a.no_export:
         mirror.wait()
         write_json(drive_run / 'status.json', {'state': 'smoke_done', 'steps': trainer.state.global_step,
-                                               'metrics': result.metrics, 'updated': now_iso()})
+                                               'metrics': result.metrics, 'updated': now_iso(), **progress})
         swan.finish()
         shutil.rmtree(local_run, ignore_errors=True)
         log(f'{run}: smoke finished at step {trainer.state.global_step} (no export)')
@@ -228,7 +286,7 @@ def main() -> None:
             time.sleep(15 * attempt)
     summary = {'steps': trainer.state.global_step, 'metrics': result.metrics, 'tokenization': stats,
                'wall_hours_this_session': round((time.monotonic() - started) / 3600, 3),
-               'final': str(drive_run / 'final'), 'resumed_from': resume, 'completed': now_iso()}
+               'final': str(drive_run / 'final'), 'resumed_from': resume, 'completed': now_iso(), **progress}
     write_json(drive_run / 'TRAIN_COMPLETE.json', summary)
     write_json(drive_run / 'status.json', {'state': 'complete', **summary})
     swan.log({'lifecycle/export_complete': 1}, trainer.state.global_step)

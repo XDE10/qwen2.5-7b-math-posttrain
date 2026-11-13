@@ -9,6 +9,7 @@ Stages (all idempotent; re-running resumes or skips completed work):
     smoke-eval                  24 short generations of the base model + scoring
     smoke-grpo                  2 GRPO steps at the real batch shape with completions forced to 8192 tokens
     train:<config>              full SFT/QFFT run, e.g. train:qfft_ds  (configs/train/<config>.json)
+    warm-start:<config>:<source>:<destination>   train remaining steps from published weights
     eval:<model>[:<suite>]      generate + score, e.g. eval:base:full, eval:run:qfft_ds_v93:full
     grpo:<config>               LoRA-GRPO + merge, e.g. grpo:grpo_qfft_ds (configs/grpo/<config>.json)
     score[:<tags>]              re-score saved generations and rebuild results.md
@@ -29,6 +30,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -360,7 +362,7 @@ def gpu_banner() -> None:
     try:
         import psutil
         say(f'Host RAM: {psutil.virtual_memory().total / 2**30:.0f} GiB, CPUs: {os.cpu_count()}, '
-            f'local disk free: {shutil.disk_usage("/content").free / 2**30:.0f} GiB')
+            f'local disk free: {shutil.disk_usage(LOCAL).free / 2**30:.0f} GiB')
     except ImportError:
         pass
 
@@ -447,10 +449,19 @@ def stage_sync_data(ctx: Context) -> None:
 
 
 def run_stage(ctx: Context, stage: str, force: bool = False) -> None:
-    if stage.partition(':')[0] in READ_ONLY_STAGES:
+    kind, _, rest = stage.partition(':')
+    if kind in READ_ONLY_STAGES:
         _dispatch(ctx, stage)
         return
-    lease = StageLease(stage, ctx.sha, force)
+    lease_stage = stage
+    if kind == 'warm-start':
+        parts = rest.split(':')
+        if len(parts) != 3 or not all(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*', part) for part in parts):
+            raise ValueError('Use warm-start:<config>:<source_run>:<destination_run>')
+        if parts[1] == parts[2]:
+            raise ValueError('Warm-start requires a separate destination run')
+        lease_stage = f'warm-start:{parts[2]}'
+    lease = StageLease(lease_stage, ctx.sha, force)
     started = time.monotonic()
     try:
         _dispatch(ctx, stage)
@@ -496,16 +507,23 @@ def _dispatch(ctx: Context, stage: str) -> None:
         gpu_banner()
         fresh_smoke(DRIVE / 'runs/project1/v93/runs/smoke_grpo_v93', LOCAL / 'runs/smoke_grpo_v93')
         ctx.run(ctx.py_module('rl', m + 'grpo', '--config', 'grpo/smoke_grpo.json', '--no-merge'), 'smoke_grpo')
-    elif kind == 'train':
+    elif kind in ('train', 'warm-start'):
         from experiments.qfft_v93.common import load_config
-        data = PROJECT / 'data' / load_config(ctx.pkg / 'configs/train' / f'{rest}.json')['data']
+        name = rest
+        extra = []
+        log_name = f'train_{name}'
+        if kind == 'warm-start':
+            name, source, destination = rest.split(':')
+            extra = ['--warm-start-from', source, '--run-name', destination]
+            log_name = f'warm_start_{destination}'
+        data = PROJECT / 'data' / load_config(ctx.pkg / 'configs/train' / f'{name}.json')['data']
         if not data.exists():
             raise FileNotFoundError(f'{data} is missing: build the data locally, then run pipeline.sh d '
                                     '(launch.sh --gpu cpu --with-data sync-data)')
         gpu_banner()
         check_host_ram()
         torchrun = [ctx.python('train'), '-m', 'torch.distributed.run', '--standalone', '--nnodes=1', '--nproc_per_node=1']
-        ctx.run(torchrun + ['-m', m + 'train_sft', '--config', f'train/{rest}.json'], f'train_{rest}')
+        ctx.run(torchrun + ['-m', m + 'train_sft', '--config', f'train/{name}.json', *extra], log_name)
     elif kind == 'eval':
         gpu_banner()
         parts = rest.split(':')

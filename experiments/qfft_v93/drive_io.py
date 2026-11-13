@@ -155,17 +155,31 @@ def put_json(path, value) -> None:
         upload_file(local, path)
 
 
-def download_tree(src, dst, atomic: bool = True) -> None:
-    """Copy Drive directory `src` to local `dst` (via `dst.partial` when atomic)."""
+def download_tree(src, dst, atomic: bool = True, files=None) -> None:
+    """Copy a Drive tree or a nonempty mapping of exact file names to expected sizes."""
     src, dst = Path(src), Path(dst)
-    if not rclone_remote():
+    if files is not None and not files:
+        raise ValueError('A selective download requires at least one file')
+    remote = rclone_remote()
+    if not remote and files is None:
         copy_tree_fast(src, dst)
         return
     target = dst.with_name(dst.name + '.partial') if atomic else dst
     if atomic and target.exists():
         shutil.rmtree(target)
     started = time.monotonic()
-    _rclone('copy', remote_path(src), str(target), *DOWNLOAD_FLAGS, *([] if atomic else ['--size-only']))
+    if remote:
+        filters = [arg for name in (files or ()) for arg in ('--include', f'/{name}')]
+        _rclone('copy', remote_path(src), str(target), *DOWNLOAD_FLAGS, *filters,
+                *([] if atomic else ['--size-only']))
+    else:
+        target.mkdir(parents=True, exist_ok=True)
+        for name in files:
+            shutil.copyfile(src / name, target / name)
+    if files is not None:
+        for name, size in files.items():
+            if not (target / name).is_file() or (target / name).stat().st_size != size:
+                raise RuntimeError(f'Incomplete download: {src / name}')
     if atomic:
         if dst.exists():
             shutil.rmtree(dst)

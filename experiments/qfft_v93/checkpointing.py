@@ -105,6 +105,35 @@ def resolve_resume(local_dir: Path, drive_dir: Path):
     return None
 
 
+def latest_warm_start_weights(drive_dir: Path):
+    """Find the newest published light mirror with a usable model and matching step."""
+    for step, path in reversed(_checkpoints(drive_dir / 'ckpt_mirror', MIRROR_MARK)):
+        try:
+            marker = read_json(path / MIRROR_MARK)
+            artifact_type = marker.get('artifact_type')
+            if artifact_type != WEIGHTS_ONLY and (artifact_type is not None or _resumable(path, MIRROR_MARK)):
+                continue
+            state = read_state(path)
+            if state['global_step'] != step:
+                continue
+            names = ['config.json']
+            if _nonempty(path / 'generation_config.json'):
+                names.append('generation_config.json')
+            index = path / 'model.safetensors.index.json'
+            if index.is_file():
+                shards = set(read_json(index)['weight_map'].values())
+                if not shards or not all(re.fullmatch(r'[\w.-]+\.safetensors', name) for name in shards):
+                    continue
+                names += [index.name, *sorted(shards)]
+            else:
+                names.append('model.safetensors')
+            if all(_nonempty(path / name) for name in names):
+                return step, path, state, {name: (path / name).stat().st_size for name in names}
+        except (AttributeError, KeyError, OSError, TypeError, ValueError):
+            continue
+    raise RuntimeError(f'No completed weights-only checkpoint found in {drive_dir / "ckpt_mirror"}')
+
+
 class CheckpointMirror(TrainerCallback):
     def __init__(self, local_dir: Path, drive_dir: Path, every: int = 1, keep: int = 2,
                  watch_path: str = '/content', min_free_gib: float = 24, mirror_final: bool = False,
