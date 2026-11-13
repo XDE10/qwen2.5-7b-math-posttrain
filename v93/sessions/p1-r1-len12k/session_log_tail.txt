@@ -94,3 +94,16 @@ Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<
 [11-13 18:22:45] rclone purge (5 s): 2026/11/13 10:22:45 Failed to purge: directory not found
 [11-13 18:22:51] HEARTBEAT 2
 [11-13 18:22:59] rclone copy (14 s): 2026/11/13 10:22:59 NOTICE:   318.980 MiB / 318.980 MiB, 100%, 31.896 MiB/s, ETA 0s
+[11-13 18:23:04] rclone purge (4 s): 2026/11/13 10:23:04 Failed to purge: directory not found
+[11-13 18:23:11] Uploaded checkpoint-2 to /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/ckpt_mirror/checkpoint-2 (319.0MiB in 31 s, 10 MiB/s)
+[11-13 18:23:15] rclone copyto (4 s): 2026/11/13 10:23:15 NOTICE:         112 B / 112 B, 100%, 111 B/s, ETA 0s
+[11-13 18:23:16] Mirror complete: /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/ckpt_mirror/checkpoint-2
+[11-13 18:23:31] rclone copy (12 s): 2026/11/13 10:23:31 NOTICE:   318.960 MiB / 318.960 MiB, 100%, 35.442 MiB/s, ETA 0s
+[11-13 18:23:34] rclone purge (4 s): 2026/11/13 10:23:34 Failed to purge: directory not found
+[11-13 18:23:40] Uploaded adapter to /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93/adapter (319.0MiB in 22 s, 15 MiB/s)
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run compare_grpo_qfft_r1_12k_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/6hxuuqag
+swanlab: Upload complete: 2294 records
+[11-13 18:23:42] compare_grpo_qfft_r1_12k_v93: COMPLETE -> /content/mydrive/runs/project1/v93/runs/compare_grpo_qfft_r1_12k_v93
+[report] pushed to colab-reports: colab p1-r1-len12k: progress

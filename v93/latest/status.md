@@ -1,4 +1,4 @@
-# v93 status (2026-11-13T10:22:59, session p1-r1-len12k)
+# v93 status (2026-11-13T10:27:21, session p1-r1-len12k)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -8,7 +8,7 @@ stage eval:qwen_math:full                           complete  0.171
 stage eval:run:qfft_ds_v93:full                     complete  0.058 
 stage eval:run:qfft_r1_16k_b8_restart_v93:full      complete  3.463 
 stage eval:sft_repro:full                           complete  6.882 
-stage grpo:compare_grpo_qfft_r1_12k                 running   on p1-r1-len12k@edd23d325a83, heartbeat 5 min ago 
+stage grpo:compare_grpo_qfft_r1_12k                 complete  0.513 
 stage grpo:compare_grpo_qfft_r1_16k                 complete  0.702 
 stage grpo:compare_grpo_qfft_r1_8k                  complete  0.339 
 stage grpo:diagnose_grpo_qfft_r1_8k                 complete  0.424 
@@ -22,9 +22,9 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 1327 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 1332 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
-run compare_grpo_qfft_r1_12k_v93 training step 2/2 updated 2026-11-13T18:22:40+08:00
+run compare_grpo_qfft_r1_12k_v93 complete step 2/ updated 2026-11-13T18:23:41+08:00
 run compare_grpo_qfft_r1_16k_v93 complete step 2/ updated 2026-11-13T16:18:56+08:00
 run compare_grpo_qfft_r1_8k_v93  complete step 2/ updated 2026-11-13T15:32:04+08:00
 run diagnose_grpo_qfft_r1_8k_v93 complete step 2/ updated 2026-11-13T10:55:24+08:00
