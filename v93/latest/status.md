@@ -1,4 +1,4 @@
-# v93 status (2026-11-13T01:09:10, session p1-r1-16k-restart-1112)
+# v93 status (2026-11-13T01:17:30, session p1-r1-16k-restart-1112)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -6,7 +6,7 @@ stage eval:base:full                                complete  0.394
 stage eval:qfft_official:full                       complete  3.439 
 stage eval:qwen_math:full                           complete  0.171 
 stage eval:run:qfft_ds_v93:full                     complete  0.058 
-stage eval:run:qfft_r1_16k_b8_restart_v93:full      running   on p1-r1-16k-restart-1112@b8e654fbf873, heartbeat 4 min ago 
+stage eval:run:qfft_r1_16k_b8_restart_v93:full      complete  3.463 
 stage eval:sft_repro:full                           complete  6.882 
 stage models:base,qwen_math,qfft_official,sft_repro complete  0.173 
 stage pilot                                         failed     ValueError: Unknown stage 'pilot'
@@ -16,7 +16,7 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 773 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 782 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run qfft_ds_v93                  complete step 378/ updated 2026-11-12T03:37:21+08:00
 run qfft_r1_16k_b8_restart_v93   complete step 750/ updated 2026-11-13T05:49:15+08:00
@@ -38,6 +38,11 @@ eval qfft_official/aime25     480/480 complete=True
 eval qfft_official/amc23      320/320 complete=True
 eval qfft_official/gsm8k      1319/1319 complete=True
 eval qfft_official/math500    2000/2000 complete=True
+eval qfft_r1_16k_b8_restart_v93/aime24     480/480 complete=True
+eval qfft_r1_16k_b8_restart_v93/aime25     480/480 complete=True
+eval qfft_r1_16k_b8_restart_v93/amc23      320/320 complete=True
+eval qfft_r1_16k_b8_restart_v93/gsm8k      1319/1319 complete=True
+eval qfft_r1_16k_b8_restart_v93/math500    2000/2000 complete=True
 eval qwen_math/aime24     480/480 complete=True
 eval qwen_math/aime25     480/480 complete=True
 eval qwen_math/amc23      320/320 complete=True
@@ -52,10 +57,10 @@ eval smoke_base/aime24     8/8 complete=True
 eval smoke_base/math500    16/16 complete=True
 # v93 results (mean@n %, ±95% CI half-width / mean output tokens)
 
-Grader: v93-final-segment-last-box/math-verify-0.9.0; generated 2026-11-12T10:32:22+08:00.
+Grader: v93-final-segment-last-box/math-verify-0.9.0; generated 2026-11-13T09:17:29+08:00.
 
 | model | math500 | aime24 | aime25 | amc23 | gsm8k | AIME24+25+AMC23 |
 |---|---|---|---|---|---|---|
-| qfft_ds_v93 | 67.0 ±3.4 / 4.4K | 5.0 ±3.9 / 19.6K | 4.0 ±3.6 / 18.6K | 41.6 ±12.0 / 8.7K | 88.7 ±1.7 / 0.4K | 19.3 ±6.3 |
+| qfft_r1_16k_b8_restart_v93 | 80.5 ±2.8 / 3.1K | 18.5 ±10.2 / 14.7K | 14.8 ±10.5 / 11.1K | 59.1 ±12.2 / 7.5K | 91.4 ±1.5 / 0.5K | 33.6 ±7.9 |
 
 ```

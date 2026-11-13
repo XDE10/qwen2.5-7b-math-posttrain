@@ -46,12 +46,12 @@
  },
  "eval__run__qfft_r1_16k_b8_restart_v93__full": {
   "stage": "eval:run:qfft_r1_16k_b8_restart_v93:full",
-  "state": "running",
+  "state": "complete",
+  "hours": 3.463,
+  "finished": "2026-11-13T01:17:29.985164",
   "started": "2026-11-12T21:49:42.101217",
   "code": "fa6fc71edeae",
-  "host": "p1-r1-16k-restart-1112@b8e654fbf873",
-  "heartbeat": "2026-11-13T01:09:46.079586",
-  "heartbeat_ts": 1794532186.0796
+  "host": "p1-r1-16k-restart-1112@b8e654fbf873"
  },
  "eval__sft_repro__full": {
   "stage": "eval:sft_repro:full",

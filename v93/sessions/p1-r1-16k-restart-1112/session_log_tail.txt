@@ -2066,3 +2066,25 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:39<
 [11-13 09:06:31] qfft_r1_16k_b8_restart_v93: 4506/4599 new generations, 1729 output tok/s
 [11-13 09:07:36] qfft_r1_16k_b8_restart_v93: 4524/4599 new generations, 1738 output tok/s
 [11-13 09:08:38] qfft_r1_16k_b8_restart_v93: 4539/4599 new generations, 1751 output tok/s
+[11-13 09:09:58] qfft_r1_16k_b8_restart_v93: 4548/4599 new generations, 1752 output tok/s
+[11-13 09:11:04] qfft_r1_16k_b8_restart_v93: 4556/4599 new generations, 1756 output tok/s
+[report] pushed to colab-reports: colab p1-r1-16k-restart-1112: progress
+[11-13 09:12:17] qfft_r1_16k_b8_restart_v93: 4566/4599 new generations, 1760 output tok/s
+[11-13 09:13:30] qfft_r1_16k_b8_restart_v93: 4578/4599 new generations, 1769 output tok/s
+[11-13 09:15:17] qfft_r1_16k_b8_restart_v93: 4586/4599 new generations, 1770 output tok/s
+[11-13 09:16:36] qfft_r1_16k_b8_restart_v93: 4593/4599 new generations, 1774 output tok/s
+[11-13 09:17:04] qfft_r1_16k_b8_restart_v93: 4599 new generations, 21,628,948 output tokens in 12108 s (1786 tok/s; engine start 134 s)
+[11-13 09:17:04] qfft_r1_16k_b8_restart_v93: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=102000) INFO 11-13 01:17:04 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-13 01:17:10] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --tags qfft_r1_16k_b8_restart_v93 | log: /content/mydrive/runs/project1/v93/logs/20261113-011710_score_qfft_r1_16k_b8_restart_v93.log
+[11-13 09:17:17] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+Timeout during comparison
+[11-13 09:17:23] qfft_r1_16k_b8_restart_v93/aime25: mean@n=0.148 CI=[0.05416666666666667, 0.26458333333333334] tokens=11125 trunc=0.025
+[11-13 09:17:23] qfft_r1_16k_b8_restart_v93/amc23: mean@n=0.591 CI=[0.46875, 0.7125] tokens=7498 trunc=0.013
+[11-13 09:17:26] qfft_r1_16k_b8_restart_v93/gsm8k: mean@n=0.914 CI=[0.8991660348749052, 0.9287338893100834] tokens=476 trunc=0.000
+[11-13 09:17:29] qfft_r1_16k_b8_restart_v93/math500: mean@n=0.805 CI=[0.777, 0.8325] tokens=3115 trunc=0.009
+[11-13 09:17:29] Wrote /content/mydrive/runs/project1/v93/evals/results.md

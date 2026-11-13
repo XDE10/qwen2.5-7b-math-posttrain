@@ -1,8 +1,8 @@
 {
   "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-  "updated": "2026-11-12T10:32:22+08:00",
+  "updated": "2026-11-13T09:17:29+08:00",
   "results": {
-    "qfft_ds_v93": {
+    "qfft_r1_16k_b8_restart_v93": {
       "aime24": {
         "problems": 30,
         "missing_problems": [],
@@ -10,40 +10,40 @@
         "samples_per_problem": [
           16
         ],
-        "mean_at_n": 0.05,
+        "mean_at_n": 0.18541666666666667,
         "mean_at_n_ci95": [
-          0.016666666666666666,
-          0.09375
+          0.09166666666666666,
+          0.29583333333333334
         ],
         "pass_at_k": {
-          "1": 0.05,
-          "2": 0.08805555555555555,
-          "4": 0.1429120879120879,
-          "8": 0.21401450401450403,
-          "16": 0.3
+          "1": 0.18541666666666667,
+          "2": 0.26,
+          "4": 0.35075091575091577,
+          "8": 0.46051282051282055,
+          "16": 0.5666666666666667
         },
-        "mean_tokens": 19566.13125,
-        "mean_tokens_correct": 2512.375,
-        "mean_tokens_wrong": 20463.697368421053,
-        "median_tokens": 24740.0,
-        "truncation_rate": 0.44583333333333336,
-        "no_answer_rate": 0.0125,
+        "mean_tokens": 14650.69375,
+        "mean_tokens_correct": 5372.38202247191,
+        "mean_tokens_wrong": 16762.6368286445,
+        "median_tokens": 13619.0,
+        "truncation_rate": 0.10416666666666667,
+        "no_answer_rate": 0.00625,
         "grader_failure_rate": 0.0,
-        "tail_repetition_rate": 0.06041666666666667,
-        "reflection_per_response": 46.75625,
-        "any_reflection_rate": 0.8958333333333334,
+        "tail_repetition_rate": 0.008333333333333333,
+        "reflection_per_response": 80.12291666666667,
+        "any_reflection_rate": 0.85,
         "metric_note": "mean@n = average over problems of per-problem accuracy over n samples (pass@1 estimate); pass@k unbiased; maj@n = plurality answer correct.",
-        "maj_at_n": 0.16666666666666666,
+        "maj_at_n": 0.3333333333333333,
         "budget_curve_no_forcing": {
-          "1024": 0.022916666666666665,
-          "2048": 0.035416666666666666,
-          "4096": 0.04375,
-          "8192": 0.04583333333333333,
-          "16384": 0.04791666666666667,
-          "32768": 0.05
+          "1024": 0.010416666666666666,
+          "2048": 0.07916666666666666,
+          "4096": 0.10833333333333334,
+          "8192": 0.14583333333333334,
+          "16384": 0.17083333333333334,
+          "32768": 0.18541666666666667
         },
         "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-        "scored": "2026-11-12T10:32:07+08:00",
+        "scored": "2026-11-13T09:17:16+08:00",
         "benchmark_problems": 30
       },
       "aime25": {
@@ -53,40 +53,40 @@
         "samples_per_problem": [
           16
         ],
-        "mean_at_n": 0.03958333333333333,
+        "mean_at_n": 0.14791666666666667,
         "mean_at_n_ci95": [
-          0.008333333333333333,
-          0.08125
+          0.05416666666666667,
+          0.26458333333333334
         ],
         "pass_at_k": {
-          "1": 0.03958333333333333,
-          "2": 0.06833333333333333,
-          "4": 0.10767399267399268,
-          "8": 0.15845894845894845,
-          "16": 0.23333333333333334
+          "1": 0.14791666666666667,
+          "2": 0.19083333333333333,
+          "4": 0.2367765567765568,
+          "8": 0.3011085211085211,
+          "16": 0.4
         },
-        "mean_tokens": 18567.33125,
-        "mean_tokens_correct": 5353.894736842105,
-        "mean_tokens_wrong": 19111.919739696314,
-        "median_tokens": 20623.5,
-        "truncation_rate": 0.41875,
-        "no_answer_rate": 0.010416666666666666,
+        "mean_tokens": 11125.158333333333,
+        "mean_tokens_correct": 3100.1830985915494,
+        "mean_tokens_wrong": 12518.246943765282,
+        "median_tokens": 9783.5,
+        "truncation_rate": 0.025,
+        "no_answer_rate": 0.0,
         "grader_failure_rate": 0.0,
-        "tail_repetition_rate": 0.04583333333333333,
-        "reflection_per_response": 49.08958333333333,
-        "any_reflection_rate": 0.95625,
+        "tail_repetition_rate": 0.00625,
+        "reflection_per_response": 65.0625,
+        "any_reflection_rate": 0.8083333333333333,
         "metric_note": "mean@n = average over problems of per-problem accuracy over n samples (pass@1 estimate); pass@k unbiased; maj@n = plurality answer correct.",
-        "maj_at_n": 0.1,
+        "maj_at_n": 0.2,
         "budget_curve_no_forcing": {
-          "1024": 0.0125,
-          "2048": 0.029166666666666667,
-          "4096": 0.03125,
-          "8192": 0.03125,
-          "16384": 0.035416666666666666,
-          "32768": 0.035416666666666666
+          "1024": 0.03333333333333333,
+          "2048": 0.1,
+          "4096": 0.12083333333333333,
+          "8192": 0.13125,
+          "16384": 0.14166666666666666,
+          "32768": 0.14791666666666667
         },
         "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-        "scored": "2026-11-12T10:32:10+08:00",
+        "scored": "2026-11-13T09:17:23+08:00",
         "benchmark_problems": 30
       },
       "amc23": {
@@ -96,39 +96,39 @@
         "samples_per_problem": [
           8
         ],
-        "mean_at_n": 0.415625,
+        "mean_at_n": 0.590625,
         "mean_at_n_ci95": [
-          0.296875,
-          0.5375
+          0.46875,
+          0.7125
         ],
         "pass_at_k": {
-          "1": 0.415625,
-          "2": 0.5214285714285715,
-          "4": 0.6167857142857143,
-          "8": 0.7
+          "1": 0.590625,
+          "2": 0.6830357142857143,
+          "4": 0.7707142857142857,
+          "8": 0.85
         },
-        "mean_tokens": 8693.715625,
-        "mean_tokens_correct": 2323.1203007518798,
-        "mean_tokens_wrong": 13224.673796791443,
-        "median_tokens": 1757.0,
-        "truncation_rate": 0.171875,
-        "no_answer_rate": 0.0125,
+        "mean_tokens": 7497.959375,
+        "mean_tokens_correct": 3614.5820105820108,
+        "mean_tokens_wrong": 13100.69465648855,
+        "median_tokens": 2011.5,
+        "truncation_rate": 0.0125,
+        "no_answer_rate": 0.0,
         "grader_failure_rate": 0.0,
-        "tail_repetition_rate": 0.028125,
-        "reflection_per_response": 17.5625,
-        "any_reflection_rate": 0.628125,
+        "tail_repetition_rate": 0.0,
+        "reflection_per_response": 43.109375,
+        "any_reflection_rate": 0.5375,
         "metric_note": "mean@n = average over problems of per-problem accuracy over n samples (pass@1 estimate); pass@k unbiased; maj@n = plurality answer correct.",
-        "maj_at_n": 0.55,
+        "maj_at_n": 0.7,
         "budget_curve_no_forcing": {
-          "1024": 0.296875,
-          "2048": 0.34375,
-          "4096": 0.365625,
-          "8192": 0.384375,
-          "16384": 0.4,
-          "32768": 0.4125
+          "1024": 0.325,
+          "2048": 0.41875,
+          "4096": 0.459375,
+          "8192": 0.50625,
+          "16384": 0.559375,
+          "32768": 0.584375
         },
         "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-        "scored": "2026-11-12T10:32:12+08:00",
+        "scored": "2026-11-13T09:17:23+08:00",
         "benchmark_problems": 40
       },
       "gsm8k": {
@@ -138,35 +138,35 @@
         "samples_per_problem": [
           1
         ],
-        "mean_at_n": 0.8870356330553449,
+        "mean_at_n": 0.9143290371493555,
         "mean_at_n_ci95": [
-          0.869598180439727,
-          0.9037149355572404
+          0.8991660348749052,
+          0.9287338893100834
         ],
         "pass_at_k": {
-          "1": 0.8870356330553449
+          "1": 0.9143290371493555
         },
-        "mean_tokens": 444.39802880970433,
-        "mean_tokens_correct": 250.98888888888888,
-        "mean_tokens_wrong": 1963.1140939597315,
-        "median_tokens": 199,
-        "truncation_rate": 0.0037907505686125853,
+        "mean_tokens": 476.16982562547383,
+        "mean_tokens_correct": 343.6542288557214,
+        "mean_tokens_wrong": 1890.4513274336284,
+        "median_tokens": 285,
+        "truncation_rate": 0.0,
         "no_answer_rate": 0.0,
         "grader_failure_rate": 0.0,
-        "tail_repetition_rate": 0.000758150113722517,
-        "reflection_per_response": 0.44579226686884005,
-        "any_reflection_rate": 0.08642911296436695,
+        "tail_repetition_rate": 0.0,
+        "reflection_per_response": 1.3745261561789235,
+        "any_reflection_rate": 0.052312357846853674,
         "metric_note": "mean@n = average over problems of per-problem accuracy over n samples (pass@1 estimate); pass@k unbiased; maj@n = plurality answer correct.",
         "budget_curve_no_forcing": {
-          "1024": 0.8718726307808946,
-          "2048": 0.8840030326004549,
-          "4096": 0.8847611827141774,
-          "8192": 0.8870356330553449,
-          "16384": 0.8870356330553449,
-          "32768": 0.8870356330553449
+          "1024": 0.9006823351023503,
+          "2048": 0.9052312357846853,
+          "4096": 0.9097801364670205,
+          "8192": 0.9128127369219106,
+          "16384": 0.9143290371493555,
+          "32768": 0.9143290371493555
         },
         "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-        "scored": "2026-11-12T10:32:16+08:00",
+        "scored": "2026-11-13T09:17:26+08:00",
         "benchmark_problems": 1319
       },
       "math500": {
@@ -176,70 +176,70 @@
         "samples_per_problem": [
           4
         ],
-        "mean_at_n": 0.67,
+        "mean_at_n": 0.805,
         "mean_at_n_ci95": [
-          0.6365,
-          0.7035
+          0.777,
+          0.8325
         ],
         "pass_at_k": {
-          "1": 0.67,
-          "2": 0.7696666666666666,
-          "4": 0.836
+          "1": 0.805,
+          "2": 0.879,
+          "4": 0.926
         },
-        "mean_tokens": 4373.531,
-        "mean_tokens_correct": 812.5529850746269,
-        "mean_tokens_wrong": 11603.395454545454,
-        "median_tokens": 539.0,
-        "truncation_rate": 0.0795,
-        "no_answer_rate": 0.0025,
+        "mean_tokens": 3114.562,
+        "mean_tokens_correct": 1465.9670807453417,
+        "mean_tokens_wrong": 9920.3,
+        "median_tokens": 645.0,
+        "truncation_rate": 0.0095,
+        "no_answer_rate": 0.0015,
         "grader_failure_rate": 0.0,
-        "tail_repetition_rate": 0.0095,
-        "reflection_per_response": 9.927,
-        "any_reflection_rate": 0.376,
+        "tail_repetition_rate": 0.0015,
+        "reflection_per_response": 15.4485,
+        "any_reflection_rate": 0.2785,
         "metric_note": "mean@n = average over problems of per-problem accuracy over n samples (pass@1 estimate); pass@k unbiased; maj@n = plurality answer correct.",
-        "maj_at_n": 0.756,
+        "maj_at_n": 0.86,
         "by_level": {
           "1": {
-            "acc": 0.9709302325581395,
-            "mean_tokens": 575.0872093023256,
-            "any_reflection_rate": 0.12790697674418605,
+            "acc": 0.9593023255813954,
+            "mean_tokens": 521.3372093023256,
+            "any_reflection_rate": 0.0755813953488372,
             "generations": 172
           },
           "2": {
-            "acc": 0.8638888888888889,
-            "mean_tokens": 1039.6055555555556,
-            "any_reflection_rate": 0.18055555555555555,
+            "acc": 0.9194444444444444,
+            "mean_tokens": 986.2805555555556,
+            "any_reflection_rate": 0.1388888888888889,
             "generations": 360
           },
           "3": {
-            "acc": 0.7761904761904762,
-            "mean_tokens": 2869.1738095238097,
-            "any_reflection_rate": 0.2714285714285714,
+            "acc": 0.9119047619047619,
+            "mean_tokens": 1447.4261904761904,
+            "any_reflection_rate": 0.18333333333333332,
             "generations": 420
           },
           "4": {
-            "acc": 0.62109375,
-            "mean_tokens": 4845.4765625,
-            "any_reflection_rate": 0.42578125,
+            "acc": 0.798828125,
+            "mean_tokens": 3437.55859375,
+            "any_reflection_rate": 0.283203125,
             "generations": 512
           },
           "5": {
-            "acc": 0.40671641791044777,
-            "mean_tokens": 8559.611940298508,
-            "any_reflection_rate": 0.621268656716418,
+            "acc": 0.6007462686567164,
+            "mean_tokens": 6373.962686567164,
+            "any_reflection_rate": 0.5074626865671642,
             "generations": 536
           }
         },
         "budget_curve_no_forcing": {
-          "1024": 0.5835,
-          "2048": 0.632,
-          "4096": 0.6515,
-          "8192": 0.6625,
-          "16384": 0.666,
-          "32768": 0.6695
+          "1024": 0.6265,
+          "2048": 0.719,
+          "4096": 0.747,
+          "8192": 0.7705,
+          "16384": 0.7945,
+          "32768": 0.804
         },
         "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-        "scored": "2026-11-12T10:32:22+08:00",
+        "scored": "2026-11-13T09:17:29+08:00",
         "benchmark_problems": 500
       }
     }

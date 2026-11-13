@@ -302,3 +302,16 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:39<
 [11-13 09:06:31] qfft_r1_16k_b8_restart_v93: 4506/4599 new generations, 1729 output tok/s
 [11-13 09:07:36] qfft_r1_16k_b8_restart_v93: 4524/4599 new generations, 1738 output tok/s
 [11-13 09:08:38] qfft_r1_16k_b8_restart_v93: 4539/4599 new generations, 1751 output tok/s
+[11-13 09:09:58] qfft_r1_16k_b8_restart_v93: 4548/4599 new generations, 1752 output tok/s
+[11-13 09:11:04] qfft_r1_16k_b8_restart_v93: 4556/4599 new generations, 1756 output tok/s
+[11-13 09:12:17] qfft_r1_16k_b8_restart_v93: 4566/4599 new generations, 1760 output tok/s
+[11-13 09:13:30] qfft_r1_16k_b8_restart_v93: 4578/4599 new generations, 1769 output tok/s
+[11-13 09:15:17] qfft_r1_16k_b8_restart_v93: 4586/4599 new generations, 1770 output tok/s
+[11-13 09:16:36] qfft_r1_16k_b8_restart_v93: 4593/4599 new generations, 1774 output tok/s
+[11-13 09:17:04] qfft_r1_16k_b8_restart_v93: 4599 new generations, 21,628,948 output tokens in 12108 s (1786 tok/s; engine start 134 s)
+[11-13 09:17:04] qfft_r1_16k_b8_restart_v93: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=102000) INFO 11-13 01:17:04 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=102468) INFO 11-13 01:17:04 [core.py:1573] [shutdown] EngineCore: exiting busy loop

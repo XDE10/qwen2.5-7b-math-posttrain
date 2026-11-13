@@ -1,2 +1,2 @@
 p1-r1-16k-restart-1112
-running
+OK
