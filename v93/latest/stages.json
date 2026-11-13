@@ -104,8 +104,8 @@
   "started": "2026-11-13T10:43:56.932804",
   "code": "549f4e44e789",
   "host": "p1-r1-pilot16-a@169c4d99e9d5",
-  "heartbeat": "2026-11-13T11:14:00.475448",
-  "heartbeat_ts": 1794568440.4754639
+  "heartbeat": "2026-11-13T11:49:04.430776",
+  "heartbeat_ts": 1794570544.4307897
  },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
