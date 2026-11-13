@@ -1,0 +1,7 @@
+{
+  "steps": 10,
+  "resumed_from": "/content/p1/runs/grpo_qfft_r1_16k_pilot_v93/checkpoint-5",
+  "adapter": "/content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/adapter",
+  "wall_hours_this_session": 1.563,
+  "completed": "2026-11-13T22:06:37+08:00"
+}

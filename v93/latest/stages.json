@@ -100,12 +100,12 @@
  },
  "grpo__grpo_qfft_r1_16k_pilot": {
   "stage": "grpo:grpo_qfft_r1_16k_pilot",
-  "state": "running",
+  "state": "complete",
+  "hours": 1.7,
+  "finished": "2026-11-13T14:09:49.497165",
   "started": "2026-11-13T12:27:47.138445",
   "code": "549f4e44e789",
-  "host": "p1-r1-pilot16-b@79c53d275e8f",
-  "heartbeat": "2026-11-13T14:07:54.442569",
-  "heartbeat_ts": 1794578874.4425843
+  "host": "p1-r1-pilot16-b@79c53d275e8f"
  },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
@@ -151,6 +151,15 @@
   "started": "2026-11-10T05:57:56.241816",
   "code": "0f7a0623a31d",
   "host": "p1-1110-135452@6be45fc5fe3e"
+ },
+ "r1-grpo-dev": {
+  "stage": "r1-grpo-dev",
+  "state": "running",
+  "started": "2026-11-13T14:09:49.498311",
+  "code": "549f4e44e789",
+  "host": "p1-r1-pilot16-b@79c53d275e8f",
+  "heartbeat": "2026-11-13T14:39:50.190868",
+  "heartbeat_ts": 1794580790.1908803
  },
  "smoke-eval": {
   "stage": "smoke-eval",

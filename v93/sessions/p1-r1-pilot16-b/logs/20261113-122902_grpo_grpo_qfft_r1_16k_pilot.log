@@ -88,3 +88,47 @@ Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<
 [11-13 21:52:59] HEARTBEAT 9
 [11-13 21:57:59] HEARTBEAT 9
 [11-13 22:03:00] HEARTBEAT 9
+[11-13 22:05:47] comparison step 10: length stops 14/64, mixed unmasked groups 3/8, generation 299.6s, update 699.3s, card peak 79.5 GiB, utilization 99.8%
+[11-13 22:05:47] step 10/10 epoch 0.05 loss -0.0116 lr 1.00e-05 s/step 1142.7 eta 0.00h peakGPU 77.2GiB
+{'loss': '-0.01161', 'grad_norm': '0.003059', 'learning_rate': '1e-05', 'num_tokens': '3.942e+06', 'completions/mean_length': '7247', 'completions/min_length': '592', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.2188', 'completions/mean_terminated_length': '4689', 'completions/min_terminated_length': '592', 'completions/max_terminated_length': '1.633e+04', 'rewards/final_answer/mean': '0.375', 'rewards/final_answer/std': '0.488', 'reward': '0.375', 'reward_std': '0.488', 'frac_reward_zero_std': '0.5', 'comparison/completion_tokens': '4.638e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '4', 'comparison/length_stop_frac': '0.2188', 'comparison/length_stops': '14', 'comparison/loss_masked': '14', 'comparison/loss_masked_frac': '0.2188', 'comparison/mean_completion_tokens': '7247', 'comparison/mixed_unmasked_reward_groups': '3', 'reward/correct_frac': '0.375', 'reward/no_answer_frac': '0.2344', 'reward/wrong_frac': '0.3906', 'sampling/sampling_logp_difference/mean': '0.02363', 'sampling/sampling_logp_difference/max': '4.462', 'sampling/importance_sampling_ratio/min': '7.461e-33', 'sampling/importance_sampling_ratio/mean': '0.4532', 'sampling/importance_sampling_ratio/max': '1.518', 'entropy': '0.257', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '1066', 'epoch': '0.05181', 'comparison/step_seconds': '1143', 'comparison/generation_seconds': '299.6', 'comparison/rollout_other_seconds': '143.8', 'comparison/update_seconds': '699.3', 'comparison/gpu_step_samples': 1118, 'comparison/gpu_step_peak_used_gib': '79.49', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.77', 'comparison/gpu_generation_samples': 292, 'comparison/gpu_generation_peak_used_gib': '79.49', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '100', 'comparison/gpu_rollout_other_samples': 140, 'comparison/gpu_rollout_other_peak_used_gib': '79.49', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '98.54', 'comparison/gpu_update_samples': 686, 'comparison/gpu_update_peak_used_gib': '79.49', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.92'}
+[11-13 22:05:48] Saved checkpoint-10 locally: 935.3MiB in 0.5 s, 211.0 GiB free
+{'train_runtime': '5579', 'train_samples_per_second': '0.057', 'train_steps_per_second': '0.001', 'train_loss': '-0.011', 'epoch': '0.05181'}
+[11-13 22:05:49] Waiting for the previous checkpoint mirror to finish ...
+[11-13 22:05:49] Mirroring checkpoint-10 to Drive (full_state) in the background
+[11-13 22:06:05] rclone copy (16 s): 2026/11/13 14:06:05 NOTICE:   935.315 MiB / 935.315 MiB, 100%, 71.949 MiB/s, ETA 0s
+[11-13 22:06:07] rclone check (2 s): 2026/11/13 14:06:07 NOTICE: Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-10.0bbca7fc8259427db5fffaaba44b9564.partial': 12 matching files
+[11-13 22:06:11] rclone purge (4 s): 2026/11/13 14:06:11 Failed to purge: directory not found
+[11-13 22:06:15] Uploaded checkpoint-10 to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-10 (935.3MiB in 26 s, 36 MiB/s)
+[11-13 22:06:19] rclone copyto (3 s): 2026/11/13 14:06:19 NOTICE:     1.750 KiB / 1.750 KiB, 100%, 1.748 KiB/s, ETA 0s
+[11-13 22:06:19] Mirror complete: /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-10
+[11-13 22:06:30] rclone copy (6 s): 2026/11/13 14:06:30 NOTICE:   318.960 MiB / 318.960 MiB, 100%, 77.858 MiB/s, ETA 0s
+[11-13 22:06:33] rclone purge (3 s): 2026/11/13 14:06:33 Failed to purge: directory not found
+[11-13 22:06:37] Uploaded adapter to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/adapter (319.0MiB in 13 s, 24 MiB/s)
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run grpo_qfft_r1_16k_pilot_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/flxhfxxf
+swanlab: Upload complete: 427 records
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   1%|          | 2/339 [00:00<00:29, 11.48it/s]
+Loading weights:  12%|█▏        | 41/339 [00:00<00:01, 175.51it/s]
+Loading weights:  23%|██▎       | 78/339 [00:00<00:01, 243.23it/s]
+Loading weights:  34%|███▎      | 114/339 [00:00<00:00, 281.34it/s]
+Loading weights:  45%|████▌     | 154/339 [00:00<00:00, 319.82it/s]
+Loading weights:  58%|█████▊    | 196/339 [00:00<00:00, 342.34it/s]
+Loading weights:  69%|██████▊   | 233/339 [00:00<00:00, 342.84it/s]
+Loading weights:  80%|███████▉  | 270/339 [00:00<00:00, 348.93it/s]
+Loading weights:  91%|█████████▏| 310/339 [00:01<00:00, 362.79it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 313.40it/s]
+
+Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Writing model shards:  25%|██▌       | 1/4 [00:02<00:07,  2.65s/it]
+Writing model shards:  50%|█████     | 2/4 [00:14<00:15,  7.88s/it]
+Writing model shards:  75%|███████▌  | 3/4 [00:25<00:09,  9.47s/it]
+Writing model shards: 100%|██████████| 4/4 [00:36<00:00, 10.03s/it]
+Writing model shards: 100%|██████████| 4/4 [00:36<00:00,  9.11s/it]
+[11-13 22:09:40] rclone copy (133 s): 2026/11/13 14:09:40 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 100.875 MiB/s, ETA 0s
+[11-13 22:09:41] rclone purge (2 s): 2026/11/13 14:09:41 Failed to purge: directory not found
+[11-13 22:09:44] Uploaded merged to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/merged (14.2GiB in 137 s, 106 MiB/s)
+[11-13 22:09:44] Merged weights -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/merged
+[11-13 22:09:44] grpo_qfft_r1_16k_pilot_v93: COMPLETE -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93

@@ -1,24 +1,8 @@
 {
-  "state": "training",
-  "step": 10,
-  "max_steps": 10,
-  "epoch": 0.05181347150259067,
-  "updated": "2026-11-13T22:05:49+08:00",
-  "last_log": {
-    "step": 10,
-    "time": "2026-11-13T22:05:49+08:00",
-    "train_runtime": 5579.1795,
-    "train_samples_per_second": 0.057,
-    "train_steps_per_second": 0.001,
-    "total_flos": 0.0,
-    "train_loss": -0.010999000817537307,
-    "epoch": 0.05181347150259067,
-    "gpu/allocated_gib": 56.63782072067261,
-    "gpu/peak_allocated_gib": 77.23446893692017,
-    "gpu/peak_reserved_gib": 78.6796875,
-    "host/rss_gib": 4.242607116699219,
-    "host/available_gib": 166.54677963256836,
-    "train/epoch": 0.05181347150259067
-  },
-  "run": "grpo_qfft_r1_16k_pilot_v93"
+  "state": "complete",
+  "steps": 10,
+  "resumed_from": "/content/p1/runs/grpo_qfft_r1_16k_pilot_v93/checkpoint-5",
+  "adapter": "/content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/adapter",
+  "wall_hours_this_session": 1.563,
+  "completed": "2026-11-13T22:06:37+08:00"
 }

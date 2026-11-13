@@ -1,4 +1,4 @@
-# v93 status (2026-11-13T14:04:48, session p1-r1-pilot16-b)
+# v93 status (2026-11-13T14:38:13, session p1-r1-pilot16-b)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -12,24 +12,25 @@ stage grpo:compare_grpo_qfft_r1_12k                 complete  0.513
 stage grpo:compare_grpo_qfft_r1_16k                 complete  0.702 
 stage grpo:compare_grpo_qfft_r1_8k                  complete  0.339 
 stage grpo:diagnose_grpo_qfft_r1_8k                 complete  0.424 
-stage grpo:grpo_qfft_r1_16k_pilot                   running   on p1-r1-pilot16-b@79c53d275e8f, heartbeat 2 min ago 
+stage grpo:grpo_qfft_r1_16k_pilot                   complete  1.7 
 stage grpo:smoke_grpo_qfft_r1_16k_b8                complete  0.325 
 stage grpo:smoke_grpo_qfft_r1_fallback_8k           complete  0.331 
 stage models:base,qwen_math,qfft_official,sft_repro complete  0.173 
 stage pilot                                         failed     ValueError: Unknown stage 'pilot'
 stage ping:30                                       complete  0.008 
+stage r1-grpo-dev                                   running   on p1-r1-pilot16-b@79c53d275e8f, heartbeat 4 min ago 
 stage smoke-eval                                    complete  0.1 
 stage smoke-grpo                                    complete  0.342 
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 1549 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 1582 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run compare_grpo_qfft_r1_12k_v93 complete step 2/ updated 2026-11-13T18:23:41+08:00
 run compare_grpo_qfft_r1_16k_v93 complete step 2/ updated 2026-11-13T16:18:56+08:00
 run compare_grpo_qfft_r1_8k_v93  complete step 2/ updated 2026-11-13T15:32:04+08:00
 run diagnose_grpo_qfft_r1_8k_v93 complete step 2/ updated 2026-11-13T10:55:24+08:00
-run grpo_qfft_r1_16k_pilot_v93   training step 9/10 updated 2026-11-13T21:46:45+08:00
+run grpo_qfft_r1_16k_pilot_v93   complete step 10/ updated 2026-11-13T22:06:37+08:00
 run qfft_ds_v93                  complete step 378/ updated 2026-11-12T03:37:21+08:00
 run qfft_r1_16k_b8_restart_v93   complete step 750/ updated 2026-11-13T05:49:15+08:00
 run qfft_r1_16k_b8_v93           training step 209/750 updated 2026-11-12T20:20:25+08:00
