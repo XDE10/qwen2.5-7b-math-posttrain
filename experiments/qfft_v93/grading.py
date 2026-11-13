@@ -52,6 +52,15 @@ def boxed_contents(text: str) -> list:
     return out
 
 
+def last_box_without_final_tag(text: str) -> str | None:
+    if '<|im_start|>answer' in text or '</think>' in text:
+        return None
+    boxes = [box for box in boxed_contents(text) if box.strip()]
+    if boxes:
+        return '<|im_start|>answer\n\\boxed{' + boxes[-1] + '}'
+    return None
+
+
 def clean_reference(reference) -> str:
     ref = str(reference if reference is not None else '').strip()
     if len(ref) >= 2 and ref[0] == ref[-1] == '$':
