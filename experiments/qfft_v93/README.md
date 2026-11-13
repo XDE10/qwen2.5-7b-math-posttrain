@@ -152,7 +152,15 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 | 环境 | `/content/p1/venvs/{infer,rl}` | `envcache/venvs/*.tar` 快照 + 冻结版本清单 | 约 1 分钟恢复 |
 
 - 镜像先写 `.partial`，发布成功后写完成标记。完整镜像与轻量镜像各自保留，新的轻量镜像不会淘汰旧的完整镜像。`--drive colab` 时使用限速复制。
-- 原 VM 仍可用且会话空闲时，用原来的 `--session` 和训练阶段重启，同一 VM 会使用完整本地检查点。会话繁忙时用 `--attach`。如果换 VM 后只剩轻量镜像，要从底座重跑或做权重 warm-start，应使用独立的 run 名称。
+- 原 VM 仍可用且会话空闲时，用原来的 `--session` 和训练阶段重启，同一 VM 会使用完整本地检查点。会话繁忙时用 `--attach`。
+- 原 VM 已消失且只剩轻量镜像时，可显式启动 `warm-start:<配置>:<来源 run>:<新 run>`。例如来源是 `qfft_r1_16k_b8_restart_v93` 时：
+
+  ```bash
+  bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 \
+    warm-start:qfft_r1_16k_b8_restart:qfft_r1_16k_b8_restart_v93:qfft_r1_16k_b8_warm_v93
+  ```
+
+  入口选择来源最新可用的轻量镜像并在新 run 中固定来源。仅下载模型权重和模型配置，使用固定底座的 tokenizer。数据 SHA 和训练配方须与来源一致。若在第 125/750 步恢复，Trainer 在新 run 从 0 计数、最多更新 625 次，第一个更新用原 cosine 曲线在 125 步的学习率，后续沿同一曲线走到第 750 步。AdamW 状态重建，随机种子按配置重新初始化采样器，数据顺序会重新开始。运行身份、状态和完成报告的 `warm_start` 字段记录来源、原始偏移、剩余步数及学习率策略。结果需标为权重 warm-start。
 - 训练日志（`metrics.jsonl`）、GRPO 的判分记录和各阶段日志都先写 VM 本地，再每 30–60 秒整体替换 Drive 上的副本：挂载点上一直打开着的文件要到关闭时才会上传。
 - run 目录里的 `run_identity.json` 记录配方与数据 SHA；配方或数据变了会拒绝在同名 run 上续跑。
 - 训练完成后导出 bf16 safetensors 到 `runs/<run>/final/`，写 `TRAIN_COMPLETE.json`，删除镜像，并把权重留在本地 SSD 上供同一 VM 的评测直接使用。
