@@ -84,23 +84,18 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 ## 下一步：从 R1 最终权重做 GRPO（待运行）
 
 - 初始化用 `init_model: "run:qfft_r1_16k_b8_restart_v93"`，解析到 Drive 的 `runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final/`。已核对权重、tokenizer 和模型身份文件，身份记录为 750 步。[重跑配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8_restart.json) · [模型路径解析](../../experiments/qfft_v93/models.py)
-- 规划独立 GRPO run `grpo_qfft_r1_16k_b8_v93`。沿用 v93 配方，LoRA r32、LR `1e-5`、8 题 × 8 采样、DAPO 损失、严格最终段 0/1 奖励及截断掩码。Drive 上核对到 920 条已批准训练题，另有 637 条候选题的 `training_approved` 均为 `false`。R1 的配置草案固定批准文件，并清空默认的候选题通配符。训练入口仍会对题池去重并检查与评测集的相似度。[GRPO 默认配置](../../experiments/qfft_v93/configs/grpo/_defaults.json) · [题池与奖励实现](../../experiments/qfft_v93/grpo.py)
-- 先用独立 run 做 2 步真实 rollout，观察显存、截断率和组内是否同时出现 0/1 奖励。R1 在离线 AIME24 的平均输出已达 14.7K token，现行 8,192 token rollout 的可用奖励密度需要实测。
+- 独立 GRPO run `grpo_qfft_r1_16k_b8_v93` 沿用 v93 配方，LoRA r32、LR `1e-5`、8 题 × 8 采样、DAPO 损失、严格最终段 0/1 奖励及截断掩码。2026-11-13 用户明确授权将 637 条 E0 难题全部加入本轮 R1 题池，与已批准的 920 条合计 1,557 条源记录。批准清单固定两份文件的 SHA-256、行数和原始批准状态，源探针的 `training_approved: false` 留作历史。训练入口仍执行去重和评测集去污。[R1 GRPO 配置](../../experiments/qfft_v93/configs/grpo/grpo_qfft_r1_16k_b8.json) · [题池批准清单](../../experiments/qfft_v93/configs/grpo/r1_pool_approval.json)
+- CPU 实测使用 Drive 的两份原文件。去重后 1,555 题，去除 4 道与评测集相似的题后剩 **1,551 题（918 道原批准题 + 633 道难题）**。
+- 先用独立 run 做 2 步真实 rollout，观察显存、截断率和组内是否同时出现 0/1 奖励。R1 在离线 AIME24 的平均输出已达 14.7K token，现行 8,192 token rollout 的可用奖励密度需要实测。冒烟沿用正式采样和截断掩码，warmup 缩为 1 步，每步存检查点，结束时只导出 adapter。[两步冒烟配置](../../experiments/qfft_v93/configs/grpo/smoke_grpo_qfft_r1_16k_b8.json)
 - 正式跑前验证 GRPO 的跨 VM 恢复。当前 adapter 镜像默认排除优化器，精确恢复需要包含优化器的 LoRA 检查点。正式训练计划为 150 步，用最后一步的 adapter 合并到 R1 权重，再按同一五项口径评测，以本轮 R1 QFFT 的 **33.63%** 为 GRPO 的竞赛基线，报告配对差值、输出长度和截断率。[GRPO 训练与合并入口](../../experiments/qfft_v93/grpo.py)
 
-正式配置草案（文件名拟为 `configs/grpo/grpo_qfft_r1_16k_b8.json`，尚未启用）：
+正式流程使用 `grpo:grpo_qfft_r1_16k_b8` → `eval:run:grpo_qfft_r1_16k_b8_v93/merged:full`。配置已准备，GPU 待用户授权。
 
-```json
-{
-  "base": "_defaults.json",
-  "run_name": "grpo_qfft_r1_16k_b8_v93",
-  "init_model": "run:qfft_r1_16k_b8_restart_v93",
-  "pool": {
-    "files": ["runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl"],
-    "optional_globs": [],
-    "note": "Approved 920-row E0 pool before deduplication and benchmark decontamination."
-  }
-}
+两步冒烟命令（WSL2 仓库根目录，待运行）：
+
+```bash
+source ~/.proxy_env.sh
+bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 grpo:smoke_grpo_qfft_r1_16k_b8
 ```
 
-完成短跑与恢复验证后，正式流程使用 `grpo:grpo_qfft_r1_16k_b8` → `eval:run:grpo_qfft_r1_16k_b8_v93/merged:full`。本次只准备方案。
+成功时会输出 `P1_RESULT=OK`，Drive 的 `runs/project1/v93/runs/smoke_grpo_qfft_r1_16k_b8_v93/GRPO_COMPLETE.json` 应记录 2 步。显存、`completions/clipped_ratio` 和 `frac_reward_zero_std` 见同一目录的 `metrics.jsonl`。

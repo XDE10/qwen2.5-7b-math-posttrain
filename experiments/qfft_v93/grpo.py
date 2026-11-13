@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import argparse
 import glob
+import hashlib
+import json
 import os
 import shutil
 import time
@@ -22,7 +24,7 @@ from pathlib import Path
 
 from experiments.qfft_v93 import decontam, drive_io
 from experiments.qfft_v93.checkpointing import CheckpointMirror, resolve_resume
-from experiments.qfft_v93.common import (Heartbeat, JsonlAppender, drive_layout, gpu_profile,
+from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, JsonlAppender, drive_layout, gpu_profile,
                                          load_config, local_root, log, now_iso, read_json, read_jsonl, sha256_json,
                                          write_json)
 from experiments.qfft_v93.formats import messages
@@ -30,18 +32,40 @@ from experiments.qfft_v93.grading import Grader
 from experiments.qfft_v93.telemetry import ProgressCallback, SwanLab
 
 
+def approved_pool_sources(cfg: dict, root: Path):
+    manifest = read_json(CONFIG_DIR / cfg['pool']['approval_manifest'])
+    if cfg['run_name'] not in manifest['run_names']:
+        raise ValueError('RL pool approval belongs to a different run')
+    for name in manifest['approved_training_files']:
+        path = root / name
+        spec = manifest['files'][name]
+        content = path.read_bytes()
+        if hashlib.sha256(content).hexdigest() != spec['sha256']:
+            raise ValueError(f'RL pool file hash differs from the approval manifest: {path}')
+        rows = [json.loads(line) for line in content.decode('utf-8-sig').splitlines() if line.strip()]
+        if len(rows) != spec['rows'] or any(r.get('training_approved') is not spec['source_training_approved'] for r in rows):
+            raise ValueError(f'RL pool rows differ from the approval manifest: {path}')
+        yield path, rows
+
+
 def build_pool(cfg: dict, layout, bench_dir: Path | None, sft_questions: set):
     """RL prompts: listed files + optional globs (relative to the Drive root), deduplicated and decontaminated."""
-    files = [layout.root / f for f in cfg['pool']['files']]
-    for pattern in cfg['pool'].get('optional_globs', []):
-        files += [Path(p) for p in sorted(glob.glob(str(layout.root / pattern)))]
-    rows, seen = [], set()
-    for path in files:
-        if not path.exists():
-            if str(path.relative_to(layout.root)) in cfg['pool']['files']:
+    manifest = cfg['pool'].get('approval_manifest')
+    if manifest:
+        sources = approved_pool_sources(cfg, layout.root)
+    else:
+        files = [layout.root / f for f in cfg['pool']['files']]
+        for path in files:
+            if not path.exists():
                 raise FileNotFoundError(f'RL pool file missing: {path}')
-            continue
-        for r in read_jsonl(path):
+        for pattern in cfg['pool'].get('optional_globs', []):
+            files += [Path(p) for p in sorted(glob.glob(str(layout.root / pattern)))]
+        sources = ((path, read_jsonl(path)) for path in files if path.exists())
+    rows, seen = [], set()
+    used_files = []
+    for path, source_rows in sources:
+        used_files.append(str(path))
+        for r in source_rows:
             question = r.get('problem') or r.get('question')
             answer = r.get('reference_answer', r.get('answer'))
             if not question or answer is None or not str(answer).strip():
@@ -52,7 +76,9 @@ def build_pool(cfg: dict, layout, bench_dir: Path | None, sft_questions: set):
             seen.add(key)
             rows.append({'sample_id': r.get('sample_id', f'pool/{len(rows):05d}'), 'question': question,
                          'reference_answer': str(answer), 'pool_file': path.name})
-    report = {'files': [str(p) for p in files if p.exists()], 'unique_questions': len(rows)}
+    report = {'files': used_files, 'unique_questions': len(rows)}
+    if manifest:
+        report['approval_manifest'] = manifest
     if bench_dir and Path(bench_dir).exists():
         benchmarks = decontam.load_benchmarks(bench_dir)
         flagged = set()
@@ -154,12 +180,13 @@ def main() -> None:
     p.add_argument('--no-merge', action='store_true')
     a = p.parse_args()
     cfg = load_config(a.config)
+    merge_adapter = cfg.get('merge_adapter', True) and not a.no_merge
     layout = drive_layout()
     run = cfg['run_name']
     drive_run, local_run = layout.runs / run, local_root() / 'runs' / run
     drive_run.mkdir(parents=True, exist_ok=True)
     local_run.mkdir(parents=True, exist_ok=True)
-    if (drive_run / 'GRPO_COMPLETE.json').exists() and ((drive_run / 'merged').exists() or a.no_merge):
+    if (drive_run / 'GRPO_COMPLETE.json').exists() and ((drive_run / 'merged').exists() or not merge_adapter):
         log(f'{run}: already complete')
         return
     if a.model_path:
@@ -231,7 +258,7 @@ def main() -> None:
     write_json(drive_run / 'GRPO_COMPLETE.json', summary)
     write_json(drive_run / 'status.json', {'state': 'complete', **summary})
     swan.finish()
-    if not a.no_merge:
+    if merge_adapter:
         from experiments.qfft_v93.merge_lora import merge
         merge(model_path, adapter_local, drive_run / 'merged', smoke=a.smoke)
     shutil.rmtree(local_run, ignore_errors=True)
