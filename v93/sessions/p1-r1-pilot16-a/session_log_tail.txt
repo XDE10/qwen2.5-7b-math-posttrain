@@ -102,3 +102,22 @@ swanlab: Upload recovered, resuming normally.
 [11-13 20:09:13] HEARTBEAT 4
 [11-13 20:14:14] HEARTBEAT 4
 [11-13 20:19:14] HEARTBEAT 4
+[11-13 20:21:40] comparison step 5: length stops 11/64, mixed unmasked groups 3/8, generation 319.0s, update 692.4s, card peak 78.9 GiB, utilization 99.8%
+[11-13 20:21:40] step 5/10 epoch 0.03 loss 0.0018 lr 8.00e-06 s/step 1154.8 eta 1.60h peakGPU 77.1GiB
+{'loss': '0.001847', 'grad_norm': '0.0004741', 'learning_rate': '8e-06', 'num_tokens': '1.983e+06', 'completions/mean_length': '8606', 'completions/min_length': '374', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1875', 'completions/mean_terminated_length': '6968', 'completions/min_terminated_length': '374', 'completions/max_terminated_length': '1.527e+04', 'rewards/final_answer/mean': '0.2344', 'rewards/final_answer/std': '0.427', 'reward': '0.2344', 'reward_std': '0.427', 'frac_reward_zero_std': '0.625', 'comparison/completion_tokens': '5.508e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '3', 'comparison/length_stop_frac': '0.1719', 'comparison/length_stops': '11', 'comparison/loss_masked': '12', 'comparison/loss_masked_frac': '0.1875', 'comparison/mean_completion_tokens': '8606', 'comparison/mixed_unmasked_reward_groups': '3', 'reward/correct_frac': '0.2344', 'reward/no_answer_frac': '0.1719', 'reward/wrong_frac': '0.5938', 'sampling/sampling_logp_difference/mean': '0.0283', 'sampling/sampling_logp_difference/max': '2.762', 'sampling/importance_sampling_ratio/min': '5.127e-31', 'sampling/importance_sampling_ratio/mean': '0.3255', 'sampling/importance_sampling_ratio/max': '2.176', 'entropy': '0.4574', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '1079', 'epoch': '0.02591', 'comparison/step_seconds': '1155', 'comparison/generation_seconds': '319', 'comparison/rollout_other_seconds': '143.4', 'comparison/update_seconds': '692.4', 'comparison/gpu_step_samples': 1132, 'comparison/gpu_step_peak_used_gib': '78.91', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.79', 'comparison/gpu_generation_samples': 312, 'comparison/gpu_generation_peak_used_gib': '78.91', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '99.97', 'comparison/gpu_rollout_other_samples': 140, 'comparison/gpu_rollout_other_peak_used_gib': '78.91', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '98.56', 'comparison/gpu_update_samples': 680, 'comparison/gpu_update_peak_used_gib': '78.91', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.96'}
+[11-13 20:21:41] Saved checkpoint-5 locally: 935.3MiB in 0.5 s, 212.0 GiB free
+[11-13 20:21:41] Waiting for the previous checkpoint mirror to finish ...
+[11-13 20:21:41] Mirroring checkpoint-5 to Drive (full_state) in the background
+[11-13 20:21:54] rclone copy (13 s): 2026/11/13 12:21:54 NOTICE:   935.306 MiB / 935.306 MiB, 100%, 85.028 MiB/s, ETA 0s
+[11-13 20:21:56] rclone check (2 s): 2026/11/13 12:21:56 NOTICE: Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-5.32da60359a274d61a0b25b29d799d66d.partial': 12 matching files
+[11-13 20:21:58] rclone purge (2 s): 2026/11/13 12:21:58 Failed to purge: directory not found
+[11-13 20:22:00] Uploaded checkpoint-5 to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-5 (935.3MiB in 19 s, 49 MiB/s)
+[11-13 20:22:02] rclone copyto (2 s): 2026/11/13 12:22:02 NOTICE:     1.750 KiB / 1.750 KiB, 100%, 0 B/s, ETA -
+[11-13 20:22:17] Mirror complete: /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-5
+{'train_runtime': '5590', 'train_samples_per_second': '0.057', 'train_steps_per_second': '0.001', 'train_loss': '-0.008909', 'epoch': '0.02591'}
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run grpo_qfft_r1_16k_pilot_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/flxhfxxf
+swanlab: Upload complete: 7373 records
+[11-13 20:22:22] grpo_qfft_r1_16k_pilot_v93: paused after step 5; full Drive mirror confirmed
+[report] pushed to colab-reports: colab p1-r1-pilot16-a: progress
