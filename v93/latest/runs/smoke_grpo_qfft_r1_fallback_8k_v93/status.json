@@ -1,0 +1,8 @@
+{
+  "state": "complete",
+  "steps": 2,
+  "resumed_from": null,
+  "adapter": "/content/mydrive/runs/project1/v93/runs/smoke_grpo_qfft_r1_fallback_8k_v93/adapter",
+  "wall_hours_this_session": 0.246,
+  "completed": "2026-11-13T11:22:34+08:00"
+}
