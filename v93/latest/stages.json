@@ -64,12 +64,12 @@
  },
  "grpo__compare_grpo_qfft_r1_16k": {
   "stage": "grpo:compare_grpo_qfft_r1_16k",
-  "state": "running",
+  "state": "complete",
+  "hours": 0.702,
+  "finished": "2026-11-13T08:19:03.049160",
   "started": "2026-11-13T07:36:54.003575",
   "code": "33440c8e9f13",
-  "host": "p1-r1-len16k@d07dd4d29e74",
-  "heartbeat": "2026-11-13T08:06:57.684294",
-  "heartbeat_ts": 1794557217.6843066
+  "host": "p1-r1-len16k@d07dd4d29e74"
  },
  "grpo__compare_grpo_qfft_r1_8k": {
   "stage": "grpo:compare_grpo_qfft_r1_8k",
