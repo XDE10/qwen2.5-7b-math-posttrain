@@ -414,3 +414,22 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:38<
 [11-14 06:09:49] step30: 441/498 new generations, 1875 output tok/s
 [11-14 06:10:54] step30: 453/498 new generations, 1892 output tok/s
 [11-14 06:11:58] step30: 456/498 new generations, 1688 output tok/s
+[11-14 06:13:16] step30: 462/498 new generations, 1594 output tok/s
+[11-14 06:14:18] step30: 472/498 new generations, 1723 output tok/s
+[11-14 06:15:20] step30: 478/498 new generations, 1737 output tok/s
+[report] pushed to colab-reports: colab p1-r1-16k-step30: progress
+[11-14 06:16:21] step30: 482/498 new generations, 1706 output tok/s
+[11-14 06:17:25] step30: 486/498 new generations, 1688 output tok/s
+[11-14 06:18:41] step30: 490/498 new generations, 1665 output tok/s
+[11-14 06:19:53] step30: 493/498 new generations, 1633 output tok/s
+[11-14 06:20:09] step30: 498 new generations, 1,582,189 output tokens in 885 s (1788 tok/s; engine start 132 s)
+[11-14 06:20:09] step30: generation complete for r1_grpo_dev
+(MainProcess pid=150327) INFO 11-13 22:20:09 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=150930) INFO 11-13 22:20:09 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=150930) INFO 11-13 22:20:09 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=150930) INFO 11-13 22:20:09 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=150930) INFO 11-13 22:20:09 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-13 22:20:15] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --bench-dir /content/mydrive/projects/project1/v93/data/r1_grpo_dev --require-gradable --evals-root /content/mydrive/runs/project1/v93/grpo_dev --tags r1,step30 --compare step30:r1 | log: /content/mydrive/runs/project1/v93/logs/20261113-222015_score_r1_grpo_dev.log
+[11-14 06:20:20] r1/r1_grpo_dev: mean@n=0.819 CI=[0.7791164658634538, 0.8594377510040161] tokens=3293 trunc=0.010
+[11-14 06:20:21] step30/r1_grpo_dev: mean@n=0.833 CI=[0.7911646586345381, 0.8755020080321285] tokens=3177 trunc=0.012
+[11-14 06:20:22] Wrote /content/mydrive/runs/project1/v93/grpo_dev/results.md

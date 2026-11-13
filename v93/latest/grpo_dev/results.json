@@ -1,6 +1,6 @@
 {
   "grader": "v93-final-segment-last-box/math-verify-0.9.0-timeout-status",
-  "updated": "2026-11-13T22:45:53+08:00",
+  "updated": "2026-11-14T06:20:22+08:00",
   "results": {
     "r1": {
       "r1_grpo_dev": {
@@ -40,11 +40,11 @@
           "32768": 0.8192771084337349
         },
         "grader": "v93-final-segment-last-box/math-verify-0.9.0-timeout-status",
-        "scored": "2026-11-13T22:45:52+08:00",
+        "scored": "2026-11-14T06:20:20+08:00",
         "benchmark_problems": 249
       }
     },
-    "pilot": {
+    "step30": {
       "r1_grpo_dev": {
         "problems": 249,
         "missing_problems": [],
@@ -52,52 +52,52 @@
         "samples_per_problem": [
           2
         ],
-        "mean_at_n": 0.8293172690763052,
+        "mean_at_n": 0.8333333333333334,
         "mean_at_n_ci95": [
-          0.7871485943775101,
-          0.8694779116465864
+          0.7911646586345381,
+          0.8755020080321285
         ],
         "pass_at_k": {
-          "1": 0.8293172690763052,
-          "2": 0.8995983935742972
+          "1": 0.8333333333333334,
+          "2": 0.8875502008032129
         },
-        "mean_tokens": 3169.656626506024,
-        "mean_tokens_correct": 1481.915254237288,
-        "mean_tokens_wrong": 11370.094117647059,
-        "median_tokens": 681.5,
+        "mean_tokens": 3177.086345381526,
+        "mean_tokens_correct": 1581.8457831325302,
+        "mean_tokens_wrong": 11153.289156626506,
+        "median_tokens": 689.0,
         "truncation_rate": 0.012048192771084338,
         "no_answer_rate": 0.0,
         "grader_failure_rate": 0.0,
-        "tail_repetition_rate": 0.0,
-        "reflection_per_response": 16.116465863453815,
-        "any_reflection_rate": 0.26305220883534136,
+        "tail_repetition_rate": 0.002008032128514056,
+        "reflection_per_response": 16.150602409638555,
+        "any_reflection_rate": 0.2751004016064257,
         "metric_note": "mean@n = average over problems of per-problem accuracy over n samples (pass@1 estimate); pass@k unbiased; maj@n = plurality answer correct.",
-        "maj_at_n": 0.8313253012048193,
+        "maj_at_n": 0.8353413654618473,
         "budget_curve_no_forcing": {
-          "1024": 0.6224899598393574,
-          "2048": 0.7429718875502008,
+          "1024": 0.6325301204819277,
+          "2048": 0.7369477911646586,
           "4096": 0.7630522088353414,
-          "8192": 0.7931726907630522,
-          "16384": 0.821285140562249,
-          "32768": 0.8293172690763052
+          "8192": 0.7951807228915663,
+          "16384": 0.8192771084337349,
+          "32768": 0.8313253012048193
         },
         "grader": "v93-final-segment-last-box/math-verify-0.9.0-timeout-status",
-        "scored": "2026-11-13T22:45:53+08:00",
+        "scored": "2026-11-14T06:20:21+08:00",
         "benchmark_problems": 249
       }
     }
   },
   "comparisons": [
     {
-      "left": "pilot",
+      "left": "step30",
       "right": "r1",
       "benchmark": "r1_grpo_dev",
-      "diff": 0.010040160642570281,
+      "diff": 0.014056224899598393,
       "ci95": [
-        -0.01606425702811245,
-        0.03614457831325301
+        -0.010040160642570281,
+        0.040160642570281124
       ],
-      "p_two_sided": 0.504,
+      "p_two_sided": 0.3192,
       "problems": 249
     }
   ]

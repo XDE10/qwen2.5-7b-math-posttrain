@@ -1,2 +1,2 @@
 p1-r1-16k-step30
-running
+OK
