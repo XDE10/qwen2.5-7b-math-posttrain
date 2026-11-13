@@ -1,0 +1,6 @@
+{
+  "base": "diagnose_grpo_qfft_r1_8k.json",
+  "run_name": "smoke_grpo_qfft_r1_fallback_8k_v93",
+  "last_box_fallback": true,
+  "note": "Two steps at 8192 tokens, with last-box fallback only when the final-segment tag is absent."
+}

@@ -81,21 +81,38 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 - 严格判分（strict-v3）在 dev256 上比原生 Math-Verify 低 18 题。
 - R1 教师在 s1K-1.1 的 742 道可核对题上答对 62.7%；R1 response 最长 26,835 token，32K 窗口可全部容纳。
 
-## 下一步：从 R1 最终权重做 GRPO（待运行）
+## R1 GRPO（8K 冒烟完成，正式训练待运行）
 
 - 初始化用 `init_model: "run:qfft_r1_16k_b8_restart_v93"`，解析到 Drive 的 `runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final/`。已核对权重、tokenizer 和模型身份文件，身份记录为 750 步。[重跑配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8_restart.json) · [模型路径解析](../../experiments/qfft_v93/models.py)
-- 独立 GRPO run `grpo_qfft_r1_16k_b8_v93` 沿用 v93 配方，LoRA r32、LR `1e-5`、8 题 × 8 采样、DAPO 损失、严格最终段 0/1 奖励及截断掩码。2026-11-13 用户明确授权将 637 条 E0 难题全部加入本轮 R1 题池，与已批准的 920 条合计 1,557 条源记录。批准清单固定两份文件的 SHA-256、行数和原始批准状态，源探针的 `training_approved: false` 留作历史。训练入口仍执行去重和评测集去污。[R1 GRPO 配置](../../experiments/qfft_v93/configs/grpo/grpo_qfft_r1_16k_b8.json) · [题池批准清单](../../experiments/qfft_v93/configs/grpo/r1_pool_approval.json)
+- 独立 GRPO run `grpo_qfft_r1_16k_b8_v93` 使用 LoRA r32、LR `1e-5`、8 题 × 8 采样、8,192 token 生成上限、DAPO 损失、0/1 奖励及截断掩码。奖励优先判最终段最后一个完整答案框，仅在两个最终段标签都缺失时回退到全文最后一个完整框。2026-11-13 用户授权把 637 条 E0 难题全部加入本轮 R1 题池，与已批准的 920 条合计 1,557 条源记录。批准清单固定两份文件的 SHA-256、行数和原始批准状态，训练入口执行去重与评测集去污。[R1 GRPO 配置](../../experiments/qfft_v93/configs/grpo/grpo_qfft_r1_16k_b8.json) · [题池批准清单](../../experiments/qfft_v93/configs/grpo/r1_pool_approval.json)
 - CPU 实测使用 Drive 的两份原文件。去重后 1,555 题，去除 4 道与评测集相似的题后剩 **1,551 题（918 道原批准题 + 633 道难题）**。
-- 先用独立 run 做 2 步真实 rollout，观察显存、截断率和组内是否同时出现 0/1 奖励。R1 在离线 AIME24 的平均输出已达 14.7K token，现行 8,192 token rollout 的可用奖励密度需要实测。冒烟沿用正式采样和截断掩码，warmup 缩为 1 步，每步存检查点，结束时只导出 adapter。[两步冒烟配置](../../experiments/qfft_v93/configs/grpo/smoke_grpo_qfft_r1_16k_b8.json)
-- 正式跑前验证 GRPO 的跨 VM 恢复。当前 adapter 镜像默认排除优化器，精确恢复需要包含优化器的 LoRA 检查点。正式训练计划为 150 步，用最后一步的 adapter 合并到 R1 权重，再按同一五项口径评测，以本轮 R1 QFFT 的 **33.63%** 为 GRPO 的竞赛基线，报告配对差值、输出长度和截断率。[GRPO 训练与合并入口](../../experiments/qfft_v93/grpo.py)
+- 冒烟用独立 run，保留正式采样和截断掩码，warmup 缩为 1 步，每步存检查点，结束时导出 adapter。
 
-正式流程使用 `grpo:grpo_qfft_r1_16k_b8` → `eval:run:grpo_qfft_r1_16k_b8_v93/merged:full`。配置已准备，GPU 待用户授权。
-
-两步冒烟命令（WSL2 仓库根目录，待运行）：
+严格奖励基线（2 步，已完成）：
 
 ```bash
 source ~/.proxy_env.sh
 bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 grpo:smoke_grpo_qfft_r1_16k_b8
 ```
 
-成功时会输出 `P1_RESULT=OK`，Drive 的 `runs/project1/v93/runs/smoke_grpo_qfft_r1_16k_b8_v93/GRPO_COMPLETE.json` 应记录 2 步。显存、`completions/clipped_ratio` 和 `frac_reward_zero_std` 见同一目录的 `metrics.jsonl`。
+会话 `p1-r1-grpo-smoke8k-1113` 完成两步，128 条中 113 条为 `no_answer`，37 条被 TRL 掩码，8/16 题组奖励零方差。[会话报告](https://github.com/XDE10/qwen2.5-7b-math-posttrain/blob/ac48a7e6202dc8e15ecb56005882c5b6d372df36/v93/sessions/p1-r1-grpo-smoke8k-1113/README.md)
+
+2026-11-13 用户授权从同一 R1 权重另跑 2 步 8,192-token 诊断，沿用严格奖励。诊断入口为 `grpo:diagnose_grpo_qfft_r1_8k`。逐条原文、vLLM 停止原因、TRL 截断掩码和判分原因保存在该 run 的 Drive 文件 `rollout_diagnostics.jsonl`。下载后可用 `python -m experiments.qfft_v93.rollout_diagnostics <文件>` 在 CPU 上重放严格判分，并仅对缺最终段标签的回答使用最后一个完整答案框做对照。原文仅写入 Drive。
+
+诊断已完成 2 步（会话 `p1-r1-grpo-diag8k-1113`，代码包 `dad352384f53`）。128 条中 31 条达到长度上限，另有 1 条因字符串 `\n\nProblem:` 提前结束并被 TRL 掩码。97 条未达长度上限的回答里，82 条严格判为 `no_answer`，全部缺最终段标签。80 条有完整答案框，回退重判后 44 对、36 错。按相同题组离线重算，零方差组从 9/16 降到 3/16。该轮训练使用严格奖励。[诊断会话报告](https://github.com/XDE10/qwen2.5-7b-math-posttrain/blob/278ba2c/v93/sessions/p1-r1-grpo-diag8k-1113/README.md)
+
+2026-11-13 用户授权启用 R1 的答案框回退，并用同一第 750 步权重跑 8K 两步冒烟（`grpo:smoke_grpo_qfft_r1_fallback_8k`）。G4 会话 `p1-r1-grpo-box8k-1113` 完成，代码包 `80fb86403290`。同批 128 条上，严格判分为 CPU 重放，回退是 GPU 训练实际使用的奖励。[会话报告](https://github.com/XDE10/qwen2.5-7b-math-posttrain/blob/278ba2c/v93/sessions/p1-r1-grpo-box8k-1113/README.md) · [SwanLab](https://swanlab.cn/@XDE10/project1-7b-math/runs/lm8ta3jd)
+
+| 同批指标 | 严格判分 | 答案框回退 | 差值（百分点） |
+|---|---:|---:|---:|
+| `no_answer` | 113/128（88.28%） | 30/128（23.44%） | −64.84 |
+| 零方差题组 | 8/16（50.00%） | 3/16（18.75%） | −31.25 |
+| 触及长度上限 | 37/128（28.91%） | 37/128（28.91%） | 0 |
+
+76 条未截断回答因回退恢复可判分，其中 50 对、26 错。37 条触及长度上限的回答仍被掩码。两步用时约 422 / 402 秒，PyTorch 峰值分配 66.6 GiB。诊断与回退的逐条原文保存在各自 Drive run 下，GitHub 只存汇总。CPU 回归 181 通过、1 跳过。16K 和正式 150 步均未运行。
+
+### 正式 150 步前的准备
+
+- **先验证跨 VM 恢复。** 现有 GRPO 调用默认上传不含优化器的 adapter 镜像。本次每个本地完整检查点约 935 MiB，轻量镜像约 319 MiB。正式 R1 可复用已有的完整镜像选项，保存 LoRA 权重、优化器、调度器、RNG 和 Trainer 状态；先做 CPU 续训验证，再用独立短跑验证 Drive 落盘后在新 VM 从原步数恢复。当前 PR 记录方案，正式配置尚未启用完整镜像。[检查点实现](../../experiments/qfft_v93/checkpointing.py)
+- **明确截断回答的奖励口径。** TRL 1.17.1 的截断掩码排除这些回答的 loss token，但奖励仍参与组内均值。离线核对发现，3 条截断回答获得正奖励，涉及 2 个题组。把这 3 条奖励置零后，零方差仍为 3/16。正式训练前需明确是否沿用冒烟的组内均值口径。
+- **将训练与评测拆成两个会话。** 按两步实测速率外推，150 步约 **17.2 小时**，另有环境启动、保存、合并和评测。正式训练使用 `grpo:grpo_qfft_r1_16k_b8`。训练结束确认 `GRPO_COMPLETE.json` 记录 150 步，并核对 `merged/` 的最终权重，再用 `eval:run:grpo_qfft_r1_16k_b8_v93/merged:full` 跑五项评测。以这轮 R1 QFFT 的竞赛 **33.63%** 为基线，报告按题配对差值、输出长度和截断率。[GRPO 入口](../../experiments/qfft_v93/grpo.py)

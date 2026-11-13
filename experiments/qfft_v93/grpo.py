@@ -28,7 +28,7 @@ from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, JsonlAppender, d
                                          load_config, local_root, log, now_iso, read_json, read_jsonl, sha256_json,
                                          write_json)
 from experiments.qfft_v93.formats import messages
-from experiments.qfft_v93.grading import Grader
+from experiments.qfft_v93.grading import Grader, last_box_without_final_tag
 from experiments.qfft_v93.telemetry import ProgressCallback, SwanLab
 
 
@@ -92,27 +92,85 @@ def build_pool(cfg: dict, layout, bench_dir: Path | None, sft_questions: set):
     return rows, report
 
 
+class RolloutDiagnostics:
+    """Capture colocated vLLM outputs before TRL drops the stop metadata."""
+
+    def __init__(self, trainer, journal):
+        if trainer.accelerator.num_processes != 1:
+            raise ValueError('Rollout diagnostics require single-process colocated vLLM')
+        self.journal = journal
+        self.eos_and_pad = {*trainer.eos_token_ids, trainer._tokenizer.pad_token_id}
+        self.batches = []
+        llm = trainer.vllm_generation.llm
+        generate = llm.generate
+
+        def capture(*args, **kwargs):
+            outputs = generate(*args, **kwargs)
+            self.batches.extend(output for request in outputs for output in request.outputs)
+            return outputs
+
+        llm.generate = capture
+
+    def record(self, step, call, sample_ids, completion_ids, raw_texts, reward_texts, references, strict_grades, grades):
+        outputs, self.batches = self.batches, []
+        if len(outputs) != len(grades) or len(sample_ids) != len(grades):
+            raise RuntimeError('Rollout diagnostics could not align vLLM outputs with rewards')
+        for index, (output, sid, ids, raw, text, ref, strict_grade, grade) in enumerate(
+            zip(outputs, sample_ids, completion_ids, raw_texts, reward_texts, references, strict_grades, grades, strict=True)
+        ):
+            if list(output.token_ids) != list(ids):
+                raise RuntimeError(f'Rollout diagnostics token mismatch for call {call}, index {index}')
+            self.journal.write({
+                'step': step, 'call': call, 'index': index, 'sample_id': sid,
+                'text': raw, 'vllm_text': output.text, 'reward_text': text,
+                'tokens': len(ids), 'reference_answer': ref,
+                'finish_reason': output.finish_reason, 'stop_reason': output.stop_reason,
+                'truncated': output.finish_reason == 'length',
+                'trl_clipped': not ids or ids[-1] not in self.eos_and_pad,
+                'strict_status': strict_grade['status'], 'how': strict_grade.get('how'),
+                'reward_status': grade['status'], 'reward_how': grade.get('how'),
+            })
+
+
 class FinalAnswerReward:
     """Binary reward: 1 if the final answer segment matches the reference (grading.py policy)."""
 
-    def __init__(self, tokenizer, grader: Grader, journal: JsonlAppender, max_failure_rate: float = 0.05):
+    def __init__(self, tokenizer, grader: Grader, journal: JsonlAppender, max_failure_rate: float = 0.05,
+                 last_box_fallback: bool = False):
         self.__name__ = 'final_answer'
         self.tokenizer, self.grader, self.journal = tokenizer, grader, journal
         self.max_failure_rate = max_failure_rate
         self.calls = 0
+        self.diagnostics = None
+        self.last_box_fallback = last_box_fallback
 
     def __call__(self, prompts, completions, completion_ids=None, reference_answer=None, trainer_state=None, **kwargs):
         if completion_ids is not None:
-            texts = self.tokenizer.batch_decode(completion_ids, skip_special_tokens=False)
-            texts = [t.split('<|im_end|>')[0] for t in texts]
+            raw_texts = self.tokenizer.batch_decode(completion_ids, skip_special_tokens=False)
+            texts = [t.split('<|im_end|>')[0] for t in raw_texts]
         else:
-            texts = [c[-1]['content'] if isinstance(c, list) else c for c in completions]
-        results = self.grader.grade_many(list(zip(texts, reference_answer)), strict=True)
+            raw_texts = texts = [c[-1]['content'] if isinstance(c, list) else c for c in completions]
+        strict_grades = self.grader.grade_many(list(zip(texts, reference_answer)), strict=True)
+        results = strict_grades.copy()
+        if self.last_box_fallback:
+            candidates = []
+            for index, grade in enumerate(strict_grades):
+                if grade.get('how') == 'missing_answer_tag':
+                    text = last_box_without_final_tag(texts[index])
+                    if text is not None:
+                        candidates.append((index, text, reference_answer[index]))
+            if candidates:
+                fallback_grades = self.grader.grade_many([(text, ref) for _, text, ref in candidates], strict=True)
+                for (index, _, _), grade in zip(candidates, fallback_grades, strict=True):
+                    results[index] = {**grade, 'how': 'last_box_fallback'}
         counts = Counter(r['status'] for r in results)
         failures = counts['timeout'] + counts['error']
         self.calls += 1
         step = getattr(trainer_state, 'global_step', None)
         self.journal.write({'step': step, 'call': self.calls, 'time': now_iso(), 'counts': dict(counts)})
+        if self.diagnostics:
+            self.diagnostics.record(step, self.calls, kwargs['sample_id'], completion_ids, raw_texts,
+                                    texts, reference_answer, strict_grades, results)
         if failures > self.max_failure_rate * len(results):
             raise RuntimeError(f'Grader infrastructure failures {failures}/{len(results)}; aborting instead of '
                                'turning them into wrong answers')
@@ -231,7 +289,7 @@ def main() -> None:
     mirror = CheckpointMirror(local_run, drive_run, every=1, keep=cfg.get('mirror_keep', 3),
                               watch_path=str(local_root()), min_free_gib=8, mirror_final=True)
     with Grader(workers=cfg.get('reward_workers', 8), timeout=cfg.get('reward_timeout', 30)) as grader:
-        reward = FinalAnswerReward(tok, grader, journal)
+        reward = FinalAnswerReward(tok, grader, journal, last_box_fallback=cfg.get('last_box_fallback', False))
         # Strings keep GRPOConfig JSON-serializable; TRL maps them to torch dtypes.
         args.model_init_kwargs = {**(args.model_init_kwargs or {}),
                                   'dtype': 'float32' if a.smoke else 'bfloat16', 'attn_implementation': 'sdpa'}
@@ -239,6 +297,12 @@ def main() -> None:
                               processing_class=tok, peft_config=peft_config,
                               callbacks=[ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror])
         resume = resolve_resume(local_run, drive_run)
+        if cfg.get('log_rollout_diagnostics'):
+            if not args.use_vllm or args.vllm_mode != 'colocate':
+                raise ValueError('Rollout diagnostics require colocated vLLM')
+            diagnostic_file = 'rollout_diagnostics.jsonl'
+            reward.diagnostics = RolloutDiagnostics(
+                trainer, JsonlAppender(local_run / diagnostic_file, mirror=drive_run / diagnostic_file))
         beat = Heartbeat(lambda: read_json(drive_run / 'status.json').get('step')
                          if (drive_run / 'status.json').exists() else 'starting', interval=300)
         beat.start()
@@ -248,6 +312,8 @@ def main() -> None:
         finally:
             beat.stop()
             journal.close()
+            if reward.diagnostics:
+                reward.diagnostics.journal.close()
         adapter_local = local_run / 'adapter'
         trainer.save_model(str(adapter_local))
         tok.save_pretrained(str(adapter_local))

@@ -28754,11 +28754,11 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 14223,
+      "bytes": 17091,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-13 同步 R1 GRPO 题池和冒烟",
-      "sha256": "6af2126c3573835e1a23e12748eceaee04c7d5d40e02c322e446c21a76581587"
+      "refactor_note": "2026-11-13 记录 R1 GRPO 诊断、回退和正式训练准备",
+      "sha256": "922045f9838d77588234fc46da23b58bb4d6c604f04cbf54d4342a2da0663664"
     },
     {
       "bytes": 87855,
