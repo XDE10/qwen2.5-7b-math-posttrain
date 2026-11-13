@@ -100,12 +100,12 @@
  },
  "grpo__grpo_qfft_r1_16k_pilot": {
   "stage": "grpo:grpo_qfft_r1_16k_pilot",
-  "state": "complete",
-  "hours": 1.642,
-  "finished": "2026-11-13T12:22:27.875433",
-  "started": "2026-11-13T10:43:56.932804",
+  "state": "running",
+  "started": "2026-11-13T12:27:47.138445",
   "code": "549f4e44e789",
-  "host": "p1-r1-pilot16-a@169c4d99e9d5"
+  "host": "p1-r1-pilot16-b@79c53d275e8f",
+  "heartbeat": "2026-11-13T12:57:51.351990",
+  "heartbeat_ts": 1794574671.352001
  },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
