@@ -104,8 +104,8 @@
   "started": "2026-11-13T15:39:00.960052",
   "code": "217f95dfe7d1",
   "host": "p1-r1-16k-step30@bafe0dcab6ba",
-  "heartbeat": "2026-11-13T18:21:41.024311",
-  "heartbeat_ts": 1794594101.0243225
+  "heartbeat": "2026-11-13T18:51:44.475584",
+  "heartbeat_ts": 1794595904.4755943
  },
  "grpo__grpo_qfft_r1_16k_pilot": {
   "stage": "grpo:grpo_qfft_r1_16k_pilot",
