@@ -154,12 +154,12 @@
  },
  "r1-grpo-dev": {
   "stage": "r1-grpo-dev",
-  "state": "running",
+  "state": "complete",
+  "hours": 0.601,
+  "finished": "2026-11-13T14:45:53.969178",
   "started": "2026-11-13T14:09:49.498311",
   "code": "549f4e44e789",
-  "host": "p1-r1-pilot16-b@79c53d275e8f",
-  "heartbeat": "2026-11-13T14:39:50.190868",
-  "heartbeat_ts": 1794580790.1908803
+  "host": "p1-r1-pilot16-b@79c53d275e8f"
  },
  "smoke-eval": {
   "stage": "smoke-eval",

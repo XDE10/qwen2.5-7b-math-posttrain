@@ -407,3 +407,21 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<
 [11-13 22:35:08] pilot: 443/498 new generations, 1892 output tok/s
 [11-13 22:36:22] pilot: 450/498 new generations, 1707 output tok/s
 [11-13 22:37:36] pilot: 457/498 new generations, 1615 output tok/s
+[11-13 22:39:27] pilot: 466/498 new generations, 1533 output tok/s
+[11-13 22:40:35] pilot: 473/498 new generations, 1577 output tok/s
+[report] pushed to colab-reports: colab p1-r1-pilot16-b: progress
+[11-13 22:42:04] pilot: 479/498 new generations, 1552 output tok/s
+[11-13 22:43:18] pilot: 488/498 new generations, 1688 output tok/s
+[11-13 22:44:36] pilot: 491/498 new generations, 1631 output tok/s
+[11-13 22:45:40] pilot: 497/498 new generations, 1733 output tok/s
+[11-13 22:45:43] pilot: 498 new generations, 1,578,489 output tokens in 896 s (1763 tok/s; engine start 41 s)
+[11-13 22:45:43] pilot: generation complete for r1_grpo_dev
+(MainProcess pid=47104) INFO 11-13 14:45:43 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=47535) INFO 11-13 14:45:43 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=47535) INFO 11-13 14:45:43 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=47535) INFO 11-13 14:45:43 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=47535) INFO 11-13 14:45:43 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-13 14:45:49] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --bench-dir /content/mydrive/projects/project1/v93/data/r1_grpo_dev --require-gradable --evals-root /content/mydrive/runs/project1/v93/grpo_dev --tags r1,pilot --compare pilot:r1 | log: /content/mydrive/runs/project1/v93/logs/20261113-144549_score_r1_grpo_dev.log
+[11-13 22:45:52] r1/r1_grpo_dev: mean@n=0.819 CI=[0.7791164658634538, 0.8594377510040161] tokens=3293 trunc=0.010
+[11-13 22:45:53] pilot/r1_grpo_dev: mean@n=0.829 CI=[0.7871485943775101, 0.8694779116465864] tokens=3170 trunc=0.012
+[11-13 22:45:53] Wrote /content/mydrive/runs/project1/v93/grpo_dev/results.md

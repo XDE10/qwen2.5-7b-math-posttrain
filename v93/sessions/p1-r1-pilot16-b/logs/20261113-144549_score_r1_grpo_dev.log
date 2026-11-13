@@ -1,0 +1,3 @@
+[11-13 22:45:52] r1/r1_grpo_dev: mean@n=0.819 CI=[0.7791164658634538, 0.8594377510040161] tokens=3293 trunc=0.010
+[11-13 22:45:53] pilot/r1_grpo_dev: mean@n=0.829 CI=[0.7871485943775101, 0.8694779116465864] tokens=3170 trunc=0.012
+[11-13 22:45:53] Wrote /content/mydrive/runs/project1/v93/grpo_dev/results.md
