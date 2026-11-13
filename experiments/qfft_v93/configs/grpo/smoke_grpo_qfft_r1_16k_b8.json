@@ -6,5 +6,6 @@
   "save_steps": 1,
   "merge_adapter": false,
   "last_box_fallback": false,
+  "mirror_optimizer_state": false,
   "note": "Two real GPU rollout steps from the final R1 QFFT export. Retain the formal truncation mask and sample naturally. Save the adapter without merging or starting evaluation."
 }

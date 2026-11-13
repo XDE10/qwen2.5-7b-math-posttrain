@@ -113,6 +113,26 @@ bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 grpo:smoke_grpo_qfft_r1_
 
 ### 正式 150 步前的准备
 
-- **先验证跨 VM 恢复。** 现有 GRPO 调用默认上传不含优化器的 adapter 镜像。本次每个本地完整检查点约 935 MiB，轻量镜像约 319 MiB。正式 R1 可复用已有的完整镜像选项，保存 LoRA 权重、优化器、调度器、RNG 和 Trainer 状态；先做 CPU 续训验证，再用独立短跑验证 Drive 落盘后在新 VM 从原步数恢复。当前 PR 记录方案，正式配置尚未启用完整镜像。[检查点实现](../../experiments/qfft_v93/checkpointing.py)
-- **明确截断回答的奖励口径。** TRL 1.17.1 的截断掩码排除这些回答的 loss token，但奖励仍参与组内均值。离线核对发现，3 条截断回答获得正奖励，涉及 2 个题组。把这 3 条奖励置零后，零方差仍为 3/16。正式训练前需明确是否沿用冒烟的组内均值口径。
+- **跨 VM 恢复。** 正式 R1 每 10 步将完整 LoRA 检查点镜像到 Drive，保留最近 3 份已发布的完整镜像。镜像包含 adapter、优化器、调度器、RNG 和 Trainer 状态。之前的 G4 冒烟中，完整本地检查点约 935 MiB。CPU 用真实 TRL + LoRA、微型模型和本地 Drive 替身验证，从空的第二个 VM 目录下载第 1 步镜像，逐项核对 adapter、AdamW、调度器及 Python/NumPy/PyTorch RNG，然后从第 2 步跑到第 3 步。实际 Colab 换 VM 的恢复仍待验证，vLLM 采样序列也未验证能逐 token 重现。[检查点实现](../../experiments/qfft_v93/checkpointing.py)
+- **沿用 8K 回退冒烟的奖励。** `no_answer` 表示按当前规则没提取到可判分的答案，奖励为 0。有最终段标签时只判该段最后一个完整答案框；两种标签都缺失时才取全文最后一个完整框，并与参考答案比较。TRL 1.17.1 仍掩掉截断回答的 loss token，组内奖励均值沿用冒烟算法。
 - **将训练与评测拆成两个会话。** 按两步实测速率外推，150 步约 **17.2 小时**，另有环境启动、保存、合并和评测。正式训练使用 `grpo:grpo_qfft_r1_16k_b8`。训练结束确认 `GRPO_COMPLETE.json` 记录 150 步，并核对 `merged/` 的最终权重，再用 `eval:run:grpo_qfft_r1_16k_b8_v93/merged:full` 跑五项评测。以这轮 R1 QFFT 的竞赛 **33.63%** 为基线，报告按题配对差值、输出长度和截断率。[GRPO 入口](../../experiments/qfft_v93/grpo.py)
+
+### 8K 换 VM 验证（命令已准备，GPU 待授权）
+
+两个会话共享独立的 [两步验证配置](../../experiments/qfft_v93/configs/grpo/smoke_grpo_qfft_r1_resume_8k.json)，从 R1 第 750 步最终权重启动，并沿用答案框回退与截断掩码。训练预算固定为两步。
+
+```bash
+cd /home/xde10/projects/qwen2.5-7b-math-posttrain
+source ~/.proxy_env.sh
+bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 --session p1-r1-resume8k-a \
+  grpo:smoke_grpo_qfft_r1_resume_8k:pause-after=1
+```
+
+等日志显示 `paused after step 1; full Drive mirror confirmed` 和第一台 VM 已释放，再启动第二台：
+
+```bash
+bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 --session p1-r1-resume8k-b \
+  grpo:smoke_grpo_qfft_r1_resume_8k:resume
+```
+
+第二台需找到完整断点才能启动训练。验收看 `Resuming from restored .../checkpoint-1`、`step 2/2` 和 `P1_RESULT=OK`，以及 Drive 的 `runs/project1/v93/runs/smoke_grpo_qfft_r1_resume_8k_v93/GRPO_COMPLETE.json` 中的 `steps: 2` 和 `resumed_from`。两条命令用同一阶段租约。

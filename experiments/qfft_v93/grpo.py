@@ -23,7 +23,7 @@ from collections import Counter
 from pathlib import Path
 
 from experiments.qfft_v93 import decontam, drive_io
-from experiments.qfft_v93.checkpointing import CheckpointMirror, resolve_resume
+from experiments.qfft_v93.checkpointing import CheckpointMirror, read_state, resolve_resume
 from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, JsonlAppender, drive_layout, gpu_profile,
                                          load_config, local_root, log, now_iso, read_json, read_jsonl, sha256_json,
                                          write_json)
@@ -236,8 +236,16 @@ def main() -> None:
     p.add_argument('--smoke', action='store_true')
     p.add_argument('--no-swanlab', action='store_true')
     p.add_argument('--no-merge', action='store_true')
+    p.add_argument('--pause-after', type=int, help='Exit after publishing a full mirror at this step')
+    p.add_argument('--require-resume', action='store_true', help='Require a complete checkpoint before training')
     a = p.parse_args()
     cfg = load_config(a.config)
+    if a.pause_after is not None and (
+        not cfg.get('mirror_optimizer_state')
+        or not 0 < a.pause_after < (a.max_steps or cfg['max_steps'])
+        or a.pause_after % cfg['save_steps']
+    ):
+        p.error('--pause-after requires a scheduled full checkpoint before the final step')
     merge_adapter = cfg.get('merge_adapter', True) and not a.no_merge
     layout = drive_layout()
     run = cfg['run_name']
@@ -264,13 +272,24 @@ def main() -> None:
         pool, pool_report = build_pool(cfg, layout, bench_dir, sft_questions)
     write_json(drive_run / 'rl_pool_report.json', pool_report)
     identity = {'run': run, 'init_model': cfg['init_model'], 'pool_sha256': sha256_json([r['sample_id'] for r in pool]),
-                'recipe': {k: v for k, v in cfg.items() if k not in ('run_name', 'pool', 'vllm')},
+                'recipe': {k: v for k, v in cfg.items() if k not in ('run_name', 'pool', 'vllm', 'mirror_optimizer_state')},
                 'init_identity': read_json(init_identity) if init_identity.exists() else None,
                 'smoke': a.smoke, 'max_steps_override': a.max_steps}
     id_path = drive_run / 'run_identity.json'
     if id_path.exists() and read_json(id_path)['identity'] != identity:
         raise RuntimeError(f'{id_path} describes a different experiment; choose a new run_name')
     write_json(id_path, {'identity': identity, 'updated': now_iso(), 'code_bundle': os.environ.get('P1_CODE_SHA')})
+    resume = resolve_resume(local_run, drive_run)
+    if a.require_resume and resume is None:
+        raise RuntimeError('No complete GRPO checkpoint is available for the requested resume')
+    mirror = CheckpointMirror(local_run, drive_run, every=1, keep=cfg.get('mirror_keep', 3),
+                              watch_path=str(local_root()), min_free_gib=8, mirror_final=True,
+                              mirror_optimizer_state=cfg.get('mirror_optimizer_state', False))
+    if a.pause_after is not None and mirror.has_full_mirror(a.pause_after):
+        log(f'{run}: paused after step {a.pause_after}; full Drive mirror confirmed')
+        return
+    if a.pause_after is not None and resume and read_state(resume)['global_step'] >= a.pause_after:
+        raise RuntimeError(f'{run}: local progress already reached step {a.pause_after} without the requested Drive mirror')
 
     from datasets import Dataset
     from peft import LoraConfig
@@ -286,8 +305,20 @@ def main() -> None:
     swan = SwanLab(drive_run, run, {'identity': identity, 'pool': pool_report}, tags=['v93', 'grpo', 'lora'],
                    enabled=not (a.no_swanlab or a.smoke), log_dir=local_run / 'swanlog')
     journal = JsonlAppender(local_run / 'reward_status.jsonl', mirror=drive_run / 'reward_status.jsonl')
-    mirror = CheckpointMirror(local_run, drive_run, every=1, keep=cfg.get('mirror_keep', 3),
-                              watch_path=str(local_root()), min_free_gib=8, mirror_final=True)
+    callbacks = [ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror]
+    if a.pause_after is not None:
+        from transformers import TrainerCallback
+
+        class PauseAfterSave(TrainerCallback):
+            def on_save(self, args, state, control, **kwargs):
+                if state.global_step == a.pause_after:
+                    mirror.wait()
+                    if not mirror.has_full_mirror(state.global_step):
+                        raise RuntimeError(f'Full mirror for step {state.global_step} could not be confirmed: {mirror.error}')
+                    control.should_training_stop = True
+                return control
+
+        callbacks.append(PauseAfterSave())
     with Grader(workers=cfg.get('reward_workers', 8), timeout=cfg.get('reward_timeout', 30)) as grader:
         reward = FinalAnswerReward(tok, grader, journal, last_box_fallback=cfg.get('last_box_fallback', False))
         # Strings keep GRPOConfig JSON-serializable; TRL maps them to torch dtypes.
@@ -295,8 +326,7 @@ def main() -> None:
                                   'dtype': 'float32' if a.smoke else 'bfloat16', 'attn_implementation': 'sdpa'}
         trainer = GRPOTrainer(model=str(model_path), reward_funcs=[reward], args=args, train_dataset=dataset,
                               processing_class=tok, peft_config=peft_config,
-                              callbacks=[ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror])
-        resume = resolve_resume(local_run, drive_run)
+                              callbacks=callbacks)
         if cfg.get('log_rollout_diagnostics'):
             if not args.use_vllm or args.vllm_mode != 'colocate':
                 raise ValueError('Rollout diagnostics require colocated vLLM')
@@ -314,6 +344,12 @@ def main() -> None:
             journal.close()
             if reward.diagnostics:
                 reward.diagnostics.journal.close()
+        if a.pause_after is not None:
+            if trainer.state.global_step != a.pause_after:
+                raise RuntimeError(f'{run}: expected to pause at step {a.pause_after}, reached {trainer.state.global_step}')
+            swan.finish()
+            log(f'{run}: paused after step {a.pause_after}; full Drive mirror confirmed')
+            return
         adapter_local = local_run / 'adapter'
         trainer.save_model(str(adapter_local))
         tok.save_pretrained(str(adapter_local))
