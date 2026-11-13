@@ -77,15 +77,31 @@ def build_pool(cfg: dict, layout, bench_dir: Path | None, sft_questions: set):
             rows.append({'sample_id': r.get('sample_id', f'pool/{len(rows):05d}'), 'question': question,
                          'reference_answer': str(answer), 'pool_file': path.name})
     report = {'files': used_files, 'unique_questions': len(rows)}
+    comparison_ids = cfg['pool'].get('comparison_sample_ids')
     if manifest:
         report['approval_manifest'] = manifest
     if bench_dir and Path(bench_dir).exists():
         benchmarks = decontam.load_benchmarks(bench_dir)
+        if comparison_ids is not None and any(
+            not benchmarks.get(name) for name in ('aime24', 'aime25', 'amc23', 'math500', 'gsm8k')
+        ):
+            raise ValueError('The length comparison requires all five benchmark files for decontamination')
         flagged = set()
         for name, items in benchmarks.items():
             flagged |= {f['train_id'] for f in decontam.find_flags([(r['sample_id'], r['question']) for r in rows], items)}
         rows = [r for r in rows if r['sample_id'] not in flagged]
         report['removed_benchmark_similar'] = len(flagged)
+    if comparison_ids is not None:
+        if not manifest or 'removed_benchmark_similar' not in report:
+            raise ValueError('The length comparison requires the approved pool and benchmark decontamination')
+        by_id = {row['sample_id']: row for row in rows}
+        if (len(by_id) != len(rows) or len(set(comparison_ids)) != len(comparison_ids)
+                or set(comparison_ids) - by_id.keys()):
+            raise ValueError('The fixed comparison sample IDs must be unique and present in the cleaned pool')
+        rows = [by_id[sid] for sid in comparison_ids]
+        report['comparison_sample_ids'] = comparison_ids
+        report['comparison_sample_ids_sha256'] = sha256_json(comparison_ids)
+        report['comparison_source_counts'] = dict(Counter(r['pool_file'] for r in rows))
     report['overlap_with_sft_questions'] = sum(' '.join(decontam.words(r['question'])) in sft_questions for r in rows)
     report['final_questions'] = len(rows)
     log('RL pool:', report)
@@ -95,10 +111,12 @@ def build_pool(cfg: dict, layout, bench_dir: Path | None, sft_questions: set):
 class RolloutDiagnostics:
     """Capture colocated vLLM outputs before TRL drops the stop metadata."""
 
-    def __init__(self, trainer, journal):
+    def __init__(self, trainer, journal, comparison_ids=None):
         if trainer.accelerator.num_processes != 1:
             raise ValueError('Rollout diagnostics require single-process colocated vLLM')
         self.journal = journal
+        self.comparison_ids = comparison_ids
+        self.num_generations = trainer.num_generations if comparison_ids is not None else None
         self.eos_and_pad = {*trainer.eos_token_ids, trainer._tokenizer.pad_token_id}
         self.batches = []
         llm = trainer.vllm_generation.llm
@@ -115,12 +133,13 @@ class RolloutDiagnostics:
         outputs, self.batches = self.batches, []
         if len(outputs) != len(grades) or len(sample_ids) != len(grades):
             raise RuntimeError('Rollout diagnostics could not align vLLM outputs with rewards')
+        diagnostics = []
         for index, (output, sid, ids, raw, text, ref, strict_grade, grade) in enumerate(
             zip(outputs, sample_ids, completion_ids, raw_texts, reward_texts, references, strict_grades, grades, strict=True)
         ):
             if list(output.token_ids) != list(ids):
                 raise RuntimeError(f'Rollout diagnostics token mismatch for call {call}, index {index}')
-            self.journal.write({
+            row = {
                 'step': step, 'call': call, 'index': index, 'sample_id': sid,
                 'text': raw, 'vllm_text': output.text, 'reward_text': text,
                 'tokens': len(ids), 'reference_answer': ref,
@@ -129,7 +148,34 @@ class RolloutDiagnostics:
                 'trl_clipped': not ids or ids[-1] not in self.eos_and_pad,
                 'strict_status': strict_grade['status'], 'how': strict_grade.get('how'),
                 'reward_status': grade['status'], 'reward_how': grade.get('how'),
-            })
+            }
+            self.journal.write(row)
+            if self.comparison_ids is not None:
+                diagnostics.append(row)
+        if self.comparison_ids is None:
+            return {}
+        size = self.num_generations
+        groups_per_step = len(self.comparison_ids) // 2
+        expected = self.comparison_ids[step * groups_per_step:(step + 1) * groups_per_step]
+        if sample_ids != [sid for sid in expected for _ in range(size)] or not expected:
+            raise RuntimeError(f'Unexpected prompt groups in comparison rollout at step {step + 1}')
+        mixed_unmasked = with_signal = 0
+        for start in range(0, len(diagnostics), size):
+            group = diagnostics[start:start + size]
+            unmasked = {row['reward_status'] == 'correct' for row in group if not row['trl_clipped']}
+            raw_rewards = {row['reward_status'] == 'correct' for row in group}
+            mixed_unmasked += len(unmasked) == 2
+            with_signal += bool(unmasked) and len(raw_rewards) == 2
+        length_stops = sum(row['truncated'] for row in diagnostics)
+        masked = sum(row['trl_clipped'] for row in diagnostics)
+        tokens = sum(row['tokens'] for row in diagnostics)
+        return {
+            'completions': len(diagnostics), 'groups': len(expected),
+            'length_stops': length_stops, 'length_stop_frac': length_stops / len(diagnostics),
+            'loss_masked': masked, 'loss_masked_frac': masked / len(diagnostics),
+            'mixed_unmasked_reward_groups': mixed_unmasked, 'groups_with_reward_signal': with_signal,
+            'completion_tokens': tokens, 'mean_completion_tokens': tokens / len(diagnostics),
+        }
 
 
 class FinalAnswerReward:
@@ -167,15 +213,18 @@ class FinalAnswerReward:
         failures = counts['timeout'] + counts['error']
         self.calls += 1
         step = getattr(trainer_state, 'global_step', None)
-        self.journal.write({'step': step, 'call': self.calls, 'time': now_iso(), 'counts': dict(counts)})
+        metrics = {}
         if self.diagnostics:
-            self.diagnostics.record(step, self.calls, kwargs['sample_id'], completion_ids, raw_texts,
-                                    texts, reference_answer, strict_grades, results)
+            metrics = self.diagnostics.record(step, self.calls, kwargs['sample_id'], completion_ids, raw_texts,
+                                              texts, reference_answer, strict_grades, results)
+        self.journal.write({'step': step, 'call': self.calls, 'time': now_iso(), 'counts': dict(counts), **metrics})
         if failures > self.max_failure_rate * len(results):
             raise RuntimeError(f'Grader infrastructure failures {failures}/{len(results)}; aborting instead of '
                                'turning them into wrong answers')
         log_metric = kwargs.get('log_metric')
         if callable(log_metric):
+            for name, value in metrics.items():
+                log_metric(f'comparison/{name}', value)
             for status in ('correct', 'wrong', 'no_answer'):
                 try:
                     log_metric(f'reward/{status}_frac', counts[status] / len(results))
@@ -199,7 +248,8 @@ def grpo_config(cfg: dict, out: Path, smoke: bool, max_steps: int | None):
         max_completion_length=cfg['max_completion_length'], temperature=cfg['temperature'], top_p=cfg['top_p'],
         beta=cfg['beta'], epsilon=cfg['epsilon'], epsilon_high=cfg['epsilon_high'], loss_type=cfg['loss_type'],
         scale_rewards=cfg['scale_rewards'], mask_truncated_completions=cfg['mask_truncated_completions'],
-        num_iterations=1, disable_dropout=True, shuffle_dataset=True, remove_unused_columns=False,
+        num_iterations=1, disable_dropout=True, shuffle_dataset=cfg.get('shuffle_dataset', True),
+        remove_unused_columns=False,
         bf16=not smoke, gradient_checkpointing=not smoke,
         gradient_checkpointing_kwargs={'use_reentrant': False}, logging_steps=1, save_strategy='steps',
         save_steps=cfg['save_steps'], save_total_limit=None, seed=cfg['seed'], report_to='none',
@@ -240,6 +290,14 @@ def main() -> None:
     p.add_argument('--require-resume', action='store_true', help='Require a complete checkpoint before training')
     a = p.parse_args()
     cfg = load_config(a.config)
+    comparison_ids = cfg['pool'].get('comparison_sample_ids')
+    completions_per_step = cfg['per_device_train_batch_size'] * cfg['gradient_accumulation_steps']
+    if comparison_ids is not None and (
+        a.pool or a.model_path or a.bench_dir or a.smoke or a.max_steps is not None or cfg['max_steps'] != 2
+        or cfg.get('shuffle_dataset', True) or not cfg.get('log_rollout_diagnostics')
+        or len(comparison_ids) * cfg['num_generations'] != 2 * completions_per_step
+    ):
+        p.error('The length comparison requires the fixed two-step, single-GPU model and pool recipe')
     if a.pause_after is not None and (
         not cfg.get('mirror_optimizer_state')
         or not 0 < a.pause_after < (a.max_steps or cfg['max_steps'])
@@ -260,6 +318,10 @@ def main() -> None:
     else:
         from experiments.qfft_v93.models import ensure_local
         model_path = ensure_local(cfg['init_model'], layout)
+    if comparison_ids is not None:
+        model_context = read_json(model_path / 'config.json')['max_position_embeddings']
+        if cfg['max_prompt_tokens'] + cfg['max_completion_length'] > model_context:
+            p.error(f'Prompt plus completion budget exceeds the model window of {model_context} tokens')
     bench_dir = Path(a.bench_dir) if a.bench_dir else layout.data / 'benchmarks_v93'
     sft_questions = set()
     init_identity = Path(model_path) / 'p1_model_identity.json'
@@ -296,6 +358,11 @@ def main() -> None:
     from transformers import AutoTokenizer
     from trl import GRPOTrainer
     tok = AutoTokenizer.from_pretrained(model_path)
+    if comparison_ids is not None:
+        lengths = [len(tok.apply_chat_template(messages(row['question']), add_generation_prompt=True,
+                                               tokenize=True, return_dict=False)) for row in pool]
+        if max(lengths) > cfg['max_prompt_tokens']:
+            raise ValueError(f'Longest comparison prompt is {max(lengths)} tokens, above the configured prompt budget')
     dataset = Dataset.from_list([{'prompt': messages(r['question']), 'reference_answer': r['reference_answer'],
                                   'sample_id': r['sample_id']} for r in pool])
     args = grpo_config(cfg, local_run, a.smoke, a.max_steps)
@@ -306,6 +373,11 @@ def main() -> None:
                    enabled=not (a.no_swanlab or a.smoke), log_dir=local_run / 'swanlog')
     journal = JsonlAppender(local_run / 'reward_status.jsonl', mirror=drive_run / 'reward_status.jsonl')
     callbacks = [ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror]
+    comparison = None
+    if comparison_ids is not None:
+        from experiments.qfft_v93.grpo_telemetry import ComparisonTelemetry
+        comparison = ComparisonTelemetry()
+        callbacks.insert(0, comparison)
     if a.pause_after is not None:
         from transformers import TrainerCallback
 
@@ -332,15 +404,20 @@ def main() -> None:
                 raise ValueError('Rollout diagnostics require colocated vLLM')
             diagnostic_file = 'rollout_diagnostics.jsonl'
             reward.diagnostics = RolloutDiagnostics(
-                trainer, JsonlAppender(local_run / diagnostic_file, mirror=drive_run / diagnostic_file))
+                trainer, JsonlAppender(local_run / diagnostic_file, mirror=drive_run / diagnostic_file), comparison_ids)
         beat = Heartbeat(lambda: read_json(drive_run / 'status.json').get('step')
                          if (drive_run / 'status.json').exists() else 'starting', interval=300)
         beat.start()
         started = time.monotonic()
         try:
+            if comparison is not None:
+                comparison.attach(trainer)
+                comparison.start()
             trainer.train(resume_from_checkpoint=resume)
         finally:
             beat.stop()
+            if comparison is not None:
+                comparison.close()
             journal.close()
             if reward.diagnostics:
                 reward.diagnostics.journal.close()

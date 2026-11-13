@@ -136,3 +136,25 @@ bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 --session p1-r1-resume8k
 ```
 
 第二台需找到完整断点才能启动训练。验收看 `Resuming from restored .../checkpoint-1`、`step 2/2` 和 `P1_RESULT=OK`，以及 Drive 的 `runs/project1/v93/runs/smoke_grpo_qfft_r1_resume_8k_v93/GRPO_COMPLETE.json` 中的 `steps: 2` 和 `resumed_from`。两条命令用同一阶段租约。
+
+### 8K / 16K 生成长度对照（每组两步）
+
+[8K 配置](../../experiments/qfft_v93/configs/grpo/compare_grpo_qfft_r1_8k.json)和 [16K 配置](../../experiments/qfft_v93/configs/grpo/compare_grpo_qfft_r1_16k.json)均从 R1 第 750 步最终权重独立启动。用固定种子从去重、去污后的两份获批来源各抽 8 题，固定顺序，每步 4 道 E0 中等题（4 次答对 1–3 次）和 4 道 E0 难题（4 次全错），每题生成 8 条。CPU 核对了源文件哈希和题目顺序，用本地 Qwen2.5-7B-Instruct tokenizer 核对，模板编码后 prompt 为 60–167 token。两组只改生成上限（8,192 / 16,384），沿用答案框回退、截断掩码及同一训练参数。
+
+用户授权在 G4 上依次运行这两组各两步的对照。正式 150 步和接近 32K 的配置待另行决定。CPU 测试结果为 187 通过、1 跳过（另有 4 个子测试通过），覆盖配置等价、TRL 题组顺序、掩码后的奖励题组计数和阶段计时。GPU 汇总由运行结束后的 `colab-reports` 会话报告回传。
+
+在 WSL 终端先进入仓库并加载代理，依次运行两条命令，使用 G4，等第一条结束后再运行第二条。
+
+```bash
+cd /home/xde10/projects/qwen2.5-7b-math-posttrain
+source ~/.proxy_env.sh
+bash experiments/qfft_v93/colab/launch.sh --gpu G4 --session p1-r1-len8k grpo:compare_grpo_qfft_r1_8k
+bash experiments/qfft_v93/colab/launch.sh --gpu G4 --session p1-r1-len16k grpo:compare_grpo_qfft_r1_16k
+```
+
+分别检查 `P1_RESULT=OK` 和 Drive 对应 `compare_grpo_qfft_r1_{8k,16k}_v93` 下的 `GRPO_COMPLETE.json`（`steps: 2`）、`rl_pool_report.json`（相同题目 ID 与顺序）及 `metrics.jsonl` 的 `comparison/` 指标。
+
+- 长度截断率用 vLLM 的 `finish_reason=length`。另记录 TRL 掩码率，字符串停止也可能被掩码。
+- 有效奖励题组记录未掩码回答中同时有 0 和 1 的题数。另记录仍有更新信号的题数，包含只有掩码回答提供奖励差异、但仍有未掩码 token 获得非零优势的组。
+- 每约一秒采样整卡显存与 GPU 利用率，输出每步及各阶段的采样峰值、平均利用率和样本数。生成耗时只计 vLLM 生成。其余 rollout 包括权重同步、判分及 logprob 计算。更新耗时包括前向、反向、优化器和训练循环开销。每步耗时从训练步开始算到优化器更新结束，不含模型加载、保存和镜像。
+- R1 最终权重原生窗口为 32,768 token，含题目和生成。保留 1,024 token 的 prompt 预算时，32K 上下文最多配 31,744 个生成 token。先用 16K 实测截断和整卡显存，再判断要不要做接近 32K 的对照。两步对照用于选生成预算，分数需经固定评测验证。

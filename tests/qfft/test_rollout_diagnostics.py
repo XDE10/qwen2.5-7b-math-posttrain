@@ -1,5 +1,7 @@
 from types import SimpleNamespace
 
+import pytest
+
 from experiments.qfft_v93.common import JsonlAppender, read_jsonl
 from experiments.qfft_v93.grading import grade_text
 from experiments.qfft_v93.grpo import FinalAnswerReward, RolloutDiagnostics
@@ -57,3 +59,29 @@ def test_r1_reward_fallback_only_without_final_segment_tag(tmp_path):
         reward = FinalAnswerReward(tokenizer, LocalGrader(), journal, last_box_fallback=True)
         assert reward([], [], completion_ids=ids, reference_answer=['42'] * len(texts)) == [1., 0., 0., 0., 0., 1.]
     assert read_jsonl(path)[0]['counts'] == {'correct': 2, 'wrong': 1, 'no_answer': 3}
+
+
+def test_length_comparison_counts_groups_after_mask(tmp_path):
+    sample_ids = ['medium'] * 2 + ['hard'] * 2
+    token_ids = [[1, 9], [2, 9], [3, 9], [4, 8]]
+    grades = [{'status': status} for status in ('correct', 'wrong', 'wrong', 'correct')]
+    outputs = [
+        SimpleNamespace(token_ids=ids, text='', finish_reason='stop', stop_reason=None) for ids in token_ids
+    ]
+    outputs[-1].stop_reason = '\n\nProblem:'
+    llm = SimpleNamespace(generate=lambda: [SimpleNamespace(outputs=outputs)])
+    trainer = SimpleNamespace(accelerator=SimpleNamespace(num_processes=1), eos_token_ids=[9],
+                              _tokenizer=SimpleNamespace(pad_token_id=0), num_generations=2,
+                              vllm_generation=SimpleNamespace(llm=llm))
+    with JsonlAppender(tmp_path / 'diagnostics.jsonl') as journal:
+        diagnostics = RolloutDiagnostics(trainer, journal, ['medium', 'hard', 'medium2', 'hard2'])
+        llm.generate()
+        blank = [''] * 4
+        metrics = diagnostics.record(0, 1, sample_ids, token_ids, blank, blank, blank, grades, grades)
+        assert metrics['mixed_unmasked_reward_groups'] == 1
+        assert metrics['groups_with_reward_signal'] == 2
+        assert metrics['length_stop_frac'] == 0
+        assert metrics['loss_masked_frac'] == 0.25
+        llm.generate()
+        with pytest.raises(RuntimeError, match='Unexpected prompt groups'):
+            diagnostics.record(1, 2, sample_ids, token_ids, blank, blank, blank, grades, grades)
