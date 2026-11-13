@@ -1,2 +1,2 @@
-p1-r1-len12k
-OK
+p1-r1-pilot16-a
+running
