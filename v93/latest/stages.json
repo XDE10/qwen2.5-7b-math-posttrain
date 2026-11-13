@@ -62,6 +62,15 @@
   "code": "7e18a2c7bda6",
   "host": "p1-1110-234216@4b5c96d35876"
  },
+ "grpo__smoke_grpo_qfft_r1_16k_b8": {
+  "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
+  "state": "complete",
+  "hours": 0.325,
+  "finished": "2026-11-13T02:09:52.689718",
+  "started": "2026-11-13T01:50:20.600644",
+  "code": "4930b9106f06",
+  "host": "p1-r1-grpo-smoke8k-1113@a648be84dd7b"
+ },
  "models__base+qwen_math+qfft_official+sft_repro": {
   "stage": "models:base,qwen_math,qfft_official,sft_repro",
   "state": "complete",
