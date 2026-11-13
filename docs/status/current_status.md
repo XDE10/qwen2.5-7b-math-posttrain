@@ -1,4 +1,4 @@
-# 项目一当前状态（2026-11-12，v93）
+# 项目一当前状态（2026-11-13，v93）
 
 > 本页只写「现在做到哪」的摘要；逐版本历史与精确数字见 [history.md](history.md)，仓库约定见根目录 [AGENTS.md](../../AGENTS.md)，v93 方案见 [三周冲刺方案_v93.md](../blueprints/三周冲刺方案_v93.md)。WSL2 启动和恢复命令见 [v93 运行手册](../../experiments/qfft_v93/README.md)。
 
@@ -17,9 +17,27 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 - 2026-11-10：阶段 d（CPU VM，会话 `p1-1110-230033`，约 7 分钟）把 `data/qfft1000_v93` 与评测集传到 Drive `projects/project1/v93/data/`；本机 `rclone check` 核对 Drive 上的文件与本地逐个相同。
 - 2026-11-11：**阶段 2（4 个锚点模型 × 5 个评测集，共 4 × 4,599 条生成）全部完成**（会话 `p1-1110-234216`），结果已归档至 Drive 与 `colab-reports`。
 - 2026-11-11～11-12：**阶段 3 上半场 `train:qfft_ds`（378 步全参 QFFT，DeepSeek-V4.1-Flash 轨迹）+ `eval:run:qfft_ds_v93:full`（4,599 条全量评测）全部完成**。会话 `p1-1111-231532` 从带优化器状态的 checkpoint-126 续训到第 378 步，导出最终权重并评完五个题集。真实训练中每步约 40～66 s，显存峰值 28.8 GiB。排除优化器状态的 checkpoint-252 镜像实测上传 28.4 GiB，用时 318 s，未用于本轮恢复。
-- 2026-11-12 20:14（UTC+8）：R1 16K batch 8 对照 `qfft_r1_16k_b8_v93` 的第 196/750 步已见于 `colab-reports` 提交 `aca5248`，正式评测结果待回传。
+- 2026-11-12：旧 R1 对照 `qfft_r1_16k_b8_v93` 停在第 209/750 步，Drive 留有第 125 步轻量镜像。原 VM 消失后，用户授权从底座用独立 run 重跑。[旧会话报告](https://github.com/XDE10/qwen2.5-7b-math-posttrain/blob/aca5248/v93/sessions/p1-1112-183656/README.md)
+- 2026-11-13：**R1 16K batch 8 对照 `qfft_r1_16k_b8_restart_v93` 完成 750 步及五项评测**。G4 会话 `p1-r1-16k-restart-1112` 从固定底座开始，完成 6 个 epoch，未使用 warm-start。最终权重 05:49 写完，4,599 条生成全部判分，09:17 结束（UTC+8）。[会话报告](https://github.com/XDE10/qwen2.5-7b-math-posttrain/blob/71a78e7c69989e7ced436a8e228356ccd4402737/v93/sessions/p1-r1-16k-restart-1112/README.md)
 
-## 阶段 2 锚点与阶段 3 `qfft_ds_v93` 实测结果汇总（v93 统一口径）
+## R1 五项实测成绩（v93 统一口径）
+
+四个模型使用相同题目、生成配置和判分器。各题先对多次生成取平均，再按题等权汇总。竞赛 100 题为 AIME24（30 题）、AIME25（30 题）及 AMC23（40 题）。公开 QFFT 为作者发布的 `lwl-uestc/QFFT-S1-7B`。[五项评分明细](https://github.com/XDE10/qwen2.5-7b-math-posttrain/tree/71a78e7c69989e7ced436a8e228356ccd4402737/v93/latest/evals)
+
+| 评测 | 底座 | 公开 QFFT | Flash QFFT | 本轮 R1 QFFT | R1 比底座（百分点） |
+|---|---:|---:|---:|---:|---:|
+| **竞赛 100 题** | **26.06%** | **35.56%** | **19.31%** | **33.63%** | **+7.56** |
+| AIME24 (mean@16) | 11.25% | 20.83% | 5.00% | 18.54% | +7.29 |
+| AIME25 (mean@16) | 7.71% | 16.04% | 3.96% | 14.79% | +7.08 |
+| AMC23 (mean@8) | 50.94% | 61.25% | 41.56% | 59.06% | +8.13 |
+| MATH-500 (mean@4) | 76.80% | 81.10% | 67.00% | 80.50% | +3.70 |
+| GSM8K (mean@1) | 91.58% | 92.27% | 88.70% | 91.43% | −0.15 |
+
+竞赛 100 题按 `sample_id` 配对，使用项目的 bootstrap 实现重采样 10,000 次（seed 0）。相对底座的 **+7.56 个百分点，95% CI [+3.88, +11.44]**，达到「点估计至少 +5 个百分点且区间下界高于 0」的目标。区间仍包含低于 +5 的增益。相对 Flash 为 **+14.31**，95% CI **[+9.94, +18.88]**。相对公开 QFFT 为 **−1.94**，95% CI **[−4.06, +0.06]**。[配对方法](../../experiments/qfft_v93/metrics.py)
+
+本轮 R1 平均输出 token / 截断率依次为 AIME24 **14,651 / 10.42%**、AIME25 **11,125 / 2.50%**、AMC23 **7,498 / 1.25%**、MATH-500 **3,115 / 0.95%**、GSM8K **476 / 0.00%**。与 Flash 的比较同时涉及教师轨迹、训练窗口和有效 batch，无法单独归因于教师。
+
+## 阶段 2 锚点与阶段 3 `qfft_ds_v93` 历史实测（v93 统一口径）
 
 评测口径：`v93-final-segment-last-box/math-verify-0.9.0`，temperature=0.6，top_p=0.95，`max_model_len=32768`（`qwen_math` 为 4096）；AIME24×16、AIME25×16、AMC23×8、MATH-500×4、GSM8K×1（共 4,599 条/模型）。
 
@@ -53,7 +71,7 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 
 ## 明确未完成
 
-- 阶段 3 下半场（`train:sft_ds` + `eval:run:sft_ds_v93:full`）、阶段 4（`grpo:grpo_qfft_ds`）、阶段 5（R1 对 `qfft_r1` / `sft_r1`）、阶段 6、阶段 7 尚未完成。
+- 预注册矩阵的阶段 3 下半场（`train:sft_ds` + `eval:run:sft_ds_v93:full`）、阶段 4（Flash GRPO）、阶段 5（32K、batch 16 的 R1 双格式臂）、阶段 6、阶段 7 尚未完成。上面的 R1 16K、batch 8 对照已完成。
 - 判分：Math-Verify 自身的 5 秒比较超时会返回"不相等"，现在被记成答错，而不是按约定单列为超时；修复后要重判，见 history v93-P8。
 
 ## 历史结论（仍有效，口径与 v93 不同，不能当 v93 基线）
@@ -63,9 +81,26 @@ Qwen2.5-7B-Instruct → 全参 SFT / QFFT（两位教师）→ LoRA-GRPO，与�
 - 严格判分（strict-v3）在 dev256 上比原生 Math-Verify 低 18 题。
 - R1 教师在 s1K-1.1 的 742 道可核对题上答对 62.7%；R1 response 最长 26,835 token，32K 窗口可全部容纳。
 
-## 当前优先目标（2026-11-12）
+## 下一步：从 R1 最终权重做 GRPO（待运行）
 
-- 2026-11-12 用户授权修复合并后启动一轮 R1 监督训练与五项评测。旧会话已不在 Colab 会话列表，Drive 的 checkpoint-125 不含优化器。使用独立的 `qfft_r1_16k_b8_restart_v93` 从固定底座重跑，沿用 R1 对照配方，旧记录留存。[重跑配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8_restart.json)
-- 实习项目优先拿到一组可复现的自训增益。先用 `qfft_r1_16k_b8_v93` 在固定 Qwen2.5-7B-Instruct 底座上做全参 QFFT，使用已上传的 v93 去污 R1 数据、16K 截断、有效 batch 8、6 epoch。用第 750 步最终权重完成五项评测，再根据结果决定是否投入 GRPO。这轮命令只包含监督训练和评测。[训练配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8.json)
-- 主指标是 AIME24 + AIME25 + AMC23 的 100 题按题平均分。当前基座 **26.0625%**，建议目标是比基座高至少 **5 个百分点**（约 **31.1%**），且按题配对 bootstrap 的 95% 置信区间下界高于 0。同步报告 MATH-500、GSM8K、平均输出 token 和截断率。目标待实测，简历只引用实测成绩和明确的评测口径。
-- RomEscape 的 `qfft_repro` 是独立复现权重，作为复现参考。`qfft_official` 是 QFFT 作者权重。自训增益以同一 v93 评测下的 `base` 为基准。[模型配置](../../experiments/qfft_v93/configs/pipeline.json)
+- 初始化用 `init_model: "run:qfft_r1_16k_b8_restart_v93"`，解析到 Drive 的 `runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final/`。已核对权重、tokenizer 和模型身份文件，身份记录为 750 步。[重跑配置](../../experiments/qfft_v93/configs/train/qfft_r1_16k_b8_restart.json) · [模型路径解析](../../experiments/qfft_v93/models.py)
+- 规划独立 GRPO run `grpo_qfft_r1_16k_b8_v93`。沿用 v93 配方，LoRA r32、LR `1e-5`、8 题 × 8 采样、DAPO 损失、严格最终段 0/1 奖励及截断掩码。Drive 上核对到 920 条已批准训练题，另有 637 条候选题的 `training_approved` 均为 `false`。R1 的配置草案固定批准文件，并清空默认的候选题通配符。训练入口仍会对题池去重并检查与评测集的相似度。[GRPO 默认配置](../../experiments/qfft_v93/configs/grpo/_defaults.json) · [题池与奖励实现](../../experiments/qfft_v93/grpo.py)
+- 先用独立 run 做 2 步真实 rollout，观察显存、截断率和组内是否同时出现 0/1 奖励。R1 在离线 AIME24 的平均输出已达 14.7K token，现行 8,192 token rollout 的可用奖励密度需要实测。
+- 正式跑前验证 GRPO 的跨 VM 恢复。当前 adapter 镜像默认排除优化器，精确恢复需要包含优化器的 LoRA 检查点。正式训练计划为 150 步，用最后一步的 adapter 合并到 R1 权重，再按同一五项口径评测，以本轮 R1 QFFT 的 **33.63%** 为 GRPO 的竞赛基线，报告配对差值、输出长度和截断率。[GRPO 训练与合并入口](../../experiments/qfft_v93/grpo.py)
+
+正式配置草案（文件名拟为 `configs/grpo/grpo_qfft_r1_16k_b8.json`，尚未启用）：
+
+```json
+{
+  "base": "_defaults.json",
+  "run_name": "grpo_qfft_r1_16k_b8_v93",
+  "init_model": "run:qfft_r1_16k_b8_restart_v93",
+  "pool": {
+    "files": ["runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl"],
+    "optional_globs": [],
+    "note": "Approved 920-row E0 pool before deduplication and benchmark decontamination."
+  }
+}
+```
+
+完成短跑与恢复验证后，正式流程使用 `grpo:grpo_qfft_r1_16k_b8` → `eval:run:grpo_qfft_r1_16k_b8_v93/merged:full`。本次只准备方案。
