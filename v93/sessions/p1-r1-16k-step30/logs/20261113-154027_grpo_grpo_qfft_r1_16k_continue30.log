@@ -1,45 +1,4 @@
-[11-13 23:41:44] rclone copy (65 s): 2026/11/13 15:41:44 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 116.769 MiB/s, ETA 0s
-[11-13 23:41:44] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 65 s
-[11-13 23:42:11] RL pool: {'files': ['/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl', '/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl'], 'unique_questions': 1555, 'approval_manifest': 'grpo/r1_pool_approval.json', 'removed_benchmark_similar': 4, 'overlap_with_sft_questions': 0, 'final_questions': 1551}
-[11-13 23:42:31] Restoring checkpoint-10 from Drive (935.3MiB) ...
-[11-13 23:42:52] rclone copy (18 s): 2026/11/13 15:42:52 NOTICE:   935.317 MiB / 935.317 MiB, 100%, 186.295 MiB/s, ETA 0s
-[11-13 23:42:52] Downloaded /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/ckpt_mirror/checkpoint-10 in 18 s
-[11-13 23:42:54] Resuming from restored /content/p1/runs/grpo_qfft_r1_16k_continue30_v93/checkpoint-10
-[11-13 23:42:54] grpo_qfft_r1_16k_continue30_v93: extending from step 10 to 30 with full training state
-swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
-login --relogin` to force relogin
-swanlab: Tracking run with swanlab version 0.10.4
-swanlab: 💾 Run data saved at 
-/content/p1/runs/grpo_qfft_r1_16k_continue30_v93/swanlog/run-20261113_154302-1aa
-jvf4e
-swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
-swanlab: 🚀 View run grpo_qfft_r1_16k_continue30_v93 at 
-https://swanlab.cn/@XDE10/project1-7b-math/runs/1aajvf4e
-[11-13 23:43:04] SwanLab run 1aajvf4e https://swanlab.cn/@XDE10/project1-7b-math/runs/1aajvf4e
-
-Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
-Loading weights:   1%|          | 2/339 [00:00<00:29, 11.49it/s]
-Loading weights:  12%|█▏        | 42/339 [00:00<00:01, 179.70it/s]
-Loading weights:  23%|██▎       | 78/339 [00:00<00:01, 247.36it/s]
-Loading weights:  37%|███▋      | 124/339 [00:00<00:00, 311.42it/s]
-Loading weights:  47%|████▋     | 160/339 [00:00<00:00, 320.73it/s]
-Loading weights:  58%|█████▊    | 198/339 [00:00<00:00, 333.79it/s]
-Loading weights:  69%|██████▉   | 234/339 [00:00<00:00, 340.49it/s]
-Loading weights:  80%|███████▉  | 270/339 [00:00<00:00, 345.36it/s]
-Loading weights:  90%|█████████ | 306/339 [00:01<00:00, 347.93it/s]
-Loading weights: 100%|██████████| 339/339 [00:01<00:00, 313.59it/s]
-
-Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
-
-Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.11s/it]
-
-Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.11s/it]
-
-
-Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
-Capturing CUDA graphs (PIECEWISE):   5%|▌         | 1/19 [00:22<06:50, 22.81s/it]
-Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:22<00:36,  2.82s/it]
-Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:39<00:36,  2.82s/it]
+[... first 3,143 bytes omitted ...]
 Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 9/19 [00:42<00:44,  4.43s/it]
 Capturing CUDA graphs (PIECEWISE):  74%|███████▎  | 14/19 [00:42<00:11,  2.20s/it]
 Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  1.29s/it]
@@ -209,3 +168,51 @@ Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<
 [11-14 05:37:31] comparison step 29: length stops 9/64, mixed unmasked groups 3/8, generation 301.4s, update 690.0s, card peak 79.3 GiB, utilization 99.8%
 [11-14 05:37:31] step 29/30 epoch 0.15 loss 0.0010 lr 1.00e-05 s/step 1134.0 eta 0.31h peakGPU 77.2GiB
 {'loss': '0.000955', 'grad_norm': '0.0007425', 'learning_rate': '1e-05', 'num_tokens': '1.146e+07', 'completions/mean_length': '7339', 'completions/min_length': '717', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1406', 'completions/mean_terminated_length': '5859', 'completions/min_terminated_length': '717', 'completions/max_terminated_length': '1.612e+04', 'rewards/final_answer/mean': '0.3906', 'rewards/final_answer/std': '0.4917', 'reward': '0.3906', 'reward_std': '0.4917', 'frac_reward_zero_std': '0.625', 'comparison/completion_tokens': '4.697e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '3', 'comparison/length_stop_frac': '0.1406', 'comparison/length_stops': '9', 'comparison/loss_masked': '9', 'comparison/loss_masked_frac': '0.1406', 'comparison/mean_completion_tokens': '7339', 'comparison/mixed_unmasked_reward_groups': '3', 'reward/correct_frac': '0.3906', 'reward/no_answer_frac': '0.1094', 'reward/wrong_frac': '0.5', 'sampling/sampling_logp_difference/mean': '0.02707', 'sampling/sampling_logp_difference/max': '8.627', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.3331', 'sampling/importance_sampling_ratio/max': '1.785', 'entropy': '0.3499', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '1059', 'epoch': '0.1503', 'comparison/step_seconds': '1134', 'comparison/generation_seconds': '301.4', 'comparison/rollout_other_seconds': '142.5', 'comparison/update_seconds': '690', 'comparison/gpu_step_samples': 1113, 'comparison/gpu_step_peak_used_gib': '79.34', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.79', 'comparison/gpu_generation_samples': 295, 'comparison/gpu_generation_peak_used_gib': '79.34', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '99.99', 'comparison/gpu_rollout_other_samples': 140, 'comparison/gpu_rollout_other_peak_used_gib': '79.34', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '98.54', 'comparison/gpu_update_samples': 678, 'comparison/gpu_update_peak_used_gib': '79.34', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.97'}
+[11-14 05:41:58] HEARTBEAT 29
+[11-14 05:46:59] HEARTBEAT 29
+[11-14 05:51:59] HEARTBEAT 29
+[11-14 05:56:19] comparison step 30: length stops 7/64, mixed unmasked groups 4/8, generation 287.2s, update 697.3s, card peak 79.3 GiB, utilization 99.8%
+[11-14 05:56:19] step 30/30 epoch 0.16 loss -0.0106 lr 1.00e-05 s/step 1127.2 eta 0.00h peakGPU 77.2GiB
+{'loss': '-0.01063', 'grad_norm': '0.004963', 'learning_rate': '1e-05', 'num_tokens': '1.189e+07', 'completions/mean_length': '6636', 'completions/min_length': '268', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1094', 'completions/mean_terminated_length': '5439', 'completions/min_terminated_length': '268', 'completions/max_terminated_length': '1.566e+04', 'rewards/final_answer/mean': '0.4062', 'rewards/final_answer/std': '0.495', 'reward': '0.4062', 'reward_std': '0.495', 'frac_reward_zero_std': '0.375', 'comparison/completion_tokens': '4.247e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '5', 'comparison/length_stop_frac': '0.1094', 'comparison/length_stops': '7', 'comparison/loss_masked': '7', 'comparison/loss_masked_frac': '0.1094', 'comparison/mean_completion_tokens': '6636', 'comparison/mixed_unmasked_reward_groups': '4', 'reward/correct_frac': '0.4062', 'reward/no_answer_frac': '0.07812', 'reward/wrong_frac': '0.5156', 'sampling/sampling_logp_difference/mean': '0.0265', 'sampling/sampling_logp_difference/max': '2.978', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.506', 'sampling/importance_sampling_ratio/max': '2.891', 'entropy': '0.3621', 'clip_ratio/low_mean': '4.706e-05', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '4.706e-05', 'clip_ratio/low_min': '4.706e-05', 'clip_ratio/high_max': '0', 'step_time': '1051', 'epoch': '0.1554', 'comparison/step_seconds': '1127', 'comparison/generation_seconds': '287.2', 'comparison/rollout_other_seconds': '142.6', 'comparison/update_seconds': '697.3', 'comparison/gpu_step_samples': 1107, 'comparison/gpu_step_peak_used_gib': '79.34', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.75', 'comparison/gpu_generation_samples': 281, 'comparison/gpu_generation_peak_used_gib': '79.34', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '100', 'comparison/gpu_rollout_other_samples': 140, 'comparison/gpu_rollout_other_peak_used_gib': '79.34', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '98.93', 'comparison/gpu_update_samples': 686, 'comparison/gpu_update_peak_used_gib': '79.34', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.82'}
+[11-14 05:56:19] Saved checkpoint-30 locally: 935.4MiB in 0.5 s, 211.0 GiB free
+{'train_runtime': '2.227e+04', 'train_samples_per_second': '0.057', 'train_steps_per_second': '0.001', 'train_loss': '-0.004173', 'epoch': '0.1554'}
+[11-14 05:56:19] Waiting for the previous checkpoint mirror to finish ...
+[11-14 05:56:19] Mirroring checkpoint-30 to Drive (full_state) in the background
+[11-14 05:56:32] rclone copy (13 s): 2026/11/13 21:56:32 NOTICE:   935.351 MiB / 935.351 MiB, 100%, 93.534 MiB/s, ETA 0s
+[11-14 05:56:34] rclone check (2 s): 2026/11/13 21:56:34 NOTICE: Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93/ckpt_mirror/checkpoint-30.390f564fdd9f44f78db0722e83cc74ce.partial': 12 matching files
+[11-14 05:56:36] rclone purge (2 s): 2026/11/13 21:56:36 Failed to purge: directory not found
+[11-14 05:56:38] Uploaded checkpoint-30 to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93/ckpt_mirror/checkpoint-30 (935.4MiB in 19 s, 50 MiB/s)
+[11-14 05:56:41] rclone copyto (2 s): 2026/11/13 21:56:41 NOTICE:     1.750 KiB / 1.750 KiB, 100%, 0 B/s, ETA -
+[11-14 05:56:56] Mirror complete: /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93/ckpt_mirror/checkpoint-30
+[11-14 05:56:59] HEARTBEAT 30
+[11-14 05:57:16] rclone copy (6 s): 2026/11/13 21:57:16 NOTICE:   318.960 MiB / 318.960 MiB, 100%, 74.823 MiB/s, ETA 0s
+[11-14 05:57:17] rclone purge (2 s): 2026/11/13 21:57:17 Failed to purge: directory not found
+[11-14 05:57:20] Uploaded adapter to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93/adapter (319.0MiB in 10 s, 31 MiB/s)
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run grpo_qfft_r1_16k_continue30_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/1aajvf4e
+swanlab: Upload complete: 28647 records
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<01:03,  5.35it/s]
+Loading weights:  12%|█▏        | 42/339 [00:00<00:01, 173.98it/s]
+Loading weights:  23%|██▎       | 78/339 [00:00<00:01, 241.76it/s]
+Loading weights:  35%|███▌      | 120/339 [00:00<00:00, 303.13it/s]
+Loading weights:  46%|████▌     | 156/339 [00:00<00:00, 321.33it/s]
+Loading weights:  58%|█████▊    | 196/339 [00:00<00:00, 333.27it/s]
+Loading weights:  69%|██████▊   | 233/339 [00:00<00:00, 343.25it/s]
+Loading weights:  79%|███████▉  | 269/339 [00:00<00:00, 347.41it/s]
+Loading weights:  90%|████████▉ | 305/339 [00:01<00:00, 349.52it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 309.22it/s]
+
+Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Writing model shards:  25%|██▌       | 1/4 [00:02<00:08,  2.68s/it]
+Writing model shards:  50%|█████     | 2/4 [00:16<00:18,  9.04s/it]
+Writing model shards:  75%|███████▌  | 3/4 [00:28<00:10, 10.40s/it]
+Writing model shards: 100%|██████████| 4/4 [00:35<00:00,  9.26s/it]
+Writing model shards: 100%|██████████| 4/4 [00:35<00:00,  8.93s/it]
+[11-14 06:00:25] rclone copy (132 s): 2026/11/13 22:00:25 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 105.648 MiB/s, ETA 0s
+[11-14 06:00:27] rclone purge (2 s): 2026/11/13 22:00:27 Failed to purge: directory not found
+[11-14 06:00:29] Uploaded merged to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93/merged (14.2GiB in 136 s, 107 MiB/s)
+[11-14 06:00:40] Merged weights -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93/merged
+[11-14 06:00:40] grpo_qfft_r1_16k_continue30_v93: COMPLETE -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93

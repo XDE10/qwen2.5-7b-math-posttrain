@@ -1,0 +1,5 @@
+[11-14 06:02:08] rclone copy (1 s): 2026/11/13 22:02:08 NOTICE:           0 B / 0 B, -, 0 B/s, ETA -
+[11-14 06:02:08] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 1 s
+[11-14 06:02:22] r1/r1_grpo_dev: 498 generations planned, 498 already saved
+[11-14 06:02:22] Nothing to generate; all requested generations exist
+[11-14 06:02:23] r1: generation complete for r1_grpo_dev

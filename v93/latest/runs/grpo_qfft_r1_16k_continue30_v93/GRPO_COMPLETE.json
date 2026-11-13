@@ -1,0 +1,12 @@
+{
+  "steps": 30,
+  "resumed_from": "/content/p1/runs/grpo_qfft_r1_16k_continue30_v93/checkpoint-10",
+  "adapter": "/content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_continue30_v93/adapter",
+  "wall_hours_this_session": 6.204,
+  "completed": "2026-11-14T05:57:25+08:00",
+  "extension": {
+    "source_run": "grpo_qfft_r1_16k_pilot_v93",
+    "source_step": 10,
+    "source_identity_sha256": "20dcfc257829495e1d4786b88f79fe087837dbc8c870f4a1a346158459f9754d"
+  }
+}
