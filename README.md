@@ -1,6 +1,6 @@
 # 项目一：7B 数学后训练
 
-Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO 继续提升，与 Qwen2.5-Math-7B-Instruct 对标，形成可写简历的结果链；另含「同一道题：原生长轨迹 vs 教师精炼轨迹」的质量/长度/成本对照，以及 QFFT 造数链。不能预先保证涨分。
+Qwen2.5-7B-Instruct 的数学后训练项目，包含全参 SFT、QFFT、LoRA-GRPO 与双教师轨迹比较。当前自训 R1 QFFT 在竞赛 100 题上由 **26.06% 提升至 33.63%**，增益 **+7.56 个百分点**，配对 95% CI **[+3.88, +11.44]**。R1 权重的 GRPO 待运行。
 
 - **当前状态**：[docs/status/current_status.md](docs/status/current_status.md)
 - **协作约定与阅读入口**：[AGENTS.md](AGENTS.md)
