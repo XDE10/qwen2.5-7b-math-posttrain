@@ -62,6 +62,15 @@
   "code": "7e18a2c7bda6",
   "host": "p1-1110-234216@4b5c96d35876"
  },
+ "grpo__compare_grpo_qfft_r1_8k": {
+  "stage": "grpo:compare_grpo_qfft_r1_8k",
+  "state": "complete",
+  "hours": 0.339,
+  "finished": "2026-11-13T07:32:11.236135",
+  "started": "2026-11-13T07:11:51.256967",
+  "code": "33440c8e9f13",
+  "host": "p1-r1-len8k@7d4967c854ba"
+ },
  "grpo__diagnose_grpo_qfft_r1_8k": {
   "stage": "grpo:diagnose_grpo_qfft_r1_8k",
   "state": "complete",
