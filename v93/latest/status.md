@@ -1,4 +1,4 @@
-# v93 status (2026-11-13T19:25:51, session p1-r1-16k-step30)
+# v93 status (2026-11-13T19:59:08, session p1-r1-16k-step30)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -12,7 +12,7 @@ stage grpo:compare_grpo_qfft_r1_12k                 complete  0.513
 stage grpo:compare_grpo_qfft_r1_16k                 complete  0.702 
 stage grpo:compare_grpo_qfft_r1_8k                  complete  0.339 
 stage grpo:diagnose_grpo_qfft_r1_8k                 complete  0.424 
-stage grpo:grpo_qfft_r1_16k_continue30              running   on p1-r1-16k-step30@bafe0dcab6ba, heartbeat 4 min ago 
+stage grpo:grpo_qfft_r1_16k_continue30              running   on p1-r1-16k-step30@bafe0dcab6ba, heartbeat 2 min ago 
 stage grpo:grpo_qfft_r1_16k_pilot                   complete  1.7 
 stage grpo:smoke_grpo_qfft_r1_16k_b8                complete  0.325 
 stage grpo:smoke_grpo_qfft_r1_fallback_8k           complete  0.331 
@@ -25,13 +25,13 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 1870 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 1903 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run compare_grpo_qfft_r1_12k_v93 complete step 2/ updated 2026-11-13T18:23:41+08:00
 run compare_grpo_qfft_r1_16k_v93 complete step 2/ updated 2026-11-13T16:18:56+08:00
 run compare_grpo_qfft_r1_8k_v93  complete step 2/ updated 2026-11-13T15:32:04+08:00
 run diagnose_grpo_qfft_r1_8k_v93 complete step 2/ updated 2026-11-13T10:55:24+08:00
-run grpo_qfft_r1_16k_continue30_v93 training step 22/30 updated 2026-11-14T03:25:58+08:00
+run grpo_qfft_r1_16k_continue30_v93 training step 23/30 updated 2026-11-14T03:44:39+08:00
 run grpo_qfft_r1_16k_pilot_v93   complete step 10/ updated 2026-11-13T22:06:37+08:00
 run qfft_ds_v93                  complete step 378/ updated 2026-11-12T03:37:21+08:00
 run qfft_r1_16k_b8_restart_v93   complete step 750/ updated 2026-11-13T05:49:15+08:00
