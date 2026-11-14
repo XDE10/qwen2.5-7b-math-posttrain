@@ -127,12 +127,12 @@
  },
  "grpo__grpo_qfft_r1_16k_tokenmask10": {
   "stage": "grpo:grpo_qfft_r1_16k_tokenmask10",
-  "state": "running",
+  "state": "complete",
+  "hours": 3.233,
+  "finished": "2026-11-14T08:39:07.304568",
   "started": "2026-11-14T05:25:07.690827",
   "code": "6b9323a23e5b",
-  "host": "p1-r1-tokenmask10@90b3d945fe47",
-  "heartbeat": "2026-11-14T08:10:16.261316",
-  "heartbeat_ts": 1794643816.2613301
+  "host": "p1-r1-tokenmask10@90b3d945fe47"
  },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
@@ -178,6 +178,15 @@
   "started": "2026-11-10T05:57:56.241816",
   "code": "0f7a0623a31d",
   "host": "p1-1110-135452@6be45fc5fe3e"
+ },
+ "r1-competition-2026": {
+  "stage": "r1-competition-2026",
+  "state": "running",
+  "started": "2026-11-14T09:13:21.342721",
+  "code": "22258ad1408f",
+  "host": "p1-r1-comp26@231c1ed5bf93",
+  "heartbeat": "2026-11-14T09:43:24.386225",
+  "heartbeat_ts": 1794649404.3862386
  },
  "r1-grpo-dev": {
   "stage": "r1-grpo-dev",
