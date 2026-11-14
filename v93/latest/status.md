@@ -1,10 +1,11 @@
-# v93 status (2026-11-13T22:20:22, session p1-r1-16k-step30)
+# v93 status (2026-11-14T01:10:23, session p1-r1-step30-comp)
 
 ```
 stage benchmarks                                    complete  0.003 
 stage eval:base:full                                complete  0.394 
 stage eval:qfft_official:full                       complete  3.439 
 stage eval:qwen_math:full                           complete  0.171 
+stage eval:run:grpo_qfft_r1_16k_continue30_v93/merged:competition running   on p1-r1-step30-comp@63de1296d769, heartbeat 5 min ago 
 stage eval:run:qfft_ds_v93:full                     complete  0.058 
 stage eval:run:qfft_r1_16k_b8_restart_v93:full      complete  3.463 
 stage eval:sft_repro:full                           complete  6.882 
@@ -26,7 +27,7 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 2045 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 2215 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run compare_grpo_qfft_r1_12k_v93 complete step 2/ updated 2026-11-13T18:23:41+08:00
 run compare_grpo_qfft_r1_16k_v93 complete step 2/ updated 2026-11-13T16:18:56+08:00

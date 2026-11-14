@@ -1,2 +1,2 @@
-p1-r1-16k-step30
-OK
+p1-r1-step30-comp
+running
