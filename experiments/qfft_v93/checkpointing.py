@@ -19,7 +19,7 @@ import time
 from pathlib import Path
 
 from experiments.qfft_v93 import drive_io
-from experiments.qfft_v93.common import (GIB, free_bytes, human_bytes, log, now_iso, read_json, read_jsonl,
+from experiments.qfft_v93.common import (GIB, free_bytes, human_bytes, log, now_iso, read_json, read_jsonl, sha256_file,
                                          tree_bytes, write_json, write_jsonl)
 
 try:
@@ -73,28 +73,54 @@ def _resumable(path: Path, marker: str) -> bool:
     try:
         metadata = read_json(path / marker)
         # Old markers had no artifact_type. Inspect those files as well as newly labeled full mirrors.
-        return (isinstance(metadata, dict) and metadata.get('artifact_type', FULL_STATE) == FULL_STATE
-                and _nonempty(path / 'trainer_state.json') and _has_training_state(path))
-    except (OSError, ValueError):
+        if (not isinstance(metadata, dict) or metadata.get('artifact_type', FULL_STATE) != FULL_STATE
+                or not _has_training_state(path)
+                or read_state(path)['global_step'] != int(_STEP.fullmatch(path.name)[1])):
+            return False
+        manifest = metadata.get('file_manifest')
+        return manifest is None or (bool(manifest) and all(
+            not Path(name).is_absolute() and '..' not in Path(name).parts
+            and (path / name).stat().st_size == record['bytes']
+            for name, record in manifest.items()
+        ))
+    except (AttributeError, KeyError, OSError, TypeError, ValueError):
         return False
 
 
-def resolve_resume(local_dir: Path, drive_dir: Path):
+def resolve_resume(local_dir: Path, drive_dir: Path, *, exact_drive_step: int | None = None):
     """Restore a full training state or stop clearly if only incomplete checkpoints exist."""
     local = _checkpoints(Path(local_dir), SAVED_MARK)
-    for _, path in reversed(local):
+    for _, path in reversed(local if exact_drive_step is None else []):
         if _resumable(path, SAVED_MARK):
             log(f'Resuming from local {path}')
             return str(path)
     mirror = _checkpoints(Path(drive_dir) / 'ckpt_mirror', MIRROR_MARK)
     for step, src in reversed(mirror):
+        if exact_drive_step is not None and step != exact_drive_step:
+            continue
         if not _resumable(src, MIRROR_MARK):
             continue
         dst = Path(local_dir) / src.name
+        staged = Path(local_dir) / '.restore' / src.name
+        staged.parent.mkdir(parents=True, exist_ok=True)
         log(f'Restoring checkpoint-{step} from Drive ({human_bytes(tree_bytes(src))}) ...')
-        drive_io.download_tree(src, dst)
-        if not _resumable(dst, MIRROR_MARK):
-            raise RuntimeError(f'Downloaded checkpoint-{step} is missing full training state')
+        try:
+            metadata = read_json(src / MIRROR_MARK)
+            if exact_drive_step is not None and not metadata.get('file_manifest'):
+                raise RuntimeError('an imported checkpoint requires the full checksum manifest')
+            drive_io.download_tree(src, staged)
+            if not _resumable(staged, MIRROR_MARK):
+                raise RuntimeError('missing full training state')
+            for name, record in metadata.get('file_manifest', {}).items():
+                if sha256_file(staged / name) != record['sha256']:
+                    raise RuntimeError(f'checksum mismatch for {name}')
+        except (OSError, ValueError, RuntimeError) as error:
+            shutil.rmtree(staged, ignore_errors=True)
+            log(f'WARNING: cannot restore checkpoint-{step}: {error}')
+            continue
+        if dst.exists():
+            shutil.rmtree(dst)
+        staged.replace(dst)
         write_json(dst / SAVED_MARK, {'restored_from': str(src), 'at': now_iso()})
         log(f'Resuming from restored {dst}')
         return str(dst)
@@ -156,6 +182,8 @@ class CheckpointMirror(TrainerCallback):
         need = tree_bytes(newest) * 1.15 + self.min_free
         if free_bytes(self.local_dir) < need:
             self.wait()  # never delete a checkpoint whose Drive mirror is still being written
+            if self.mirror_optimizer_state and not self.has_full_mirror(int(_STEP.fullmatch(newest.name)[1])):
+                raise RuntimeError(f'Insufficient local disk; retaining {newest.name} without a confirmed full mirror')
             for p in older:
                 log(f'Freeing local disk before saving step {step}: removing {p.name}')
                 shutil.rmtree(p, ignore_errors=True)
@@ -221,16 +249,33 @@ class CheckpointMirror(TrainerCallback):
             dst = self.mirror_dir / ckpt.name
             exclude = None if self.mirror_optimizer_state else ['*optim*']
             artifact_type = FULL_STATE if self.mirror_optimizer_state else WEIGHTS_ONLY
+            if self.mirror_optimizer_state and self.has_full_mirror(int(_STEP.fullmatch(ckpt.name)[1])):
+                log(f'Keeping the existing verified full-state mirror for {ckpt.name}')
+                return
             if artifact_type == WEIGHTS_ONLY and _resumable(dst, MIRROR_MARK):
                 log(f'Keeping the existing full-state mirror for {ckpt.name}')
                 return
             log(f'Mirroring {ckpt.name} to Drive ({artifact_type}) in the background')
             if self.mirror_optimizer_state and not _resumable(ckpt, SAVED_MARK):
                 raise RuntimeError(f'{ckpt.name} is missing full training state; cannot publish a resumable mirror')
+            manifest = None
+            if self.mirror_optimizer_state:
+                manifest = {p.relative_to(ckpt).as_posix(): {'bytes': p.stat().st_size, 'sha256': sha256_file(p)}
+                            for p in sorted(ckpt.rglob('*')) if p.is_file()}
             files = drive_io.upload_tree(ckpt, dst, watch_path=self.watch_path, min_free=self.min_free,
-                                         exclude=exclude)
-            drive_io.put_json(dst / MIRROR_MARK, {'artifact_type': artifact_type,
-                                                 'bytes': sum(files.values()), 'files': len(files), 'at': now_iso()})
+                                         exclude=exclude, verify_full=self.mirror_optimizer_state)
+            marker = {'artifact_type': artifact_type, 'bytes': sum(files.values()),
+                      'files': len(files), 'at': now_iso()}
+            if manifest is not None:
+                if files != {name: entry['bytes'] for name, entry in manifest.items()}:
+                    raise RuntimeError('Full checkpoint file list changed during upload')
+                if not drive_io.rclone_remote() and any(
+                    sha256_file(dst / name) != entry['sha256'] for name, entry in manifest.items()
+                ):
+                    raise RuntimeError('Full checkpoint copy checksum mismatch')
+                marker['file_manifest'] = manifest
+            drive_io.put_json(dst / MIRROR_MARK, marker)
+            self.error = None
             log(f'Mirror complete: {dst}')
             mirrors = _checkpoints(self.mirror_dir, MIRROR_MARK)
             full, light = [], []

@@ -1,0 +1,6 @@
+{
+  "base": "compare_grpo_qfft_r1_8k.json",
+  "run_name": "compare_grpo_qfft_r1_12k_v93",
+  "max_completion_length": 12288,
+  "note": "User-authorized two-step G4 length comparison from the same R1 QFFT final weights and fixed prompt panel."
+}

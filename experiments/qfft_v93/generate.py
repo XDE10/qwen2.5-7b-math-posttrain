@@ -125,6 +125,7 @@ def main() -> None:
     p.add_argument('--suite', default='full')
     p.add_argument('--benchmarks', help='Comma list overriding the suite benchmark selection')
     p.add_argument('--bench-dir', help='Default: Drive data/benchmarks_v93')
+    p.add_argument('--evals-root', help='Separate output root for a development evaluation')
     p.add_argument('--model-path', help='Override local model directory')
     p.add_argument('--tokenizer-path', help='Prompt tokenizer (default: local base model)')
     p.add_argument('--engine', choices=['vllm', 'fake'], default='vllm')
@@ -154,7 +155,7 @@ def main() -> None:
         if spec.get('limit'):
             rows = rows[:spec['limit']]
         max_tokens = spec.get('max_tokens')
-        out_dir = layout.evals / tag / name
+        out_dir = (Path(a.evals_root) if a.evals_root else layout.evals) / tag / name
         protocol = {'model': a.model, 'model_identity': model_identity, 'benchmark': name,
                     'benchmark_sha256': sha256_file(bench_dir / f'{name}.jsonl'), 'n': spec['n'],
                     'limit': spec.get('limit'), 'temperature': ev['temperature'], 'top_p': ev['top_p'],
@@ -164,7 +165,7 @@ def main() -> None:
         if id_path.exists() and read_json(id_path)['protocol'] != protocol:
             raise RuntimeError(f'{id_path}: protocol differs from this request; use another --tag')
         write_json(id_path, {'protocol': protocol, 'protocol_sha256': sha256_json(protocol), 'updated': now_iso()})
-        local_raw = local_root() / 'evals' / tag / name / 'raw.jsonl'
+        local_raw = local_root() / 'evals' / sha256_json(protocol) / tag / name / 'raw.jsonl'
         drive_raw = out_dir / 'raw.jsonl'
         merged = {}
         for record in read_jsonl(drive_raw) + read_jsonl(local_raw):  # union: Drive may be ahead or behind

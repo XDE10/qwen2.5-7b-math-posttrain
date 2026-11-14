@@ -68,6 +68,13 @@ elif cmd == 'moveto':
     src, dst = local(pos[0]), local(pos[1])
     dst.parent.mkdir(parents=True, exist_ok=True)
     os.replace(src, dst)
+elif cmd == 'check':
+    src, dst = local(pos[0]), local(pos[1])
+    src_files = {p.relative_to(src): p.read_bytes() for p in src.rglob('*') if p.is_file()}
+    dst_files = {p.relative_to(dst): p.read_bytes() for p in dst.rglob('*') if p.is_file()}
+    if src_files != dst_files:
+        print('rclone check: files differ', file=sys.stderr)
+        sys.exit(1)
 elif cmd == 'purge':
     target = local(pos[0])
     if not target.exists():

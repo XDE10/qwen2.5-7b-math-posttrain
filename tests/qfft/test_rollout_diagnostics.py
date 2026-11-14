@@ -13,6 +13,38 @@ class LocalGrader:
         return [grade_text(text, reference, strict=strict) for text, reference in rows]
 
 
+def test_retry_grader_failure_before_returning_rewards(tmp_path):
+    from unittest.mock import Mock
+
+    grader = Mock()
+    with JsonlAppender(tmp_path / 'reward.jsonl') as journal:
+        reward = FinalAnswerReward(None, grader, journal)
+        grader.grade_many.side_effect = [
+            [{'status': 'timeout'}, {'status': 'wrong'}], [{'status': 'correct'}],
+            [{'status': 'error'}, {'status': 'correct'}], [{'status': 'timeout'}],
+        ]
+        assert reward([], ['a', 'b'], reference_answer=['1', '2']) == [1., 0.]
+        with pytest.raises(RuntimeError, match='timeout'):
+            reward([], ['a', 'b'], reference_answer=['1', '2'])
+
+
+def test_math_verify_inner_timeout_is_distinct_from_wrong(monkeypatch):
+    from experiments.qfft_v93 import grading
+    from sympy import Integer
+
+    mv = grading._math_verify()
+    from math_verify import grader
+    from math_verify.errors import TimeoutException
+
+    def timed_out(*args):
+        raise TimeoutException('forced comparison timeout')
+
+    monkeypatch.setattr(mv, 'parse', lambda *args, **kwargs: [Integer(3)])
+    monkeypatch.setattr(grading, '_parse_gold', lambda *args: [Integer(2)])
+    monkeypatch.setattr(grader, 'sympy_expr_eq', timed_out)
+    assert grade_text('<|im_start|>answer\n\\boxed{3}', '2', strict=True)['status'] == 'timeout'
+
+
 def test_capture_stop_reasons_and_compare_without_changing_strict_reward(tmp_path):
     texts = [r'The answer is \boxed{42}<|im_end|>', r'The answer is \boxed{41}',
              '<|im_start|>answer\n' + r'\boxed{42}', '<|im_start|>answer\n42']

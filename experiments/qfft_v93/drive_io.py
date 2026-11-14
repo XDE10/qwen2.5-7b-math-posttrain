@@ -26,6 +26,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+from uuid import uuid4
 from pathlib import Path
 
 from experiments.qfft_v93.common import copy_tree_fast, copy_tree_throttled, human_bytes, log, write_json
@@ -106,7 +107,7 @@ def wait_visible(path, expect: dict | None = None, timeout: float = 900, gone: b
         time.sleep(5)
 
 
-def upload_tree(src, dst, exclude=None, **throttle) -> dict:
+def upload_tree(src, dst, exclude=None, verify_full=False, **throttle) -> dict:
     """Publish a local tree on Drive and return the uploaded relative file paths and sizes."""
     src, dst = Path(src), Path(dst)
     files = _files(src, exclude=exclude)
@@ -114,7 +115,7 @@ def upload_tree(src, dst, exclude=None, **throttle) -> dict:
         copy_tree_throttled(src, dst, exclude=exclude, **throttle)
         return files
     size = sum(files.values())
-    partial = dst.with_name(dst.name + '.partial')
+    partial = dst.with_name(dst.name + (f'.{uuid4().hex}.partial' if verify_full else '.partial'))
     started = time.monotonic()
     flags = list(UPLOAD_FLAGS)
     if exclude:
@@ -123,12 +124,16 @@ def upload_tree(src, dst, exclude=None, **throttle) -> dict:
         for pat in exclude:
             flags.extend(['--exclude', pat])
     _rclone('copy', str(src), remote_path(partial), *flags)
+    if verify_full:
+        # Drive provides MD5 to rclone, so checking here does not download a second copy.
+        _rclone('check', str(src), remote_path(partial), '--checkers', '8')
     purge(dst, wait=False)
     _rclone('moveto', remote_path(partial), remote_path(dst))
     seconds = time.monotonic() - started
     log(f'Uploaded {src.name} to {dst} ({human_bytes(size)} in {seconds:.0f} s, '
         f'{size / max(seconds, 1e-6) / 2 ** 20:.0f} MiB/s)')
-    wait_visible(dst, files)
+    if not wait_visible(dst, files):
+        raise RuntimeError(f'Uploaded files did not become visible: {dst}')
     return files
 
 
@@ -141,7 +146,8 @@ def upload_file(src, dst) -> None:
         os.replace(tmp, dst)
         return
     _rclone('copyto', str(src), remote_path(dst), *UPLOAD_FLAGS)
-    wait_visible(dst.parent, {dst.name: src.stat().st_size})
+    if not wait_visible(dst.parent, {dst.name: src.stat().st_size}):
+        raise RuntimeError(f'Uploaded file did not become visible: {dst}')
 
 
 def put_json(path, value) -> None:
