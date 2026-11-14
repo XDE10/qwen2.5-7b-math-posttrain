@@ -13,6 +13,7 @@ Stages (all idempotent; re-running resumes or skips completed work):
     eval:<model>[:<suite>]      generate + score, e.g. eval:base:full, eval:run:qfft_ds_v93:full
     grpo:<config>               LoRA-GRPO + merge, e.g. grpo:grpo_qfft_ds (configs/grpo/<config>.json)
     grpo:<config>:pause-after=<step> / grpo:<config>:resume   verify a full checkpoint across VMs
+    r1-is-diagnostic            capture one fixed R1 rollout and compare importance weights
     r1-grpo-dev[:step30]        paired development evaluation of R1 and the 16K run
     score[:<tags>]              re-score saved generations and rebuild results.md
     analyze:<tags>[:<grpo_runs>] figures into Drive runs/project1/v93/figures
@@ -549,6 +550,9 @@ def _dispatch(ctx: Context, stage: str) -> None:
             raise ValueError(f'Unknown GRPO operation: {operation}')
         gpu_banner()
         ctx.run(ctx.py_module('rl', m + 'grpo', '--config', f'grpo/{config}.json', *extra), f'grpo_{config}')
+    elif kind == 'r1-is-diagnostic' and not rest:
+        gpu_banner()
+        ctx.run(ctx.py_module('rl', m + 'grpo_is_diagnostic', 'capture'), 'r1_is_diagnostic')
     elif kind == 'r1-grpo-dev':
         from experiments.qfft_v93.common import load_config, sha256_file
         gpu_banner()

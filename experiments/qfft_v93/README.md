@@ -141,6 +141,23 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 - 关掉终端或按 Ctrl+C 只是脱离（退出码 75，pipeline.sh 不会接着开下一台 VM）：任务继续，结束后 VM 自己释放。重新跟踪用 `launch.sh --attach <session>`，中止用 `colab stop -s <session>`。
 - 每个阶段在 Drive 上有带心跳的标记文件。另一台 VM 想跑同一阶段时，若心跳在 15 分钟内就拒绝，避免两台 VM 同时写一个 run 目录；确认原 VM 已不在时可加 `--force`。
 
+### R1 重要性采样诊断
+
+以下是准备好的独立 G4 阶段。它使用 R1 QFFT 第 750 步最终权重，复用 16K 长度对照的前 8 个固定题目，每题采样 8 次。直接调用锁定版本 TRL 的训练态 rollout 路径，只做生成、判分和前向重算。命令会分配 G4，须在获准上卡后执行。
+
+```zsh
+source ~/.proxy_env.sh
+bash experiments/qfft_v93/colab/launch.sh --gpu G4 --session p1-r1-is-diagnostic r1-is-diagnostic
+```
+
+验收看 `P1_RESULT=OK` 和 `r1_is_diagnostic: saved 64 completions`。逐 token 数据只保存到 Drive 的 `runs/project1/v93/runs/r1_is_diagnostic/logprobs.jsonl`。阶段日志打印两种权重的聚合结果。再次运行会尝试复用完整作答。把单份产物下载到本机后，可用装有 CPU PyTorch 的 Python 在仓库根目录比较：
+
+```zsh
+python -m experiments.qfft_v93.grpo_is_diagnostic compare /path/to/logprobs.jsonl
+```
+
+产物保存原始 token ID、采样端与训练端的 logprob、实际 completion mask、组内 advantage、奖励与停止原因，并保留 TRL 当场计算的序列权重供离线核对。比较按奖励与长度分桶，单列 IS 零权重 token 和已有截断掩码。非零权重 token 数与绝对优势加权和是更新信号指标，实测能力仍需独立评测。
+
 ## 三、断点与续跑
 
 | 对象 | 本地（VM SSD） | Drive（持久） | 新 VM 上怎么继续 |
