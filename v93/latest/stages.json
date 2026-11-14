@@ -125,6 +125,15 @@
   "code": "549f4e44e789",
   "host": "p1-r1-pilot16-b@79c53d275e8f"
  },
+ "grpo__grpo_qfft_r1_16k_tokenmask10": {
+  "stage": "grpo:grpo_qfft_r1_16k_tokenmask10",
+  "state": "running",
+  "started": "2026-11-14T05:25:07.690827",
+  "code": "6b9323a23e5b",
+  "host": "p1-r1-tokenmask10@90b3d945fe47",
+  "heartbeat": "2026-11-14T05:55:11.325426",
+  "heartbeat_ts": 1794635711.3254387
+ },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
   "state": "complete",

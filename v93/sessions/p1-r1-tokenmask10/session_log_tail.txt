@@ -1,0 +1,72 @@
+P1_SESSION=p1-r1-tokenmask10 gpu=G4 auto_release=1
+/tmp/ipykernel_944/634627337.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 6b9323a23e5b (git cf8a805f7dbc+dirty); stages: ['grpo:grpo_qfft_r1_16k_tokenmask10']
+[11-14 05:25:06] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-14 05:25:07] ===== STAGE grpo:grpo_qfft_r1_16k_tokenmask10 =====
+[11-14 05:25:08] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-14 05:25:08] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-14 05:25:08] Restoring rl venv from Drive snapshot rl-366e0de0b57e.tar
+[11-14 05:26:36] RUN /content/p1/venvs/rl/bin/python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_16k_tokenmask10.json | log: /content/mydrive/runs/project1/v93/logs/20261114-052636_grpo_grpo_qfft_r1_16k_tokenmask10.log
+[11-14 13:27:39] rclone copy (60 s): 2026/11/14 05:27:39 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 95.443 MiB/s, ETA 0s
+[11-14 13:27:39] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 60 s
+[11-14 13:27:47] RL pool: {'files': ['/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl', '/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl'], 'unique_questions': 1555, 'approval_manifest': 'grpo/r1_pool_approval.json', 'removed_benchmark_similar': 4, 'overlap_with_sft_questions': 0, 'final_questions': 1551}
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/grpo_qfft_r1_16k_tokenmask10_v93/swanlog/run-20261114_052803-8c
+x21yl2
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run grpo_qfft_r1_16k_tokenmask10_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/8cx21yl2
+[11-14 13:28:04] SwanLab run 8cx21yl2 https://swanlab.cn/@XDE10/project1-7b-math/runs/8cx21yl2
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<00:59,  5.64it/s]
+Loading weights:  12%|█▏        | 40/339 [00:00<00:01, 176.17it/s]
+Loading weights:  23%|██▎       | 78/339 [00:00<00:01, 254.42it/s]
+Loading weights:  33%|███▎      | 112/339 [00:00<00:00, 283.73it/s]
+Loading weights:  46%|████▌     | 155/339 [00:00<00:00, 331.36it/s]
+Loading weights:  58%|█████▊    | 196/339 [00:00<00:00, 352.98it/s]
+Loading weights:  69%|██████▊   | 233/339 [00:00<00:00, 348.46it/s]
+Loading weights:  79%|███████▉  | 269/339 [00:00<00:00, 351.80it/s]
+Loading weights:  92%|█████████▏| 312/339 [00:00<00:00, 373.75it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 320.52it/s]
+
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.06s/it]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.06s/it]
+
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   5%|▌         | 1/19 [00:22<06:45, 22.54s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:22<00:36,  2.79s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:39<00:36,  2.79s/it]
+Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 9/19 [00:42<00:43,  4.37s/it]
+Capturing CUDA graphs (PIECEWISE):  74%|███████▎  | 14/19 [00:42<00:10,  2.17s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  1.27s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  2.23s/it]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  50%|█████     | 1/2 [00:38<00:38, 38.42s/it]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:38<00:00, 19.22s/it]
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  26%|██▋       | 5/19 [00:00<00:00, 44.90it/s]
+Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 10/19 [00:00<00:00, 45.54it/s]
+Capturing CUDA graphs (PIECEWISE):  79%|███████▉  | 15/19 [00:00<00:00, 46.23it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:00<00:00, 46.54it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/11 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  64%|██████▎   | 7/11 [00:00<00:00, 60.73it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<00:00, 62.05it/s]
+[11-14 13:35:09] HEARTBEAT starting
+[11-14 13:40:10] HEARTBEAT starting
+[11-14 13:45:10] HEARTBEAT starting
+[11-14 13:48:52] comparison step 1: length stops 10/64, mixed unmasked groups 5/8, generation 284.3s, update 696.2s, card peak 78.7 GiB, utilization 99.8%
+[11-14 13:48:52] step 1/10 epoch 0.01 loss 0.0160 lr 0.00e+00 s/step 1122.9 eta 2.81h peakGPU 76.4GiB
+{'loss': '0.01599', 'grad_norm': '0.01449', 'learning_rate': '0', 'num_tokens': '4.317e+05', 'completions/mean_length': '6639', 'completions/min_length': '701', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1562', 'completions/mean_terminated_length': '4835', 'completions/min_terminated_length': '701', 'completions/max_terminated_length': '1.509e+04', 'rewards/final_answer/mean': '0.5156', 'rewards/final_answer/std': '0.5037', 'reward': '0.5156', 'reward_std': '0.5037', 'frac_reward_zero_std': '0.25', 'comparison/completion_tokens': '4.249e+05', 'comparison/completions': '64', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '6', 'comparison/length_stop_frac': '0.1562', 'comparison/length_stops': '10', 'comparison/loss_masked': '10', 'comparison/loss_masked_frac': '0.1562', 'comparison/mean_completion_tokens': '6639', 'comparison/mixed_unmasked_reward_groups': '5', 'reward/correct_frac': '0.5156', 'reward/no_answer_frac': '0.1406', 'reward/wrong_frac': '0.3438', 'sampling/sampling_logp_difference/mean': '0.02416', 'sampling/sampling_logp_difference/max': '3.128', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9998', 'sampling/importance_sampling_ratio/max': '2.889', 'entropy': '0.3176', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '2.349e-06', 'clip_ratio/region_mean': '2.349e-06', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '8.896e-06', 'step_time': '1047', 'epoch': '0.005181', 'comparison/step_seconds': '1123', 'comparison/generation_seconds': '284.3', 'comparison/rollout_other_seconds': '142.3', 'comparison/update_seconds': '696.2', 'comparison/gpu_step_samples': 1102, 'comparison/gpu_step_peak_used_gib': '78.68', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.8', 'comparison/gpu_generation_samples': 278, 'comparison/gpu_generation_peak_used_gib': '57.41', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': 100, 'comparison/gpu_rollout_other_samples': 139, 'comparison/gpu_rollout_other_peak_used_gib': '64.48', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '98.57', 'comparison/gpu_update_samples': 685, 'comparison/gpu_update_peak_used_gib': '78.68', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.98'}
+[11-14 13:50:11] HEARTBEAT 1
