@@ -41,8 +41,8 @@
   "started": "2026-11-14T00:40:23.765484",
   "code": "944c77e5a0b3",
   "host": "p1-r1-step30-comp@63de1296d769",
-  "heartbeat": "2026-11-14T01:45:37.283415",
-  "heartbeat_ts": 1794620737.283427
+  "heartbeat": "2026-11-14T02:20:44.306000",
+  "heartbeat_ts": 1794622844.3060129
  },
  "eval__run__qfft_ds_v93__full": {
   "stage": "eval:run:qfft_ds_v93:full",
