@@ -159,3 +159,26 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:39<
 [11-14 19:54:27] token_mask: 177/267 new generations, 1098 output tok/s
 [11-14 19:55:43] token_mask: 187/267 new generations, 1179 output tok/s
 [11-14 19:56:43] token_mask: 198/267 new generations, 1299 output tok/s
+[11-14 19:56:59] token_mask: 200/267 new generations, 1309 output tok/s
+[11-14 19:58:24] token_mask: 209/267 new generations, 1341 output tok/s
+[11-14 19:59:25] token_mask: 216/267 new generations, 1382 output tok/s
+[11-14 20:00:31] token_mask: 223/267 new generations, 1428 output tok/s
+[report] pushed to colab-reports: colab p1-1114-192550: progress
+[11-14 20:01:53] token_mask: 230/267 new generations, 1454 output tok/s
+[11-14 20:02:58] token_mask: 236/267 new generations, 1506 output tok/s
+[11-14 20:03:58] token_mask: 246/267 new generations, 1619 output tok/s
+[11-14 20:05:16] token_mask: 254/267 new generations, 1664 output tok/s
+[11-14 20:06:20] token_mask: 263/267 new generations, 1735 output tok/s
+[11-14 20:08:14] token_mask: 266/267 new generations, 1681 output tok/s
+[11-14 20:08:29] token_mask: 267 new generations, 3,498,860 output tokens in 2076 s (1685 tok/s; engine start 134 s)
+[11-14 20:08:29] token_mask: generation complete for r1_competition_2026
+(MainProcess pid=5105) INFO 11-14 12:08:29 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=5692) INFO 11-14 12:08:29 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=5692) INFO 11-14 12:08:29 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=5692) INFO 11-14 12:08:29 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=5692) INFO 11-14 12:08:29 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-14 12:08:35] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --bench-dir /content/mydrive/projects/project1/v93/data/r1_competition_2026 --require-gradable --evals-root /content/mydrive/runs/project1/v93/r1_competition_2026 --tags r1,sequence_mask,token_mask --compare token_mask:sequence_mask --compare token_mask:r1 --compare sequence_mask:r1 | log: /content/mydrive/runs/project1/v93/logs/20261114-120835_score_r1_competition_2026.log
+[11-14 20:08:39] r1/r1_competition_2026: mean@n=0.294 CI=[0.2033898305084746, 0.3919491525423729] tokens=10760 trunc=0.042
+[11-14 20:08:41] sequence_mask/r1_competition_2026: mean@n=0.301 CI=[0.2097457627118644, 0.3983050847457627] tokens=10399 trunc=0.032
+[11-14 20:08:42] token_mask/r1_competition_2026: mean@n=0.303 CI=[0.211864406779661, 0.3983050847457627] tokens=8656 trunc=0.032
+[11-14 20:08:42] Wrote /content/mydrive/runs/project1/v93/r1_competition_2026/results.md

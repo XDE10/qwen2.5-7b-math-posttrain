@@ -1,0 +1,4 @@
+[11-14 20:08:39] r1/r1_competition_2026: mean@n=0.294 CI=[0.2033898305084746, 0.3919491525423729] tokens=10760 trunc=0.042
+[11-14 20:08:41] sequence_mask/r1_competition_2026: mean@n=0.301 CI=[0.2097457627118644, 0.3983050847457627] tokens=10399 trunc=0.032
+[11-14 20:08:42] token_mask/r1_competition_2026: mean@n=0.303 CI=[0.211864406779661, 0.3983050847457627] tokens=8656 trunc=0.032
+[11-14 20:08:42] Wrote /content/mydrive/runs/project1/v93/r1_competition_2026/results.md
