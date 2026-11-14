@@ -1,0 +1,5 @@
+[11-14 19:29:41] rclone copy (61 s): 2026/11/14 11:29:41 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 99.712 MiB/s, ETA 0s
+[11-14 19:29:41] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 61 s
+[11-14 19:29:54] r1/r1_competition_2026: 472 generations planned, 472 already saved
+[11-14 19:29:54] Nothing to generate; all requested generations exist
+[11-14 19:29:55] r1: generation complete for r1_competition_2026

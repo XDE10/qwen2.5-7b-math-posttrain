@@ -182,11 +182,11 @@
  "r1-competition-2026": {
   "stage": "r1-competition-2026",
   "state": "running",
-  "started": "2026-11-14T09:13:21.342721",
+  "started": "2026-11-14T11:26:55.493520",
   "code": "22258ad1408f",
-  "host": "p1-r1-comp26@231c1ed5bf93",
-  "heartbeat": "2026-11-14T10:53:31.367873",
-  "heartbeat_ts": 1794653611.3678863
+  "host": "p1-1114-192550@c014701a40b9",
+  "heartbeat": "2026-11-14T11:56:59.025176",
+  "heartbeat_ts": 1794657419.0251887
  },
  "r1-grpo-dev": {
   "stage": "r1-grpo-dev",

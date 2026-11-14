@@ -1,4 +1,4 @@
-# v93 status (2026-11-14T10:50:57, session p1-r1-comp26)
+# v93 status (2026-11-14T11:56:55, session p1-1114-192550)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -21,7 +21,7 @@ stage grpo:smoke_grpo_qfft_r1_fallback_8k           complete  0.331
 stage models:base,qwen_math,qfft_official,sft_repro complete  0.173 
 stage pilot                                         failed     ValueError: Unknown stage 'pilot'
 stage ping:30                                       complete  0.008 
-stage r1-competition-2026                           running   on p1-r1-comp26@231c1ed5bf93, heartbeat 3 min ago 
+stage r1-competition-2026                           running   on p1-1114-192550@c014701a40b9, heartbeat 0 min ago 
 stage r1-grpo-dev                                   complete  0.601 
 stage r1-grpo-dev:step30                            complete  0.327 
 stage r1-is-diagnostic                              complete  0.243 
@@ -30,7 +30,7 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 2795 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 2861 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run compare_grpo_qfft_r1_12k_v93 complete step 2/ updated 2026-11-13T18:23:41+08:00
 run compare_grpo_qfft_r1_16k_v93 complete step 2/ updated 2026-11-13T16:18:56+08:00

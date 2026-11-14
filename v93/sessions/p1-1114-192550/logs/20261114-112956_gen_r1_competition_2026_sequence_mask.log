@@ -1,0 +1,5 @@
+[11-14 19:30:38] rclone copy (42 s): 2026/11/14 11:30:38 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 289.803 MiB/s, ETA 0s
+[11-14 19:30:38] Downloaded /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_16k_pilot_v93/merged in 42 s
+[11-14 19:30:48] sequence_mask/r1_competition_2026: 472 generations planned, 472 already saved
+[11-14 19:30:48] Nothing to generate; all requested generations exist
+[11-14 19:30:49] sequence_mask: generation complete for r1_competition_2026
