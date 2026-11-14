@@ -131,8 +131,8 @@
   "started": "2026-11-14T05:25:07.690827",
   "code": "6b9323a23e5b",
   "host": "p1-r1-tokenmask10@90b3d945fe47",
-  "heartbeat": "2026-11-14T07:05:14.691737",
-  "heartbeat_ts": 1794639914.691751
+  "heartbeat": "2026-11-14T07:35:15.358666",
+  "heartbeat_ts": 1794641715.3586807
  },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
