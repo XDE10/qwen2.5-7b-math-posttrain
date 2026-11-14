@@ -1,0 +1,214 @@
+P1_SESSION=p1-r1-is-diagnostic gpu=G4 auto_release=1
+/tmp/ipykernel_2171/3234040916.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 0171f48fe026 (git cf8a805f7dbc); stages: ['r1-is-diagnostic']
+[11-14 05:00:46] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-14 05:00:46] ===== STAGE r1-is-diagnostic =====
+[11-14 05:00:47] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-14 05:00:47] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-14 05:00:48] Restoring rl venv from Drive snapshot rl-366e0de0b57e.tar
+[11-14 05:03:49] RUN /content/p1/venvs/rl/bin/python -m experiments.qfft_v93.grpo_is_diagnostic capture | log: /content/mydrive/runs/project1/v93/logs/20261114-050349_r1_is_diagnostic.log
+[11-14 13:04:17] RL pool: {'files': ['/content/mydrive/runs/project1/rl_approved_v8_n4/project1_rl_rollout_approved_v1.jsonl', '/content/mydrive/runs/project1/E0_dev_v9_20261025_065200/hard_candidates_e0_0of4.jsonl'], 'unique_questions': 1555, 'approval_manifest': 'grpo/r1_pool_approval.json', 'removed_benchmark_similar': 4, 'comparison_sample_ids': ['math/train/05084', 'math/train/02269', 'math/train/01851', 'math/train/06835', 'math/train/00588', 'math/train/02175', 'math/train/06058', 'math/train/07310', 'math/train/03147', 'math/train/04510', 'math/train/02890', 'math/train/02049', 'math/train/02597', 'math/train/01988', 'math/train/02021', 'math/train/02188'], 'comparison_sample_ids_sha256': 'efe35bafe79db53c48ab37d82b1260f64dd94882a8044c5059c765a42cd8f18d', 'comparison_source_counts': {'project1_rl_rollout_approved_v1.jsonl': 8, 'hard_candidates_e0_0of4.jsonl': 8}, 'overlap_with_sft_questions': 0, 'final_questions': 16}
+[11-14 13:05:25] rclone copy (68 s): 2026/11/14 05:05:25 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 94.556 MiB/s, ETA 0s
+[11-14 13:05:25] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 68 s
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<01:30,  3.75it/s]
+Loading weights:   7%|▋         | 24/339 [00:00<00:03, 82.47it/s]
+Loading weights:  12%|█▏        | 42/339 [00:00<00:02, 111.14it/s]
+Loading weights:  19%|█▉        | 66/339 [00:00<00:01, 144.98it/s]
+Loading weights:  27%|██▋       | 90/339 [00:00<00:01, 166.10it/s]
+Loading weights:  33%|███▎      | 112/339 [00:00<00:01, 181.79it/s]
+Loading weights:  40%|████      | 137/339 [00:00<00:01, 193.15it/s]
+Loading weights:  47%|████▋     | 160/339 [00:01<00:00, 202.25it/s]
+Loading weights:  54%|█████▍    | 184/339 [00:01<00:00, 205.39it/s]
+Loading weights:  61%|██████    | 207/339 [00:01<00:00, 204.00it/s]
+Loading weights:  68%|██████▊   | 232/339 [00:01<00:00, 198.64it/s]
+Loading weights:  76%|███████▌  | 257/339 [00:01<00:00, 195.93it/s]
+Loading weights:  83%|████████▎ | 282/339 [00:01<00:00, 202.10it/s]
+Loading weights:  90%|█████████ | 306/339 [00:01<00:00, 204.35it/s]
+Loading weights:  97%|█████████▋| 329/339 [00:01<00:00, 202.40it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 181.31it/s]
+
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.04s/it]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.04s/it]
+
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   5%|▌         | 1/19 [00:22<06:53, 22.98s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:23<00:36,  2.84s/it]
+Capturing CUDA graphs (PIECEWISE):  32%|███▏      | 6/19 [00:39<00:36,  2.84s/it]
+Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 9/19 [00:42<00:44,  4.43s/it]
+Capturing CUDA graphs (PIECEWISE):  74%|███████▎  | 14/19 [00:42<00:11,  2.20s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  1.29s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:42<00:00,  2.26s/it]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  50%|█████     | 1/2 [00:38<00:38, 38.88s/it]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:38<00:00, 19.45s/it]
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/19 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  26%|██▋       | 5/19 [00:00<00:00, 44.41it/s]
+Capturing CUDA graphs (PIECEWISE):  53%|█████▎    | 10/19 [00:00<00:00, 45.09it/s]
+Capturing CUDA graphs (PIECEWISE):  79%|███████▉  | 15/19 [00:00<00:00, 45.83it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 19/19 [00:00<00:00, 46.21it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/11 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  64%|██████▎   | 7/11 [00:00<00:00, 60.59it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 11/11 [00:00<00:00, 61.90it/s]
+[11-14 13:15:17] rclone copyto (9 s): 2026/11/14 05:15:17 NOTICE:    22.813 MiB / 22.813 MiB, 100%, 7.603 MiB/s, ETA 0s
+[11-14 13:15:17] r1_is_diagnostic: saved 64 completions to /content/mydrive/runs/project1/v93/runs/r1_is_diagnostic/logprobs.jsonl
+{
+  "completions": 64,
+  "upper": 3.0,
+  "missing_sampling_logps_on_loss_tokens": 0,
+  "modes": {
+    "sequence_mask": {
+      "all": {
+        "completions": 64,
+        "loss_tokens": 344325,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 220535,
+        "weighted_nonzero_advantage_tokens": 220535,
+        "is_weight_sum": 15378.494366466291,
+        "absolute_advantage_weight_sum": 4134.076251390961
+      },
+      "length/8K+": {
+        "completions": 25,
+        "loss_tokens": 219186,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 116179,
+        "weighted_nonzero_advantage_tokens": 116179,
+        "is_weight_sum": 0.004593969017095606,
+        "absolute_advantage_weight_sum": 0.0005740003008275226
+      },
+      "reward/wrong": {
+        "completions": 32,
+        "loss_tokens": 266163,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 142373,
+        "weighted_nonzero_advantage_tokens": 142373,
+        "is_weight_sum": 2410.8273058367686,
+        "absolute_advantage_weight_sum": 886.5731344890638
+      },
+      "length/<4K": {
+        "completions": 26,
+        "loss_tokens": 48069,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 46020,
+        "weighted_nonzero_advantage_tokens": 46020,
+        "is_weight_sum": 15335.593264307827,
+        "absolute_advantage_weight_sum": 4128.787627556827
+      },
+      "reward/correct": {
+        "completions": 25,
+        "loss_tokens": 78162,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 78162,
+        "weighted_nonzero_advantage_tokens": 78162,
+        "is_weight_sum": 12967.667060629523,
+        "absolute_advantage_weight_sum": 3247.5031169018985
+      },
+      "length/4K–8K": {
+        "completions": 13,
+        "loss_tokens": 77070,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 58336,
+        "weighted_nonzero_advantage_tokens": 58336,
+        "is_weight_sum": 42.89650818944756,
+        "absolute_advantage_weight_sum": 5.288049833834464
+      },
+      "reward/no_answer": {
+        "completions": 7,
+        "loss_tokens": 0,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 0,
+        "weighted_nonzero_advantage_tokens": 0,
+        "is_weight_sum": 0.0,
+        "absolute_advantage_weight_sum": 0.0
+      }
+    },
+    "token_mask": {
+      "all": {
+        "completions": 64,
+        "loss_tokens": 344325,
+        "zero_weight_tokens": 22,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 220535,
+        "weighted_nonzero_advantage_tokens": 220520,
+        "is_weight_sum": 344246.04901123047,
+        "absolute_advantage_weight_sum": 73098.23626708984
+      },
+      "length/8K+": {
+        "completions": 25,
+        "loss_tokens": 219186,
+        "zero_weight_tokens": 18,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 116179,
+        "weighted_nonzero_advantage_tokens": 116167,
+        "is_weight_sum": 219107.5615234375,
+        "absolute_advantage_weight_sum": 35429.29052734375
+      },
+      "reward/wrong": {
+        "completions": 32,
+        "loss_tokens": 266163,
+        "zero_weight_tokens": 18,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 142373,
+        "weighted_nonzero_advantage_tokens": 142362,
+        "is_weight_sum": 266088.6862792969,
+        "absolute_advantage_weight_sum": 46311.82660675049
+      },
+      "length/<4K": {
+        "completions": 26,
+        "loss_tokens": 48069,
+        "zero_weight_tokens": 2,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 46020,
+        "weighted_nonzero_advantage_tokens": 46018,
+        "is_weight_sum": 48066.14569091797,
+        "absolute_advantage_weight_sum": 15678.320495605469
+      },
+      "reward/correct": {
+        "completions": 25,
+        "loss_tokens": 78162,
+        "zero_weight_tokens": 4,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 78162,
+        "weighted_nonzero_advantage_tokens": 78158,
+        "is_weight_sum": 78157.3627319336,
+        "absolute_advantage_weight_sum": 26786.409660339355
+      },
+      "length/4K–8K": {
+        "completions": 13,
+        "loss_tokens": 77070,
+        "zero_weight_tokens": 2,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 58336,
+        "weighted_nonzero_advantage_tokens": 58335,
+        "is_weight_sum": 77072.341796875,
+        "absolute_advantage_weight_sum": 21990.625244140625
+      },
+      "reward/no_answer": {
+        "completions": 7,
+        "loss_tokens": 0,
+        "zero_weight_tokens": 0,
+        "zero_weight_completions": 0,
+        "nonzero_advantage_tokens": 0,
+        "weighted_nonzero_advantage_tokens": 0,
+        "is_weight_sum": 0.0,
+        "absolute_advantage_weight_sum": 0.0
+      }
+    }
+  }
+}

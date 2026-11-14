@@ -188,6 +188,15 @@
   "code": "217f95dfe7d1",
   "host": "p1-r1-16k-step30@bafe0dcab6ba"
  },
+ "r1-is-diagnostic": {
+  "stage": "r1-is-diagnostic",
+  "state": "complete",
+  "hours": 0.243,
+  "finished": "2026-11-14T05:15:22.867846",
+  "started": "2026-11-14T05:00:46.935341",
+  "code": "0171f48fe026",
+  "host": "p1-r1-is-diagnostic@526b4586ab8d"
+ },
  "smoke-eval": {
   "stage": "smoke-eval",
   "state": "complete",
