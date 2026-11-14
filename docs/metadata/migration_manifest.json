@@ -964,11 +964,11 @@
       "source_sha256": "1e063890e13d78b7489b5f10808f4d345836acfeb7e74c91d3106baf32fb17e8"
     },
     {
-      "bytes": 16918,
+      "bytes": 16927,
       "note": "size synced 2026-11-08 doc update",
       "path": "AGENTS.md",
-      "refactor_note": "2026-11-13 同步 R1 GRPO 题池和冒烟",
-      "sha256": "58895936942cbb867ebfaa9aae81c2c3bbbbc10785bdc9ae34ff2e8800681675"
+      "refactor_note": "2026-11-14 记录 16K GRPO 第 30 步、竞赛评测及掉分诊断",
+      "sha256": "cd948c438805160f984bcde33396b5f98f21a8d0937b93055632c8bb54e39c84"
     },
     {
       "bytes": 4434,
@@ -28754,11 +28754,11 @@
       "sha256": "0e79e256eaa03a10ad7f6624e2e7a7db3e1ee2b52ac98e96c03831697e5c6d23"
     },
     {
-      "bytes": 21090,
+      "bytes": 27017,
       "changed_for_portability": false,
       "path": "docs/status/current_status.md",
-      "refactor_note": "2026-11-13 记录 R1 GRPO 8K / 16K 生成长度对照",
-      "sha256": "f3417d3737a62805428afe4d50418b48985e95f3f0eb00cc51d16fe500fbbdc1"
+      "refactor_note": "2026-11-14 记录 16K GRPO 第 30 步、竞赛评测及掉分诊断",
+      "sha256": "468f3df2004b930227fc84112720edf31d1fd584aaacc837acb14d268d31e129"
     },
     {
       "bytes": 87855,

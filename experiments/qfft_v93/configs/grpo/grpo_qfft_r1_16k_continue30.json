@@ -1,0 +1,11 @@
+{
+  "base": "grpo_qfft_r1_16k_pilot.json",
+  "run_name": "grpo_qfft_r1_16k_continue30_v93",
+  "max_steps": 30,
+  "extend_from": {
+    "config": "grpo/grpo_qfft_r1_16k_pilot.json",
+    "code_bundle": "549f4e44e789",
+    "approval_sha256": "d4cbcf67c89c9b50ed65d382e8a578ddee1decda3f7f99cf3f5eee621b515e33"
+  },
+  "note": "Authorized 16K extension from the verified pilot step 10 to step 30. Keep the original optimizer and constant post-warmup learning rate."
+}

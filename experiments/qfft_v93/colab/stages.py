@@ -13,6 +13,7 @@ Stages (all idempotent; re-running resumes or skips completed work):
     eval:<model>[:<suite>]      generate + score, e.g. eval:base:full, eval:run:qfft_ds_v93:full
     grpo:<config>               LoRA-GRPO + merge, e.g. grpo:grpo_qfft_ds (configs/grpo/<config>.json)
     grpo:<config>:pause-after=<step> / grpo:<config>:resume   verify a full checkpoint across VMs
+    r1-grpo-dev[:step30]        paired development evaluation of R1 and the 16K run
     score[:<tags>]              re-score saved generations and rebuild results.md
     analyze:<tags>[:<grpo_runs>] figures into Drive runs/project1/v93/figures
     status                      print stage markers, run progress, eval completeness and results.md
@@ -548,6 +549,25 @@ def _dispatch(ctx: Context, stage: str) -> None:
             raise ValueError(f'Unknown GRPO operation: {operation}')
         gpu_banner()
         ctx.run(ctx.py_module('rl', m + 'grpo', '--config', f'grpo/{config}.json', *extra), f'grpo_{config}')
+    elif kind == 'r1-grpo-dev':
+        from experiments.qfft_v93.common import load_config, sha256_file
+        gpu_banner()
+        bench_dir = PROJECT / 'data/r1_grpo_dev'
+        dev = load_config('grpo/r1_dev.json')
+        if sha256_file(bench_dir / 'r1_grpo_dev.jsonl') != dev['sha256']:
+            raise RuntimeError('R1 GRPO development set does not match its frozen fingerprint')
+        out = DRIVE / 'runs/project1/v93/grpo_dev'
+        tag = rest or 'pilot'
+        if tag not in ('pilot', 'step30'):
+            raise ValueError(f'Unknown R1 development evaluation target: {tag}')
+        for eval_tag in ('r1', tag):
+            model = dev['models'][eval_tag]
+            ctx.run(ctx.py_module('infer', m + 'generate', '--model', model, '--tag', eval_tag,
+                                  '--suite', 'r1_grpo_dev', '--bench-dir', str(bench_dir),
+                                  '--evals-root', str(out)), f'gen_r1_dev_{eval_tag}')
+        ctx.run(ctx.py_module('infer', m + 'score', '--bench-dir', str(bench_dir), '--require-gradable',
+                              '--evals-root', str(out), '--tags', f'r1,{tag}', '--compare', f'{tag}:r1'),
+                'score_r1_grpo_dev')
     elif kind == 'score':
         args = ['--tags', rest] if rest else []
         ctx.run(ctx.py_module('score', m + 'score', *args), 'score')

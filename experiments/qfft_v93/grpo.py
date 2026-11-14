@@ -25,7 +25,7 @@ from pathlib import Path
 from experiments.qfft_v93 import decontam, drive_io
 from experiments.qfft_v93.checkpointing import CheckpointMirror, read_state, resolve_resume
 from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, JsonlAppender, drive_layout, gpu_profile,
-                                         load_config, local_root, log, now_iso, read_json, read_jsonl, sha256_json,
+                                         load_config, local_root, log, now_iso, read_json, read_jsonl, sha256_file, sha256_json,
                                          write_json)
 from experiments.qfft_v93.formats import messages
 from experiments.qfft_v93.grading import Grader, last_box_without_final_tag
@@ -116,7 +116,7 @@ class RolloutDiagnostics:
             raise ValueError('Rollout diagnostics require single-process colocated vLLM')
         self.journal = journal
         self.comparison_ids = comparison_ids
-        self.num_generations = trainer.num_generations if comparison_ids is not None else None
+        self.num_generations = getattr(trainer, 'num_generations', None)
         self.eos_and_pad = {*trainer.eos_token_ids, trainer._tokenizer.pad_token_id}
         self.batches = []
         llm = trainer.vllm_generation.llm
@@ -150,14 +150,18 @@ class RolloutDiagnostics:
                 'reward_status': grade['status'], 'reward_how': grade.get('how'),
             }
             self.journal.write(row)
-            if self.comparison_ids is not None:
+            if self.num_generations:
                 diagnostics.append(row)
-        if self.comparison_ids is None:
+        if not self.num_generations:
             return {}
         size = self.num_generations
-        groups_per_step = len(self.comparison_ids) // 2
-        expected = self.comparison_ids[step * groups_per_step:(step + 1) * groups_per_step]
-        if sample_ids != [sid for sid in expected for _ in range(size)] or not expected:
+        group_ids = sample_ids[::size]
+        if self.comparison_ids is not None:
+            groups_per_step = len(self.comparison_ids) // 2
+            expected = self.comparison_ids[step * groups_per_step:(step + 1) * groups_per_step]
+            if group_ids != expected:
+                raise RuntimeError(f'Unexpected prompt groups in comparison rollout at step {step + 1}')
+        if sample_ids != [sid for sid in group_ids for _ in range(size)] or not group_ids:
             raise RuntimeError(f'Unexpected prompt groups in comparison rollout at step {step + 1}')
         mixed_unmasked = with_signal = 0
         for start in range(0, len(diagnostics), size):
@@ -170,7 +174,7 @@ class RolloutDiagnostics:
         masked = sum(row['trl_clipped'] for row in diagnostics)
         tokens = sum(row['tokens'] for row in diagnostics)
         return {
-            'completions': len(diagnostics), 'groups': len(expected),
+            'completions': len(diagnostics), 'groups': len(group_ids),
             'length_stops': length_stops, 'length_stop_frac': length_stops / len(diagnostics),
             'loss_masked': masked, 'loss_masked_frac': masked / len(diagnostics),
             'mixed_unmasked_reward_groups': mixed_unmasked, 'groups_with_reward_signal': with_signal,
@@ -181,14 +185,21 @@ class RolloutDiagnostics:
 class FinalAnswerReward:
     """Binary reward: 1 if the final answer segment matches the reference (grading.py policy)."""
 
-    def __init__(self, tokenizer, grader: Grader, journal: JsonlAppender, max_failure_rate: float = 0.05,
+    def __init__(self, tokenizer, grader: Grader, journal: JsonlAppender,
                  last_box_fallback: bool = False):
         self.__name__ = 'final_answer'
         self.tokenizer, self.grader, self.journal = tokenizer, grader, journal
-        self.max_failure_rate = max_failure_rate
         self.calls = 0
         self.diagnostics = None
         self.last_box_fallback = last_box_fallback
+
+    def _grade(self, items):
+        grades = self.grader.grade_many(items, strict=True)
+        failed = [i for i, grade in enumerate(grades) if grade['status'] in ('timeout', 'error')]
+        if failed:
+            for i, grade in zip(failed, self.grader.grade_many([items[i] for i in failed], strict=True), strict=True):
+                grades[i] = grade
+        return grades
 
     def __call__(self, prompts, completions, completion_ids=None, reference_answer=None, trainer_state=None, **kwargs):
         if completion_ids is not None:
@@ -196,7 +207,7 @@ class FinalAnswerReward:
             texts = [t.split('<|im_end|>')[0] for t in raw_texts]
         else:
             raw_texts = texts = [c[-1]['content'] if isinstance(c, list) else c for c in completions]
-        strict_grades = self.grader.grade_many(list(zip(texts, reference_answer)), strict=True)
+        strict_grades = self._grade(list(zip(texts, reference_answer, strict=True)))
         results = strict_grades.copy()
         if self.last_box_fallback:
             candidates = []
@@ -206,11 +217,10 @@ class FinalAnswerReward:
                     if text is not None:
                         candidates.append((index, text, reference_answer[index]))
             if candidates:
-                fallback_grades = self.grader.grade_many([(text, ref) for _, text, ref in candidates], strict=True)
+                fallback_grades = self._grade([(text, ref) for _, text, ref in candidates])
                 for (index, _, _), grade in zip(candidates, fallback_grades, strict=True):
                     results[index] = {**grade, 'how': 'last_box_fallback'}
         counts = Counter(r['status'] for r in results)
-        failures = counts['timeout'] + counts['error']
         self.calls += 1
         step = getattr(trainer_state, 'global_step', None)
         metrics = {}
@@ -218,9 +228,10 @@ class FinalAnswerReward:
             metrics = self.diagnostics.record(step, self.calls, kwargs['sample_id'], completion_ids, raw_texts,
                                               texts, reference_answer, strict_grades, results)
         self.journal.write({'step': step, 'call': self.calls, 'time': now_iso(), 'counts': dict(counts), **metrics})
-        if failures > self.max_failure_rate * len(results):
-            raise RuntimeError(f'Grader infrastructure failures {failures}/{len(results)}; aborting instead of '
-                               'turning them into wrong answers')
+        failures = {key: counts[key] for key in ('timeout', 'error', 'ref_unparsed', 'no_reference') if counts[key]}
+        if failures:
+            # TRL's DAPO token denominator is computed before rewards, including unscorable rows.
+            raise RuntimeError(f'GRPO batch could not be scored after retry: {failures}')
         log_metric = kwargs.get('log_metric')
         if callable(log_metric):
             for name, value in metrics.items():
@@ -276,6 +287,46 @@ def grpo_config(cfg: dict, out: Path, smoke: bool, max_steps: int | None):
     return GRPOConfig(**kwargs)
 
 
+def run_identity(cfg, pool, model_path, *, smoke, max_steps, merge_adapter):
+    from experiments.qfft_v93.models import TOKENIZER_FILES, MARK
+
+    model_files = {path.name: sha256_file(path) for path in sorted(model_path.iterdir())
+                   if path.is_file() and (path.name in {*TOKENIZER_FILES, MARK}
+                                          or path.suffix in ('.safetensors', '.bin')
+                                          or path.name.endswith('.index.json'))}
+    approval = cfg['pool'].get('approval_manifest')
+    return {
+        'run': cfg['run_name'], 'init_model': cfg['init_model'], 'model_files': model_files,
+        'code_bundle': os.environ.get('P1_CODE_SHA'),
+        'gpu_profile': None if smoke else gpu_profile().get('kind'),
+        'pool_sha256': sha256_json(pool), 'recipe_sha256': sha256_json(cfg),
+        'approval_sha256': sha256_file(CONFIG_DIR / approval) if approval else None,
+        'smoke': smoke, 'max_steps_override': max_steps, 'merge_adapter': merge_adapter,
+    }
+
+
+def extension_source(cfg, identity, runs_dir):
+    """Authenticate the completed source while allowing an explicit increase in the step budget."""
+    extension = cfg['extend_from']
+    source_cfg = load_config(extension['config'])
+    source_step = source_cfg['max_steps']
+    allowed = {'run_name', 'max_steps', 'note', 'extend_from'}
+    if ({k: v for k, v in cfg.items() if k not in allowed}
+            != {k: v for k, v in source_cfg.items() if k not in allowed}
+            or cfg['run_name'] == source_cfg['run_name']
+            or not source_cfg.get('mirror_optimizer_state')
+            or source_cfg['lr_scheduler_type'] != 'constant_with_warmup'
+            or not source_cfg['warmup_steps'] <= source_step < cfg['max_steps']):
+        raise RuntimeError('Extension must increase the step budget without changing the training recipe')
+    source = runs_dir / source_cfg['run_name']
+    source_identity = read_json(source / 'run_identity.json')['identity']
+    expected = {**identity, 'run': source_cfg['run_name'], 'recipe_sha256': sha256_json(source_cfg),
+                'code_bundle': extension['code_bundle'], 'approval_sha256': extension['approval_sha256']}
+    if source_identity != expected or read_json(source / 'GRPO_COMPLETE.json')['steps'] != source_step:
+        raise RuntimeError('Extension source identity or completed step does not match')
+    return source, source_step, sha256_json(source_identity)
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--config', required=True)
@@ -290,6 +341,9 @@ def main() -> None:
     p.add_argument('--require-resume', action='store_true', help='Require a complete checkpoint before training')
     a = p.parse_args()
     cfg = load_config(a.config)
+    extending = 'extend_from' in cfg
+    if extending and (a.max_steps is not None or a.pause_after is not None):
+        p.error('An extension uses the step budget recorded in its config')
     comparison_ids = cfg['pool'].get('comparison_sample_ids')
     completions_per_step = cfg['per_device_train_batch_size'] * cfg['gradient_accumulation_steps']
     if comparison_ids is not None and (
@@ -318,13 +372,12 @@ def main() -> None:
     else:
         from experiments.qfft_v93.models import ensure_local
         model_path = ensure_local(cfg['init_model'], layout)
-    if comparison_ids is not None:
+    if not a.smoke:
         model_context = read_json(model_path / 'config.json')['max_position_embeddings']
         if cfg['max_prompt_tokens'] + cfg['max_completion_length'] > model_context:
             p.error(f'Prompt plus completion budget exceeds the model window of {model_context} tokens')
     bench_dir = Path(a.bench_dir) if a.bench_dir else layout.data / 'benchmarks_v93'
     sft_questions = set()
-    init_identity = Path(model_path) / 'p1_model_identity.json'
     if a.pool:
         pool = [{'sample_id': r.get('sample_id', f'pool/{i:05d}'), 'question': r.get('problem') or r.get('question'),
                  'reference_answer': str(r.get('reference_answer', r.get('answer')))}
@@ -332,18 +385,28 @@ def main() -> None:
         pool_report = {'override': a.pool, 'final_questions': len(pool)}
     else:
         pool, pool_report = build_pool(cfg, layout, bench_dir, sft_questions)
-    write_json(drive_run / 'rl_pool_report.json', pool_report)
-    identity = {'run': run, 'init_model': cfg['init_model'], 'pool_sha256': sha256_json([r['sample_id'] for r in pool]),
-                'recipe': {k: v for k, v in cfg.items() if k not in ('run_name', 'pool', 'vllm', 'mirror_optimizer_state')},
-                'init_identity': read_json(init_identity) if init_identity.exists() else None,
-                'smoke': a.smoke, 'max_steps_override': a.max_steps}
+    identity = run_identity(cfg, pool, model_path, smoke=a.smoke, max_steps=a.max_steps, merge_adapter=merge_adapter)
+    if extending:
+        source, source_step, source_identity = extension_source(cfg, identity, layout.runs)
+        identity['extension'] = {'source_run': source.name, 'source_step': source_step,
+                                 'source_identity_sha256': source_identity}
     id_path = drive_run / 'run_identity.json'
     if id_path.exists() and read_json(id_path)['identity'] != identity:
         raise RuntimeError(f'{id_path} describes a different experiment; choose a new run_name')
+    if not id_path.exists() and (any(local_run.glob('checkpoint-*')) or (drive_run / 'ckpt_mirror').exists()):
+        raise RuntimeError(f'{id_path} is missing for a run with checkpoints')
+    write_json(drive_run / 'rl_pool_report.json', pool_report)
     write_json(id_path, {'identity': identity, 'updated': now_iso(), 'code_bundle': os.environ.get('P1_CODE_SHA')})
     resume = resolve_resume(local_run, drive_run)
-    if a.require_resume and resume is None:
+    if extending and resume is None:
+        resume = resolve_resume(local_run, source, exact_drive_step=source_step)
+    if (a.require_resume or extending) and resume is None:
         raise RuntimeError('No complete GRPO checkpoint is available for the requested resume')
+    if extending:
+        resumed_step = read_state(resume)['global_step']
+        if resumed_step < source_step:
+            raise RuntimeError('Extension checkpoint predates its declared source step')
+        log(f'{run}: extending from step {resumed_step} to {cfg["max_steps"]} with full training state')
     mirror = CheckpointMirror(local_run, drive_run, every=1, keep=cfg.get('mirror_keep', 3),
                               watch_path=str(local_root()), min_free_gib=8, mirror_final=True,
                               mirror_optimizer_state=cfg.get('mirror_optimizer_state', False))
@@ -358,11 +421,11 @@ def main() -> None:
     from transformers import AutoTokenizer
     from trl import GRPOTrainer
     tok = AutoTokenizer.from_pretrained(model_path)
-    if comparison_ids is not None:
+    if not a.smoke:
         lengths = [len(tok.apply_chat_template(messages(row['question']), add_generation_prompt=True,
                                                tokenize=True, return_dict=False)) for row in pool]
         if max(lengths) > cfg['max_prompt_tokens']:
-            raise ValueError(f'Longest comparison prompt is {max(lengths)} tokens, above the configured prompt budget')
+            raise ValueError(f'Longest GRPO prompt is {max(lengths)} tokens, above the configured prompt budget')
     dataset = Dataset.from_list([{'prompt': messages(r['question']), 'reference_answer': r['reference_answer'],
                                   'sample_id': r['sample_id']} for r in pool])
     args = grpo_config(cfg, local_run, a.smoke, a.max_steps)
@@ -374,7 +437,7 @@ def main() -> None:
     journal = JsonlAppender(local_run / 'reward_status.jsonl', mirror=drive_run / 'reward_status.jsonl')
     callbacks = [ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror]
     comparison = None
-    if comparison_ids is not None:
+    if comparison_ids is not None or cfg.get('measure_gpu'):
         from experiments.qfft_v93.grpo_telemetry import ComparisonTelemetry
         comparison = ComparisonTelemetry()
         callbacks.insert(0, comparison)
@@ -431,9 +494,13 @@ def main() -> None:
         trainer.save_model(str(adapter_local))
         tok.save_pretrained(str(adapter_local))
         mirror.wait()
+        if cfg.get('mirror_optimizer_state') and not mirror.has_full_mirror(trainer.state.global_step):
+            raise RuntimeError(f'Final full checkpoint mirror could not be confirmed: {mirror.error}')
     drive_io.upload_tree(adapter_local, drive_run / 'adapter', watch_path=str(local_root()))
     summary = {'steps': trainer.state.global_step, 'resumed_from': resume, 'adapter': str(drive_run / 'adapter'),
                'wall_hours_this_session': round((time.monotonic() - started) / 3600, 3), 'completed': now_iso()}
+    if extending:
+        summary['extension'] = identity['extension']
     write_json(drive_run / 'GRPO_COMPLETE.json', summary)
     write_json(drive_run / 'status.json', {'state': 'complete', **summary})
     swan.finish()

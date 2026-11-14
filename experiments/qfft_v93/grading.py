@@ -21,7 +21,7 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-GRADER_VERSION = 'v93-final-segment-last-box/math-verify-0.9.0'
+GRADER_VERSION = 'v93-final-segment-last-box/math-verify-0.9.0-timeout-status'
 _BOX = re.compile(r'\\(?:boxed|fbox)\s*\{')
 
 
@@ -95,10 +95,10 @@ def _timeout(seconds: float) -> int:
 
 def _parse_gold(mv, reference: str, t: float):
     gold = mv.parse('\\boxed{' + reference + '}', extraction_config=[mv.LatexExtractionConfig()],
-                    parsing_timeout=t)
+                    parsing_timeout=t, raise_on_error=True)
     if not gold:
         gold = mv.parse(reference, extraction_config=[mv.LatexExtractionConfig(), mv.ExprExtractionConfig()],
-                        parsing_timeout=t)
+                        parsing_timeout=t, raise_on_error=True)
     return gold
 
 
@@ -109,7 +109,11 @@ def grade_text(text: str, reference, inner_timeout: float = 5.0, strict: bool = 
     ref = clean_reference(reference)
     if not ref:
         return {'status': 'no_reference'}
-    gold = _parse_gold(mv, ref, t)
+    from math_verify.errors import TimeoutException
+    try:
+        gold = _parse_gold(mv, ref, t)
+    except TimeoutException:
+        return {'status': 'timeout', 'how': 'reference_timeout'}
     if not gold:
         return {'status': 'ref_unparsed'}
     segment = final_segment(text or '', strict=strict)
@@ -123,22 +127,32 @@ def grade_text(text: str, reference, inner_timeout: float = 5.0, strict: bool = 
             if len(distinct) > 1:
                 candidates.append(', '.join(distinct))
         predictions = [mv.parse('\\boxed{' + c + '}', extraction_config=[mv.LatexExtractionConfig()],
-                                parsing_timeout=t) for c in candidates]
+                                parsing_timeout=t, raise_on_error=True) for c in candidates]
         how, shown = 'last_box', boxes[-1]
     elif strict:
         return {'status': 'no_answer', 'how': 'missing_box', 'pred': None}
     else:
         tail = segment[-3000:]
         predictions = [mv.parse(tail, extraction_config=[mv.LatexExtractionConfig(boxed_match_priority=0),
-                                                         mv.ExprExtractionConfig()], parsing_timeout=t)]
+                                                         mv.ExprExtractionConfig()], parsing_timeout=t, raise_on_error=True)]
         how, shown = 'no_box_fallback', None
     predictions = [p for p in predictions if p]
     if not predictions:
         return {'status': 'no_answer', 'how': how, 'pred': shown}
     if shown is None:
         shown = str(predictions[0][-1])[:200]
-    ok = any(mv.verify(gold, p, timeout_seconds=t) for p in predictions)
-    return {'status': 'correct' if ok else 'wrong', 'how': how, 'pred': shown[:500]}
+    failure = None
+    for prediction in predictions:
+        try:
+            if mv.verify(gold, prediction, timeout_seconds=t, raise_on_error=True):
+                return {'status': 'correct', 'how': how, 'pred': shown[:500]}
+        except TimeoutException:
+            failure = {'status': 'timeout', 'how': 'comparison_timeout'}
+        except Exception as error:
+            failure = {'status': 'error', 'error': f'{type(error).__name__}: {error}'[:300]}
+    if failure:
+        return failure
+    return {'status': 'wrong', 'how': how, 'pred': shown[:500]}
 
 
 def equivalent(a: str, b: str, inner_timeout: float = 5.0) -> bool:
@@ -166,8 +180,12 @@ def _ping():
 def _grade_task(args):
     text, reference, inner, *rest = args
     strict = rest[0] if rest else False
+    _math_verify()
+    from math_verify.errors import TimeoutException
     try:
         return grade_text(text, reference, inner, strict=strict)
+    except TimeoutException:
+        return {'status': 'timeout', 'how': 'parse_timeout'}
     except Exception as error:  # surfaced to the caller as an infrastructure status
         return {'status': 'error', 'error': f'{type(error).__name__}: {error}'[:300]}
 

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from experiments.qfft_v93.common import load_config, read_json, read_jsonl, write_jsonl
+from experiments.qfft_v93.common import CONFIG_DIR, load_config, read_json, read_jsonl, sha256_file, write_json, write_jsonl
 
 
 def test_r1_grpo_mirrors_full_training_state_without_changing_smoke_reward():
@@ -33,6 +33,7 @@ def test_grpo_cpu_resumes_full_mirror_on_an_empty_vm(tmp_path, monkeypatch):
     from transformers.trainer_pt_utils import safe_globals
 
     from experiments.qfft_v93 import grpo
+    trainer_cls = trl.GRPOTrainer
 
     base, drive, vm1, vm2 = (tmp_path / name for name in ('base', 'drive', 'vm1', 'vm2'))
     tokenizer = Tokenizer(WordLevel({'[UNK]': 0, '[PAD]': 1, '[EOS]': 2, 'question': 3}, unk_token='[UNK]'))
@@ -111,6 +112,10 @@ def test_grpo_cpu_resumes_full_mirror_on_an_empty_vm(tmp_path, monkeypatch):
     monkeypatch.setenv('P1_LOCAL_ROOT', str(vm2))
     monkeypatch.setattr(trl, 'GRPOTrainer', VerifyRestore)
     monkeypatch.setattr(sys, 'argv', [*command, '--require-resume'])
+    with monkeypatch.context() as modified:
+        modified.setenv('P1_CODE_SHA', 'different-code')
+        with pytest.raises(RuntimeError, match='different experiment'):
+            grpo.main()
     grpo.main()
     complete = read_json(run / 'GRPO_COMPLETE.json')
     assert complete['steps'] == 3
@@ -118,3 +123,98 @@ def test_grpo_cpu_resumes_full_mirror_on_an_empty_vm(tmp_path, monkeypatch):
     assert complete['resumed_from'] == str(restored)
     assert restored_rng == [str(restored)]
     assert [r['step'] for r in read_jsonl(run / 'reward_status.jsonl')] == [0, 1, 2]
+
+    extended = {
+        **cfg, 'run_name': 'cpu_extend', 'max_steps': 5,
+        'extend_from': {'config': 'source', 'code_bundle': None,
+                        'approval_sha256': sha256_file(CONFIG_DIR / cfg['pool']['approval_manifest'])},
+    }
+    monkeypatch.setattr(grpo, 'load_config', lambda name: cfg if name == 'source' else extended)
+    vm3 = tmp_path / 'vm3'
+    monkeypatch.setenv('P1_LOCAL_ROOT', str(vm3))
+    monkeypatch.setenv('P1_CODE_SHA', 'extension-code')
+    final = run / 'ckpt_mirror/checkpoint-3'
+    expected_optimizer = torch.load(final / 'optimizer.pt', weights_only=True)
+    expected_scheduler = torch.load(final / 'scheduler.pt', weights_only=True)
+    verified = []
+
+    class VerifyExtension(trainer_cls):
+        def _load_optimizer_and_scheduler(self, path):
+            super()._load_optimizer_and_scheduler(path)
+            assert Path(path) == vm3 / 'runs/cpu_extend/checkpoint-3'
+            assert self.optimizer.state_dict()['param_groups'] == expected_optimizer['param_groups']
+            for key, moments in expected_optimizer['state'].items():
+                for name, tensor in moments.items():
+                    torch.testing.assert_close(self.optimizer.state_dict()['state'][key][name], tensor, rtol=0, atol=0)
+            assert self.lr_scheduler.state_dict() == expected_scheduler
+            verified.append(path)
+
+    monkeypatch.setattr(trl, 'GRPOTrainer', VerifyExtension)
+    monkeypatch.setattr(sys, 'argv', command)
+    grpo.main()
+    extension_run = run.with_name('cpu_extend')
+    complete = read_json(extension_run / 'GRPO_COMPLETE.json')
+    assert complete['steps'] == 5 and complete['extension']['source_step'] == 3
+    assert len(verified) == 1
+    assert [r['step'] for r in read_jsonl(extension_run / 'reward_status.jsonl')] == [3, 4]
+    assert [r['learning_rate'] for r in read_jsonl(extension_run / 'metrics.jsonl') if 'loss' in r] == [1e-5, 1e-5]
+    assert read_json(run / 'GRPO_COMPLETE.json')['steps'] == 3
+
+
+def test_corrupt_full_checkpoint_falls_back_and_low_disk_preserves_local(tmp_path, monkeypatch):
+    from experiments.qfft_v93 import checkpointing as ckpt
+
+    local, drive = tmp_path / 'vm1', tmp_path / 'drive'
+    monkeypatch.delenv('P1_RCLONE_REMOTE', raising=False)
+    mirror = ckpt.CheckpointMirror(local, drive, mirror_optimizer_state=True, min_free_gib=0)
+    for step in (1, 2):
+        path = local / f'checkpoint-{step}'
+        path.mkdir(parents=True)
+        write_json(path / ckpt.SAVED_MARK, {'step': step})
+        write_json(path / 'trainer_state.json', {'global_step': step})
+        for name in ('adapter_model.safetensors', 'optimizer.pt', 'scheduler.pt', 'rng_state.pth'):
+            (path / name).write_bytes(b'original')
+        mirror._mirror(path)
+        assert mirror.has_full_mirror(step)
+    newest = drive / 'ckpt_mirror/checkpoint-2'
+    (newest / 'optimizer.pt').write_bytes(b'corrupt!')
+    assert Path(ckpt.resolve_resume(tmp_path / 'vm2', drive)).name == 'checkpoint-1'
+    (newest / ckpt.MIRROR_MARK).unlink()
+    monkeypatch.setattr(ckpt, 'free_bytes', lambda path: 0)
+    with pytest.raises(RuntimeError, match='retaining checkpoint-2'):
+        mirror._before_save(3)
+    assert (local / 'checkpoint-2/optimizer.pt').exists()
+
+
+def test_holdout_scoring_rejects_missing_or_duplicate_draws(tmp_path):
+    from experiments.qfft_v93.score import score_one
+
+    rows = {'a': {'answer': '1'}, 'b': {'answer': '2'}}
+    write_json(tmp_path / 'identity.json', {'protocol': {'n': 1}})
+    write_jsonl(tmp_path / 'raw.jsonl', [{'sample_id': 'a', 'draw': 0}] * 2)
+    with pytest.raises(RuntimeError, match='1 missing, 0 unexpected, 1 duplicates'):
+        score_one(None, tmp_path, rows, rescore=False)
+
+
+def test_remote_full_upload_stops_before_publication_on_verification_failure(tmp_path, monkeypatch):
+    from experiments.qfft_v93 import drive_io
+
+    src = tmp_path / 'source'
+    src.mkdir()
+    (src / 'optimizer.pt').write_bytes(b'original')
+    monkeypatch.setenv('P1_DRIVE_ROOT', str(tmp_path))
+    monkeypatch.setenv('P1_RCLONE_REMOTE', 'mydrive:')
+    commands = []
+
+    def remote(*args, **kwargs):
+        commands.append(args)
+        if args[0] == 'check':
+            raise RuntimeError('checksum mismatch')
+
+    monkeypatch.setattr(drive_io, '_rclone', remote)
+    with pytest.raises(RuntimeError, match='checksum mismatch'):
+        drive_io.upload_tree(src, tmp_path / 'checkpoint-5', verify_full=True)
+    assert [args[0] for args in commands] == ['copy', 'check']
+    staging = commands[0][2]
+    assert staging.startswith('mydrive:checkpoint-5.') and staging.endswith('.partial')
+    assert commands[1][2] == staging

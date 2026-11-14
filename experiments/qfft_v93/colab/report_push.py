@@ -132,6 +132,10 @@ class Reporter:
                     _put(latest / 'runs' / run.name / name, _tail_text(run / name, FILE_CAP))
         evals = self.root / 'evals'
         for name in ('results.md', 'results.json'):
+            path = self.root / 'grpo_dev' / name
+            if path.is_file():
+                _put(latest / 'grpo_dev' / name, _tail_text(path, FILE_CAP))
+        for name in ('results.md', 'results.json'):
             if (evals / name).is_file():
                 _put(latest / 'evals' / name, _tail_text(evals / name, FILE_CAP))
         for tag in sorted(p for p in evals.iterdir() if p.is_dir()) if evals.is_dir() else []:

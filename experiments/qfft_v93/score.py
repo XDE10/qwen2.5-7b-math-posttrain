@@ -12,7 +12,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from experiments.qfft_v93.common import drive_layout, load_config, log, now_iso, read_jsonl, write_json, write_jsonl
+from experiments.qfft_v93.common import drive_layout, log, now_iso, read_json, read_jsonl, write_json, write_jsonl
 from experiments.qfft_v93.grading import GRADER_VERSION, Grader
 from experiments.qfft_v93.metrics import (bootstrap_ci, budget_curve, paired_bootstrap, reflection_count, summarize,
                                           tail_repetition)
@@ -20,16 +20,26 @@ from experiments.qfft_v93.metrics import (bootstrap_ci, budget_curve, paired_boo
 COMPETITION = ('aime24', 'aime25', 'amc23')
 
 
-def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool) -> dict | None:
+def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool, require_gradable: bool = False) -> dict | None:
     raw_path = out_dir / 'raw.jsonl'
     if not raw_path.exists():
         return None
-    raw = {(r['sample_id'], r['draw']): r for r in read_jsonl(raw_path)}
+    raw_rows = read_jsonl(raw_path)
+    raw = {(r['sample_id'], r['draw']): r for r in raw_rows}
+    id_path = out_dir / 'identity.json'
+    if id_path.is_file():
+        protocol = read_json(id_path)['protocol']
+        if protocol.get('limit'):
+            rows = dict(list(rows.items())[:protocol['limit']])
+        expected = {(sid, draw) for sid in rows for draw in range(protocol['n'])}
+        if raw.keys() != expected or len(raw) != len(raw_rows):
+            raise RuntimeError(f'{out_dir}: incomplete draws: {len(expected - raw.keys())} missing, '
+                               f'{len(raw.keys() - expected)} unexpected, {len(raw_rows) - len(raw)} duplicates')
     scored_path = out_dir / 'scored.jsonl'
     previous = {}
     if scored_path.exists() and not rescore:
         previous = {(r['sample_id'], r['draw']): r for r in read_jsonl(scored_path)
-                    if r.get('grader') == GRADER_VERSION}
+                    if r.get('grader') == GRADER_VERSION and r['status'] in ('correct', 'wrong', 'no_answer')}
     todo = [k for k in raw if k not in previous and k[0] in rows]
     results = grader.grade_many([(raw[k]['text'], rows[k[0]]['answer']) for k in todo]) if todo else []
     for key, grade in zip(todo, results):
@@ -39,8 +49,12 @@ def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool) -> dict 
                          'tokens': r['tokens'], 'finish_reason': r['finish_reason'],
                          'tail_repetition': tail_repetition(r['text']), 'reflections': reflection_count(r['text']),
                          'grader': GRADER_VERSION}
-    records = sorted(previous.values(), key=lambda r: (r['sample_id'], r['draw']))
+    records = [previous[key] for key in sorted(raw) if key in previous and key[0] in rows]
     write_jsonl(scored_path, records)
+    if require_gradable:
+        failures = sum(row['status'] not in ('correct', 'wrong', 'no_answer') for row in records)
+        if failures:
+            raise RuntimeError(f'{out_dir}: {failures} unscorable generations; re-run scoring to retry')
     by_problem = {}
     for r in records:
         by_problem.setdefault(r['sample_id'], []).append(r)
@@ -49,8 +63,7 @@ def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool) -> dict 
         if len(group) > 1:
             cluster = grader.majority_cluster([g['pred'] if g['status'] in ('correct', 'wrong') else None for g in group])
             majority[sid] = bool(cluster) and group[cluster[0]]['correct']
-    problems = {sid: rows[sid] for sid in by_problem}
-    summary = summarize(records, problems, majority or None)
+    summary = summarize(records, rows, majority or None)
     summary['budget_curve_no_forcing'] = budget_curve(records)
     summary.update(grader=GRADER_VERSION, scored=now_iso(), benchmark_problems=len(rows))
     write_json(out_dir / 'summary.json', summary)
@@ -84,20 +97,21 @@ def main() -> None:
     p.add_argument('--tags', help='Comma list; default: every folder under evals-root')
     p.add_argument('--compare', action='append', default=[], help='A:B paired comparison (repeatable)')
     p.add_argument('--rescore', action='store_true')
+    p.add_argument('--require-gradable', action='store_true', help='Refuse a score containing verifier failures')
     p.add_argument('--workers', type=int)
     a = p.parse_args()
     layout = drive_layout()
     evals = Path(a.evals_root) if a.evals_root else layout.evals
     bench_dir = Path(a.bench_dir) if a.bench_dir else layout.data / 'benchmarks_v93'
     benchmarks = {path.stem: {r['sample_id']: r for r in read_jsonl(path)} for path in sorted(bench_dir.glob('*.jsonl'))}
-    order = list(load_config('pipeline.json')['eval']['suites']['full'])
+    order = list(benchmarks)
     tags = a.tags.split(',') if a.tags else sorted(p.name for p in evals.iterdir() if p.is_dir())
     table = {}
     with Grader(workers=a.workers) as grader:
         for tag in tags:
             table[tag] = {}
             for name, rows in benchmarks.items():
-                summary = score_one(grader, evals / tag / name, rows, a.rescore)
+                summary = score_one(grader, evals / tag / name, rows, a.rescore, a.require_gradable)
                 if summary:
                     table[tag][name] = summary
                     log(f"{tag}/{name}: mean@n={summary['mean_at_n']:.3f} CI={summary['mean_at_n_ci95']} "
@@ -105,14 +119,18 @@ def main() -> None:
     comparisons = []
     for pair in a.compare:
         left, right = pair.split(':')
-        for name in order + ['competition']:
+        for name in order + (['competition'] if set(COMPETITION) <= benchmarks.keys() else []):
             if name == 'competition':
-                la = [v for n in COMPETITION for v in table.get(left, {}).get(n, {}).get('per_problem_acc', {}).values()]
-                ra = [v for n in COMPETITION for v in table.get(right, {}).get(n, {}).get('per_problem_acc', {}).values()]
+                lp = {(n, sid): v for n in COMPETITION for sid, v in
+                      table.get(left, {}).get(n, {}).get('per_problem_acc', {}).items()}
+                rp = {(n, sid): v for n in COMPETITION for sid, v in
+                      table.get(right, {}).get(n, {}).get('per_problem_acc', {}).items()}
+                keys = sorted(lp) if lp.keys() == rp.keys() else []
+                la, ra = [lp[k] for k in keys], [rp[k] for k in keys]
             else:
                 lp = table.get(left, {}).get(name, {}).get('per_problem_acc', {})
                 rp = table.get(right, {}).get(name, {}).get('per_problem_acc', {})
-                common = sorted(set(lp) & set(rp))
+                common = sorted(lp) if lp.keys() == rp.keys() else []
                 la, ra = [lp[s] for s in common], [rp[s] for s in common]
             if la and len(la) == len(ra):
                 comparisons.append({'left': left, 'right': right, 'benchmark': name, **paired_bootstrap(la, ra)})

@@ -29,7 +29,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`，并推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`）。2026-11-09 已在 G4 跑通（41 分钟）：32K 最坏长度全参 142 s/步、显存 28.9 GiB、主机 RSS 145.3 GiB / 177 GiB，GRPO 476 s/步、66.6 GiB。
 - 23 道缺口题（DeepSeek 在 high/max 下的轨迹一直跑出 32K 窗口）：预注册方案是先用 `reasoning_effort=low` 追加尝试、仍缺的成对剔除。实际（2026-11-10）：4 题补齐；剩下 19 题用户决定保留 1000 题、不做成对剔除，改为用已批准的 OpenR1 原题替换。不用 R1 补 DS，不训练只缺一边的数据。预览构建（`--allow-gaps`）不能上传，阶段 `d` 会拒收。
 - DS 思考段里关于隐藏参数 "oververbosity 5" 的句子由 `data_build.py` 的 `META` 删除，原文留在每行 `teacher_detail.meta_edits`。
-- **进度（2026-11-13）**：阶段 0、1、d、2 与 Flash、R1（16K、batch 8）的 QFFT 训练和评测已完成。R1 在竞赛 100 题相对底座提升 7.56 个百分点，达到当前目标。下一步准备从 R1 最终权重做 GRPO。实测与运行计划见 [docs/status/current_status.md](docs/status/current_status.md) 与 `colab-reports`。
+- **进度（2026-11-14）**：R1 QFFT 在竞赛 100 题相对底座提升 7.56 个百分点。16K LoRA-GRPO 已完成跨 VM 恢复与 30 步试点，竞赛综合相对原始 R1 为 −1.50 个百分点。正式 150 步暂缓，下一轮方案待审查。实测与运行计划见 [docs/status/current_status.md](docs/status/current_status.md) 与 `colab-reports`。
 
 ## 仓库约定（必须遵守）
 

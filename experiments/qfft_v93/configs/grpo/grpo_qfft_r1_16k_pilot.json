@@ -1,0 +1,10 @@
+{
+  "base": "grpo_qfft_r1_16k_b8.json",
+  "run_name": "grpo_qfft_r1_16k_pilot_v93",
+  "max_completion_length": 16384,
+  "max_steps": 10,
+  "save_steps": 5,
+  "log_rollout_diagnostics": true,
+  "measure_gpu": true,
+  "note": "Authorized G4 pilot: pause after step 5, restore a full checkpoint on a new VM, then evaluate the step-10 adapter against the unchanged R1 checkpoint on protected dev256."
+}
