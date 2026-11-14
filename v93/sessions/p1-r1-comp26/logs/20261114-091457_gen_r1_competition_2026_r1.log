@@ -132,3 +132,31 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:39<
 [11-14 17:40:32] r1: 268/472 new generations, 1122 output tok/s
 [11-14 17:41:53] r1: 273/472 new generations, 1139 output tok/s
 [11-14 17:43:04] r1: 283/472 new generations, 1227 output tok/s
+[11-14 17:44:09] r1: 293/472 new generations, 1302 output tok/s
+[11-14 17:45:12] r1: 301/472 new generations, 1358 output tok/s
+[11-14 17:46:32] r1: 314/472 new generations, 1373 output tok/s
+[11-14 17:47:42] r1: 335/472 new generations, 1379 output tok/s
+[11-14 17:48:49] r1: 343/472 new generations, 1403 output tok/s
+[11-14 17:49:53] r1: 350/472 new generations, 1405 output tok/s
+[11-14 17:50:57] r1: 362/472 new generations, 1452 output tok/s
+[11-14 17:51:57] r1: 370/472 new generations, 1485 output tok/s
+[11-14 17:53:03] r1: 395/472 new generations, 1706 output tok/s
+[11-14 17:53:20] r1: 400/472 new generations, 1719 output tok/s
+[11-14 17:54:39] r1: 409/472 new generations, 1712 output tok/s
+[11-14 17:55:52] r1: 416/472 new generations, 1699 output tok/s
+[11-14 17:56:58] r1: 421/472 new generations, 1700 output tok/s
+[11-14 17:58:06] r1: 427/472 new generations, 1689 output tok/s
+[11-14 17:59:17] r1: 433/472 new generations, 1684 output tok/s
+[11-14 18:00:19] r1: 443/472 new generations, 1724 output tok/s
+[11-14 18:01:22] r1: 447/472 new generations, 1712 output tok/s
+[11-14 18:02:32] r1: 456/472 new generations, 1746 output tok/s
+[11-14 18:04:01] r1: 459/472 new generations, 1718 output tok/s
+[11-14 18:05:04] r1: 466/472 new generations, 1750 output tok/s
+[11-14 18:06:27] r1: 470/472 new generations, 1740 output tok/s
+[11-14 18:06:43] r1: 472 new generations, 5,078,528 output tokens in 2897 s (1753 tok/s; engine start 133 s)
+[11-14 18:06:43] r1: generation complete for r1_competition_2026
+(MainProcess pid=3339) INFO 11-14 10:06:43 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=4032) INFO 11-14 10:06:43 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=4032) INFO 11-14 10:06:43 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=4032) INFO 11-14 10:06:43 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=4032) INFO 11-14 10:06:43 [core.py:1573] [shutdown] EngineCore: exiting busy loop

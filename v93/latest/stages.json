@@ -185,8 +185,8 @@
   "started": "2026-11-14T09:13:21.342721",
   "code": "22258ad1408f",
   "host": "p1-r1-comp26@231c1ed5bf93",
-  "heartbeat": "2026-11-14T09:43:24.386225",
-  "heartbeat_ts": 1794649404.3862386
+  "heartbeat": "2026-11-14T10:18:27.815944",
+  "heartbeat_ts": 1794651507.8159533
  },
  "r1-grpo-dev": {
   "stage": "r1-grpo-dev",
