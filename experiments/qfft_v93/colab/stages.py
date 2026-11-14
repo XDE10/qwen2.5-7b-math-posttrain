@@ -15,6 +15,8 @@ Stages (all idempotent; re-running resumes or skips completed work):
     grpo:<config>:pause-after=<step> / grpo:<config>:resume   verify a full checkpoint across VMs
     r1-is-diagnostic            capture one fixed R1 rollout and compare importance weights
     r1-grpo-dev[:step30]        paired development evaluation of R1 and the 16K run
+    r1-competition-2026         evaluate R1 and the two step-10 adapters on the frozen competition set
+    r1-fura50-eval              score the fixed 50-step LoRA run against R1 on the competition suite
     score[:<tags>]              re-score saved generations and rebuild results.md
     analyze:<tags>[:<grpo_runs>] figures into Drive runs/project1/v93/figures
     status                      print stage markers, run progress, eval completeness and results.md
@@ -572,6 +574,73 @@ def _dispatch(ctx: Context, stage: str) -> None:
         ctx.run(ctx.py_module('infer', m + 'score', '--bench-dir', str(bench_dir), '--require-gradable',
                               '--evals-root', str(out), '--tags', f'r1,{tag}', '--compare', f'{tag}:r1'),
                 'score_r1_grpo_dev')
+    elif kind == 'r1-competition-2026' and not rest:
+        from experiments.qfft_v93.common import drive_layout, load_config, read_jsonl, sha256_file
+        from experiments.qfft_v93.models import drive_path
+        name = 'r1_competition_2026'
+        cfg = load_config(f'grpo/{name}.json')
+        bench_dir = PROJECT / 'data' / name
+        benchmark = bench_dir / f'{name}.jsonl'
+        if sha256_file(benchmark) != cfg['sha256'] or len(read_jsonl(benchmark)) != cfg['rows']:
+            raise RuntimeError('R1 competition set does not match its frozen identity')
+        out = DRIVE / 'runs/project1/v93' / name
+        layout = drive_layout(DRIVE)
+        for tag, model in cfg['models'].items():
+            model_dir = drive_path(model['spec'], layout)
+            if sha256_file(model_dir / 'p1_model_identity.json') != model['identity_sha256']:
+                raise RuntimeError(f'{tag}: model identity differs from the frozen evaluation protocol')
+        gpu_banner()
+        for tag, model in cfg['models'].items():
+            ctx.run(ctx.py_module('infer', m + 'generate', '--model', model['spec'], '--tag', tag,
+                                  '--suite', name, '--bench-dir', str(bench_dir), '--evals-root', str(out)),
+                    f'gen_{name}_{tag}')
+        ctx.run(ctx.py_module('infer', m + 'score', '--bench-dir', str(bench_dir), '--require-gradable',
+                              '--evals-root', str(out), '--tags', ','.join(cfg['models']),
+                              '--compare', 'token_mask:sequence_mask', '--compare', 'token_mask:r1',
+                              '--compare', 'sequence_mask:r1'), f'score_{name}')
+    elif kind == 'r1-fura50-eval' and not rest:
+        from experiments.qfft_v93.common import drive_layout, load_config, read_json, sha256_file
+        from experiments.qfft_v93.formats import SYSTEM_PROMPT
+        from experiments.qfft_v93.models import drive_path, max_model_len
+        from experiments.qfft_v93.score import COMPETITION
+        cfg = load_config('grpo/grpo_qfft_r1_fura_lora50.json')
+        run = cfg['run_name']
+        model = f'run:{run}/merged'
+        layout = drive_layout(DRIVE)
+        run_dir = drive_path(model, layout).parent
+        if read_json(run_dir / 'GRPO_COMPLETE.json')['steps'] != cfg['max_steps']:
+            raise RuntimeError(f'{run}: expected the final {cfg["max_steps"]}-step checkpoint')
+        baseline_model = cfg['init_model']
+        tag, baseline = f'{run}_merged', baseline_model.removeprefix('run:')
+        baseline_identity = read_json(drive_path(baseline_model, layout) / 'p1_model_identity.json')
+        evaluation = load_config('pipeline.json')['eval']
+        suite = evaluation['suites']['competition']
+        for benchmark, spec in suite.items():
+            base_eval = layout.evals / baseline / benchmark
+            status = read_json(base_eval / 'generation_status.json')
+            if not status['complete'] or not (base_eval / 'raw.jsonl').is_file():
+                raise RuntimeError(f'{baseline}/{benchmark}: missing complete reference generations')
+            expected = {
+                'model': baseline_model, 'model_identity': baseline_identity, 'benchmark': benchmark,
+                'benchmark_sha256': sha256_file(layout.data / 'benchmarks_v93' / f'{benchmark}.jsonl'),
+                'n': spec['n'], 'limit': spec.get('limit'), 'max_tokens_cap': spec.get('max_tokens'),
+                'temperature': evaluation['temperature'], 'top_p': evaluation['top_p'], 'seed': evaluation['seed'],
+                'max_model_len': min(max_model_len(baseline_model), evaluation['max_model_len']),
+                'system_prompt': SYSTEM_PROMPT, 'engine': 'vllm',
+            }
+            if read_json(base_eval / 'identity.json')['protocol'] != expected:
+                raise RuntimeError(f'{baseline}/{benchmark}: reference generation protocol differs')
+        gpu_banner()
+        ctx.run(ctx.py_module('infer', m + 'generate', '--model', model, '--tag', tag,
+                              '--suite', 'competition'), f'gen_{tag}')
+        report_dir = layout.evals.parent / 'r1_fura50_eval'
+        ctx.run(ctx.py_module('infer', m + 'score', '--benchmarks', ','.join(COMPETITION),
+                              '--tags', f'{tag},{baseline}', '--require-gradable',
+                              '--report-dir', str(report_dir),
+                              '--compare', f'{tag}:{baseline}'), f'score_{tag}')
+        pairs = read_json(report_dir / 'results.json')['comparisons']
+        if not any(row['benchmark'] == 'competition' and row['problems'] == 100 for row in pairs):
+            raise RuntimeError(f'{run}: missing the 100-problem paired comparison')
     elif kind == 'score':
         args = ['--tags', rest] if rest else []
         ctx.run(ctx.py_module('score', m + 'score', *args), 'score')

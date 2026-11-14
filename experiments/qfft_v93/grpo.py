@@ -265,6 +265,8 @@ def grpo_config(cfg: dict, out: Path, smoke: bool, max_steps: int | None):
         gradient_checkpointing_kwargs={'use_reentrant': False}, logging_steps=1, save_strategy='steps',
         save_steps=cfg['save_steps'], save_total_limit=None, seed=cfg['seed'], report_to='none',
         log_completions=False, disable_tqdm=True)
+    if 'optim' in cfg:
+        kwargs['optim'] = cfg['optim']
     if 'vllm_importance_sampling_mode' in cfg:
         mode = cfg['vllm_importance_sampling_mode']
         if mode not in ('sequence_mask', 'token_mask', 'sequence_truncate', 'token_truncate'):

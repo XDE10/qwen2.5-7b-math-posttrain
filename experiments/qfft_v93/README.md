@@ -143,7 +143,7 @@ bash experiments/qfft_v93/colab/pipeline.sh 7   # CPU VM：重新判分、result
 
 ### R1 重要性采样诊断
 
-以下是准备好的独立 G4 阶段。它使用 R1 QFFT 第 750 步最终权重，复用 16K 长度对照的前 8 个固定题目，每题采样 8 次。直接调用锁定版本 TRL 的训练态 rollout 路径，只做生成、判分和前向重算。命令会分配 G4，须在获准上卡后执行。
+独立 G4 阶段已完成 64 条 rollout。它使用 R1 QFFT 第 750 步最终权重，复用 16K 长度对照的前 8 个固定题目，每题采样 8 次。直接调用锁定版本 TRL 的训练态 rollout 路径，只做生成、判分和前向重算。下方为复现命令，执行会分配 G4。
 
 ```zsh
 source ~/.proxy_env.sh
@@ -157,6 +157,31 @@ python -m experiments.qfft_v93.grpo_is_diagnostic compare /path/to/logprobs.json
 ```
 
 产物保存原始 token ID、采样端与训练端的 logprob、实际 completion mask、组内 advantage、奖励与停止原因，并保留 TRL 当场计算的序列权重供离线核对。比较按奖励与长度分桶，单列 IS 零权重 token 和已有截断掩码。非零权重 token 数与绝对优势加权和是更新信号指标，实测能力仍需独立评测。
+
+### 59 道竞赛留出题的三臂评测
+
+`r1-competition-2026` 阶段读取 Drive 的 `projects/project1/v93/data/r1_competition_2026/r1_competition_2026.jsonl`，校验冻结文件与三份模型标识的 SHA-256，并生成、评分和按题配对。保留结果在 Drive 的 `runs/project1/v93/r1_competition_2026/`。已完成的结果见 [实验总结](../../docs/status/v93_experiment_summary.md)。
+
+### FuRA 标准 LoRA-GRPO 的单卡迁移草案
+
+调研对照包括 [SimpleRL-Zoo](https://arxiv.org/html/2503.18892v3#A2.SS5)（每轮 1,024 题 × 8 作答）、[Dr. GRPO](https://arxiv.org/html/2503.20783v2#A7)（8 张 A100、全参）、[TinyLoRA](https://arxiv.org/html/2602.04118#S5)（同一 Instruct 起点，MATH 配方用 8,523 道题、三轮及学习率搜索）、[FutureMa](https://huggingface.co/FutureMa/Qwen2.5-7B-Instruct-GRPO-Math)（同一 Instruct 起点、单 H100，公开命令与权重，模型卡无留出成绩）和 [thawait](https://huggingface.co/thawait/qwen2.5-7b-math-reasoning-grpo#benchmark-results)（同模型家族，SFT 后的 1,000 步 GRPO 在其 MATH-500 评测上持平）。
+
+采用 FuRA 论文中报告成绩的标准 LoRA 对照。作者在单张 H100 上从 `Qwen/Qwen2.5-7B` 开始，在三个种子上报告了 MATH-500、AMC23 和 AIME24/25。7B 启动脚本的 LoRA 默认值为 `r=64`、`alpha=32`、恒定学习率 `1e-4`，50 步，每步 32 题 × 8 作答。训练源码使用 `qwedsacf/competition_math` 的前 7,500 条、组内去均值、按作答长度归一化，每批仅更新一次。本地 vLLM 的实际 `max_tokens` 是 1,024，模型上下文是 2,048。[论文表 4 和附录 D.3](https://arxiv.org/abs/2605.22869) · [固定提交的 7B 脚本](https://github.com/yequanzhao/FuRA/blob/9c68151f3cf81bf6543bf918c011bfd98cf81220/rl/run_rl_7B.sh) · [训练源码](https://github.com/yequanzhao/FuRA/blob/9c68151f3cf81bf6543bf918c011bfd98cf81220/rl/run_rl.py)
+
+本项目的[复现配置](configs/grpo/grpo_qfft_r1_fura_lora50.json)移植上述 rank、alpha、AdamW、学习率、50 步预算和按作答归一化的 `grpo` 损失。从 R1 QFFT 第 750 步权重出发，使用已获批并清理的 1,551 道题、每步 8 题 × 8 作答、16K 生成上限、Math-Verify 0/1 奖励、截断掩码和 `token_mask`。TRL 使用其单轮 GRPO 实现，设对称裁剪 0.2，源码在一次更新内部直接用未裁剪的比率。原版每步独立随机抽题，TRL 沿用项目的遍历式洗牌。16K 预算下，单卡只采用现有 64 条作答的批大小。此轮检验公开优化配方能否迁移到项目权重。
+
+获得本轮 GPU 训练授权后，从 WSL 仓库根目录启动。训练以最近的 16K 实测步速估算约 15.4 个 G4 小时，另计评测。固定使用第 50 步合并权重与原始 R1 在项目竞赛 100 题上的已有作答配对，使用当前判分器，报告差值、置信区间和输出长度。这 100 道题已用于早期诊断，成绩用于与项目既有结果对标。若没有可信的增益，以已验证的 QFFT 成绩和本轮 GRPO 结果收尾。
+
+```zsh
+source ~/.proxy_env.sh
+export PATH="$HOME/.local/bin:$PATH"
+bash experiments/qfft_v93/colab/launch.sh --gpu G4 --session p1-r1-fura50 \
+  grpo:grpo_qfft_r1_fura_lora50 r1-fura50-eval
+```
+
+训练验收检查第 50 步 `GRPO_COMPLETE.json`、`merged/p1_model_identity.json` 和三个竞赛子集的 `generation_status.json`。如 VM 已被回收，从完整 Drive 镜像用 `grpo:grpo_qfft_r1_fura_lora50:resume` 继续，并复用原评分阶段。
+
+本地核对两份已批准的源文件、1,551 道题的顺序和题池指纹，均与前一轮 R1 一致。TRL 1.17.1 配置检查通过。微型 Qwen2 在 CPU 上实跑两次 AdamW 更新并写出完整镜像，使用模拟奖励和缩小的采样设置。评测阶段用模拟作答验证了 100 题配对和独立报告写入。真实单卡 7B 训练待本轮授权。
 
 ## 三、断点与续跑
 

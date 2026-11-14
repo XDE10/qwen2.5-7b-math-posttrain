@@ -1,8 +1,9 @@
 # 项目一：7B 数学后训练
 
-Qwen2.5-7B-Instruct 的数学后训练项目，包含全参 SFT、QFFT、LoRA-GRPO 与双教师轨迹比较。当前自训 R1 QFFT 在竞赛 100 题上由 **26.06% 提升至 33.63%**，增益 **+7.56 个百分点**，配对 95% CI **[+3.88, +11.44]**。R1 权重的 GRPO 待运行。
+Qwen2.5-7B-Instruct 的数学后训练项目，包含全参 SFT、QFFT、LoRA-GRPO 与双教师轨迹比较。当前自训 R1 QFFT 在竞赛 100 题上由 **26.06% 提升至 33.63%**，增益 **+7.56 个百分点**，配对 95% CI **[+3.88, +11.44]**。已完成 16K LoRA-GRPO 短跑、跨 VM 恢复与独立留出评测。现有短跑尚未证实准确率进一步提升。
 
 - **当前状态**：[docs/status/current_status.md](docs/status/current_status.md)
+- **v93 实验总结与公开配方调研**：[实验总结](docs/status/v93_experiment_summary.md)、[调研提示词](docs/operations/v93_public_rl_research_prompt.md)
 - **协作约定与阅读入口**：[AGENTS.md](AGENTS.md)
 - **逐版本历史（v1…v93）**：[docs/status/history.md](docs/status/history.md)
 - **WSL2 启动与恢复**：[v93 运行手册](experiments/qfft_v93/README.md)、[凭据文件模板](docs/operations/credential_templates/README.md)
