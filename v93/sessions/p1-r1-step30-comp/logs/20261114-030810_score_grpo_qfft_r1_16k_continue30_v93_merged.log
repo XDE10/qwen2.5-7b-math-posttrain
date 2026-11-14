@@ -1,0 +1,4 @@
+[11-14 11:08:18] grpo_qfft_r1_16k_continue30_v93_merged/aime24: mean@n=0.183 CI=[0.0875, 0.29583333333333334] tokens=14328 trunc=0.071
+[11-14 11:08:19] grpo_qfft_r1_16k_continue30_v93_merged/aime25: mean@n=0.163 CI=[0.06875, 0.275] tokens=11323 trunc=0.025
+[11-14 11:08:20] grpo_qfft_r1_16k_continue30_v93_merged/amc23: mean@n=0.544 CI=[0.421875, 0.665625] tokens=7849 trunc=0.028
+[11-14 11:08:20] Wrote /content/mydrive/runs/project1/v93/evals/results.md

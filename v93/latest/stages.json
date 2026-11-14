@@ -37,12 +37,12 @@
  },
  "eval__run__grpo_qfft_r1_16k_continue30_v93_merged__competition": {
   "stage": "eval:run:grpo_qfft_r1_16k_continue30_v93/merged:competition",
-  "state": "running",
+  "state": "complete",
+  "hours": 2.465,
+  "finished": "2026-11-14T03:08:20.594344",
   "started": "2026-11-14T00:40:23.765484",
   "code": "944c77e5a0b3",
-  "host": "p1-r1-step30-comp@63de1296d769",
-  "heartbeat": "2026-11-14T02:55:51.258882",
-  "heartbeat_ts": 1794624951.2588952
+  "host": "p1-r1-step30-comp@63de1296d769"
  },
  "eval__run__qfft_ds_v93__full": {
   "stage": "eval:run:qfft_ds_v93:full",

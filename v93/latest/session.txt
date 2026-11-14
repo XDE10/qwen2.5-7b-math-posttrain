@@ -1,2 +1,2 @@
 p1-r1-step30-comp
-running
+OK
