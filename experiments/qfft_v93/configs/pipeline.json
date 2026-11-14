@@ -41,6 +41,7 @@
     "suites": {
       "full": {"math500": {"n": 4}, "aime24": {"n": 16}, "aime25": {"n": 16}, "amc23": {"n": 8}, "gsm8k": {"n": 1}},
       "r1_grpo_dev": {"r1_grpo_dev": {"n": 2}},
+      "r1_competition_2026": {"r1_competition_2026": {"n": 8}},
       "competition": {"aime24": {"n": 16}, "aime25": {"n": 16}, "amc23": {"n": 8}},
       "quick": {"math500": {"n": 1}, "aime24": {"n": 4}, "aime25": {"n": 4}, "amc23": {"n": 2}},
       "smoke": {"math500": {"n": 1, "limit": 16, "max_tokens": 2048}, "aime24": {"n": 2, "limit": 4, "max_tokens": 2048}}

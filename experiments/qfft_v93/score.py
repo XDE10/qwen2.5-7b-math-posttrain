@@ -93,7 +93,9 @@ def fmt(summary) -> str:
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--evals-root', help='Default: Drive runs/project1/v93/evals')
+    p.add_argument('--report-dir', help='Directory for results.md and results.json (default: evals root)')
     p.add_argument('--bench-dir', help='Default: Drive data/benchmarks_v93')
+    p.add_argument('--benchmarks', help='Comma-separated list of benchmark filenames without .jsonl')
     p.add_argument('--tags', help='Comma list; default: every folder under evals-root')
     p.add_argument('--compare', action='append', default=[], help='A:B paired comparison (repeatable)')
     p.add_argument('--rescore', action='store_true')
@@ -102,8 +104,15 @@ def main() -> None:
     a = p.parse_args()
     layout = drive_layout()
     evals = Path(a.evals_root) if a.evals_root else layout.evals
+    report_dir = Path(a.report_dir) if a.report_dir else evals
     bench_dir = Path(a.bench_dir) if a.bench_dir else layout.data / 'benchmarks_v93'
-    benchmarks = {path.stem: {r['sample_id']: r for r in read_jsonl(path)} for path in sorted(bench_dir.glob('*.jsonl'))}
+    paths = sorted(bench_dir.glob('*.jsonl'))
+    if a.benchmarks:
+        names = set(a.benchmarks.split(','))
+        if missing := names - {path.stem for path in paths}:
+            p.error(f'Unknown benchmark(s) in {bench_dir}: {", ".join(sorted(missing))}')
+        paths = [path for path in paths if path.stem in names]
+    benchmarks = {path.stem: {r['sample_id']: r for r in read_jsonl(path)} for path in paths}
     order = list(benchmarks)
     tags = a.tags.split(',') if a.tags else sorted(p.name for p in evals.iterdir() if p.is_dir())
     table = {}
@@ -146,12 +155,13 @@ def main() -> None:
         for c in comparisons:
             lines.append(f"| {c['left']} − {c['right']} | {c['benchmark']} | {c['diff'] * 100:+.1f} | "
                          f"[{c['ci95'][0] * 100:+.1f}, {c['ci95'][1] * 100:+.1f}] | {c['p_two_sided']:.3f} |")
-    (evals / 'results.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / 'results.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
     slim = {tag: {n: {k: v for k, v in s.items() if k != 'per_problem_acc'} for n, s in sm.items()}
             for tag, sm in table.items()}
-    write_json(evals / 'results.json', {'grader': GRADER_VERSION, 'updated': now_iso(), 'results': slim,
-                                        'comparisons': comparisons})
-    log('Wrote', evals / 'results.md')
+    write_json(report_dir / 'results.json', {'grader': GRADER_VERSION, 'updated': now_iso(), 'results': slim,
+                                            'comparisons': comparisons})
+    log('Wrote', report_dir / 'results.md')
 
 
 if __name__ == '__main__':

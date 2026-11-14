@@ -1,0 +1,18 @@
+{
+  "sha256": "c7b67bacc08851ac9f85935c3459dc973520c3ce3d1a78ecbc2408f027e113cc",
+  "rows": 59,
+  "models": {
+    "r1": {
+      "spec": "run:qfft_r1_16k_b8_restart_v93",
+      "identity_sha256": "6d2dc17054512f956fa6bbbc7184e246d016ea5f22dd3c725aaf1219d6f61e1a"
+    },
+    "sequence_mask": {
+      "spec": "run:grpo_qfft_r1_16k_pilot_v93/merged",
+      "identity_sha256": "d25870f290815a13d1b0d080651da4fb82a21fe700c6342e0530defd0c3ae97e"
+    },
+    "token_mask": {
+      "spec": "run:grpo_qfft_r1_16k_tokenmask10_v93/merged",
+      "identity_sha256": "d35104dfa3505f0613453ca02a0fae811b1cd6808d9b9f2426bbcedcaf55654b"
+    }
+  }
+}
