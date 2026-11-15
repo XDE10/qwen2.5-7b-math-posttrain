@@ -12,7 +12,7 @@
       "tokenizer_config.json": "2e3bd3cb5055f7a903a54e7062b2fd14d21b70f4174c3ffcd9fc81ec50a25631",
       "training_args.bin": "34f1b477a151011f7606d5cc2ff0bb47a5679f37a328587a2ba555317e7914d9"
     },
-    "code_bundle": "56a6b5d0b250",
+    "code_bundle": "63247fb0116e",
     "gpu_profile": "g4",
     "pool_sha256": "8ca05d27f7347adfffba57d219baac019a2c923d63bbd7833ede5edf0522204a",
     "recipe_sha256": "0337a1c590e6c7cb0334ef84f65093662026a93af9fd7b42bbfb66eb228b3741",
@@ -21,6 +21,6 @@
     "max_steps_override": null,
     "merge_adapter": true
   },
-  "updated": "2026-11-15T13:47:21+08:00",
-  "code_bundle": "56a6b5d0b250"
+  "updated": "2026-11-15T15:01:29+08:00",
+  "code_bundle": "63247fb0116e"
 }

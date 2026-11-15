@@ -136,12 +136,12 @@
  },
  "grpo__grpo_qfft_r1_mmr_dr50": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr50",
-  "state": "failed",
-  "error": "RuntimeError: grpo_grpo_qfft_r1_mmr_dr50 failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261115-065207_grpo_grpo_qfft_r1_mmr_dr50.log",
-  "at": "2026-11-15T06:53:20.360020",
-  "started": "2026-11-15T06:50:36.200410",
+  "state": "running",
+  "started": "2026-11-15T06:58:11.216056",
   "code": "63247fb0116e",
-  "host": "p1-r1-mmr-dr50-retry1@51d948e8417c"
+  "host": "p1-r1-mmr-dr50-retry2@80c8a50b0c95",
+  "heartbeat": "2026-11-15T07:28:20.121404",
+  "heartbeat_ts": 1794727700.1214142
  },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
