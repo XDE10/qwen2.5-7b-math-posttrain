@@ -1,2 +1,2 @@
-p1-r1-mmr-dr50
-running
+p1-r1-mmr-dr50-retry1
+FAILED grpo:grpo_qfft_r1_mmr_dr50: RuntimeError: grpo_grpo_qfft_r1_mmr_dr50 failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261115-065207_grpo_grpo_qfft_r1_mmr_dr50.log

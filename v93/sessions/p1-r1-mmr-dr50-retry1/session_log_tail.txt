@@ -1,0 +1,22 @@
+P1_SESSION=p1-r1-mmr-dr50-retry1 gpu=G4 auto_release=1
+/tmp/ipykernel_908/1655051497.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 63247fb0116e (git f593e55e3ec1+dirty); stages: ['grpo:grpo_qfft_r1_mmr_dr50', 'r1-mmr-dr50-eval']
+[11-15 06:50:35] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-15 06:50:36] ===== STAGE grpo:grpo_qfft_r1_mmr_dr50 =====
+[11-15 06:50:37] Taking over stage grpo:grpo_qfft_r1_mmr_dr50 from p1-r1-mmr-dr50@69cc76b19bed (heartbeat 6 min ago)
+[11-15 06:50:37] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-15 06:50:37] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-15 06:50:37] Restoring rl venv from Drive snapshot rl-366e0de0b57e.tar
+[11-15 06:52:07] RUN env PYTHONPATH=/content/p1/code/63247fb0116e:/content/p1/venvs/rl-mmr-extra-4ca6eff846ea /content/p1/venvs/rl/bin/python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_mmr_dr50.json | log: /content/mydrive/runs/project1/v93/logs/20261115-065207_grpo_grpo_qfft_r1_mmr_dr50.log
+[11-15 14:53:09] rclone copy (59 s): 2026/11/15 06:53:09 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 111.772 MiB/s, ETA 0s
+[11-15 14:53:09] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 59 s
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/grpo.py", line 590, in <module>
+    main()
+    ~~~~^^
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/grpo.py", line 437, in main
+    raise RuntimeError(f'{id_path} describes a different experiment; choose a new run_name')
+RuntimeError: /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/run_identity.json describes a different experiment; choose a new run_name
