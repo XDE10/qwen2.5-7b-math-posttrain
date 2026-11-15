@@ -1,104 +1,4 @@
-[... first 132,714 bytes omitted ...]
-[11-16 00:09:53] HEARTBEAT 29
-[11-16 00:14:54] HEARTBEAT 29
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-[11-16 00:19:54] HEARTBEAT 29
-2026-11-15 16:20:00.985 | ERROR    | 
-swanlab.sdk.internal.pkg.client.session:send:131 - [HTTP] POST 
-https://api.swanlab.cn/api/house/metrics -> 522 (5157ms) trace:unknown | [ERR] 
-code=unknown code message=unknown error
-2026-11-15 16:20:00.988 | WARNING  | 
-swanlab.sdk.internal.core_python.transport.worker:warn:245 - Upload failed due 
-to network or server issues, retrying automatically.
-swanlab: Upload recovered, resuming normally.
-[11-16 00:24:06] comparison step 30: length stops 7/48, mixed unmasked groups 6/8, generation 235.8s, update 539.3s, card peak 84.6 GiB, utilization 99.0%
-[11-16 00:24:06] step 30/50 epoch 0.60 loss -0.0517 lr 5.80e-07 s/step 983.0 eta 5.46h peakGPU 82.2GiB
-{'loss': '-0.05171', 'grad_norm': '0.04036', 'learning_rate': '5.8e-07', 'num_tokens': '9.613e+06', 'completions/mean_length': '4898', 'completions/min_length': '290', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1458', 'completions/mean_terminated_length': '2938', 'completions/min_terminated_length': '290', 'completions/max_terminated_length': '1.47e+04', 'rewards/mmr_format_cosine/mean': '0.9821', 'rewards/mmr_format_cosine/std': '1.192', 'reward': '0.9821', 'reward_std': '1.192', 'frac_reward_zero_std': '0', 'comparison/completions': '48', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '8', 'comparison/length_stops': '7', 'comparison/mixed_unmasked_reward_groups': '6', 'mmr/prompt_truncated_frac': '0', 'reward/correct_frac': '0.6042', 'reward/format_frac': '0.8333', 'sampling/sampling_logp_difference/mean': '0.02521', 'sampling/sampling_logp_difference/max': '4.59', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9996', 'sampling/importance_sampling_ratio/max': '2.986', 'kl': '0.002175', 'entropy': '0.1936', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '926', 'epoch': '0.6', 'comparison/step_seconds': '982.9', 'comparison/generation_seconds': '235.8', 'comparison/rollout_other_seconds': '207.9', 'comparison/update_seconds': '539.3', 'comparison/gpu_step_samples': 961, 'comparison/gpu_step_peak_used_gib': '84.62', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '98.98', 'comparison/gpu_generation_samples': 230, 'comparison/gpu_generation_peak_used_gib': '84.62', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': 100, 'comparison/gpu_rollout_other_samples': 203, 'comparison/gpu_rollout_other_peak_used_gib': '84.62', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '95.36', 'comparison/gpu_update_samples': 528, 'comparison/gpu_update_peak_used_gib': '84.62', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.92'}
-[11-16 00:24:12] Saved checkpoint-30 locally: 1.8GiB in 5.9 s, 209.1 GiB free
-[11-16 00:24:12] Mirroring checkpoint-30 to Drive (full_state) in the background
-[11-16 00:24:35] rclone copy (22 s): 2026/11/15 16:24:35 NOTICE:     1.816 GiB / 1.816 GiB, 100%, 97.961 MiB/s, ETA 0s
-[11-16 00:24:37] rclone check (3 s): 2026/11/15 16:24:37 NOTICE: Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-30.69e7f3f6156f4856bc448bf6591bb024.partial': 12 matching files
-[11-16 00:24:39] rclone purge (2 s): 2026/11/15 16:24:39 Failed to purge: directory not found
-[11-16 00:24:42] Uploaded checkpoint-30 to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-30 (1.8GiB in 29 s, 65 MiB/s)
-[11-16 00:24:44] rclone copyto (2 s): 2026/11/15 16:24:44 NOTICE:     1.752 KiB / 1.752 KiB, 100%, 0 B/s, ETA -
-[11-16 00:24:49] Mirror complete: /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-30
-[11-16 00:24:54] HEARTBEAT 30
-[11-16 00:29:55] HEARTBEAT 30
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
-equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+[... first 143,242 bytes omitted ...]
 equations=True in NormalizationConfig is deprecated, as it handled by the parser now
 equations=True in NormalizationConfig is deprecated, as it handled by the parser now
 equations=True in NormalizationConfig is deprecated, as it handled by the parser now
@@ -481,3 +381,89 @@ equations=True in NormalizationConfig is deprecated, as it handled by the parser
 [11-16 02:55:11] step 39/50 epoch 0.78 loss -0.0868 lr 7.60e-07 s/step 1077.6 eta 3.29h peakGPU 82.2GiB
 {'loss': '-0.08684', 'grad_norm': '0.03712', 'learning_rate': '7.6e-07', 'num_tokens': '1.224e+07', 'completions/mean_length': '9023', 'completions/min_length': '712', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.3542', 'completions/mean_terminated_length': '4986', 'completions/min_terminated_length': '712', 'completions/max_terminated_length': '1.592e+04', 'rewards/mmr_format_cosine/mean': '0.4494', 'rewards/mmr_format_cosine/std': '1.305', 'reward': '0.4494', 'reward_std': '1.305', 'frac_reward_zero_std': '0', 'comparison/completions': '48', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '8', 'comparison/length_stops': '17', 'comparison/mixed_unmasked_reward_groups': '2', 'mmr/prompt_truncated_frac': '0', 'reward/correct_frac': '0.4583', 'reward/format_frac': '0.6667', 'sampling/sampling_logp_difference/mean': '0.02774', 'sampling/sampling_logp_difference/max': '32.14', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9991', 'sampling/importance_sampling_ratio/max': '2.982', 'kl': '0.002767', 'entropy': '0.149', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '1015', 'epoch': '0.78', 'comparison/step_seconds': '1072', 'comparison/generation_seconds': '313.9', 'comparison/rollout_other_seconds': '213.9', 'comparison/update_seconds': '544', 'comparison/gpu_step_samples': 1047, 'comparison/gpu_step_peak_used_gib': '84.62', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '98.66', 'comparison/gpu_generation_samples': 304, 'comparison/gpu_generation_peak_used_gib': '84.62', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': 100, 'comparison/gpu_rollout_other_samples': 210, 'comparison/gpu_rollout_other_peak_used_gib': '84.62', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '93.42', 'comparison/gpu_update_samples': 533, 'comparison/gpu_update_peak_used_gib': '84.62', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.97'}
 [11-16 03:00:03] HEARTBEAT 39
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+[11-16 03:05:03] HEARTBEAT 39
+[11-16 03:10:03] HEARTBEAT 39
+[11-16 03:12:12] comparison step 40: length stops 8/48, mixed unmasked groups 3/8, generation 270.2s, update 539.7s, card peak 84.6 GiB, utilization 98.6%
+[11-16 03:12:12] step 40/50 epoch 0.80 loss -0.0025 lr 7.80e-07 s/step 1021.5 eta 2.84h peakGPU 82.2GiB
+{'loss': '-0.002509', 'grad_norm': '0.04205', 'learning_rate': '7.8e-07', 'num_tokens': '1.261e+07', 'completions/mean_length': '7413', 'completions/min_length': '367', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1667', 'completions/mean_terminated_length': '5619', 'completions/min_terminated_length': '367', 'completions/max_terminated_length': '1.527e+04', 'rewards/mmr_format_cosine/mean': '0.6407', 'rewards/mmr_format_cosine/std': '1.177', 'reward': '0.6407', 'reward_std': '1.177', 'frac_reward_zero_std': '0', 'comparison/completions': '48', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '8', 'comparison/length_stops': '8', 'comparison/mixed_unmasked_reward_groups': '3', 'mmr/prompt_truncated_frac': '0', 'reward/correct_frac': '0.4792', 'reward/format_frac': '0.8125', 'sampling/sampling_logp_difference/mean': '0.02774', 'sampling/sampling_logp_difference/max': '4.766', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9996', 'sampling/importance_sampling_ratio/max': '2.902', 'kl': '0.002398', 'entropy': '0.2218', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '964.4', 'epoch': '0.8', 'comparison/step_seconds': '1022', 'comparison/generation_seconds': '270.2', 'comparison/rollout_other_seconds': '211.6', 'comparison/update_seconds': '539.7', 'comparison/gpu_step_samples': 999, 'comparison/gpu_step_peak_used_gib': '84.62', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '98.58', 'comparison/gpu_generation_samples': 263, 'comparison/gpu_generation_peak_used_gib': '84.62', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': 100, 'comparison/gpu_rollout_other_samples': 207, 'comparison/gpu_rollout_other_peak_used_gib': '84.62', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '93.23', 'comparison/gpu_update_samples': 529, 'comparison/gpu_update_peak_used_gib': '84.62', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.96'}
+[11-16 03:12:18] Saved checkpoint-40 locally: 1.8GiB in 5.7 s, 209.1 GiB free
+[11-16 03:12:18] Mirroring checkpoint-40 to Drive (full_state) in the background
+[11-16 03:12:40] rclone copy (21 s): 2026/11/15 19:12:40 NOTICE:     1.816 GiB / 1.816 GiB, 100%, 97.110 MiB/s, ETA 0s
+[11-16 03:12:43] rclone check (3 s): 2026/11/15 19:12:43 NOTICE: Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-40.65001978f723406d83f9c7bcd7ea9540.partial': 12 matching files
+[11-16 03:12:44] rclone purge (2 s): 2026/11/15 19:12:44 Failed to purge: directory not found
+[11-16 03:12:47] Uploaded checkpoint-40 to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-40 (1.8GiB in 28 s, 67 MiB/s)
+[11-16 03:12:49] rclone copyto (2 s): 2026/11/15 19:12:49 NOTICE:     1.752 KiB / 1.752 KiB, 100%, 0 B/s, ETA -
+[11-16 03:12:49] Mirror complete: /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-40
+[11-16 03:15:03] HEARTBEAT 40
+[11-16 03:20:03] HEARTBEAT 40
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+[11-16 03:25:04] HEARTBEAT 40
+[11-16 03:29:30] comparison step 41: length stops 10/48, mixed unmasked groups 7/8, generation 276.0s, update 543.0s, card peak 84.6 GiB, utilization 98.5%
+[11-16 03:29:30] step 41/50 epoch 0.82 loss -0.0972 lr 8.00e-07 s/step 1037.5 eta 2.59h peakGPU 82.2GiB
+{'loss': '-0.09724', 'grad_norm': '0.04355', 'learning_rate': '8e-07', 'num_tokens': '1.297e+07', 'completions/mean_length': '7465', 'completions/min_length': '384', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.2083', 'completions/mean_terminated_length': '5118', 'completions/min_terminated_length': '384', 'completions/max_terminated_length': '1.505e+04', 'rewards/mmr_format_cosine/mean': '0.9102', 'rewards/mmr_format_cosine/std': '1.32', 'reward': '0.9102', 'reward_std': '1.32', 'frac_reward_zero_std': '0', 'comparison/completions': '48', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '8', 'comparison/length_stops': '10', 'comparison/mixed_unmasked_reward_groups': '7', 'mmr/prompt_truncated_frac': '0', 'reward/correct_frac': '0.5625', 'reward/format_frac': '0.75', 'sampling/sampling_logp_difference/mean': '0.02842', 'sampling/sampling_logp_difference/max': '3.829', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9993', 'sampling/importance_sampling_ratio/max': '2.989', 'kl': '0.002275', 'entropy': '0.2033', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '975', 'epoch': '0.82', 'comparison/step_seconds': '1032', 'comparison/generation_seconds': '276', 'comparison/rollout_other_seconds': '212.8', 'comparison/update_seconds': '543', 'comparison/gpu_step_samples': 1008, 'comparison/gpu_step_peak_used_gib': '84.62', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '98.5', 'comparison/gpu_generation_samples': 268, 'comparison/gpu_generation_peak_used_gib': '84.62', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '99.63', 'comparison/gpu_rollout_other_samples': 209, 'comparison/gpu_rollout_other_peak_used_gib': '84.62', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '93.38', 'comparison/gpu_update_samples': 531, 'comparison/gpu_update_peak_used_gib': '84.62', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.93'}
+[11-16 03:30:04] HEARTBEAT 41
