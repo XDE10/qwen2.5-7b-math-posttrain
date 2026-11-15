@@ -1,4 +1,4 @@
-# 项目一当前状态（2026-11-14，v93）
+# 项目一当前状态（2026-11-15，v93）
 
 > 本页只写「现在做到哪」的摘要；逐版本历史与精确数字见 [history.md](history.md)，仓库约定见根目录 [AGENTS.md](../../AGENTS.md)，v93 方案见 [三周冲刺方案_v93.md](../blueprints/三周冲刺方案_v93.md)。WSL2 启动和恢复命令见 [v93 运行手册](../../experiments/qfft_v93/README.md)。
 
@@ -203,3 +203,10 @@ bash experiments/qfft_v93/colab/launch.sh --gpu G4 --session p1-r1-16k-step30 \
 - **题池与学习信号。** 用批准源文件映射前 30 步 240 道题、1,920 条作答。其中 E0 中等题 127 道，难题 113 道。难题占生成 token **64.3%**。全 0 奖励组分别 6/127、49/113，未掩码作答的混合奖励组分别 84/127、61/113，达到训练 16K 生成上限分别 48/1,016、171/904。8 个题组的原始奖励差异只来自被屏蔽作答，单独计数。
 - **奖励与学习率。** 1,693 条未被训练屏蔽的作答用评测规则重判，二元奖励只差 1 条，训练遗漏 1 条正确答案。第 11–30 步记录的 LR 一直为 1e-5，梯度范数未持续走高；配置 β=0，缺少相对初始 R1 的 KL 测量。现有数据支持优先检验采样效率。没有题池或学习率的受控能力对照，无法确认 AMC23 退步的训练原因。
 - **下一步待审查。** 150 步配置、每步 6 道 E0 中等题与 2 道难题的采样方案、FuRA 的 50 步迁移配置均保留为草案。FuRA 公开的 7B 标准 LoRA 对照从 Base 出发，本地迁移配置已通过 CPU 微型模型与模拟评测检查。先调研从数学 SFT 或蒸馏权重出发的公开 RL 配方，再决定是否值得跑一次有预算上限的迁移。[调研提示词](../operations/v93_public_rl_research_prompt.md)
+
+### Laser-D 7B 公开配方核查
+
+- **论文结果。** 作者从 `DeepSeek-R1-Distill-Qwen-7B` 出发，在约 4 万条竞赛数学问答的 DeepScaleR 数据上继续做 RL。论文表 4 中，Laser-D 的 AIME24 准确率从 53.1% 到 58.3%，平均输出从 13,414 到 5,379 token。MATH-500 从 92.6% 到 92.2%，AMC23 从 88.4% 到 90.0%。这些分数使用作者自己的评测口径。[论文第 6 节与表 4](https://arxiv.org/html/2505.15612#S6)
+- **Laser-D 奖励。** 维持原判分，对正确且未超过对应难度目标长度的回答加 0.5 分。按当前题组的正确比例以 1/3 和 2/3 分档，从监测集统计中选择能满足预期正确数量的长度阈值。论文给出的 4,096 是阈值搜索的下界。公开训练器在开跑前做监测，7B 启动脚本将后续监测间隔设为 20 步。[论文第 5 节](https://arxiv.org/html/2505.15612#S5) · [固定提交的奖励源码](https://github.com/hkust-nlp/Laser/blob/c9e7c4ef18192212574c5f6709d67c74baea7605/verl/utils/reward_score/length_penalty.py#L249-L384) · [监测入口](https://github.com/hkust-nlp/Laser/blob/c9e7c4ef18192212574c5f6709d67c74baea7605/verl/trainer/ppo/ray_trainer.py#L1543-L1556)
+- **公开脚本与权重。** 固定提交 `c9e7c4ef18192212574c5f6709d67c74baea7605` 有 Laser-D 奖励实现及其 1.5B 启动脚本。唯一公开的 7B 启动脚本选用 Laser-DE，该变体也为部分较长且无重复的错误作答加分。7B 脚本默认全参、LR `1e-6`、每批 128 题 × 8 条作答、temperature 0.6、16,384 生成上限。作者另发布了论文 Laser-D 7B 的模型权重。[7B 启动脚本](https://github.com/hkust-nlp/Laser/blob/c9e7c4ef18192212574c5f6709d67c74baea7605/scripts/training/7b/laser-de-l4096-7b.sh) · [Laser-DE 奖励源码](https://github.com/hkust-nlp/Laser/blob/c9e7c4ef18192212574c5f6709d67c74baea7605/verl/utils/reward_score/length_penalty.py#L499-L532) · [Laser-D 7B 权重](https://huggingface.co/hkust-nlp/Laser-D-L4096-7B/tree/befb78a71eed014996618657e31741d5e232af1d)
+- **复现条件。** 作者确认 7B 用 4 个节点，公开 7B 脚本为每节点 8 卡。作者给出的训练范围是 600–900 步，每 10 步评测已保存的 checkpoint，并报告最高准确率。当前项目使用自训 R1 QFFT、单张 G4、已批准题池及预先指定的最终步。公开材料支持移植 Laser-D 奖励与监测机制。单卡短跑仍需验证，无法用论文的涨幅或步数给本项目承诺。此条只记录来源核查。[作者说明卡数](https://github.com/hkust-nlp/Laser/issues/1#issuecomment-2982406932) · [作者说明训练和选点](https://github.com/hkust-nlp/Laser/issues/3#issuecomment-2999011227)
