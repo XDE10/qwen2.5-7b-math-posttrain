@@ -1,0 +1,52 @@
+{
+  "protocol": {
+    "model": "run:grpo_qfft_r1_mmr_dr50_v93/merged",
+    "model_identity": {
+      "merged": "2026-11-16T06:03:29+08:00",
+      "base": "/content/p1/models/runs__project1__v93__runs__qfft_r1_16k_b8_restart_v93__final",
+      "adapter": "/content/p1/runs/grpo_qfft_r1_mmr_dr50_v93/adapter",
+      "base_identity": {
+        "identity": {
+          "run": "qfft_r1_16k_b8_restart_v93",
+          "format": "qfft",
+          "teacher": "r1",
+          "data_sha256": "047df3c8a897ccdfb3f6c632e2aba172f52ee4438eaee61c65e1e23e93c5a4d9",
+          "init_model": "base",
+          "recipe": {
+            "max_length": 16384,
+            "num_train_epochs": 6,
+            "learning_rate": 1e-05,
+            "warmup_fraction": 0.1,
+            "lr_scheduler_type": "cosine",
+            "per_device_train_batch_size": 1,
+            "gradient_accumulation_steps": 8,
+            "weight_decay": 0.0001,
+            "adam_beta1": 0.9,
+            "adam_beta2": 0.999,
+            "max_grad_norm": 1.0,
+            "seed": 42,
+            "truncate": true
+          },
+          "smoke": false,
+          "max_steps_override": null
+        },
+        "steps": 750,
+        "base": "base",
+        "exported": "2026-11-13T05:46:20+08:00"
+      }
+    },
+    "benchmark": "gsm8k",
+    "benchmark_sha256": "b31c428526c7f9286cd04d35934b20407193c7d68806b9bc481bfa9bdf7967f7",
+    "n": 1,
+    "limit": null,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "max_model_len": 32768,
+    "max_tokens_cap": null,
+    "seed": 42,
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "engine": "vllm"
+  },
+  "protocol_sha256": "1b273f6a693c42718a384d06e95e0be04ff89113d40e7e1ef76774cbb7618445",
+  "updated": "2026-11-16T06:26:18+08:00"
+}

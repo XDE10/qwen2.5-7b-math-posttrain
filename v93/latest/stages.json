@@ -224,6 +224,15 @@
   "code": "0171f48fe026",
   "host": "p1-r1-is-diagnostic@526b4586ab8d"
  },
+ "r1-mmr-dr50-eval": {
+  "stage": "r1-mmr-dr50-eval",
+  "state": "running",
+  "started": "2026-11-15T22:23:28.129485",
+  "code": "63247fb0116e",
+  "host": "p1-r1-mmr-dr50-eval@f830817b58d4",
+  "heartbeat": "2026-11-15T22:58:37.997573",
+  "heartbeat_ts": 1794783517.9975853
+ },
  "smoke-eval": {
   "stage": "smoke-eval",
   "state": "complete",
