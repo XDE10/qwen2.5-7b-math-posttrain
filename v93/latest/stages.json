@@ -134,6 +134,15 @@
   "code": "6b9323a23e5b",
   "host": "p1-r1-tokenmask10@90b3d945fe47"
  },
+ "grpo__grpo_qfft_r1_mmr_dr50": {
+  "stage": "grpo:grpo_qfft_r1_mmr_dr50",
+  "state": "running",
+  "started": "2026-11-15T05:44:31.344934",
+  "code": "56a6b5d0b250",
+  "host": "p1-r1-mmr-dr50@69cc76b19bed",
+  "heartbeat": "2026-11-15T06:14:35.503098",
+  "heartbeat_ts": 1794723275.5031097
+ },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
   "state": "complete",

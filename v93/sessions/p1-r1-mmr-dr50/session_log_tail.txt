@@ -1,0 +1,161 @@
+P1_SESSION=p1-r1-mmr-dr50 gpu=G4 auto_release=1
+/tmp/ipykernel_765/3403182392.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 56a6b5d0b250 (git f593e55e3ec1+dirty); stages: ['grpo:grpo_qfft_r1_mmr_dr50', 'r1-mmr-dr50-eval']
+[11-15 05:44:30] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-15 05:44:31] ===== STAGE grpo:grpo_qfft_r1_mmr_dr50 =====
+[11-15 05:44:31] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-15 05:44:31] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-15 05:44:32] Restoring rl venv from Drive snapshot rl-366e0de0b57e.tar
+[11-15 05:46:01] RUN env PYTHONPATH=/content/p1/code/56a6b5d0b250:/content/p1/venvs/rl-mmr-extra-4ca6eff846ea /content/p1/venvs/rl/bin/python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_mmr_dr50.json | log: /content/mydrive/runs/project1/v93/logs/20261115-054601_grpo_grpo_qfft_r1_mmr_dr50.log
+[11-15 13:47:11] rclone copy (67 s): 2026/11/15 05:47:11 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 77.648 MiB/s, ETA 0s
+[11-15 13:47:11] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 67 s
+swanlab: Currently logged in as: 薛定谔 to https://api.swanlab.cn. Use `swanlab 
+login --relogin` to force relogin
+swanlab: Tracking run with swanlab version 0.10.4
+swanlab: 💾 Run data saved at 
+/content/p1/runs/grpo_qfft_r1_mmr_dr50_v93/swanlog/run-20261115_054727-7iflup49
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run grpo_qfft_r1_mmr_dr50_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/7iflup49
+[11-15 13:47:29] SwanLab run 7iflup49 https://swanlab.cn/@XDE10/project1-7b-math/runs/7iflup49
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   2%|▏         | 6/339 [00:00<00:06, 55.03it/s]
+Loading weights:  12%|█▏        | 42/339 [00:00<00:01, 221.64it/s]
+Loading weights:  23%|██▎       | 78/339 [00:00<00:00, 280.77it/s]
+Loading weights:  34%|███▎      | 114/339 [00:00<00:00, 310.15it/s]
+Loading weights:  44%|████▎     | 148/339 [00:00<00:00, 319.36it/s]
+Loading weights:  58%|█████▊    | 196/339 [00:00<00:00, 364.79it/s]
+Loading weights:  69%|██████▊   | 233/339 [00:00<00:00, 357.40it/s]
+Loading weights:  80%|███████▉  | 270/339 [00:00<00:00, 359.24it/s]
+Loading weights:  90%|█████████ | 306/339 [00:00<00:00, 357.82it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 336.57it/s]
+
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.11s/it]
+
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.11s/it]
+
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/15 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   7%|▋         | 1/15 [00:22<05:20, 22.89s/it]
+Capturing CUDA graphs (PIECEWISE):  40%|████      | 6/15 [00:23<00:25,  2.83s/it]
+Capturing CUDA graphs (PIECEWISE):  40%|████      | 6/15 [00:36<00:25,  2.83s/it]
+Capturing CUDA graphs (PIECEWISE):  47%|████▋     | 7/15 [00:42<00:49,  6.18s/it]
+Capturing CUDA graphs (PIECEWISE):  80%|████████  | 12/15 [00:42<00:07,  2.56s/it]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 15/15 [00:42<00:00,  2.85s/it]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  50%|█████     | 1/2 [00:38<00:38, 38.89s/it]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:38<00:00, 19.45s/it]
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/15 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  33%|███▎      | 5/15 [00:00<00:00, 45.31it/s]
+Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 10/15 [00:00<00:00, 46.46it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 15/15 [00:00<00:00, 47.69it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 15/15 [00:00<00:00, 47.21it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/9 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  78%|███████▊  | 7/9 [00:00<00:00, 61.82it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 9/9 [00:00<00:00, 61.96it/s]
+[11-15 13:54:37] HEARTBEAT starting
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+[11-15 13:59:37] HEARTBEAT starting
+[11-15 14:04:37] HEARTBEAT starting
+[11-15 14:05:21] comparison step 1: length stops 1/48, mixed unmasked groups 6/8, generation 197.0s, update 542.3s, card peak 83.0 GiB, utilization 99.3%
+[11-15 14:05:21] step 1/50 epoch 0.02 loss 0.0114 lr 0.00e+00 s/step 944.5 eta 12.86h peakGPU 80.8GiB
+{'loss': '0.01137', 'grad_norm': '0.02281', 'learning_rate': '0', 'num_tokens': '1.121e+05', 'completions/mean_length': '2149', 'completions/min_length': '248', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.02083', 'completions/mean_terminated_length': '1847', 'completions/min_terminated_length': '248', 'completions/max_terminated_length': '1.183e+04', 'rewards/mmr_format_cosine/mean': '1.273', 'rewards/mmr_format_cosine/std': '0.9874', 'reward': '1.273', 'reward_std': '0.9874', 'frac_reward_zero_std': '0', 'comparison/completions': '48', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '8', 'comparison/length_stops': '1', 'comparison/mixed_unmasked_reward_groups': '6', 'mmr/prompt_truncated_frac': '0', 'reward/correct_frac': '0.6458', 'reward/format_frac': '0.9792', 'sampling/sampling_logp_difference/mean': '0.01862', 'sampling/sampling_logp_difference/max': '4.077', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9998', 'sampling/importance_sampling_ratio/max': '2.873', 'kl': '6.473e-05', 'entropy': '0.1289', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '887.7', 'epoch': '0.02', 'comparison/step_seconds': '944.5', 'comparison/generation_seconds': '197', 'comparison/rollout_other_seconds': '205.2', 'comparison/update_seconds': '542.3', 'comparison/gpu_step_samples': 928, 'comparison/gpu_step_peak_used_gib': '83.05', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '99.25', 'comparison/gpu_generation_samples': 193, 'comparison/gpu_generation_peak_used_gib': '57.7', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '99.95', 'comparison/gpu_rollout_other_samples': 202, 'comparison/gpu_rollout_other_peak_used_gib': '67.23', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '97.01', 'comparison/gpu_update_samples': 533, 'comparison/gpu_update_peak_used_gib': '83.05', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.85'}
+[11-15 14:09:37] HEARTBEAT 1
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now

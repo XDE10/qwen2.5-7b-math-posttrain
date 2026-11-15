@@ -1,0 +1,7 @@
+{
+  "files": [
+    "/content/mydrive/projects/project1/v93/data/rl_openr1_46k_decontaminated/mmr_dr50_train.jsonl"
+  ],
+  "final_questions": 400,
+  "approval_manifest": "grpo/mmr_openr1_approval.json"
+}
