@@ -2000,3 +2000,84 @@ equations=True in NormalizationConfig is deprecated, as it handled by the parser
 [11-16 05:45:01] step 49/50 epoch 0.98 loss -0.0029 lr 9.60e-07 s/step 1025.3 eta 0.28h peakGPU 82.2GiB
 {'loss': '-0.002859', 'grad_norm': '0.05158', 'learning_rate': '9.6e-07', 'num_tokens': '1.549e+07', 'completions/mean_length': '6651', 'completions/min_length': '306', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1458', 'completions/mean_terminated_length': '4989', 'completions/min_terminated_length': '306', 'completions/max_terminated_length': '1.605e+04', 'rewards/mmr_format_cosine/mean': '0.7799', 'rewards/mmr_format_cosine/std': '1.185', 'reward': '0.7799', 'reward_std': '1.185', 'frac_reward_zero_std': '0', 'comparison/completions': '48', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '8', 'comparison/length_stops': '7', 'comparison/mixed_unmasked_reward_groups': '5', 'mmr/prompt_truncated_frac': '0', 'reward/correct_frac': '0.4792', 'reward/format_frac': '0.8125', 'sampling/sampling_logp_difference/mean': '0.03131', 'sampling/sampling_logp_difference/max': '5.374', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9992', 'sampling/importance_sampling_ratio/max': '2.935', 'kl': '0.002607', 'entropy': '0.2292', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '962.7', 'epoch': '0.98', 'comparison/step_seconds': '1019', 'comparison/generation_seconds': '264', 'comparison/rollout_other_seconds': '212.3', 'comparison/update_seconds': '543.2', 'comparison/gpu_step_samples': 996, 'comparison/gpu_step_peak_used_gib': '84.62', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '98.67', 'comparison/gpu_generation_samples': 257, 'comparison/gpu_generation_peak_used_gib': '84.62', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '99.61', 'comparison/gpu_rollout_other_samples': 207, 'comparison/gpu_rollout_other_peak_used_gib': '84.62', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '94.22', 'comparison/gpu_update_samples': 532, 'comparison/gpu_update_peak_used_gib': '84.62', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.95'}
 [11-16 05:45:11] HEARTBEAT 49
+[11-16 05:50:11] HEARTBEAT 49
+[report] pushed to colab-reports: colab p1-1115-180357: progress
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+equations=True in NormalizationConfig is deprecated, as it handled by the parser now
+[11-16 05:55:11] HEARTBEAT 49
+[11-16 06:00:11] HEARTBEAT 49
+[11-16 06:01:31] comparison step 50: length stops 7/48, mixed unmasked groups 6/8, generation 237.1s, update 542.3s, card peak 84.6 GiB, utilization 98.8%
+[11-16 06:01:31] step 50/50 epoch 1.00 loss -0.0307 lr 9.80e-07 s/step 990.2 eta 0.00h peakGPU 82.2GiB
+{'loss': '-0.03075', 'grad_norm': '0.04152', 'learning_rate': '9.8e-07', 'num_tokens': '1.574e+07', 'completions/mean_length': '5099', 'completions/min_length': '256', 'completions/max_length': '1.638e+04', 'completions/clipped_ratio': '0.1458', 'completions/mean_terminated_length': '3173', 'completions/min_terminated_length': '256', 'completions/max_terminated_length': '1.337e+04', 'rewards/mmr_format_cosine/mean': '0.8678', 'rewards/mmr_format_cosine/std': '1.208', 'reward': '0.8678', 'reward_std': '1.208', 'frac_reward_zero_std': '0', 'comparison/completions': '48', 'comparison/groups': '8', 'comparison/groups_with_reward_signal': '8', 'comparison/length_stops': '7', 'comparison/mixed_unmasked_reward_groups': '6', 'mmr/prompt_truncated_frac': '0', 'reward/correct_frac': '0.4792', 'reward/format_frac': '0.7708', 'sampling/sampling_logp_difference/mean': '0.0252', 'sampling/sampling_logp_difference/max': '4.313', 'sampling/importance_sampling_ratio/min': '0', 'sampling/importance_sampling_ratio/mean': '0.9994', 'sampling/importance_sampling_ratio/max': '2.882', 'kl': '0.002615', 'entropy': '0.1749', 'clip_ratio/low_mean': '0', 'clip_ratio/high_mean': '0', 'clip_ratio/region_mean': '0', 'clip_ratio/low_min': '0', 'clip_ratio/high_max': '0', 'step_time': '933.4', 'epoch': '1', 'comparison/step_seconds': '990.2', 'comparison/generation_seconds': '237.1', 'comparison/rollout_other_seconds': '210.7', 'comparison/update_seconds': '542.3', 'comparison/gpu_step_samples': 969, 'comparison/gpu_step_peak_used_gib': '84.62', 'comparison/gpu_step_total_gib': '95.59', 'comparison/gpu_step_mean_utilization_pct': '98.84', 'comparison/gpu_generation_samples': 232, 'comparison/gpu_generation_peak_used_gib': '84.62', 'comparison/gpu_generation_total_gib': '95.59', 'comparison/gpu_generation_mean_utilization_pct': '100', 'comparison/gpu_rollout_other_samples': 206, 'comparison/gpu_rollout_other_peak_used_gib': '84.62', 'comparison/gpu_rollout_other_total_gib': '95.59', 'comparison/gpu_rollout_other_mean_utilization_pct': '94.66', 'comparison/gpu_update_samples': 531, 'comparison/gpu_update_peak_used_gib': '84.62', 'comparison/gpu_update_total_gib': '95.59', 'comparison/gpu_update_mean_utilization_pct': '99.95'}
+[11-16 06:01:37] Saved checkpoint-50 locally: 1.8GiB in 6.1 s, 209.1 GiB free
+{'train_runtime': '4.272e+04', 'train_samples_per_second': '0.047', 'train_steps_per_second': '0.001', 'train_loss': '-0.02026', 'epoch': '1'}
+[11-16 06:01:37] Waiting for the previous checkpoint mirror to finish ...
+[11-16 06:01:37] Mirroring checkpoint-50 to Drive (full_state) in the background
+[11-16 06:01:59] rclone copy (20 s): 2026/11/15 22:01:59 NOTICE:     1.816 GiB / 1.816 GiB, 100%, 103.219 MiB/s, ETA 0s
+[11-16 06:02:01] rclone check (2 s): 2026/11/15 22:02:01 NOTICE: Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-50.ded0eb3a1678457bb02a4fe7a1f10897.partial': 12 matching files
+[11-16 06:02:03] rclone purge (2 s): 2026/11/15 22:02:03 Failed to purge: directory not found
+[11-16 06:02:06] Uploaded checkpoint-50 to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-50 (1.8GiB in 27 s, 68 MiB/s)
+[11-16 06:02:08] rclone copyto (2 s): 2026/11/15 22:02:08 NOTICE:     1.752 KiB / 1.752 KiB, 100%, 1.750 KiB/s, ETA 0s
+[11-16 06:02:23] Mirror complete: /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/ckpt_mirror/checkpoint-50
+[11-16 06:02:46] rclone copy (9 s): 2026/11/15 22:02:46 NOTICE:   626.960 MiB / 626.960 MiB, 100%, 84.852 MiB/s, ETA 0s
+[11-16 06:02:47] rclone purge (2 s): 2026/11/15 22:02:47 Failed to purge: directory not found
+[11-16 06:02:50] Uploaded adapter to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/adapter (627.0MiB in 13 s, 47 MiB/s)
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<00:49,  6.81it/s]
+Loading weights:  12%|█▏        | 40/339 [00:00<00:01, 193.70it/s]
+Loading weights:  23%|██▎       | 78/339 [00:00<00:00, 268.86it/s]
+Loading weights:  35%|███▍      | 118/339 [00:00<00:00, 313.91it/s]
+Loading weights:  45%|████▌     | 154/339 [00:00<00:00, 326.86it/s]
+Loading weights:  56%|█████▌    | 190/339 [00:00<00:00, 337.16it/s]
+Loading weights:  67%|██████▋   | 226/339 [00:00<00:00, 342.81it/s]
+Loading weights:  78%|███████▊  | 264/339 [00:00<00:00, 353.82it/s]
+Loading weights:  88%|████████▊ | 300/339 [00:00<00:00, 355.22it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 320.33it/s]
+
+Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Writing model shards:  25%|██▌       | 1/4 [00:02<00:07,  2.64s/it]
+Writing model shards:  50%|█████     | 2/4 [00:14<00:16,  8.09s/it]
+Writing model shards:  75%|███████▌  | 3/4 [00:25<00:09,  9.55s/it]
+Writing model shards: 100%|██████████| 4/4 [00:35<00:00,  9.76s/it]
+Writing model shards: 100%|██████████| 4/4 [00:35<00:00,  8.98s/it]
+[11-16 06:05:49] rclone copy (132 s): 2026/11/15 22:05:49 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 107.492 MiB/s, ETA 0s
+[11-16 06:05:51] rclone purge (2 s): 2026/11/15 22:05:51 Failed to purge: directory not found
+[11-16 06:05:54] Uploaded merged to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/merged (14.2GiB in 136 s, 107 MiB/s)
+[11-16 06:05:54] Merged weights -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/merged
+swanlab: 📁 View project at https://swanlab.cn/@XDE10/project1-7b-math
+swanlab: 🚀 View run grpo_qfft_r1_mmr_dr50_v93 at 
+https://swanlab.cn/@XDE10/project1-7b-math/runs/gjddpi18
+swanlab: Upload complete: 4750 records
+[11-16 06:05:55] grpo_qfft_r1_mmr_dr50_v93: COMPLETE -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93
