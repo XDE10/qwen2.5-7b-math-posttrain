@@ -140,8 +140,8 @@
   "started": "2026-11-15T10:04:28.691939",
   "code": "63247fb0116e",
   "host": "p1-1115-180357@1031dd1665ed",
-  "heartbeat": "2026-11-15T13:24:45.607787",
-  "heartbeat_ts": 1794749085.6077988
+  "heartbeat": "2026-11-15T13:59:47.237451",
+  "heartbeat_ts": 1794751187.2374635
  },
  "grpo__smoke_grpo_qfft_r1_16k_b8": {
   "stage": "grpo:smoke_grpo_qfft_r1_16k_b8",
