@@ -226,12 +226,12 @@
  },
  "r1-mmr-dr50-eval": {
   "stage": "r1-mmr-dr50-eval",
-  "state": "running",
+  "state": "failed",
+  "error": "RuntimeError: score_grpo_qfft_r1_mmr_dr50_v93_merged failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261116-015335_score_grpo_qfft_r1_mmr_dr50_v93_merged.log",
+  "at": "2026-11-16T01:54:06.971900",
   "started": "2026-11-15T22:23:28.129485",
   "code": "63247fb0116e",
-  "host": "p1-r1-mmr-dr50-eval@f830817b58d4",
-  "heartbeat": "2026-11-16T01:19:17.382087",
-  "heartbeat_ts": 1794791957.3821008
+  "host": "p1-r1-mmr-dr50-eval@f830817b58d4"
  },
  "smoke-eval": {
   "stage": "smoke-eval",
