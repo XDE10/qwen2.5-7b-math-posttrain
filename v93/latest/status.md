@@ -1,4 +1,4 @@
-# v93 status (2026-11-16T01:50:04, session p1-r1-mmr-dr50-eval)
+# v93 status (2026-11-16T01:55:11, session p1-r1-mmr-dr50-eval)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -26,13 +26,13 @@ stage r1-competition-2026                           complete  0.696
 stage r1-grpo-dev                                   complete  0.601 
 stage r1-grpo-dev:step30                            complete  0.327 
 stage r1-is-diagnostic                              complete  0.243 
-stage r1-mmr-dr50-eval                              running   on p1-r1-mmr-dr50-eval@f830817b58d4, heartbeat 1 min ago 
+stage r1-mmr-dr50-eval                              failed     RuntimeError: score_grpo_qfft_r1_mmr_dr50_v93_merged failed with exit code 1; see /content/mydrive/runs/project1/v93/log
 stage smoke-eval                                    complete  0.1 
 stage smoke-grpo                                    complete  0.342 
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 5134 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 5140 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run compare_grpo_qfft_r1_12k_v93 complete step 2/ updated 2026-11-13T18:23:41+08:00
 run compare_grpo_qfft_r1_16k_v93 complete step 2/ updated 2026-11-13T16:18:56+08:00
@@ -57,6 +57,11 @@ eval base/math500    2000/2000 complete=True
 eval grpo_qfft_r1_16k_continue30_v93_merged/aime24     480/480 complete=True
 eval grpo_qfft_r1_16k_continue30_v93_merged/aime25     480/480 complete=True
 eval grpo_qfft_r1_16k_continue30_v93_merged/amc23      320/320 complete=True
+eval grpo_qfft_r1_mmr_dr50_v93_merged/aime24     480/480 complete=True
+eval grpo_qfft_r1_mmr_dr50_v93_merged/aime25     480/480 complete=True
+eval grpo_qfft_r1_mmr_dr50_v93_merged/amc23      320/320 complete=True
+eval grpo_qfft_r1_mmr_dr50_v93_merged/gsm8k      1319/1319 complete=True
+eval grpo_qfft_r1_mmr_dr50_v93_merged/math500    2000/2000 complete=True
 eval qfft_ds_v93/aime24     480/480 complete=True
 eval qfft_ds_v93/aime25     480/480 complete=True
 eval qfft_ds_v93/amc23      320/320 complete=True

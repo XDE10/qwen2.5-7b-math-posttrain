@@ -1,0 +1,17 @@
+[11-16 09:53:43] grpo_qfft_r1_mmr_dr50_v93_merged/aime24: mean@n=0.188 CI=[0.1, 0.2916666666666667] tokens=14996 trunc=0.081
+[11-16 09:53:44] grpo_qfft_r1_mmr_dr50_v93_merged/aime25: mean@n=0.163 CI=[0.075, 0.2708333333333333] tokens=11719 trunc=0.037
+[11-16 09:53:45] grpo_qfft_r1_mmr_dr50_v93_merged/amc23: mean@n=0.600 CI=[0.478125, 0.721875] tokens=7590 trunc=0.009
+[11-16 09:53:47] grpo_qfft_r1_mmr_dr50_v93_merged/gsm8k: mean@n=0.924 CI=[0.9097801364670205, 0.9378316906747536] tokens=453 trunc=0.000
+[11-16 09:53:51] grpo_qfft_r1_mmr_dr50_v93_merged/math500: mean@n=0.803 CI=[0.7745, 0.8315] tokens=3046 trunc=0.004
+[11-16 09:53:56] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/score.py", line 177, in <module>
+    main()
+    ~~~~^^
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/score.py", line 126, in main
+    summary = score_one(grader, evals / tag / name, rows, a.rescore, a.require_gradable)
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/score.py", line 57, in score_one
+    raise RuntimeError(f'{out_dir}: {failures} unscorable generations; re-run scoring to retry')
+RuntimeError: /content/mydrive/runs/project1/v93/evals/qfft_r1_16k_b8_restart_v93/aime25: 1 unscorable generations; re-run scoring to retry

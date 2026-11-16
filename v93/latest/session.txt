@@ -1,2 +1,2 @@
 p1-r1-mmr-dr50-eval
-running
+FAILED r1-mmr-dr50-eval: RuntimeError: score_grpo_qfft_r1_mmr_dr50_v93_merged failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261116-015335_score_grpo_qfft_r1_mmr_dr50_v93_merged.log

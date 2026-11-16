@@ -323,3 +323,33 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:39<
 [11-16 09:46:26] grpo_qfft_r1_mmr_dr50_v93_merged: 4552/4599 new generations, 1760 output tok/s
 [11-16 09:47:29] grpo_qfft_r1_mmr_dr50_v93_merged: 4562/4599 new generations, 1762 output tok/s
 [11-16 09:48:48] grpo_qfft_r1_mmr_dr50_v93_merged: 4569/4599 new generations, 1765 output tok/s
+[11-16 09:50:05] grpo_qfft_r1_mmr_dr50_v93_merged: 4577/4599 new generations, 1768 output tok/s
+[11-16 09:51:17] grpo_qfft_r1_mmr_dr50_v93_merged: 4589/4599 new generations, 1781 output tok/s
+[11-16 09:52:21] grpo_qfft_r1_mmr_dr50_v93_merged: 4595/4599 new generations, 1784 output tok/s
+[11-16 09:53:25] grpo_qfft_r1_mmr_dr50_v93_merged: 4598/4599 new generations, 1782 output tok/s
+[11-16 09:53:28] grpo_qfft_r1_mmr_dr50_v93_merged: 4599 new generations, 21,941,058 output tokens in 12295 s (1784 tok/s; engine start 134 s)
+[11-16 09:53:29] grpo_qfft_r1_mmr_dr50_v93_merged: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=4581) INFO 11-16 01:53:29 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=5295) INFO 11-16 01:53:29 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=5295) INFO 11-16 01:53:29 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=5295) INFO 11-16 01:53:29 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=5295) INFO 11-16 01:53:29 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-16 01:53:35] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --benchmarks math500,aime24,aime25,amc23,gsm8k --tags grpo_qfft_r1_mmr_dr50_v93_merged,qfft_r1_16k_b8_restart_v93 --require-gradable --report-dir /content/mydrive/runs/project1/v93/r1_mmr_dr50_eval --compare grpo_qfft_r1_mmr_dr50_v93_merged:qfft_r1_16k_b8_restart_v93 --per-problem | log: /content/mydrive/runs/project1/v93/logs/20261116-015335_score_grpo_qfft_r1_mmr_dr50_v93_merged.log
+[11-16 09:53:43] grpo_qfft_r1_mmr_dr50_v93_merged/aime24: mean@n=0.188 CI=[0.1, 0.2916666666666667] tokens=14996 trunc=0.081
+[11-16 09:53:44] grpo_qfft_r1_mmr_dr50_v93_merged/aime25: mean@n=0.163 CI=[0.075, 0.2708333333333333] tokens=11719 trunc=0.037
+[11-16 09:53:45] grpo_qfft_r1_mmr_dr50_v93_merged/amc23: mean@n=0.600 CI=[0.478125, 0.721875] tokens=7590 trunc=0.009
+[11-16 09:53:47] grpo_qfft_r1_mmr_dr50_v93_merged/gsm8k: mean@n=0.924 CI=[0.9097801364670205, 0.9378316906747536] tokens=453 trunc=0.000
+[11-16 09:53:51] grpo_qfft_r1_mmr_dr50_v93_merged/math500: mean@n=0.803 CI=[0.7745, 0.8315] tokens=3046 trunc=0.004
+[11-16 09:53:56] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/score.py", line 177, in <module>
+    main()
+    ~~~~^^
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/score.py", line 126, in main
+    summary = score_one(grader, evals / tag / name, rows, a.rescore, a.require_gradable)
+  File "/content/p1/code/63247fb0116e/experiments/qfft_v93/score.py", line 57, in score_one
+    raise RuntimeError(f'{out_dir}: {failures} unscorable generations; re-run scoring to retry')
+RuntimeError: /content/mydrive/runs/project1/v93/evals/qfft_r1_16k_b8_restart_v93/aime25: 1 unscorable generations; re-run scoring to retry
+[report] pushed to colab-reports: colab p1-r1-mmr-dr50-eval: progress
