@@ -1,0 +1,26 @@
+{
+  "identity": {
+    "run": "grpo_qfft_r1_mmr_dr150_smoke2_v93",
+    "init_model": "run:qfft_r1_16k_b8_restart_v93",
+    "model_files": {
+      "chat_template.jinja": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+      "config.json": "785ba7ba6e539f884e1985f363e03e0b8269bb60b1f2edd946cef023592ebe9a",
+      "generation_config.json": "0091888cd4f028cf63e0cd7ee7d88b069e4250a28b9554551e927baba879c276",
+      "model.safetensors": "70b028056a6b3b407678c15e59db33b07916c4f8a4b467b503a0792a39c55778",
+      "p1_model_identity.json": "6d2dc17054512f956fa6bbbc7184e246d016ea5f22dd3c725aaf1219d6f61e1a",
+      "tokenizer.json": "3fd169731d2cbde95e10bf356d66d5997fd885dd8dbb6fb4684da3f23b2585d8",
+      "tokenizer_config.json": "2e3bd3cb5055f7a903a54e7062b2fd14d21b70f4174c3ffcd9fc81ec50a25631",
+      "training_args.bin": "34f1b477a151011f7606d5cc2ff0bb47a5679f37a328587a2ba555317e7914d9"
+    },
+    "code_bundle": "c7bcd9df7b7e",
+    "gpu_profile": "g4",
+    "pool_sha256": "76044be4d490da4df85defacbc9e72c5e57ff3ff12c7d759c2f54b39aae6ad51",
+    "recipe_sha256": "efdd86f0b3f59ffd9b31543b7aa3ce1ef182e4eef9793ac251df0f7138ea8f2f",
+    "approval_sha256": "4516e09b528ddf7ffff51a9a9627f24e67838459472f2f79d01ce0228ef2d553",
+    "smoke": false,
+    "max_steps_override": null,
+    "merge_adapter": false
+  },
+  "updated": "2026-11-16T12:35:03+08:00",
+  "code_bundle": "c7bcd9df7b7e"
+}
