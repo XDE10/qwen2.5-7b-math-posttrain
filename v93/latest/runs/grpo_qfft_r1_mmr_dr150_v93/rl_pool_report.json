@@ -1,0 +1,7 @@
+{
+  "files": [
+    "/content/mydrive/projects/project1/v93/data/rl_openr1_46k_decontaminated/mmr_dr150_frozen_train.jsonl"
+  ],
+  "final_questions": 1200,
+  "approval_manifest": "grpo/mmr_openr1_dr150_approval.json"
+}

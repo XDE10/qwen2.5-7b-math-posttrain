@@ -1,2 +1,2 @@
-p1-mmr-dr150-smoke2-a
-OK
+p1-mmr-dr150-c
+running
