@@ -230,8 +230,8 @@
   "started": "2026-11-15T22:23:28.129485",
   "code": "63247fb0116e",
   "host": "p1-r1-mmr-dr50-eval@f830817b58d4",
-  "heartbeat": "2026-11-16T00:44:06.824478",
-  "heartbeat_ts": 1794789846.8244925
+  "heartbeat": "2026-11-16T01:19:17.382087",
+  "heartbeat_ts": 1794791957.3821008
  },
  "smoke-eval": {
   "stage": "smoke-eval",
