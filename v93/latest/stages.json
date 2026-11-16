@@ -140,8 +140,8 @@
   "started": "2026-11-16T05:21:57.651147",
   "code": "c7bcd9df7b7e",
   "host": "p1-mmr-dr150-c@adc8b4b55f38",
-  "heartbeat": "2026-11-16T06:32:18.223723",
-  "heartbeat_ts": 1794810738.223735
+  "heartbeat": "2026-11-16T07:07:28.285529",
+  "heartbeat_ts": 1794812848.2855422
  },
  "grpo__grpo_qfft_r1_mmr_dr150_smoke2": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr150_smoke2",
