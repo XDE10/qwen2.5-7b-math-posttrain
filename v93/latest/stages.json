@@ -136,12 +136,12 @@
  },
  "grpo__grpo_qfft_r1_mmr_dr150_smoke2": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr150_smoke2",
-  "state": "running",
+  "state": "complete",
+  "hours": 0.632,
+  "finished": "2026-11-16T05:10:20.476049",
   "started": "2026-11-16T04:32:23.353987",
   "code": "c7bcd9df7b7e",
-  "host": "p1-mmr-dr150-smoke2-a@0fb56b58e9e0",
-  "heartbeat": "2026-11-16T05:02:28.040056",
-  "heartbeat_ts": 1794805348.0400727
+  "host": "p1-mmr-dr150-smoke2-a@0fb56b58e9e0"
  },
  "grpo__grpo_qfft_r1_mmr_dr50": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr50",

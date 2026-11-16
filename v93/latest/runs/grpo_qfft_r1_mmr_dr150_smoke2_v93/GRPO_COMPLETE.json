@@ -1,0 +1,8 @@
+{
+  "steps": 2,
+  "resumed_from": null,
+  "adapter": "/content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_smoke2_v93/adapter",
+  "wall_hours_this_session": 0.549,
+  "completed": "2026-11-16T13:10:11+08:00",
+  "local_checkpoint_reload_verified": true
+}
