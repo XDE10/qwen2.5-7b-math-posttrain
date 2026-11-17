@@ -1,0 +1,8 @@
+[11-18 00:58:54] grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime24: mean@n=0.188 CI=[0.09375, 0.29791666666666666] tokens=14707 trunc=0.079
+[11-18 00:58:56] grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime25: mean@n=0.158 CI=[0.05625, 0.28125] tokens=11493 trunc=0.017
+[11-18 00:58:56] grpo_qfft_r1_mmr_dr100_eval_v93_merged/amc23: mean@n=0.575 CI=[0.459375, 0.69375] tokens=7572 trunc=0.006
+[11-18 00:59:05] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+[11-18 00:59:16] /content/mydrive/runs/project1/v93/evals/qfft_r1_16k_b8_restart_v93/aime25: exact numeric recovery for aime25/25 draw 10: wrong
+[11-18 00:59:16] qfft_r1_16k_b8_restart_v93/aime25: mean@n=0.148 CI=[0.05416666666666667, 0.26458333333333334] tokens=11125 trunc=0.025
+[11-18 00:59:21] qfft_r1_16k_b8_restart_v93/amc23: mean@n=0.591 CI=[0.46875, 0.7125] tokens=7498 trunc=0.013
+[11-18 00:59:24] Wrote /content/mydrive/runs/project1/v93/r1_mmr_dr100_eval/competition/results.md

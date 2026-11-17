@@ -1,0 +1,52 @@
+{
+  "protocol": {
+    "model": "run:grpo_qfft_r1_mmr_dr100_eval_v93/merged",
+    "model_identity": {
+      "merged": "2026-11-17T22:28:53+08:00",
+      "base": "/content/p1/models/runs__project1__v93__runs__qfft_r1_16k_b8_restart_v93__final",
+      "adapter": "/content/p1/step100_checkpoint",
+      "base_identity": {
+        "identity": {
+          "run": "qfft_r1_16k_b8_restart_v93",
+          "format": "qfft",
+          "teacher": "r1",
+          "data_sha256": "047df3c8a897ccdfb3f6c632e2aba172f52ee4438eaee61c65e1e23e93c5a4d9",
+          "init_model": "base",
+          "recipe": {
+            "max_length": 16384,
+            "num_train_epochs": 6,
+            "learning_rate": 1e-05,
+            "warmup_fraction": 0.1,
+            "lr_scheduler_type": "cosine",
+            "per_device_train_batch_size": 1,
+            "gradient_accumulation_steps": 8,
+            "weight_decay": 0.0001,
+            "adam_beta1": 0.9,
+            "adam_beta2": 0.999,
+            "max_grad_norm": 1.0,
+            "seed": 42,
+            "truncate": true
+          },
+          "smoke": false,
+          "max_steps_override": null
+        },
+        "steps": 750,
+        "base": "base",
+        "exported": "2026-11-13T05:46:20+08:00"
+      }
+    },
+    "benchmark": "math500",
+    "benchmark_sha256": "63a3cb41174a7e54e564f1ddfd980af52fc0386ff814ec2d4998e6e0ae46ec05",
+    "n": 4,
+    "limit": null,
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "max_model_len": 32768,
+    "max_tokens_cap": null,
+    "seed": 42,
+    "system_prompt": "Please reason step by step, and put your final answer within \\boxed{}.",
+    "engine": "vllm"
+  },
+  "protocol_sha256": "7185946010c6e5c5762505805e47a0603b06ff86cda1ef7022f5cb7725881d58",
+  "updated": "2026-11-18T00:59:37+08:00"
+}

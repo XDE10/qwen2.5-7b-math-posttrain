@@ -1,10 +1,13 @@
-# v93 status (2026-11-17T16:45:30, session p1-mmr150-p1drive-r82-1117)
+# v93 status (2026-11-17T17:00:00, session p1-mmr100-eval-a-1117-2221)
 
 ```
-stage grpo:grpo_qfft_r1_mmr_dr150                   running   on p1-mmr150-p1drive-r82-1117@843bc57b6207, heartbeat 0 min ago 
-stage r1-mmr-dr100-eval                             running   on p1-mmr100-eval-a-1117-2221@2dba19c8ed77, heartbeat 0 min ago 
+stage grpo:grpo_qfft_r1_mmr_dr150                   running   on p1-mmr150-p1drive-r82-1117@843bc57b6207, heartbeat 5 min ago 
+stage r1-mmr-dr100-eval                             running   on p1-mmr100-eval-a-1117-2221@2dba19c8ed77, heartbeat 5 min ago 
 stage r1-mmr-dr80-eval                              complete  1.576 
-run grpo_qfft_r1_mmr_dr150_v93   training step 108/150 updated 2026-11-18T00:32:48+08:00
+run grpo_qfft_r1_mmr_dr150_v93   training step 109/150 updated 2026-11-18T00:49:52+08:00
+eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime24     480/480 complete=True
+eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime25     480/480 complete=True
+eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/amc23      320/320 complete=True
 eval grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime24     480/480 complete=True
 eval grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime25     480/480 complete=True
 eval grpo_qfft_r1_mmr_dr80_eval_v93_merged/amc23      320/320 complete=True
