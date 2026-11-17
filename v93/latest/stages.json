@@ -5,17 +5,17 @@
   "started": "2026-11-17T08:57:32.668585",
   "code": "c7bcd9df7b7e",
   "host": "p1-mmr150-p1drive-r82-1117@843bc57b6207",
-  "heartbeat": "2026-11-17T17:50:26.077368",
-  "heartbeat_ts": 1794937826.0773818
+  "heartbeat": "2026-11-17T17:55:26.078419",
+  "heartbeat_ts": 1794938126.0784328
  },
  "r1-mmr-dr100-eval": {
   "stage": "r1-mmr-dr100-eval",
-  "state": "running",
+  "state": "complete",
+  "hours": 3.51,
+  "finished": "2026-11-17T17:55:20.556360",
   "started": "2026-11-17T14:24:43.737897",
   "code": "c7bcd9df7b7e",
-  "host": "p1-mmr100-eval-a-1117-2221@2dba19c8ed77",
-  "heartbeat": "2026-11-17T17:50:28.444693",
-  "heartbeat_ts": 1794937828.4447052
+  "host": "p1-mmr100-eval-a-1117-2221@2dba19c8ed77"
  },
  "r1-mmr-dr80-eval": {
   "stage": "r1-mmr-dr80-eval",

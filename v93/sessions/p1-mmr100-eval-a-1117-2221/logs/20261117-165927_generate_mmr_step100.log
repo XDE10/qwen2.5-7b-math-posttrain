@@ -146,3 +146,36 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<
 [11-18 01:27:57] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 1934/3319 new generations, 2007 output tok/s
 [11-18 01:28:28] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2000/3319 new generations, 1999 output tok/s
 [11-18 01:29:34] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2098/3319 new generations, 1967 output tok/s
+[11-18 01:30:56] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2104/3319 new generations, 1919 output tok/s
+[11-18 01:32:02] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2116/3319 new generations, 1948 output tok/s
+[11-18 01:33:05] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2128/3319 new generations, 1950 output tok/s
+[11-18 01:33:58] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2200/3319 new generations, 1945 output tok/s
+[11-18 01:35:00] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2227/3319 new generations, 1943 output tok/s
+[11-18 01:36:02] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2391/3319 new generations, 1943 output tok/s
+[11-18 01:36:06] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2400/3319 new generations, 1952 output tok/s
+[11-18 01:37:06] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2564/3319 new generations, 1941 output tok/s
+[11-18 01:37:21] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2600/3319 new generations, 1945 output tok/s
+[11-18 01:38:21] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2768/3319 new generations, 1960 output tok/s
+[11-18 01:38:34] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2800/3319 new generations, 1980 output tok/s
+[11-18 01:39:34] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 2969/3319 new generations, 1954 output tok/s
+[11-18 01:39:46] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3000/3319 new generations, 1951 output tok/s
+[11-18 01:40:35] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3200/3319 new generations, 1989 output tok/s
+[11-18 01:41:39] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3220/3319 new generations, 2011 output tok/s
+[11-18 01:42:51] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3239/3319 new generations, 2020 output tok/s
+[11-18 01:43:55] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3252/3319 new generations, 2037 output tok/s
+[11-18 01:45:01] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3261/3319 new generations, 2039 output tok/s
+[11-18 01:46:21] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3268/3319 new generations, 2028 output tok/s
+[11-18 01:47:28] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3278/3319 new generations, 2030 output tok/s
+[11-18 01:48:40] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3282/3319 new generations, 2009 output tok/s
+[11-18 01:49:44] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3292/3319 new generations, 2033 output tok/s
+[11-18 01:50:48] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3299/3319 new generations, 2041 output tok/s
+[11-18 01:51:53] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3304/3319 new generations, 2039 output tok/s
+[11-18 01:53:00] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3311/3319 new generations, 2057 output tok/s
+[11-18 01:54:07] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3318/3319 new generations, 2079 output tok/s
+[11-18 01:54:17] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3319 new generations, 6,735,028 output tokens in 3235 s (2082 tok/s; engine start 32 s)
+[11-18 01:54:18] grpo_qfft_r1_mmr_dr100_eval_v93_merged: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=40926) INFO 11-17 17:54:18 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1573] [shutdown] EngineCore: exiting busy loop
