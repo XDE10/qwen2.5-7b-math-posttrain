@@ -1,2 +1,2 @@
-p1-mmr150-p1drive-r82-1117
-running
+p1-mmr100-eval-a-1117-2221
+OK
