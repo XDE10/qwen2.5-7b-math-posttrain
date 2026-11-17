@@ -168,3 +168,14 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<
 [11-18 01:47:28] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3278/3319 new generations, 2030 output tok/s
 [11-18 01:48:40] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3282/3319 new generations, 2009 output tok/s
 [11-18 01:49:44] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3292/3319 new generations, 2033 output tok/s
+[11-18 01:50:48] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3299/3319 new generations, 2041 output tok/s
+[11-18 01:51:53] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3304/3319 new generations, 2039 output tok/s
+[11-18 01:53:00] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3311/3319 new generations, 2057 output tok/s
+[11-18 01:54:07] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3318/3319 new generations, 2079 output tok/s
+[11-18 01:54:17] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 3319 new generations, 6,735,028 output tokens in 3235 s (2082 tok/s; engine start 32 s)
+[11-18 01:54:18] grpo_qfft_r1_mmr_dr100_eval_v93_merged: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=40926) INFO 11-17 17:54:18 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=41209) INFO 11-17 17:54:18 [core.py:1573] [shutdown] EngineCore: exiting busy loop
