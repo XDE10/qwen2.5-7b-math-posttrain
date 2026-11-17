@@ -1,8 +1,0 @@
-{
-  "state": "complete",
-  "steps": 2,
-  "resumed_from": null,
-  "adapter": "/content/mydrive/runs/project1/v93/runs/smoke_grpo_v93/adapter",
-  "wall_hours_this_session": 0.283,
-  "completed": "2026-11-09T19:11:43+08:00"
-}

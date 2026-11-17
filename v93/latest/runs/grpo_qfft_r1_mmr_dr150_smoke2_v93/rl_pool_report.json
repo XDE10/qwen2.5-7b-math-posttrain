@@ -1,7 +1,0 @@
-{
-  "files": [
-    "/content/mydrive/projects/project1/v93/data/rl_openr1_46k_decontaminated/mmr_dr150_smoke2_train.jsonl"
-  ],
-  "final_questions": 16,
-  "approval_manifest": "grpo/mmr_openr1_dr150_smoke2_approval.json"
-}

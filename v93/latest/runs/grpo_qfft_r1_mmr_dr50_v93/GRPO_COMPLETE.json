@@ -1,7 +1,0 @@
-{
-  "steps": 50,
-  "resumed_from": "/content/p1/runs/grpo_qfft_r1_mmr_dr50_v93/checkpoint-8",
-  "adapter": "/content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr50_v93/adapter",
-  "wall_hours_this_session": 11.888,
-  "completed": "2026-11-16T06:02:50+08:00"
-}
