@@ -1,0 +1,29 @@
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<01:32,  3.64it/s]
+Loading weights:   8%|▊         | 26/339 [00:00<00:03, 87.77it/s]
+Loading weights:  12%|█▏        | 42/339 [00:00<00:02, 107.99it/s]
+Loading weights:  19%|█▉        | 66/339 [00:00<00:01, 142.23it/s]
+Loading weights:  26%|██▋       | 89/339 [00:00<00:01, 167.36it/s]
+Loading weights:  33%|███▎      | 113/339 [00:00<00:01, 180.26it/s]
+Loading weights:  40%|████      | 136/339 [00:00<00:01, 190.57it/s]
+Loading weights:  47%|████▋     | 160/339 [00:01<00:00, 204.32it/s]
+Loading weights:  54%|█████▎    | 182/339 [00:01<00:00, 207.02it/s]
+Loading weights:  60%|██████    | 204/339 [00:01<00:00, 200.77it/s]
+Loading weights:  66%|██████▋   | 225/339 [00:01<00:00, 197.39it/s]
+Loading weights:  73%|███████▎  | 246/339 [00:01<00:00, 191.26it/s]
+Loading weights:  80%|███████▉  | 270/339 [00:01<00:00, 196.10it/s]
+Loading weights:  87%|████████▋ | 294/339 [00:01<00:00, 199.06it/s]
+Loading weights:  94%|█████████▍| 318/339 [00:01<00:00, 202.07it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 179.69it/s]
+
+Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Writing model shards:  25%|██▌       | 1/4 [00:03<00:10,  3.40s/it]
+Writing model shards:  50%|█████     | 2/4 [00:14<00:16,  8.13s/it]
+Writing model shards:  75%|███████▌  | 3/4 [00:26<00:09,  9.61s/it]
+Writing model shards: 100%|██████████| 4/4 [00:36<00:00,  9.79s/it]
+Writing model shards: 100%|██████████| 4/4 [00:36<00:00,  9.07s/it]
+[11-17 17:46:57] rclone copy (146 s): 2026/11/17 09:46:57 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 64.085 MiB/s, ETA 0s
+[11-17 17:47:01] rclone purge (4 s): 2026/11/17 09:47:01 Failed to purge: directory not found
+[11-17 17:47:07] Uploaded merged to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr80_eval_v93/merged (14.2GiB in 156 s, 93 MiB/s)
+[11-17 17:47:08] Merged weights -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr80_eval_v93/merged
