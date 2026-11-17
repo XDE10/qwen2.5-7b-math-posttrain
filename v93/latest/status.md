@@ -1,4 +1,4 @@
-# v93 status (2026-11-17T03:23:17, session p1-1117-104930)
+# v93 status (2026-11-17T04:03:44, session p1-1117-104930)
 
 ```
 stage benchmarks                                    complete  0.003 
@@ -34,7 +34,7 @@ stage smoke-grpo                                    complete  0.342
 stage smoke-train                                   complete  0.234 
 stage sync-data                                     complete  0.002 
 stage train:qfft_ds                                 complete  0.016 
-stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 6668 min ago (stale) 
+stage train:qfft_r1_16k_b8                          running   on p1-1112-183656@ff2652a8744b, heartbeat 6709 min ago (stale) 
 stage train:qfft_r1_16k_b8_restart                  complete  6.252 
 run compare_grpo_qfft_r1_12k_v93 complete step 2/ updated 2026-11-13T18:23:41+08:00
 run compare_grpo_qfft_r1_16k_v93 complete step 2/ updated 2026-11-13T16:18:56+08:00
@@ -44,7 +44,7 @@ run grpo_qfft_r1_16k_continue30_v93 complete step 30/ updated 2026-11-14T05:57:2
 run grpo_qfft_r1_16k_pilot_v93   complete step 10/ updated 2026-11-13T22:06:37+08:00
 run grpo_qfft_r1_16k_tokenmask10_v93 complete step 10/ updated 2026-11-14T16:35:56+08:00
 run grpo_qfft_r1_mmr_dr150_smoke2_v93 complete step 2/ updated 2026-11-16T13:10:11+08:00
-run grpo_qfft_r1_mmr_dr150_v93   training step 71/150 updated 2026-11-17T11:22:01+08:00
+run grpo_qfft_r1_mmr_dr150_v93   training step 73/150 updated 2026-11-17T11:56:34+08:00
 run grpo_qfft_r1_mmr_dr50_v93    complete step 50/ updated 2026-11-16T06:02:50+08:00
 run qfft_ds_v93                  complete step 378/ updated 2026-11-12T03:37:21+08:00
 run qfft_r1_16k_b8_restart_v93   complete step 750/ updated 2026-11-13T05:49:15+08:00
