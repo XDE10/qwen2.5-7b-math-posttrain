@@ -2,11 +2,11 @@
  "grpo__grpo_qfft_r1_mmr_dr150": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr150",
   "state": "running",
-  "started": "2026-11-17T08:57:32.668585",
+  "started": "2026-11-17T22:58:21.115212",
   "code": "c7bcd9df7b7e",
-  "host": "p1-mmr150-p1drive-r82-1117@843bc57b6207",
-  "heartbeat": "2026-11-17T22:37:05.828507",
-  "heartbeat_ts": 1794955025.8285224
+  "host": "p1-mmr150-auto-1118-065724@f097e0ab2d58",
+  "heartbeat": "2026-11-17T23:28:28.151094",
+  "heartbeat_ts": 1794958108.1511066
  },
  "r1-mmr-dr100-eval": {
   "stage": "r1-mmr-dr100-eval",
