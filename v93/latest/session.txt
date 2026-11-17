@@ -1,2 +1,2 @@
-p1-mmr150-newdrive-resume-1117-1655
-FAILED grpo:grpo_qfft_r1_mmr_dr150:resume: RuntimeError: stage grpo:grpo_qfft_r1_mmr_dr150 is already running on p1-mmr150-newdrive-1117@07fbf55b42eb (heartbeat 12 min ago). Follow it with launch.sh --attach <session>, stop that VM, or relaunch with --force.
+p1-mmr150-p1drive-r82-1117
+running

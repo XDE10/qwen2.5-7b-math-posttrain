@@ -2,10 +2,10 @@
  "grpo__grpo_qfft_r1_mmr_dr150": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr150",
   "state": "running",
-  "started": "2026-11-17T07:18:02.065518",
+  "started": "2026-11-17T08:57:32.668585",
   "code": "c7bcd9df7b7e",
-  "host": "p1-mmr150-newdrive-1117@07fbf55b42eb",
-  "heartbeat": "2026-11-17T08:43:08.594042",
-  "heartbeat_ts": 1794904988.5940611
+  "host": "p1-mmr150-p1drive-r82-1117@843bc57b6207",
+  "heartbeat": "2026-11-17T09:22:45.088798",
+  "heartbeat_ts": 1794907365.0888138
  }
 }
