@@ -120,3 +120,29 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:38<
 (EngineCore pid=5197) WARNING 11-17 14:36:44 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_mask_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
 (EngineCore pid=5197) WARNING 11-17 14:36:45 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topk_topp_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
 [11-17 22:37:43] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 48/1280 new generations, 1022 output tok/s
+[11-17 22:39:07] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 72/1280 new generations, 846 output tok/s
+[11-17 22:40:10] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 80/1280 new generations, 770 output tok/s
+[11-17 22:41:14] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 90/1280 new generations, 799 output tok/s
+[11-17 22:42:18] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 97/1280 new generations, 786 output tok/s
+[11-17 22:43:50] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 103/1280 new generations, 726 output tok/s
+[11-17 22:45:08] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 112/1280 new generations, 772 output tok/s
+[11-17 22:46:12] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 119/1280 new generations, 809 output tok/s
+[11-17 22:47:24] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 125/1280 new generations, 825 output tok/s
+[11-17 22:48:31] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 135/1280 new generations, 920 output tok/s
+[11-17 22:49:39] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 139/1280 new generations, 908 output tok/s
+[11-17 22:50:46] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 147/1280 new generations, 972 output tok/s
+[11-17 22:51:54] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 153/1280 new generations, 1000 output tok/s
+[11-17 22:53:05] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 159/1280 new generations, 1028 output tok/s
+[11-17 22:54:36] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 165/1280 new generations, 1035 output tok/s
+[11-17 22:56:01] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 170/1280 new generations, 1042 output tok/s
+[11-17 22:57:05] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 175/1280 new generations, 1070 output tok/s
+[11-17 22:58:12] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 179/1280 new generations, 1080 output tok/s
+[11-17 22:59:14] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 193/1280 new generations, 1251 output tok/s
+[11-17 23:00:12] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 200/1280 new generations, 1296 output tok/s
+[11-17 23:01:39] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 212/1280 new generations, 1381 output tok/s
+[11-17 23:02:48] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 220/1280 new generations, 1386 output tok/s
+[11-17 23:03:51] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 228/1280 new generations, 1400 output tok/s
+[11-17 23:05:02] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 233/1280 new generations, 1391 output tok/s
+[11-17 23:06:08] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 237/1280 new generations, 1393 output tok/s
+[11-17 23:07:23] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 239/1280 new generations, 1358 output tok/s
+[11-17 23:08:26] grpo_qfft_r1_mmr_dr100_eval_v93_merged: 248/1280 new generations, 1419 output tok/s
