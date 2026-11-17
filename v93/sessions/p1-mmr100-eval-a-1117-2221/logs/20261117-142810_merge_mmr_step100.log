@@ -1,0 +1,30 @@
+
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/339 [00:00<00:40,  8.43it/s]
+Loading weights:   1%|          | 2/339 [00:00<00:46,  7.28it/s]
+Loading weights:   8%|▊         | 28/339 [00:00<00:03, 97.85it/s]
+Loading weights:  14%|█▍        | 48/339 [00:00<00:02, 131.36it/s]
+Loading weights:  19%|█▉        | 66/339 [00:00<00:01, 143.78it/s]
+Loading weights:  27%|██▋       | 90/339 [00:00<00:01, 164.84it/s]
+Loading weights:  34%|███▎      | 114/339 [00:00<00:01, 179.55it/s]
+Loading weights:  41%|████      | 138/339 [00:00<00:01, 188.19it/s]
+Loading weights:  48%|████▊     | 162/339 [00:01<00:00, 194.81it/s]
+Loading weights:  55%|█████▍    | 186/339 [00:01<00:00, 198.70it/s]
+Loading weights:  62%|██████▏   | 209/339 [00:01<00:00, 199.30it/s]
+Loading weights:  69%|██████▉   | 234/339 [00:01<00:00, 203.61it/s]
+Loading weights:  76%|███████▌  | 258/339 [00:01<00:00, 205.12it/s]
+Loading weights:  83%|████████▎ | 282/339 [00:01<00:00, 205.44it/s]
+Loading weights:  90%|████████▉ | 304/339 [00:01<00:00, 207.88it/s]
+Loading weights:  96%|█████████▌| 325/339 [00:01<00:00, 200.19it/s]
+Loading weights: 100%|██████████| 339/339 [00:01<00:00, 177.58it/s]
+
+Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Writing model shards:  25%|██▌       | 1/4 [00:03<00:09,  3.25s/it]
+Writing model shards:  50%|█████     | 2/4 [00:15<00:17,  8.59s/it]
+Writing model shards:  75%|███████▌  | 3/4 [00:26<00:09,  9.51s/it]
+Writing model shards: 100%|██████████| 4/4 [00:36<00:00,  9.98s/it]
+Writing model shards: 100%|██████████| 4/4 [00:36<00:00,  9.22s/it]
+[11-17 22:31:21] rclone copy (138 s): 2026/11/17 14:31:21 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 99.954 MiB/s, ETA 0s
+[11-17 22:31:26] rclone purge (5 s): 2026/11/17 14:31:26 Failed to purge: directory not found
+[11-17 22:31:35] Uploaded merged to /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr100_eval_v93/merged (14.2GiB in 152 s, 95 MiB/s)
+[11-17 22:31:36] Merged weights -> /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr100_eval_v93/merged
