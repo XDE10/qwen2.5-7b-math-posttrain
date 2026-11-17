@@ -5,16 +5,7 @@
   "started": "2026-11-17T08:57:32.668585",
   "code": "c7bcd9df7b7e",
   "host": "p1-mmr150-p1drive-r82-1117@843bc57b6207",
-  "heartbeat": "2026-11-17T11:08:16.069132",
-  "heartbeat_ts": 1794913696.069147
- },
- "r1-mmr-dr80-eval": {
-  "stage": "r1-mmr-dr80-eval",
-  "state": "running",
-  "started": "2026-11-17T09:40:24.318797",
-  "code": "c7bcd9df7b7e",
-  "host": "p1-mmr80-eval-a-1117@d8e503a28cc7",
-  "heartbeat": "2026-11-17T11:10:33.581614",
-  "heartbeat_ts": 1794913833.581629
+  "heartbeat": "2026-11-17T11:28:21.488122",
+  "heartbeat_ts": 1794914901.4881363
  }
 }
