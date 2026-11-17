@@ -137,11 +137,11 @@
  "grpo__grpo_qfft_r1_mmr_dr150": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr150",
   "state": "running",
-  "started": "2026-11-16T15:07:28.407580",
+  "started": "2026-11-17T02:53:17.715731",
   "code": "c7bcd9df7b7e",
-  "host": "p1-1116-230650@6a5aa4f6f1dd",
-  "heartbeat": "2026-11-17T02:25:29.502503",
-  "heartbeat_ts": 1794882329.5025148
+  "host": "p1-1117-104930@a4de74670178",
+  "heartbeat": "2026-11-17T03:28:35.517944",
+  "heartbeat_ts": 1794886115.5179589
  },
  "grpo__grpo_qfft_r1_mmr_dr150_smoke2": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr150_smoke2",
