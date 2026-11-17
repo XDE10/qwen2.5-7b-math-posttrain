@@ -69,7 +69,14 @@
     "16384": 0.14166666666666666,
     "32768": 0.14791666666666667
   },
-  "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-  "scored": "2026-11-13T09:17:23+08:00",
+  "exact_numeric_recoveries": [
+    {
+      "sample_id": "aime25/25",
+      "draw": 10,
+      "status": "wrong"
+    }
+  ],
+  "grader": "v93-final-segment-last-box/math-verify-0.9.0-timeout-status",
+  "scored": "2026-11-17T20:35:55+08:00",
   "benchmark_problems": 30
 }
