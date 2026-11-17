@@ -1353,7 +1353,7 @@
     "16384": 0.9143290371493555,
     "32768": 0.9143290371493555
   },
-  "grader": "v93-final-segment-last-box/math-verify-0.9.0",
-  "scored": "2026-11-13T09:17:26+08:00",
+  "grader": "v93-final-segment-last-box/math-verify-0.9.0-timeout-status",
+  "scored": "2026-11-17T21:34:10+08:00",
   "benchmark_problems": 1319
 }

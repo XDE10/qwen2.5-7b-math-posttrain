@@ -1,0 +1,12 @@
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime24: mean@n=0.167 CI=[0.06666666666666667, 0.2875] tokens=14880 trunc=0.094
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime25: mean@n=0.175 CI=[0.06666666666666667, 0.3] tokens=10516 trunc=0.017
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/amc23: mean@n=0.553 CI=[0.4375, 0.671875] tokens=7066 trunc=0.019
+[11-17 21:33:38] grpo_qfft_r1_mmr_dr80_eval_v93_merged/gsm8k: mean@n=0.920 CI=[0.9044730856709629, 0.934040940106141] tokens=451 trunc=0.000
+[11-17 21:33:43] grpo_qfft_r1_mmr_dr80_eval_v93_merged/math500: mean@n=0.807 CI=[0.779, 0.8355] tokens=3166 trunc=0.006
+[11-17 21:33:49] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+[11-17 21:33:58] /content/mydrive/runs/project1/v93/evals/qfft_r1_16k_b8_restart_v93/aime25: exact numeric recovery for aime25/25 draw 10: wrong
+[11-17 21:33:59] qfft_r1_16k_b8_restart_v93/aime25: mean@n=0.148 CI=[0.05416666666666667, 0.26458333333333334] tokens=11125 trunc=0.025
+[11-17 21:34:02] qfft_r1_16k_b8_restart_v93/amc23: mean@n=0.591 CI=[0.46875, 0.7125] tokens=7498 trunc=0.013
+[11-17 21:34:10] qfft_r1_16k_b8_restart_v93/gsm8k: mean@n=0.914 CI=[0.8991660348749052, 0.9287338893100834] tokens=476 trunc=0.000
+[11-17 21:34:19] qfft_r1_16k_b8_restart_v93/math500: mean@n=0.805 CI=[0.777, 0.8325] tokens=3115 trunc=0.009
+[11-17 21:34:23] Wrote /content/mydrive/runs/project1/v93/r1_mmr_dr80_eval/results.md

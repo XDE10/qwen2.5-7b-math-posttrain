@@ -367,3 +367,45 @@ Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<
 [11-17 21:29:04] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3287/3319 new generations, 1973 output tok/s
 [11-17 21:30:09] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3294/3319 new generations, 1981 output tok/s
 [11-17 21:31:16] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3305/3319 new generations, 2021 output tok/s
+[11-17 21:32:25] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3310/3319 new generations, 2018 output tok/s
+[report] pushed to colab-reports: colab p1-mmr80-eval-a-1117-195725: progress
+[11-17 21:33:20] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3319 new generations, 6,926,602 output tokens in 3365 s (2058 tok/s; engine start 32 s)
+[11-17 21:33:20] grpo_qfft_r1_mmr_dr80_eval_v93_merged: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=11497) INFO 11-17 13:33:20 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-17 13:33:26] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --benchmarks math500,aime24,aime25,amc23,gsm8k --tags grpo_qfft_r1_mmr_dr80_eval_v93_merged,qfft_r1_16k_b8_restart_v93 --require-gradable --known-recovery /content/p1/code/c7bcd9df7b7e/experiments/qfft_v93/configs/grpo/r1_mmr_dr150_scoring_recovery.json --report-dir /content/mydrive/runs/project1/v93/r1_mmr_dr80_eval --compare grpo_qfft_r1_mmr_dr80_eval_v93_merged:qfft_r1_16k_b8_restart_v93 --per-problem | log: /content/mydrive/runs/project1/v93/logs/20261117-133326_score_mmr_step80.log
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime24: mean@n=0.167 CI=[0.06666666666666667, 0.2875] tokens=14880 trunc=0.094
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime25: mean@n=0.175 CI=[0.06666666666666667, 0.3] tokens=10516 trunc=0.017
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/amc23: mean@n=0.553 CI=[0.4375, 0.671875] tokens=7066 trunc=0.019
+[11-17 21:33:38] grpo_qfft_r1_mmr_dr80_eval_v93_merged/gsm8k: mean@n=0.920 CI=[0.9044730856709629, 0.934040940106141] tokens=451 trunc=0.000
+[11-17 21:33:43] grpo_qfft_r1_mmr_dr80_eval_v93_merged/math500: mean@n=0.807 CI=[0.779, 0.8355] tokens=3166 trunc=0.006
+[11-17 21:33:49] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+[11-17 21:33:58] /content/mydrive/runs/project1/v93/evals/qfft_r1_16k_b8_restart_v93/aime25: exact numeric recovery for aime25/25 draw 10: wrong
+[11-17 21:33:59] qfft_r1_16k_b8_restart_v93/aime25: mean@n=0.148 CI=[0.05416666666666667, 0.26458333333333334] tokens=11125 trunc=0.025
+[11-17 21:34:02] qfft_r1_16k_b8_restart_v93/amc23: mean@n=0.591 CI=[0.46875, 0.7125] tokens=7498 trunc=0.013
+[11-17 21:34:10] qfft_r1_16k_b8_restart_v93/gsm8k: mean@n=0.914 CI=[0.8991660348749052, 0.9287338893100834] tokens=476 trunc=0.000
+[11-17 21:34:19] qfft_r1_16k_b8_restart_v93/math500: mean@n=0.805 CI=[0.777, 0.8325] tokens=3115 trunc=0.009
+[11-17 21:34:23] Wrote /content/mydrive/runs/project1/v93/r1_mmr_dr80_eval/results.md
+# v93 results (mean@n %, ±95% CI half-width / mean output tokens)
+
+Grader: v93-final-segment-last-box/math-verify-0.9.0-timeout-status; generated 2026-11-17T21:34:23+08:00.
+
+| model | aime24 | aime25 | amc23 | gsm8k | math500 | AIME24+25+AMC23 |
+|---|---|---|---|---|---|---|
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged | 16.7 ±11.0 / 14.9K | 17.5 ±11.7 / 10.5K | 55.3 ±11.7 / 7.1K | 92.0 ±1.5 / 0.5K | 80.8 ±2.8 / 3.2K | 32.4 ±7.6 |
+| qfft_r1_16k_b8_restart_v93 | 18.5 ±10.2 / 14.7K | 14.8 ±10.5 / 11.1K | 59.1 ±12.2 / 7.5K | 91.4 ±1.5 / 0.5K | 80.5 ±2.8 / 3.1K | 33.6 ±7.9 |
+
+## Paired comparisons (per-problem bootstrap)
+
+| A − B | benchmark | Δ (pp) | 95% CI | p |
+|---|---|---|---|---|
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | aime24 | -1.9 | [-4.4, +1.0] | 0.200 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | aime25 | +2.7 | [-0.4, +6.5] | 0.123 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | amc23 | -3.8 | [-10.6, +3.1] | 0.295 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | gsm8k | +0.5 | [-0.6, +1.7] | 0.388 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | math500 | +0.2 | [-1.2, +1.8] | 0.759 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | competition | -1.2 | [-4.2, +1.9] | 0.444 |
+
