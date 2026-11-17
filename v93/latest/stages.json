@@ -11,10 +11,10 @@
  "r1-mmr-dr80-eval": {
   "stage": "r1-mmr-dr80-eval",
   "state": "running",
-  "started": "2026-11-17T09:40:24.318797",
+  "started": "2026-11-17T11:59:56.944411",
   "code": "c7bcd9df7b7e",
-  "host": "p1-mmr80-eval-a-1117@d8e503a28cc7",
-  "heartbeat": "2026-11-17T11:50:45.097471",
-  "heartbeat_ts": 1794916245.097483
+  "host": "p1-mmr80-eval-a-1117-195725@6e1b44ca97a0",
+  "heartbeat": "2026-11-17T11:59:58.516851",
+  "heartbeat_ts": 1794916798.5168595
  }
 }
