@@ -7,3 +7,407 @@ code bundle c7bcd9df7b7e (git f593e55e3ec1+dirty); stages: ['shell']
 [11-17 11:58:43] shell stage: nothing to run
 [report] pushed to colab-reports: colab p1-mmr80-eval-a-1117-195725: OK
 P1_RESULT=OK
+P1_SESSION=p1-mmr80-eval-a-1117-195725 gpu=G4 auto_release=1
+code bundle c7bcd9df7b7e (git f593e55e3ec1+dirty); stages: ['r1-mmr-dr80-eval']
+[11-17 11:59:55] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-17 11:59:56] ===== STAGE r1-mmr-dr80-eval =====
+[11-17 11:59:58] Taking over stage r1-mmr-dr80-eval from p1-mmr80-eval-a-1117@d8e503a28cc7 (heartbeat 9 min ago)
+[11-17 11:59:58] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-17 11:59:58] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-17 12:00:30] Restoring infer venv from Drive snapshot infer-56ffd0b9476c.tar
+[11-17 12:06:27] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.generate --model run:grpo_qfft_r1_mmr_dr80_eval_v93/merged --tag grpo_qfft_r1_mmr_dr80_eval_v93_merged --suite full --benchmarks aime24,aime25,amc23 | log: /content/mydrive/runs/project1/v93/logs/20261117-120627_generate_mmr_step80.log
+[11-17 20:08:15] rclone copy (106 s): 2026/11/17 12:08:15 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 21.779 MiB/s, ETA 0s
+[11-17 20:08:15] Downloaded /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr80_eval_v93/merged in 106 s
+[11-17 20:08:40] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime24: 480 generations planned, 480 already saved
+[11-17 20:08:47] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime25: 480 generations planned, 441 already saved
+[11-17 20:08:54] grpo_qfft_r1_mmr_dr80_eval_v93_merged/amc23: 320 generations planned, 140 already saved
+W1117 12:08:55.234000 3584 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1117 12:08:55.234000 3584 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1117 12:08:55.235000 3584 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(MainProcess pid=3584) INFO 11-17 12:08:58 [startup.py:96] non-default args: {'tokenizer': '/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 32768, 'enable_prefix_caching': True, 'gpu_memory_utilization': 0.9, 'max_num_seqs': 256, 'disable_log_stats': True, 'generation_config': 'vllm', 'model': '/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged'}
+(MainProcess pid=3584) WARNING 11-17 12:09:04 [flashinfer.py:99] FlashInfer kernels are disabled: flashinfer-cubin is not installed and nvcc (CUDA_HOME, CUDA_PATH, PATH or /usr/local/cuda) or ninja (PATH) is missing. Set CUDA_HOME to a CUDA toolkit and put ninja on PATH, or run `vllm download-kernels`.
+(MainProcess pid=3584) INFO 11-17 12:09:04 [model.py:744] Resolved architecture: Qwen2ForCausalLM
+(MainProcess pid=3584) INFO 11-17 12:09:04 [model.py:2170] Using max model len 32768
+(MainProcess pid=3584) INFO 11-17 12:09:04 [scheduler.py:310] Chunked prefill is enabled with max_num_batched_tokens=16384.
+(MainProcess pid=3584) INFO 11-17 12:09:04 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+W1117 12:09:07.584000 4560 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1117 12:09:07.584000 4560 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1117 12:09:07.585000 4560 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(EngineCore pid=4560) INFO 11-17 12:09:09 [core.py:139] Initializing a V1 LLM engine (v0.33.0) with config: model='/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged', speculative_config=None, tokenizer='/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, custom_histogram_buckets=None, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=42, served_model_name=/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::qwen4_exp_qsa_prepare_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'cudagraph_decoder_replay': True, 'decoder_replay_cudagraph_capture_sizes': [], 'decoder_replay_trim_threshold': 768, 'compile_sizes': [], 'compile_ranges_endpoints': [16384], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_rocm_segmented_attn_autotune=False, enable_cutedsl_warmup=True, enable_jit_warmup=True, monokernel=False, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=4560) WARNING 11-17 12:09:09 [flashinfer.py:99] FlashInfer kernels are disabled: flashinfer-cubin is not installed and nvcc (CUDA_HOME, CUDA_PATH, PATH or /usr/local/cuda) or ninja (PATH) is missing. Set CUDA_HOME to a CUDA toolkit and put ninja on PATH, or run `vllm download-kernels`.
+(EngineCore pid=4560) INFO 11-17 12:09:12 [parallel_state.py:1929] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_1570c835fe1d40deb654ac33c27f078c backend=nccl
+(EngineCore pid=4560) INFO 11-17 12:09:12 [parallel_state.py:2385] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=4560) INFO 11-17 12:09:12 [gpu_worker.py:513] Using V2 Model Runner
+(EngineCore pid=4560) INFO 11-17 12:09:12 [model_runner.py:399] Loading model from scratch...
+(EngineCore pid=4560) INFO 11-17 12:09:14 [cuda.py:508] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(EngineCore pid=4560) INFO 11-17 12:09:14 [flash_attn.py:1122] Using FlashAttention version 2
+(EngineCore pid=4560) INFO 11-17 12:09:14 [base_loader.py:82] Initializing model took 1.762048 seconds
+(EngineCore pid=4560) INFO 11-17 12:09:14 [weight_utils.py:1144] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 14.19 GiB. Available RAM: 171.67 GiB.
+(EngineCore pid=4560) INFO 11-17 12:09:14 [weight_utils.py:1167] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:00<00:01,  1.98it/s]
+
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:01<00:01,  1.81it/s]
+
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:01<00:00,  1.83it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:02<00:00,  1.92it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:02<00:00,  1.89it/s]
+
+(EngineCore pid=4560) INFO 11-17 12:09:16 [default_loader.py:506] Loading weights took 2.15 seconds
+(EngineCore pid=4560) INFO 11-17 12:09:18 [model_runner.py:428] Model loading took 14.19 GiB memory and 5.693077 seconds
+(EngineCore pid=4560) INFO 11-17 12:09:18 [topk_topp_sampler.py:121] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=4560) INFO 11-17 12:09:18 [torch_utils.py:281] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=4560) INFO 11-17 12:09:18 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=4560) INFO 11-17 12:09:19 [monitor.py:40] [backbone] Starting torch.compile
+(EngineCore pid=4560) INFO 11-17 12:09:22 [backends.py:1125] [backbone] Using cache directory: /root/.cache/vllm/torch_compile_cache/f7c4c2f2bd/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=4560) INFO 11-17 12:09:22 [backends.py:1187] [backbone] Dynamo bytecode transform time: 3.00 s
+(EngineCore pid=4560) INFO 11-17 12:09:26 [backends.py:417] [backbone] Compiling a graph for compile range (1, 16384) takes 4.67 s
+(EngineCore pid=4560) INFO 11-17 12:09:28 [backends.py:948] collected artifacts: 29 entries, 3 artifacts, 4328343 bytes total
+(EngineCore pid=4560) INFO 11-17 12:09:28 [decorators.py:752] [backbone] saved AOT compiled function to /root/.cache/vllm/torch_compile_cache/torch_aot_compile/e135e14dbdadc61dad73dc3cfa30884445724a9b8f84f818a41898c3f6097446/rank_0_0/model
+(EngineCore pid=4560) INFO 11-17 12:09:28 [monitor.py:62] [backbone] torch.compile took 9.22 s in total
+(EngineCore pid=4560) INFO 11-17 12:09:28 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.10 s
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   2%|▏         | 1/51 [00:22<18:57, 22.75s/it]
+Capturing CUDA graphs (PIECEWISE):   8%|▊         | 4/51 [00:22<03:23,  4.34s/it]
+Capturing CUDA graphs (PIECEWISE):  14%|█▎        | 7/51 [00:23<01:29,  2.03s/it]
+Capturing CUDA graphs (PIECEWISE):  20%|█▉        | 10/51 [00:23<00:47,  1.17s/it]
+Capturing CUDA graphs (PIECEWISE):  25%|██▌       | 13/51 [00:23<00:28,  1.36it/s]
+Capturing CUDA graphs (PIECEWISE):  31%|███▏      | 16/51 [00:23<00:17,  2.04it/s]
+Capturing CUDA graphs (PIECEWISE):  31%|███▏      | 16/51 [00:37<00:17,  2.04it/s]
+Capturing CUDA graphs (PIECEWISE):  33%|███▎      | 17/51 [00:42<01:50,  3.24s/it]
+Capturing CUDA graphs (PIECEWISE):  41%|████      | 21/51 [00:43<00:53,  1.79s/it]
+Capturing CUDA graphs (PIECEWISE):  49%|████▉     | 25/51 [00:43<00:28,  1.10s/it]
+Capturing CUDA graphs (PIECEWISE):  57%|█████▋    | 29/51 [00:43<00:15,  1.39it/s]
+Capturing CUDA graphs (PIECEWISE):  65%|██████▍   | 33/51 [00:43<00:08,  2.06it/s]
+Capturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:43<00:04,  2.97it/s]
+Capturing CUDA graphs (PIECEWISE):  80%|████████  | 41/51 [00:43<00:02,  4.19it/s]
+Capturing CUDA graphs (PIECEWISE):  88%|████████▊ | 45/51 [00:43<00:01,  5.78it/s]
+Capturing CUDA graphs (PIECEWISE):  96%|█████████▌| 49/51 [00:43<00:00,  7.78it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:43<00:00,  1.16it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 49.36it/s]
+(EngineCore pid=4560) INFO 11-17 12:10:18 [model_runner.py:1163] Graph capturing finished in 45 secs, took 0.34 GiB
+(EngineCore pid=4560) INFO 11-17 12:10:19 [gpu_worker.py:772] Available KV cache memory: 68.56 GiB
+(EngineCore pid=4560) INFO 11-17 12:10:19 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8959 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9041. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=4560) INFO 11-17 12:10:19 [kv_cache_utils.py:1147] GPU KV cache size: 1,283,792 tokens, Maximum concurrency for 32,768 tokens per request: 39.18x
+(EngineCore pid=4560) INFO 11-17 12:10:19 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=4560) INFO 11-17 12:10:19 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   6%|▌         | 3/51 [00:00<00:02, 21.07it/s]
+Capturing CUDA graphs (PIECEWISE):  12%|█▏        | 6/51 [00:00<00:02, 21.71it/s]
+Capturing CUDA graphs (PIECEWISE):  18%|█▊        | 9/51 [00:00<00:01, 22.39it/s]
+Capturing CUDA graphs (PIECEWISE):  24%|██▎       | 12/51 [00:00<00:01, 23.16it/s]
+Capturing CUDA graphs (PIECEWISE):  29%|██▉       | 15/51 [00:00<00:01, 23.74it/s]
+Capturing CUDA graphs (PIECEWISE):  35%|███▌      | 18/51 [00:00<00:01, 25.26it/s]
+Capturing CUDA graphs (PIECEWISE):  43%|████▎     | 22/51 [00:00<00:01, 27.38it/s]
+Capturing CUDA graphs (PIECEWISE):  51%|█████     | 26/51 [00:01<00:00, 28.80it/s]
+Capturing CUDA graphs (PIECEWISE):  59%|█████▉    | 30/51 [00:01<00:00, 29.84it/s]
+Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 30.67it/s]
+Capturing CUDA graphs (PIECEWISE):  75%|███████▍  | 38/51 [00:01<00:00, 31.54it/s]
+Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:01<00:00, 32.17it/s]
+Capturing CUDA graphs (PIECEWISE):  90%|█████████ | 46/51 [00:01<00:00, 32.84it/s]
+Capturing CUDA graphs (PIECEWISE):  98%|█████████▊| 50/51 [00:01<00:00, 33.46it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 29.12it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  14%|█▍        | 5/35 [00:00<00:00, 49.97it/s]
+Capturing CUDA graphs (FULL):  31%|███▏      | 11/35 [00:00<00:00, 50.53it/s]
+Capturing CUDA graphs (FULL):  49%|████▊     | 17/35 [00:00<00:00, 52.14it/s]
+Capturing CUDA graphs (FULL):  66%|██████▌   | 23/35 [00:00<00:00, 54.35it/s]
+Capturing CUDA graphs (FULL):  66%|██████▌   | 23/35 [00:15<00:00, 54.35it/s]
+Capturing CUDA graphs (FULL):  69%|██████▊   | 24/35 [00:39<00:37,  3.42s/it]
+Capturing CUDA graphs (FULL):  86%|████████▌ | 30/35 [00:39<00:09,  1.96s/it]
+Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:39<00:00,  1.12s/it]
+(EngineCore pid=4560) INFO 11-17 12:11:06 [model_runner.py:1163] Graph capturing finished in 42 secs, took 0.19 GiB
+(EngineCore pid=4560) INFO 11-17 12:11:06 [gpu_worker.py:1003] CUDA graph pool memory: 0.19 GiB (actual), 0.39 GiB (estimated), difference: 0.2 GiB (106.2%).
+(EngineCore pid=4560) INFO 11-17 12:11:06 [gpu_worker.py:1066] Free memory on device (94.29/94.97 GiB) on startup. Desired GPU memory utilization is (0.9, 85.47 GiB). Actual usage is 14.55 GiB for consumed memory (weights + non-torch), 2.36 GiB for peak activation, and 0.19 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=73257826407` (68.23 GiB) to fit into requested memory, or `--kv-cache-memory=82723131904` (77.04 GiB) to fully utilize gpu memory. Current kv cache memory in use is 68.56 GiB.
+(EngineCore pid=4560) INFO 11-17 12:11:07 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=4560) INFO 11-17 12:11:07 [core.py:405] init engine (profile, create kv cache, warmup model) took 109.32 s (compilation: 9.22 s)
+(EngineCore pid=4560) INFO 11-17 12:11:07 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=3584) INFO 11-17 12:11:08 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=3584) WARNING 11-17 12:11:08 [input_processor.py:408] Passing raw prompts to InputProcessor is deprecated and will be removed in the future. You should instead pass the outputs of Renderer.render_cmpl() or Renderer.render_chat().
+(EngineCore pid=4560) WARNING 11-17 12:11:08 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_stats_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=4560) WARNING 11-17 12:11:09 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_step_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=4560) WARNING 11-17 12:11:09 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_mask_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=4560) WARNING 11-17 12:11:10 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topk_topp_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+[11-17 20:12:10] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 47/219 new generations, 1071 output tok/s
+[11-17 20:13:16] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 64/219 new generations, 948 output tok/s
+[11-17 20:14:22] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 73/219 new generations, 858 output tok/s
+[11-17 20:15:33] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 80/219 new generations, 801 output tok/s
+[11-17 20:16:40] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 86/219 new generations, 785 output tok/s
+[11-17 20:17:44] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 91/219 new generations, 778 output tok/s
+[11-17 20:19:02] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 100/219 new generations, 846 output tok/s
+[11-17 20:20:13] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 111/219 new generations, 964 output tok/s
+[11-17 20:21:22] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 121/219 new generations, 1055 output tok/s
+[11-17 20:22:31] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 125/219 new generations, 1027 output tok/s
+[11-17 20:23:38] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 135/219 new generations, 1131 output tok/s
+[11-17 20:24:46] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 143/219 new generations, 1187 output tok/s
+[11-17 20:25:49] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 148/219 new generations, 1197 output tok/s
+[11-17 20:26:51] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 157/219 new generations, 1287 output tok/s
+[11-17 20:27:53] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 167/219 new generations, 1393 output tok/s
+[11-17 20:29:16] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 180/219 new generations, 1525 output tok/s
+[11-17 20:30:20] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 186/219 new generations, 1557 output tok/s
+[report] pushed to colab-reports: colab p1-mmr80-eval-a-1117-195725: progress
+[11-17 20:31:24] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 191/219 new generations, 1573 output tok/s
+[11-17 20:32:10] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 200/219 new generations, 1694 output tok/s
+[11-17 20:33:26] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 203/219 new generations, 1658 output tok/s
+[11-17 20:34:41] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 208/219 new generations, 1674 output tok/s
+[11-17 20:35:17] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 219 new generations, 2,722,083 output tokens in 1449 s (1878 tok/s; engine start 134 s)
+[11-17 20:35:17] grpo_qfft_r1_mmr_dr80_eval_v93_merged: generation complete for aime24, aime25, amc23
+(MainProcess pid=3584) INFO 11-17 12:35:17 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=4560) INFO 11-17 12:35:17 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=4560) INFO 11-17 12:35:17 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=4560) INFO 11-17 12:35:17 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=4560) INFO 11-17 12:35:17 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-17 12:35:24] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --benchmarks aime24,aime25,amc23 --tags grpo_qfft_r1_mmr_dr80_eval_v93_merged,qfft_r1_16k_b8_restart_v93 --require-gradable --known-recovery /content/p1/code/c7bcd9df7b7e/experiments/qfft_v93/configs/grpo/r1_mmr_dr150_scoring_recovery.json --report-dir /content/mydrive/runs/project1/v93/r1_mmr_dr80_eval/competition --compare grpo_qfft_r1_mmr_dr80_eval_v93_merged:qfft_r1_16k_b8_restart_v93 --per-problem | log: /content/mydrive/runs/project1/v93/logs/20261117-123524_score_mmr_step80.log
+[11-17 20:35:34] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime24: mean@n=0.167 CI=[0.06666666666666667, 0.2875] tokens=14880 trunc=0.094
+[11-17 20:35:35] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime25: mean@n=0.175 CI=[0.06666666666666667, 0.3] tokens=10516 trunc=0.017
+[11-17 20:35:35] grpo_qfft_r1_mmr_dr80_eval_v93_merged/amc23: mean@n=0.553 CI=[0.4375, 0.671875] tokens=7066 trunc=0.019
+[11-17 20:35:43] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+[11-17 20:35:55] /content/mydrive/runs/project1/v93/evals/qfft_r1_16k_b8_restart_v93/aime25: exact numeric recovery for aime25/25 draw 10: wrong
+[11-17 20:35:55] qfft_r1_16k_b8_restart_v93/aime25: mean@n=0.148 CI=[0.05416666666666667, 0.26458333333333334] tokens=11125 trunc=0.025
+[11-17 20:36:01] qfft_r1_16k_b8_restart_v93/amc23: mean@n=0.591 CI=[0.46875, 0.7125] tokens=7498 trunc=0.013
+[11-17 20:36:06] Wrote /content/mydrive/runs/project1/v93/r1_mmr_dr80_eval/competition/results.md
+# v93 results (mean@n %, ±95% CI half-width / mean output tokens)
+
+Grader: v93-final-segment-last-box/math-verify-0.9.0-timeout-status; generated 2026-11-17T20:36:02+08:00.
+
+| model | aime24 | aime25 | amc23 | AIME24+25+AMC23 |
+|---|---|---|---|---|
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged | 16.7 ±11.0 / 14.9K | 17.5 ±11.7 / 10.5K | 55.3 ±11.7 / 7.1K | 32.4 ±7.6 |
+| qfft_r1_16k_b8_restart_v93 | 18.5 ±10.2 / 14.7K | 14.8 ±10.5 / 11.1K | 59.1 ±12.2 / 7.5K | 33.6 ±7.9 |
+
+## Paired comparisons (per-problem bootstrap)
+
+| A − B | benchmark | Δ (pp) | 95% CI | p |
+|---|---|---|---|---|
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | aime24 | -1.9 | [-4.4, +1.0] | 0.200 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | aime25 | +2.7 | [-0.4, +6.5] | 0.123 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | amc23 | -3.8 | [-10.6, +3.1] | 0.295 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | competition | -1.2 | [-4.2, +1.9] | 0.444 |
+
+[11-17 12:36:11] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.generate --model run:grpo_qfft_r1_mmr_dr80_eval_v93/merged --tag grpo_qfft_r1_mmr_dr80_eval_v93_merged --suite full --benchmarks math500,aime24,aime25,amc23,gsm8k | log: /content/mydrive/runs/project1/v93/logs/20261117-123611_generate_mmr_step80.log
+[11-17 20:36:18] rclone copy (4 s): 2026/11/17 12:36:18 NOTICE:           0 B / 0 B, -, 0 B/s, ETA -
+[11-17 20:36:18] Downloaded /content/mydrive/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr80_eval_v93/merged in 4 s
+[11-17 20:36:27] grpo_qfft_r1_mmr_dr80_eval_v93_merged/math500: 2000 generations planned, 0 already saved
+[11-17 20:36:31] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime24: 480 generations planned, 480 already saved
+[11-17 20:36:34] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime25: 480 generations planned, 480 already saved
+[11-17 20:36:37] grpo_qfft_r1_mmr_dr80_eval_v93_merged/amc23: 320 generations planned, 320 already saved
+[11-17 20:36:43] grpo_qfft_r1_mmr_dr80_eval_v93_merged/gsm8k: 1319 generations planned, 0 already saved
+W1117 12:36:43.615000 11497 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1117 12:36:43.616000 11497 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1117 12:36:43.616000 11497 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(MainProcess pid=11497) INFO 11-17 12:36:45 [startup.py:96] non-default args: {'tokenizer': '/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 32768, 'enable_prefix_caching': True, 'gpu_memory_utilization': 0.9, 'max_num_seqs': 256, 'disable_log_stats': True, 'generation_config': 'vllm', 'model': '/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged'}
+(MainProcess pid=11497) INFO 11-17 12:36:45 [model.py:744] Resolved architecture: Qwen2ForCausalLM
+(MainProcess pid=11497) INFO 11-17 12:36:45 [model.py:2170] Using max model len 32768
+(MainProcess pid=11497) INFO 11-17 12:36:45 [scheduler.py:310] Chunked prefill is enabled with max_num_batched_tokens=16384.
+(MainProcess pid=11497) INFO 11-17 12:36:45 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=11497) WARNING 11-17 12:36:45 [flashinfer.py:99] FlashInfer kernels are disabled: flashinfer-cubin is not installed and nvcc (CUDA_HOME, CUDA_PATH, PATH or /usr/local/cuda) or ninja (PATH) is missing. Set CUDA_HOME to a CUDA toolkit and put ninja on PATH, or run `vllm download-kernels`.
+W1117 12:36:48.556000 11815 torch/_opaque_base.py:6] torch._opaque_base is deprecated, use torch._custom_class_base instead
+W1117 12:36:48.556000 11815 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1117 12:36:48.557000 11815 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+(EngineCore pid=11815) INFO 11-17 12:36:50 [core.py:139] Initializing a V1 LLM engine (v0.33.0) with config: model='/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged', speculative_config=None, tokenizer='/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=None, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=False, max_bytes=None), kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, custom_histogram_buckets=None, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=42, served_model_name=/content/p1/models/runs__project1__v93__runs__grpo_qfft_r1_mmr_dr80_eval_v93__merged, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::qwen4_exp_qsa_prepare_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'cudagraph_decoder_replay': True, 'decoder_replay_cudagraph_capture_sizes': [], 'decoder_replay_trim_threshold': 768, 'compile_sizes': [], 'compile_ranges_endpoints': [16384], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_rocm_segmented_attn_autotune=False, enable_cutedsl_warmup=True, enable_jit_warmup=True, monokernel=False, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=11815) WARNING 11-17 12:36:50 [flashinfer.py:99] FlashInfer kernels are disabled: flashinfer-cubin is not installed and nvcc (CUDA_HOME, CUDA_PATH, PATH or /usr/local/cuda) or ninja (PATH) is missing. Set CUDA_HOME to a CUDA toolkit and put ninja on PATH, or run `vllm download-kernels`.
+(EngineCore pid=11815) INFO 11-17 12:36:51 [parallel_state.py:1929] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_c233fe0264134b8eaa139f46b9e26858 backend=nccl
+(EngineCore pid=11815) INFO 11-17 12:36:51 [parallel_state.py:2385] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=11815) INFO 11-17 12:36:51 [gpu_worker.py:513] Using V2 Model Runner
+(EngineCore pid=11815) INFO 11-17 12:36:52 [model_runner.py:399] Loading model from scratch...
+(EngineCore pid=11815) INFO 11-17 12:36:52 [cuda.py:508] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(EngineCore pid=11815) INFO 11-17 12:36:52 [flash_attn.py:1122] Using FlashAttention version 2
+(EngineCore pid=11815) INFO 11-17 12:36:53 [base_loader.py:82] Initializing model took 0.487491 seconds
+(EngineCore pid=11815) INFO 11-17 12:36:53 [weight_utils.py:1144] Filesystem type for checkpoints: OVERLAY. Checkpoint size: 14.19 GiB. Available RAM: 170.95 GiB.
+(EngineCore pid=11815) INFO 11-17 12:36:53 [weight_utils.py:1167] Auto-prefetch is disabled because the filesystem (OVERLAY) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:00<00:00,  3.19it/s]
+
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:00<00:00,  2.63it/s]
+
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:01<00:00,  2.57it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:01<00:00,  2.63it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:01<00:00,  2.65it/s]
+
+(EngineCore pid=11815) INFO 11-17 12:36:54 [default_loader.py:506] Loading weights took 1.61 seconds
+(EngineCore pid=11815) INFO 11-17 12:36:56 [model_runner.py:428] Model loading took 14.19 GiB memory and 3.893524 seconds
+(EngineCore pid=11815) INFO 11-17 12:36:56 [topk_topp_sampler.py:121] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=11815) INFO 11-17 12:36:56 [torch_utils.py:281] Reducing Torch threads from 24 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=11815) INFO 11-17 12:36:56 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=11815) INFO 11-17 12:36:57 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=29
+(EngineCore pid=11815) INFO 11-17 12:36:57 [decorators.py:326] [backbone] Directly load AOT compilation from path /root/.cache/vllm/torch_compile_cache/torch_aot_compile/e135e14dbdadc61dad73dc3cfa30884445724a9b8f84f818a41898c3f6097446/rank_0_0/model
+(EngineCore pid=11815) INFO 11-17 12:36:57 [monitor.py:62] [backbone] torch.compile took 0.10 s in total
+(EngineCore pid=11815) INFO 11-17 12:36:57 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.11 s
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   4%|▍         | 2/51 [00:00<00:03, 15.54it/s]
+Capturing CUDA graphs (PIECEWISE):  10%|▉         | 5/51 [00:00<00:02, 19.47it/s]
+Capturing CUDA graphs (PIECEWISE):  16%|█▌        | 8/51 [00:00<00:02, 20.83it/s]
+Capturing CUDA graphs (PIECEWISE):  22%|██▏       | 11/51 [00:00<00:01, 22.18it/s]
+Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 14/51 [00:00<00:01, 23.09it/s]
+Capturing CUDA graphs (PIECEWISE):  33%|███▎      | 17/51 [00:00<00:01, 21.98it/s]
+Capturing CUDA graphs (PIECEWISE):  41%|████      | 21/51 [00:00<00:01, 24.38it/s]
+Capturing CUDA graphs (PIECEWISE):  49%|████▉     | 25/51 [00:01<00:00, 26.45it/s]
+Capturing CUDA graphs (PIECEWISE):  57%|█████▋    | 29/51 [00:01<00:00, 27.97it/s]
+Capturing CUDA graphs (PIECEWISE):  65%|██████▍   | 33/51 [00:01<00:00, 29.06it/s]
+Capturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:01<00:00, 30.28it/s]
+Capturing CUDA graphs (PIECEWISE):  80%|████████  | 41/51 [00:01<00:00, 31.13it/s]
+Capturing CUDA graphs (PIECEWISE):  88%|████████▊ | 45/51 [00:01<00:00, 32.02it/s]
+Capturing CUDA graphs (PIECEWISE):  96%|█████████▌| 49/51 [00:01<00:00, 32.52it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 27.55it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 2/2 [00:00<00:00, 48.48it/s]
+(EngineCore pid=11815) INFO 11-17 12:37:04 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.34 GiB
+(EngineCore pid=11815) INFO 11-17 12:37:05 [gpu_worker.py:772] Available KV cache memory: 68.58 GiB
+(EngineCore pid=11815) INFO 11-17 12:37:05 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8959 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9041. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=11815) INFO 11-17 12:37:05 [kv_cache_utils.py:1147] GPU KV cache size: 1,284,096 tokens, Maximum concurrency for 32,768 tokens per request: 39.19x
+(EngineCore pid=11815) INFO 11-17 12:37:05 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=11815) INFO 11-17 12:37:05 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/51 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):   6%|▌         | 3/51 [00:00<00:02, 21.08it/s]
+Capturing CUDA graphs (PIECEWISE):  12%|█▏        | 6/51 [00:00<00:02, 21.87it/s]
+Capturing CUDA graphs (PIECEWISE):  18%|█▊        | 9/51 [00:00<00:01, 22.52it/s]
+Capturing CUDA graphs (PIECEWISE):  24%|██▎       | 12/51 [00:00<00:01, 23.37it/s]
+Capturing CUDA graphs (PIECEWISE):  29%|██▉       | 15/51 [00:00<00:01, 24.03it/s]
+Capturing CUDA graphs (PIECEWISE):  35%|███▌      | 18/51 [00:00<00:01, 25.53it/s]
+Capturing CUDA graphs (PIECEWISE):  43%|████▎     | 22/51 [00:00<00:01, 27.56it/s]
+Capturing CUDA graphs (PIECEWISE):  51%|█████     | 26/51 [00:01<00:00, 28.92it/s]
+Capturing CUDA graphs (PIECEWISE):  59%|█████▉    | 30/51 [00:01<00:00, 29.94it/s]
+Capturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 30.70it/s]
+Capturing CUDA graphs (PIECEWISE):  75%|███████▍  | 38/51 [00:01<00:00, 31.46it/s]
+Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 42/51 [00:01<00:00, 32.01it/s]
+Capturing CUDA graphs (PIECEWISE):  90%|█████████ | 46/51 [00:01<00:00, 32.59it/s]
+Capturing CUDA graphs (PIECEWISE):  98%|█████████▊| 50/51 [00:01<00:00, 33.15it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:01<00:00, 29.12it/s]
+
+Capturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL):  14%|█▍        | 5/35 [00:00<00:00, 49.29it/s]
+Capturing CUDA graphs (FULL):  31%|███▏      | 11/35 [00:00<00:00, 50.36it/s]
+Capturing CUDA graphs (FULL):  49%|████▊     | 17/35 [00:00<00:00, 51.60it/s]
+Capturing CUDA graphs (FULL):  66%|██████▌   | 23/35 [00:00<00:00, 53.64it/s]
+Capturing CUDA graphs (FULL):  83%|████████▎ | 29/35 [00:00<00:00, 46.04it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:00<00:00, 50.13it/s]
+(EngineCore pid=11815) INFO 11-17 12:37:13 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.19 GiB
+(EngineCore pid=11815) INFO 11-17 12:37:13 [gpu_worker.py:1003] CUDA graph pool memory: 0.19 GiB (actual), 0.39 GiB (estimated), difference: 0.2 GiB (106.2%).
+(EngineCore pid=11815) INFO 11-17 12:37:13 [gpu_worker.py:1066] Free memory on device (94.29/94.97 GiB) on startup. Desired GPU memory utilization is (0.9, 85.47 GiB). Actual usage is 14.55 GiB for consumed memory (weights + non-torch), 2.35 GiB for peak activation, and 0.19 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=73274603623` (68.24 GiB) to fit into requested memory, or `--kv-cache-memory=82739909120` (77.06 GiB) to fully utilize gpu memory. Current kv cache memory in use is 68.58 GiB.
+(EngineCore pid=11815) INFO 11-17 12:37:13 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=11815) INFO 11-17 12:37:14 [core.py:405] init engine (profile, create kv cache, warmup model) took 17.94 s (compilation: 0.10 s)
+(EngineCore pid=11815) INFO 11-17 12:37:14 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=11497) INFO 11-17 12:37:15 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=11497) WARNING 11-17 12:37:15 [input_processor.py:408] Passing raw prompts to InputProcessor is deprecated and will be removed in the future. You should instead pass the outputs of Renderer.render_cmpl() or Renderer.render_chat().
+(EngineCore pid=11815) WARNING 11-17 12:37:15 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_stats_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=11815) WARNING 11-17 12:37:15 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_step_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=11815) WARNING 11-17 12:37:16 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topp_sb_mask_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=11815) WARNING 11-17 12:37:17 [jit_monitor.py:140] Triton kernel JIT compilation during inference: _topk_topp_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+[11-17 20:37:32] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 200/3319 new generations, 4512 output tok/s
+[11-17 20:37:52] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 400/3319 new generations, 5361 output tok/s
+[11-17 20:38:33] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 600/3319 new generations, 4418 output tok/s
+[11-17 20:39:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 774/3319 new generations, 3692 output tok/s
+[11-17 20:39:49] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 800/3319 new generations, 3492 output tok/s
+[11-17 20:40:50] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 940/3319 new generations, 3202 output tok/s
+[11-17 20:41:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1000/3319 new generations, 2953 output tok/s
+[11-17 20:42:39] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1084/3319 new generations, 2823 output tok/s
+[11-17 20:43:43] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1150/3319 new generations, 2583 output tok/s
+[11-17 20:44:38] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1200/3319 new generations, 2428 output tok/s
+[11-17 20:45:41] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1248/3319 new generations, 2270 output tok/s
+[11-17 20:46:44] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1255/3319 new generations, 2109 output tok/s
+[11-17 20:47:49] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1266/3319 new generations, 2036 output tok/s
+[11-17 20:48:56] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1276/3319 new generations, 1988 output tok/s
+[11-17 20:50:09] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1284/3319 new generations, 1918 output tok/s
+[11-17 20:51:25] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1289/3319 new generations, 1826 output tok/s
+[11-17 20:52:30] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1295/3319 new generations, 1785 output tok/s
+[11-17 20:53:42] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1303/3319 new generations, 1774 output tok/s
+[11-17 20:55:09] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1309/3319 new generations, 1721 output tok/s
+[11-17 20:56:30] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1313/3319 new generations, 1661 output tok/s
+[11-17 20:57:41] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1319/3319 new generations, 1658 output tok/s
+[11-17 20:58:56] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1329/3319 new generations, 1714 output tok/s
+[11-17 21:00:00] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1359/3319 new generations, 1816 output tok/s
+[11-17 21:01:04] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1396/3319 new generations, 1804 output tok/s
+[11-17 21:01:31] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1400/3319 new generations, 1795 output tok/s
+[report] pushed to colab-reports: colab p1-mmr80-eval-a-1117-195725: progress
+[11-17 21:02:46] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1407/3319 new generations, 1740 output tok/s
+[11-17 21:03:48] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1451/3319 new generations, 1790 output tok/s
+[11-17 21:04:52] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1544/3319 new generations, 1824 output tok/s
+[11-17 21:05:35] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1600/3319 new generations, 1826 output tok/s
+[11-17 21:06:39] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1689/3319 new generations, 1885 output tok/s
+[11-17 21:07:41] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1769/3319 new generations, 1885 output tok/s
+[11-17 21:08:02] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1800/3319 new generations, 1899 output tok/s
+[11-17 21:09:05] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 1922/3319 new generations, 1878 output tok/s
+[11-17 21:09:52] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2000/3319 new generations, 1878 output tok/s
+[11-17 21:10:58] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2028/3319 new generations, 1866 output tok/s
+[11-17 21:12:01] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2128/3319 new generations, 1895 output tok/s
+[11-17 21:12:31] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2200/3319 new generations, 1894 output tok/s
+[11-17 21:13:33] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2345/3319 new generations, 1878 output tok/s
+[11-17 21:13:59] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2400/3319 new generations, 1879 output tok/s
+[11-17 21:15:02] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2541/3319 new generations, 1854 output tok/s
+[11-17 21:16:14] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2577/3319 new generations, 1847 output tok/s
+[11-17 21:16:41] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2600/3319 new generations, 1880 output tok/s
+[11-17 21:17:43] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2753/3319 new generations, 1861 output tok/s
+[11-17 21:18:03] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2800/3319 new generations, 1866 output tok/s
+[11-17 21:19:03] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 2950/3319 new generations, 1866 output tok/s
+[11-17 21:19:23] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3000/3319 new generations, 1879 output tok/s
+[11-17 21:20:34] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3192/3319 new generations, 1894 output tok/s
+[11-17 21:20:49] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3200/3319 new generations, 1905 output tok/s
+[11-17 21:21:51] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3211/3319 new generations, 1900 output tok/s
+[11-17 21:23:00] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3230/3319 new generations, 1938 output tok/s
+[11-17 21:24:03] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3243/3319 new generations, 1936 output tok/s
+[11-17 21:25:11] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3255/3319 new generations, 1942 output tok/s
+[11-17 21:26:26] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3267/3319 new generations, 1951 output tok/s
+[11-17 21:27:49] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3277/3319 new generations, 1957 output tok/s
+[11-17 21:29:04] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3287/3319 new generations, 1973 output tok/s
+[11-17 21:30:09] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3294/3319 new generations, 1981 output tok/s
+[11-17 21:31:16] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3305/3319 new generations, 2021 output tok/s
+[11-17 21:32:25] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3310/3319 new generations, 2018 output tok/s
+[report] pushed to colab-reports: colab p1-mmr80-eval-a-1117-195725: progress
+[11-17 21:33:20] grpo_qfft_r1_mmr_dr80_eval_v93_merged: 3319 new generations, 6,926,602 output tokens in 3365 s (2058 tok/s; engine start 32 s)
+[11-17 21:33:20] grpo_qfft_r1_mmr_dr80_eval_v93_merged: generation complete for math500, aime24, aime25, amc23, gsm8k
+(MainProcess pid=11497) INFO 11-17 13:33:20 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=11815) INFO 11-17 13:33:20 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+[11-17 13:33:26] RUN /content/p1/venvs/infer/bin/python -m experiments.qfft_v93.score --benchmarks math500,aime24,aime25,amc23,gsm8k --tags grpo_qfft_r1_mmr_dr80_eval_v93_merged,qfft_r1_16k_b8_restart_v93 --require-gradable --known-recovery /content/p1/code/c7bcd9df7b7e/experiments/qfft_v93/configs/grpo/r1_mmr_dr150_scoring_recovery.json --report-dir /content/mydrive/runs/project1/v93/r1_mmr_dr80_eval --compare grpo_qfft_r1_mmr_dr80_eval_v93_merged:qfft_r1_16k_b8_restart_v93 --per-problem | log: /content/mydrive/runs/project1/v93/logs/20261117-133326_score_mmr_step80.log
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime24: mean@n=0.167 CI=[0.06666666666666667, 0.2875] tokens=14880 trunc=0.094
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/aime25: mean@n=0.175 CI=[0.06666666666666667, 0.3] tokens=10516 trunc=0.017
+[11-17 21:33:36] grpo_qfft_r1_mmr_dr80_eval_v93_merged/amc23: mean@n=0.553 CI=[0.4375, 0.671875] tokens=7066 trunc=0.019
+[11-17 21:33:38] grpo_qfft_r1_mmr_dr80_eval_v93_merged/gsm8k: mean@n=0.920 CI=[0.9044730856709629, 0.934040940106141] tokens=451 trunc=0.000
+[11-17 21:33:43] grpo_qfft_r1_mmr_dr80_eval_v93_merged/math500: mean@n=0.807 CI=[0.779, 0.8355] tokens=3166 trunc=0.006
+[11-17 21:33:49] qfft_r1_16k_b8_restart_v93/aime24: mean@n=0.185 CI=[0.09166666666666666, 0.29583333333333334] tokens=14651 trunc=0.104
+[11-17 21:33:58] /content/mydrive/runs/project1/v93/evals/qfft_r1_16k_b8_restart_v93/aime25: exact numeric recovery for aime25/25 draw 10: wrong
+[11-17 21:33:59] qfft_r1_16k_b8_restart_v93/aime25: mean@n=0.148 CI=[0.05416666666666667, 0.26458333333333334] tokens=11125 trunc=0.025
+[11-17 21:34:02] qfft_r1_16k_b8_restart_v93/amc23: mean@n=0.591 CI=[0.46875, 0.7125] tokens=7498 trunc=0.013
+[11-17 21:34:10] qfft_r1_16k_b8_restart_v93/gsm8k: mean@n=0.914 CI=[0.8991660348749052, 0.9287338893100834] tokens=476 trunc=0.000
+[11-17 21:34:19] qfft_r1_16k_b8_restart_v93/math500: mean@n=0.805 CI=[0.777, 0.8325] tokens=3115 trunc=0.009
+[11-17 21:34:23] Wrote /content/mydrive/runs/project1/v93/r1_mmr_dr80_eval/results.md
+# v93 results (mean@n %, ±95% CI half-width / mean output tokens)
+
+Grader: v93-final-segment-last-box/math-verify-0.9.0-timeout-status; generated 2026-11-17T21:34:23+08:00.
+
+| model | aime24 | aime25 | amc23 | gsm8k | math500 | AIME24+25+AMC23 |
+|---|---|---|---|---|---|---|
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged | 16.7 ±11.0 / 14.9K | 17.5 ±11.7 / 10.5K | 55.3 ±11.7 / 7.1K | 92.0 ±1.5 / 0.5K | 80.8 ±2.8 / 3.2K | 32.4 ±7.6 |
+| qfft_r1_16k_b8_restart_v93 | 18.5 ±10.2 / 14.7K | 14.8 ±10.5 / 11.1K | 59.1 ±12.2 / 7.5K | 91.4 ±1.5 / 0.5K | 80.5 ±2.8 / 3.1K | 33.6 ±7.9 |
+
+## Paired comparisons (per-problem bootstrap)
+
+| A − B | benchmark | Δ (pp) | 95% CI | p |
+|---|---|---|---|---|
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | aime24 | -1.9 | [-4.4, +1.0] | 0.200 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | aime25 | +2.7 | [-0.4, +6.5] | 0.123 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | amc23 | -3.8 | [-10.6, +3.1] | 0.295 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | gsm8k | +0.5 | [-0.6, +1.7] | 0.388 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | math500 | +0.2 | [-1.2, +1.8] | 0.759 |
+| grpo_qfft_r1_mmr_dr80_eval_v93_merged − qfft_r1_16k_b8_restart_v93 | competition | -1.2 | [-4.2, +1.9] | 0.444 |
+
+[report] pushed to colab-reports: colab p1-mmr80-eval-a-1117-195725: OK
+P1_RESULT=OK
