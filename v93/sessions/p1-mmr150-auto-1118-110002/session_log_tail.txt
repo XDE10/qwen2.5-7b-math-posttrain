@@ -1,0 +1,59 @@
+P1_SESSION=p1-mmr150-auto-1118-110002 gpu=G4 auto_release=1
+/tmp/ipykernel_1483/3504591968.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle c7bcd9df7b7e (git f593e55e3ec1+dirty); stages: ['grpo:grpo_qfft_r1_mmr_dr150:resume']
+[11-18 03:08:45] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-18 03:08:46] ===== STAGE grpo:grpo_qfft_r1_mmr_dr150:resume =====
+[11-18 03:08:49] Taking over stage grpo:grpo_qfft_r1_mmr_dr150 from p1-mmr150-auto-1118-101558@b10550780821 (heartbeat 41 min ago)
+[11-18 03:08:49] GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, 580.82.07
+[11-18 03:08:49] Host RAM: 177 GiB, CPUs: 48, local disk free: 236 GiB
+[11-18 03:08:49] Restoring rl venv from Drive snapshot rl-366e0de0b57e.tar
+[11-18 03:10:08] RUN env PYTHONPATH=/content/p1/code/c7bcd9df7b7e:/content/p1/venvs/rl-mmr-extra-4ca6eff846ea /content/p1/venvs/rl/bin/python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_mmr_dr150.json --require-resume | log: /content/mydrive/runs/project1/v93/logs/20261118-031008_grpo_grpo_qfft_r1_mmr_dr150.log
+[11-18 11:11:11] rclone copy (60 s): 2026/11/18 03:11:11 NOTICE:    14.196 GiB / 14.196 GiB, 100%, 108.334 MiB/s, ETA 0s
+[11-18 11:11:11] Downloaded /content/mydrive/runs/project1/v93/runs/qfft_r1_16k_b8_restart_v93/final in 60 s
+[11-18 11:11:27] Restoring checkpoint-128 from Drive (1.8GiB) ...
+[11-18 11:11:31] WARNING: cannot restore checkpoint-128: rclone copy failed (3): 026/11/18 03:11:30 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-128': error reading source root directory: directory not found
+2026/11/18 03:11:30 ERROR : Attempt 7/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:31 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-128': error reading source root directory: directory not found
+2026/11/18 03:11:31 ERROR : Attempt 8/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:31 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-128': error reading source root directory: directory not found
+2026/11/18 03:11:31 ERROR : Attempt 9/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:31 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-128': error reading source root directory: directory not found
+2026/11/18 03:11:31 ERROR : Attempt 10/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:31 NOTICE:           0 B / 0 B, -, 0 B/s, ETA -
+2026/11/18 03:11:31 Failed to copy: directory not found
+[11-18 11:11:38] Restoring checkpoint-126 from Drive (1.8GiB) ...
+[11-18 11:11:43] WARNING: cannot restore checkpoint-126: rclone copy failed (3): 026/11/18 03:11:42 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-126': error reading source root directory: directory not found
+2026/11/18 03:11:42 ERROR : Attempt 7/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:42 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-126': error reading source root directory: directory not found
+2026/11/18 03:11:42 ERROR : Attempt 8/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:42 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-126': error reading source root directory: directory not found
+2026/11/18 03:11:42 ERROR : Attempt 9/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:43 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-126': error reading source root directory: directory not found
+2026/11/18 03:11:43 ERROR : Attempt 10/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:43 NOTICE:           0 B / 0 B, -, 0 B/s, ETA -
+2026/11/18 03:11:43 Failed to copy: directory not found
+[11-18 11:11:50] Restoring checkpoint-124 from Drive (1.8GiB) ...
+[11-18 11:11:54] WARNING: cannot restore checkpoint-124: rclone copy failed (3): 026/11/18 03:11:54 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-124': error reading source root directory: directory not found
+2026/11/18 03:11:54 ERROR : Attempt 7/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:54 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-124': error reading source root directory: directory not found
+2026/11/18 03:11:54 ERROR : Attempt 8/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:54 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-124': error reading source root directory: directory not found
+2026/11/18 03:11:54 ERROR : Attempt 9/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:54 ERROR : Google drive root 'runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/ckpt_mirror/checkpoint-124': error reading source root directory: directory not found
+2026/11/18 03:11:54 ERROR : Attempt 10/10 failed with 1 errors and: directory not found
+2026/11/18 03:11:54 NOTICE:           0 B / 0 B, -, 0 B/s, ETA -
+2026/11/18 03:11:54 Failed to copy: directory not found
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/content/p1/code/c7bcd9df7b7e/experiments/qfft_v93/grpo.py", line 644, in <module>
+    main()
+    ~~~~^^
+  File "/content/p1/code/c7bcd9df7b7e/experiments/qfft_v93/grpo.py", line 481, in main
+    resume = resolve_resume(local_run, drive_run)
+  File "/content/p1/code/c7bcd9df7b7e/experiments/qfft_v93/checkpointing.py", line 128, in resolve_resume
+    raise RuntimeError('No full-state checkpoint is available for exact resume. '
+                       'Drive weights-only mirrors are initialization artifacts. '
+                       'Use the original VM with a complete local checkpoint or start a new run.')
+RuntimeError: No full-state checkpoint is available for exact resume. Drive weights-only mirrors are initialization artifacts. Use the original VM with a complete local checkpoint or start a new run.

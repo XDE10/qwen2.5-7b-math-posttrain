@@ -1,10 +1,10 @@
-# v93 status (2026-11-18T02:47:28, session p1-mmr150-auto-1118-101558)
+# v93 status (2026-11-18T03:11:58, session p1-mmr150-auto-1118-110002)
 
 ```
-stage grpo:grpo_qfft_r1_mmr_dr150                   running   on p1-mmr150-auto-1118-101558@b10550780821, heartbeat 5 min ago 
+stage grpo:grpo_qfft_r1_mmr_dr150                   failed     RuntimeError: grpo_grpo_qfft_r1_mmr_dr150 failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261118-
 stage r1-mmr-dr100-eval                             complete  3.51 
 stage r1-mmr-dr80-eval                              complete  1.576 
-run grpo_qfft_r1_mmr_dr150_v93   training step 129/150 updated 2026-11-18T10:39:12+08:00
+run grpo_qfft_r1_mmr_dr150_v93   training step 138/150 updated 2026-11-18T09:55:11+08:00
 eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime24     480/480 complete=True
 eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime25     480/480 complete=True
 eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/amc23      320/320 complete=True
