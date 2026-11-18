@@ -33,6 +33,49 @@ bash experiments/qfft_v93/colab/launch.sh --gpu G4,H100 \
 
 报告用同一版本的评分器核对 `base`、`qfft_official` 和新模型，同时给出 AIME24+25+AMC23 合并成绩及相对基座的按题配对 95% CI、MATH-500、GSM8K、平均输出长度与截断率。最终成绩以 `TRAIN_COMPLETE.json` 和五个评测集全部完成为准，和 `qfft_official` 的差距用于判断复现程度。
 
+### R1 MMR-DR-GRPO 第 50 步
+
+本地 CPU 命令使用装有 `trl==1.17.1`、`transformers==5.19.0`、PEFT、PyTorch 和 Math-Verify 的 Python，在仓库根目录运行。它核对冻结题库、解析全部 400 条参考答案，并打印实际展开的训练设置。
+
+```bash
+python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_mmr_dr50.json --check
+```
+
+用原始 R1 QFFT 第 750 步和获批的 `data/rl_openr1_46k_decontaminated/mmr_dr50_train.jsonl` 启动。冻结文件使用原 seed 2025 的抽题顺序，只改了六个已核实的坏题位，运行时按文件顺序读取。处理记录与原始、冻结题目 ID 都在 `mmr_dr50_manifest.json`。按论文算法 1 对每题 6 条生成独立重加权。每次更新 8 题，生成上限 16,384。TRL 对生成、策略和 KL 参考模型使用相同的最多 512 个 prompt token，沿用项目的 `token_mask` 采样校正。使用作者的 500 步 cosine 调度与 50 步预热，在第 50 步结束训练，正常保存完整断点和 adapter、合并权重，再发布 `GRPO_COMPLETE.json`。训练提示与 Format 奖励用作者协议，Cosine 使用生成 token 长度。Jina 使用其官方 mean-pooled ONNX 导出，在 CPU 逐条编码后再用同题的 6 个向量重加权。
+
+GPU 获授权后，从 WSL 仓库根目录上传冻结文件，再启动训练和原口径配对评测。
+
+```bash
+source ~/.proxy_env.sh
+rclone --config "${P1_RCLONE_CONF:-$HOME/.config/rclone/rclone.conf}" copyto --checksum \
+  data/rl_openr1_46k_decontaminated/mmr_dr50_train.jsonl \
+  mydrive:projects/project1/v93/data/rl_openr1_46k_decontaminated/mmr_dr50_train.jsonl &&
+bash experiments/qfft_v93/colab/launch.sh --drive rclone --gpu G4 --session p1-r1-mmr-dr50 \
+  grpo:grpo_qfft_r1_mmr_dr50 r1-mmr-dr50-eval
+```
+
+运行结束标记为 `P1_RESULT=OK`。`r1-mmr-dr50-eval` 核对第 50 步导出和原始 R1 的生成协议，复用 R1 作答，生成五项新评测并统一判分。Drive `runs/project1/v93/r1_mmr_dr50_eval/` 保存 `results.json`、`results.md`、`per_problem_pairs.jsonl`，同时回传到 `colab-reports`。可用 `launch.sh --attach p1-r1-mmr-dr50` 重连。训练每两步额外镜像完整恢复状态。服务端回收 VM 后，用 `grpo:grpo_qfft_r1_mmr_dr50:resume` 续训。若 VM 只完成了训练，另启一个 `r1-mmr-dr50-eval` 阶段可继续评测。 [作者 7B 配置](https://github.com/WeiKangda/MMR-GRPO/blob/db07f713ce67c15f4733998f97b4ad838c9b9518/recipes/mmr_dr_grpo_7b.yaml) · [论文算法](https://arxiv.org/html/2601.09085v2#S3.SS2)
+
+### 修正截断奖励的 R1 MMR-DR-GRPO 第 150 步
+
+`grpo_qfft_r1_mmr_dr150.json` 从原始 R1 QFFT 第 750 步起训，使用新 run 目录和新优化器。继承已实跑的 MMR 配方，包括 16K、有效 batch 48、LR `1e-6`、50 步预热及 500 步调度。唯一奖励变化是被 TRL 截断掩码屏蔽的作答退出 embedding、MMR 及组内奖励均值。奖励返回值 `None` 由 TRL 1.17.1 忽略；全组无有效作答或仅有一条时，组内 advantage 为零。正式入口为 `grpo:grpo_qfft_r1_mmr_dr150`，最终五项配对评测为 `r1-mmr-dr150-eval`。
+
+正式题池为 `data/rl_openr1_46k_decontaminated/mmr_dr150_frozen_train.jsonl`。前 400 条保留原始文件的完整字节。后 800 条里，7 条去掉题尾答案或含解答的图区块，14 条用原 seed 的 1203–1217 号题按顺序在原行位替换，其中 1209 号因题干超长会丢失题意而跳过。其余新增题保留原内容和行位。新增题对照原保护评测清单核验，QFFT 旧题按既定范围保留。`python -m tools.qfft.build_mmr150_pool` 可在项目 CPU RL 环境重建，原行和修订行的 ID、seed 位置及哈希记在同目录的 `mmr_dr150_frozen_manifest.json`。
+
+两步 G4 冒烟入口为 `grpo:grpo_qfft_r1_mmr_dr150_smoke2`，使用单独批准的 `mmr_dr150_smoke2_train.jsonl`（前 16 题）、单独的 run 目录，以及同一个 16K 配方和 500 步调度。第 2 步保存完整检查点，并在同一 VM 通过 Trainer 重新加载权重、优化器、调度器和 RNG。验收看 `GRPO_COMPLETE.json` 中的 `steps: 2`、`local_checkpoint_reload_verified: true` 和完整 Drive 镜像，结合两步的 rollout、耗时和显存日志检查。
+
+正式评测继续要求全部作答可判分。若原始 R1 的 AIME25 `aime25/25`、`draw=10` 再次发生比较超时，评分入口核对此条原文哈希、模型、题目和参考答案，再用同一 Math-Verify 判定其末框表达式的精确值 `216112050`。原始生成记录保留，修复明细随评测汇总输出。
+
+本地检查使用同一个 CPU RL 解释器执行以下命令。
+
+```bash
+python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_mmr_dr150.json --check
+python -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_mmr_dr150_smoke2.json --check
+python -m pytest -q tests/qfft/test_mmr_grpo.py
+```
+
+`python -m tools.qfft.replay_mmr_truncation --help` 提供 CPU 回放入口，输入为旧 `grpo_qfft_r1_16k_tokenmask10_v93` 在 Drive 保存的逐条 rollout 和固定版本 Jina ONNX。150 步正式运行的逐条诊断按步写入 `rollout_diagnostics/step-XXXX.jsonl`，包含 vLLM 停止原因、token ID 哈希、有效性、奖励、MMR 顺序和 Trainer 实际使用的 advantage。
+
 ## 一、本地（WSL2，CPU）：把 1000 题数据做完
 
 项目在 WSL2 Ubuntu 的 `/home/xde10/projects/qwen2.5-7b-math-posttrain`，交互 shell 是 zsh；仓库脚本都是 bash，用 `bash 脚本` 运行即可。`reports/`、`artifacts/`、`data/` 这些本地数据 git 不管，要在这份目录里。
@@ -243,3 +286,33 @@ bash experiments/qfft_v93/colab/launch.sh --gpu G4 --session p1-r1-fura50 \
 - CPU 上已实跑：模板与官方 S1_QFFT 数据逐字一致（1000/1000）；SFT/QFFT 编码不变量；判分器 10 个边界用例；微型 Qwen2 上的全参训练、模拟 VM 丢失后从 Drive 镜像恢复并续跑到结束、SFT 格式、身份校验；假引擎生成的按采样粒度续跑与判分汇总；TRL 1.17.1 GRPO + LoRA + 奖励 + 镜像 + 恢复 + 合并；合成数据上的 plan/status/fill/build 全流程；launch.sh 与 remote.py 的调度流程（按 google-colab-cli 0.7.5 行为写的模拟 CLI）；冒烟序列用真实 Qwen tokenizer 生成，QFFT 32 条、SFT 4 条都恰好 32,768 token。
 - 模拟测试在 [tests/v93_harness/](../../tests/v93_harness/README.md)：`bash tests/v93_harness/run_all.sh`（8 组 214 项：launcher 场景、Drive 传输、冒烟总结、teacher、固定输入、data_build、setup_wsl.sh、check_local.sh），在工作区的临时快照上运行。
 - G4 上已实测（2026-11-09 阶段 1 冒烟，数字见[交接文档第 1 节](../../archive/docs/handover/kiro_ide_onboarding.md)）：32K 最坏长度全参 142 s/步、显存峰值 28.9 GiB 已分配、主机 RSS 145.3 GiB、本地存检查点 113.5 GiB 用 386 s；GRPO 最坏长度 476 s/步、66.6 GiB。还没测：真实数据下的 s/step（每个微批变短后 ZeRO-2 offload 的梯度搬运开销）、正式评测的生成吞吐、113.5 GiB 镜像的上传耗时、H100 上的 GRPO 显存。
+
+## 七、MMR-DR-GRPO 从第 150 步续到第 500 步（2026-11-18 授权）
+
+配置：[grpo_qfft_r1_mmr_dr500.json](configs/grpo/grpo_qfft_r1_mmr_dr500.json)。准入：[4000 题批准清单](configs/grpo/mmr_openr1_dr500_4000_approval.json)。这条接续保留原始 R1 QFFT 基座，恢复第 150 步的 LoRA、优化器、调度器和 RNG；全局下一步为 151。
+
+- 用户授权把现有 1200 题作为不变前缀，按原 seed=2025 的 OpenR1 顺序补齐 2800 题。冻结文件为 `data/rl_openr1_46k_decontaminated/mmr_dr500_frozen_train.jsonl`，SHA-256 `c02d6d28907b23ab3a7b4c8b574d2a2bbd4c2b578bfc674d5fd1acf0fcb3e5f0`。第一批 1200 行逐字节未改，8 题/步对应总共 500 步的一次固定遍历；未启用旧 QFFT 重叠或全错难题过滤。
+- 数据质量修订、补题原始 seed 位置、源行与结果行哈希见同目录的 `mmr_dr500_frozen_manifest.json`、`mmr_dr500_quality_review.json`、`mmr_dr500_quality_verification.json`。参考答案自检和结构复核不等于 4000 题人工推导金标认证。
+- 继续使用每题 6 条独立 MMR、16,384 completion token、LR 1e-6、原 500 步 cosine 调度与 50 步 warmup。其他训练参数继承第 150 步配置；接续入口验证原审批哈希、代码包、运行身份和已训练题目的字节前缀。
+- 原有每 2 步恢复镜像继续滚动保存最近 3 份；150、175、200…500 每 25 步的完整状态保留，包含优化器、调度器和 RNG。150 的模型和完整断点引用父 run 及其独立保存副本，其余里程碑保存在新 run。
+- `milestones.py` 在隐藏 CUDA 的独立 CPU 进程合并里程碑模型，对完整断点逐文件校验，发布带来源和权重哈希的导出清单。第 500 步的模型位于新 run 的 `merged/`。全部 15 份模型确认后才发布 `MILESTONES_COMPLETE.json` 与 `GRPO_COMPLETE.json`。
+- 本轮部署保留原 150 步代码 `c7bcd9df7b7e`，500 步变更位于隔离工作树。账号 C 的启动、断线恢复和等待 150 完整归档由 `/mnt/d/CodexArtifacts/project1-mmr-step500-20261118/guardian500.py` 承担；实际入口由该目录的 `resume500.sh` 固定到同一代码包、数据哈希与 `p1drive:`，不重复启动现有 150 步会话。
+
+本地检查（在本工作树执行，不申请 GPU）：
+
+```bash
+TOKENIZERS_PARALLELISM=false /home/xde10/.venvs/p1-mmr-cpu/bin/python \
+  -m experiments.qfft_v93.grpo --config grpo/grpo_qfft_r1_mmr_dr500.json --check
+```
+
+预期 `OPENR1_OK rows=4000 ... prompt_truncated=0`，以及 `MMR_CONFIG_OK groups=8 samples_per_group=6 ... scheduler_steps=500 ... final_step=500`。重建审查稿用 `python -m tools.qfft.build_mmr500_pool --review <逐题审查记录> --out <审查稿.jsonl>`；该命令不批准文件、不启动训练。
+
+### 每 25 步开发集验证（2026-11-18 用户授权）
+
+使用现有冻结的 249 题 `r1_grpo_dev`，每题 2 次，共 498 条生成。沿用已有 32K 原生上下文、temperature 0.6、top_p 0.95、seed 42、相同 prompt 和最终段答案框判分，未修改训练题目、学习率或 16K rollout。每个验证点同时保留完整断点和独立合并模型。每 2 步的恢复镜像仍保留最近 3 份；上传失败时不得清理未持久化的验证断点。
+
+调度从第 150 步开始，每 25 个全局优化器步评一次，到 500 为止；已有第 100 步权重补评一次。过去已清理的第 25、75、125 步不能补造。`validation.py` 仅使用开发集准确率选择最佳 RL checkpoint，同分取较早步；`BEST_VALIDATION.json` 绑定模型身份、完整断点哈希和评测协议。固定第 500 步模型单独保留。原先固定最后一步的规则于本次用户明确要求下修订；标准五项测试成绩不进入此选择。
+
+验证在账号 A 的单独 G4 上执行，每次评完释放，账号 C 持续训练。监督器为 `/mnt/d/CodexArtifacts/project1-mmr-step500-20261118/validation25/controller.py`；结果包含逐题配对差值和 bootstrap 95% CI。训练输入仍为新 `p1drive:`；该盘 11 月 18 日再次拒绝上传时，小体积验证结果写入已确认恢复可写的 `mydrive:`，不更改训练挂载。恢复和状态命令见同目录 `操作说明.md`。
+
+监督器源码及部署边界见 [tools/qfft/mmr500](../../tools/qfft/mmr500/README.md)，本轮可公开的参数、授权和实测结果见 [MMR 进展记录](../../docs/status/mmr_dr500_validation_20261118.md)。

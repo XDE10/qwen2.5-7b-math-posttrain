@@ -1,0 +1,12 @@
+{
+  "run_names": ["grpo_qfft_r1_mmr_dr150_smoke2_v93"],
+  "approved_training_files": ["rl_openr1_46k_decontaminated/mmr_dr150_smoke2_train.jsonl"],
+  "files": {
+    "rl_openr1_46k_decontaminated/mmr_dr150_smoke2_train.jsonl": {
+      "sha256": "606bf90b7f9a214fe19e1054597839f3a81158e999fdececd1f2c4b39f8c1758",
+      "rows": 16,
+      "source_training_approved": null
+    }
+  },
+  "authorization": "2026-11-16 user authorized local preparation of a two-step smoke using the first 16 previously frozen OpenR1 prompts. Local preparation only."
+}

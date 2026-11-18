@@ -1,0 +1,20 @@
+{
+  "run_names": [
+    "grpo_qfft_r1_mmr_dr500_v93"
+  ],
+  "approved_training_files": [
+    "rl_openr1_46k_decontaminated/mmr_dr150_frozen_train.jsonl"
+  ],
+  "files": {
+    "rl_openr1_46k_decontaminated/mmr_dr150_frozen_train.jsonl": {
+      "sha256": "6f8a22f1c3133109ed295764720bb64f053b36629be443fb09bfcac2fc66a7f7",
+      "rows": 1200,
+      "source_training_approved": null
+    }
+  },
+  "authorization": "2026-11-18 user explicitly authorized continuing the existing training to global step 500 and retaining full models at 150,200,250,300,350,400,450,500. Same previously approved frozen 1200 OpenR1 questions; no new questions or changed hashes.",
+  "source_approval": {
+    "path": "grpo/mmr_openr1_dr150_approval.json",
+    "sha256": "a5bdcb5837eaee9d48e5b1ee06e7b8dd91b2f7384c279c3d094b44cf9bb8fd90"
+  }
+}

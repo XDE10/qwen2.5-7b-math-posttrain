@@ -1,0 +1,26 @@
+{
+  "run_names": [
+    "grpo_qfft_r1_mmr_dr500_v93"
+  ],
+  "approved_training_files": [
+    "rl_openr1_46k_decontaminated/mmr_dr500_frozen_train.jsonl"
+  ],
+  "files": {
+    "rl_openr1_46k_decontaminated/mmr_dr500_frozen_train.jsonl": {
+      "sha256": "c02d6d28907b23ab3a7b4c8b574d2a2bbd4c2b578bfc674d5fd1acf0fcb3e5f0",
+      "rows": 4000,
+      "source_training_approved": null
+    }
+  },
+  "unchanged_prefix": {
+    "file": "rl_openr1_46k_decontaminated/mmr_dr150_frozen_train.jsonl",
+    "sha256": "6f8a22f1c3133109ed295764720bb64f053b36629be443fb09bfcac2fc66a7f7",
+    "rows": 1200,
+    "source_training_approved": null
+  },
+  "quality_manifest": {
+    "file": "rl_openr1_46k_decontaminated/mmr_dr500_frozen_manifest.json",
+    "sha256": "54727af8b8be2bb45c149db021ba605f57eabdbbe3d4cbfcb79183c610644819"
+  },
+  "authorization": "2026-11-18 user: 那就训练到500，150之后的每隔50步就保留下来完整的模型; after the explicit 1200+2800 proposal: 可以，你自己处理完就行，数据质量是非常重要的，请你务必重视. This authorizes this new exact 4000-row file for the continuation. Preserve the old 1200 bytes; no QFFT-overlap or all-wrong difficulty filter; preserve all other training hyperparameters."
+}

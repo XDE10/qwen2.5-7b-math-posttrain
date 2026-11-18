@@ -20,13 +20,14 @@ import os
 import shutil
 import time
 from collections import Counter
+from contextlib import nullcontext
 from pathlib import Path
 
 from experiments.qfft_v93 import decontam, drive_io
 from experiments.qfft_v93.checkpointing import CheckpointMirror, read_state, resolve_resume
 from experiments.qfft_v93.common import (CONFIG_DIR, Heartbeat, JsonlAppender, drive_layout, gpu_profile,
                                          load_config, local_root, log, now_iso, read_json, read_jsonl, sha256_file, sha256_json,
-                                         write_json)
+                                         write_json, write_jsonl)
 from experiments.qfft_v93.formats import messages
 from experiments.qfft_v93.grading import Grader, last_box_without_final_tag
 from experiments.qfft_v93.telemetry import ProgressCallback, SwanLab
@@ -108,10 +109,29 @@ def build_pool(cfg: dict, layout, bench_dir: Path | None, sft_questions: set):
     return rows, report
 
 
+def frozen_mmr_pool(cfg, data_root):
+    # The approved file contains the exact ordered draw, including the reviewed repairs.
+    (path, rows), = approved_pool_sources(cfg, data_root)
+    completions_per_step = cfg['per_device_train_batch_size'] * cfg['gradient_accumulation_steps']
+    questions_per_step, remainder = divmod(completions_per_step, cfg['num_generations'])
+    extension = cfg.get('extend_from', {})
+    draw_steps = (load_config(extension['config'])['max_steps']
+                  if extension and extension.get('data_mode') != 'append_frozen_prefix' else cfg['max_steps'])
+    if remainder or len(rows) != draw_steps * questions_per_step:
+        raise ValueError('Frozen MMR draw must contain exactly one prompt per rollout group for all steps')
+    if len({row['sample_id'] for row in rows}) != len(rows):
+        raise ValueError('Frozen MMR pool has duplicate sample IDs')
+    if any(not row['question'].strip() or not row['reference_answer'].strip() for row in rows):
+        raise ValueError('Frozen MMR pool contains a blank question or reference')
+    pool = [{key: row[key] for key in ('sample_id', 'question', 'reference_answer')} for row in rows]
+    return pool, {'files': [str(path)], 'final_questions': len(pool),
+                  'approval_manifest': cfg['pool']['approval_manifest']}
+
+
 class RolloutDiagnostics:
     """Capture colocated vLLM outputs before TRL drops the stop metadata."""
 
-    def __init__(self, trainer, journal, comparison_ids=None):
+    def __init__(self, trainer, journal=None, comparison_ids=None, *, mmr_dir=None, identity=None):
         if trainer.accelerator.num_processes != 1:
             raise ValueError('Rollout diagnostics require single-process colocated vLLM')
         self.journal = journal
@@ -119,6 +139,9 @@ class RolloutDiagnostics:
         self.num_generations = getattr(trainer, 'num_generations', None)
         self.eos_and_pad = {*trainer.eos_token_ids, trainer._tokenizer.pad_token_id}
         self.batches = []
+        self.mmr_dir = mmr_dir
+        self.identity = identity
+        self._mmr_batch = None
         llm = trainer.vllm_generation.llm
         generate = llm.generate
 
@@ -128,6 +151,31 @@ class RolloutDiagnostics:
             return outputs
 
         llm.generate = capture
+
+    def record_mmr(self, step, sample_ids, completion_ids, texts, records):
+        outputs, self.batches = self.batches, []
+        if self._mmr_batch is not None:
+            raise RuntimeError('Prior MMR diagnostic batch has no Trainer advantages')
+        rows = []
+        for index, (output, sid, ids, text, record) in enumerate(zip(
+                outputs, sample_ids, completion_ids, texts, records, strict=True)):
+            generated = list(output.token_ids)
+            empty_placeholder = not generated and len(ids) == 1 and record['trl_clipped']
+            if generated != list(ids) and not empty_placeholder:
+                raise RuntimeError(f'MMR rollout token mismatch at step {step}, index {index}')
+            rows.append({**record, 'step': step, 'index': index, 'sample_id': sid,
+                         'text': text if generated else '', 'token_ids_sha256': sha256_json(generated),
+                         'tokens': len(generated), 'finish_reason': output.finish_reason,
+                         'stop_reason': output.stop_reason, **self.identity})
+        self._mmr_batch = step, rows
+
+    def finish_mmr(self, advantages):
+        step, rows = self._mmr_batch
+        for row, advantage in zip(rows, advantages, strict=True):
+            row['advantage'] = advantage
+        # Store each rollout batch once. A retry of an uncheckpointed step replaces that step's trace.
+        write_jsonl(self.mmr_dir / f'step-{step:04d}.jsonl', rows)
+        self._mmr_batch = None
 
     def record(self, step, call, sample_ids, completion_ids, raw_texts, reward_texts, references, strict_grades, grades):
         outputs, self.batches = self.batches, []
@@ -267,6 +315,9 @@ def grpo_config(cfg: dict, out: Path, smoke: bool, max_steps: int | None):
         log_completions=False, disable_tqdm=True)
     if 'optim' in cfg:
         kwargs['optim'] = cfg['optim']
+    if 'mmr_dr_grpo' in cfg:
+        # Seeded selection already happened when the ordered draw was frozen.
+        kwargs.update(disable_dropout=False, lr_scheduler_kwargs=cfg['lr_scheduler_kwargs'], shuffle_dataset=False)
     if 'vllm_importance_sampling_mode' in cfg:
         mode = cfg['vllm_importance_sampling_mode']
         if mode not in ('sequence_mask', 'token_mask', 'sequence_truncate', 'token_truncate'):
@@ -312,26 +363,78 @@ def run_identity(cfg, pool, model_path, *, smoke, max_steps, merge_adapter):
     }
 
 
-def extension_source(cfg, identity, runs_dir):
+def extension_source(cfg, identity, runs_dir, *, pool=None, data_root=None):
     """Authenticate the completed source while allowing an explicit increase in the step budget."""
     extension = cfg['extend_from']
     source_cfg = load_config(extension['config'])
     source_step = source_cfg['max_steps']
-    allowed = {'run_name', 'max_steps', 'note', 'extend_from'}
-    if ({k: v for k, v in cfg.items() if k not in allowed}
-            != {k: v for k, v in source_cfg.items() if k not in allowed}
+    mmr = bool(cfg.get('mmr_dr_grpo'))
+    allowed = {'run_name', 'max_steps', 'note', 'extend_from', 'retained_checkpoint_steps',
+               'save_steps', 'validation'}
+
+    def recipe(value):
+        value = {k: v for k, v in value.items() if k not in allowed}
+        if mmr:
+            value['pool'] = {k: v for k, v in value['pool'].items() if k != 'approval_manifest'}
+        return value
+
+    if mmr:
+        old_approval = CONFIG_DIR / source_cfg['pool']['approval_manifest']
+        new_approval = CONFIG_DIR / cfg['pool']['approval_manifest']
+        old_scope, new_scope = read_json(old_approval), read_json(new_approval)
+        if extension['approval_sha256'] != sha256_file(old_approval):
+            raise RuntimeError('MMR continuation source approval hash changed')
+        if extension.get('data_mode') == 'append_frozen_prefix':
+            if data_root is None or pool is None:
+                raise RuntimeError('MMR prefix continuation requires both validated source and target data')
+            (old_file, old_rows), = approved_pool_sources(source_cfg, data_root)
+            (new_file, new_rows), = approved_pool_sources(cfg, data_root)
+            prefix = new_scope.get('unchanged_prefix', {})
+            old_name, = old_scope['approved_training_files']
+            if (prefix != {'file': old_name, **old_scope['files'][old_name]}
+                    or not new_file.read_bytes().startswith(old_file.read_bytes())
+                    or len(new_rows) <= len(old_rows)):
+                raise RuntimeError('MMR continuation changed its previously trained byte prefix')
+            source_pool = [{key: row[key] for key in ('sample_id', 'question', 'reference_answer')}
+                           for row in old_rows]
+            if pool[:len(source_pool)] != source_pool:
+                raise RuntimeError('MMR continuation changed the ordered source prompt groups')
+        elif (extension.get('data_mode') is not None
+              or new_scope['approved_training_files'] != old_scope['approved_training_files']
+              or new_scope['files'] != old_scope['files']):
+            raise RuntimeError('MMR continuation must keep its approved file or declare an approved prefix extension')
+        horizon = source_cfg.get('mmr_dr_grpo', {}).get('scheduler_steps', 0)
+        scheduler_ok = (source_cfg.get('mmr_dr_grpo')
+                        and source_cfg['lr_scheduler_type'] == 'cosine_with_min_lr'
+                        and source_step < cfg['max_steps'] <= horizon)
+    else:
+        scheduler_ok = source_cfg['lr_scheduler_type'] == 'constant_with_warmup'
+    if (recipe(cfg) != recipe(source_cfg)
             or cfg['run_name'] == source_cfg['run_name']
             or not source_cfg.get('mirror_optimizer_state')
-            or source_cfg['lr_scheduler_type'] != 'constant_with_warmup'
+            or not scheduler_ok
             or not source_cfg['warmup_steps'] <= source_step < cfg['max_steps']):
         raise RuntimeError('Extension must increase the step budget without changing the training recipe')
     source = runs_dir / source_cfg['run_name']
     source_identity = read_json(source / 'run_identity.json')['identity']
     expected = {**identity, 'run': source_cfg['run_name'], 'recipe_sha256': sha256_json(source_cfg),
                 'code_bundle': extension['code_bundle'], 'approval_sha256': extension['approval_sha256']}
+    if mmr and extension.get('data_mode') == 'append_frozen_prefix':
+        expected['pool_sha256'] = sha256_json(source_pool)
     if source_identity != expected or read_json(source / 'GRPO_COMPLETE.json')['steps'] != source_step:
         raise RuntimeError('Extension source identity or completed step does not match')
     return source, source_step, sha256_json(source_identity)
+
+
+def reload_mmr_checkpoint(trainer, checkpoint: Path) -> None:
+    """Exercise the normal Trainer resume loaders after the isolated smoke."""
+    trainer.create_optimizer_and_scheduler(num_training_steps=trainer.args.max_steps)
+    # Release the optimizer tensors already on the device before loading their replacements.
+    trainer.optimizer.state.clear()
+    path = str(checkpoint)
+    trainer._load_from_checkpoint(path)
+    trainer._load_optimizer_and_scheduler(path)
+    trainer._load_rng_state(path)
 
 
 def main() -> None:
@@ -346,8 +449,21 @@ def main() -> None:
     p.add_argument('--no-merge', action='store_true')
     p.add_argument('--pause-after', type=int, help='Exit after publishing a full mirror at this step')
     p.add_argument('--require-resume', action='store_true', help='Require a complete checkpoint before training')
+    p.add_argument('--check', action='store_true', help='Validate the frozen MMR recipe and local data on CPU')
     a = p.parse_args()
     cfg = load_config(a.config)
+    mmr_cfg = cfg.get('mmr_dr_grpo')
+    if mmr_cfg and any((a.pool, a.model_path, a.bench_dir, a.smoke, a.max_steps is not None,
+                        a.pause_after is not None, a.no_merge, a.no_swanlab)):
+        p.error('The approved MMR run uses its frozen config, model, data, evaluation export and final step')
+    if a.check:
+        if not mmr_cfg or a.require_resume:
+            p.error('--check is available for the frozen MMR recipe on local data')
+        from experiments.qfft_v93.mmr_grpo import check_local
+        check_local(cfg, frozen_mmr_pool, grpo_config)
+        return
+    if mmr_cfg and gpu_profile().get('kind') != 'g4':
+        p.error('The frozen MMR recipe requires one G4. Use --check for a local CPU check.')
     extending = 'extend_from' in cfg
     if extending and (a.max_steps is not None or a.pause_after is not None):
         p.error('An extension uses the step budget recorded in its config')
@@ -385,7 +501,9 @@ def main() -> None:
             p.error(f'Prompt plus completion budget exceeds the model window of {model_context} tokens')
     bench_dir = Path(a.bench_dir) if a.bench_dir else layout.data / 'benchmarks_v93'
     sft_questions = set()
-    if a.pool:
+    if mmr_cfg:
+        pool, pool_report = frozen_mmr_pool(cfg, layout.data)
+    elif a.pool:
         pool = [{'sample_id': r.get('sample_id', f'pool/{i:05d}'), 'question': r.get('problem') or r.get('question'),
                  'reference_answer': str(r.get('reference_answer', r.get('answer')))}
                 for i, r in enumerate(read_jsonl(a.pool))]
@@ -394,7 +512,8 @@ def main() -> None:
         pool, pool_report = build_pool(cfg, layout, bench_dir, sft_questions)
     identity = run_identity(cfg, pool, model_path, smoke=a.smoke, max_steps=a.max_steps, merge_adapter=merge_adapter)
     if extending:
-        source, source_step, source_identity = extension_source(cfg, identity, layout.runs)
+        source, source_step, source_identity = extension_source(cfg, identity, layout.runs,
+                                                               pool=pool, data_root=layout.data)
         identity['extension'] = {'source_run': source.name, 'source_step': source_step,
                                  'source_identity_sha256': source_identity}
     id_path = drive_run / 'run_identity.json'
@@ -416,7 +535,8 @@ def main() -> None:
         log(f'{run}: extending from step {resumed_step} to {cfg["max_steps"]} with full training state')
     mirror = CheckpointMirror(local_run, drive_run, every=1, keep=cfg.get('mirror_keep', 3),
                               watch_path=str(local_root()), min_free_gib=8, mirror_final=True,
-                              mirror_optimizer_state=cfg.get('mirror_optimizer_state', False))
+                              mirror_optimizer_state=cfg.get('mirror_optimizer_state', False),
+                              retain_steps=cfg.get('retained_checkpoint_steps', ()))
     if a.pause_after is not None and mirror.has_full_mirror(a.pause_after):
         log(f'{run}: paused after step {a.pause_after}; full Drive mirror confirmed')
         return
@@ -428,12 +548,18 @@ def main() -> None:
     from transformers import AutoTokenizer
     from trl import GRPOTrainer
     tok = AutoTokenizer.from_pretrained(model_path)
-    if not a.smoke:
+    prompt_messages = messages
+    if mmr_cfg:
+        from experiments.qfft_v93.mmr_grpo import (
+            JinaEmbeddings, MmrDRGRPOTrainer, MmrRecoveryCheckpoints, MmrReward, training_messages,
+        )
+        prompt_messages = training_messages
+    if not a.smoke and not mmr_cfg:
         lengths = [len(tok.apply_chat_template(messages(row['question']), add_generation_prompt=True,
                                                tokenize=True, return_dict=False)) for row in pool]
         if max(lengths) > cfg['max_prompt_tokens']:
             raise ValueError(f'Longest GRPO prompt is {max(lengths)} tokens, above the configured prompt budget')
-    dataset = Dataset.from_list([{'prompt': messages(r['question']), 'reference_answer': r['reference_answer'],
+    dataset = Dataset.from_list([{'prompt': prompt_messages(r['question']), 'reference_answer': r['reference_answer'],
                                   'sample_id': r['sample_id']} for r in pool])
     args = grpo_config(cfg, local_run, a.smoke, a.max_steps)
     lora = cfg['lora']
@@ -442,7 +568,16 @@ def main() -> None:
     swan = SwanLab(drive_run, run, {'identity': identity, 'pool': pool_report}, tags=['v93', 'grpo', 'lora'],
                    enabled=not (a.no_swanlab or a.smoke), log_dir=local_run / 'swanlog')
     journal = JsonlAppender(local_run / 'reward_status.jsonl', mirror=drive_run / 'reward_status.jsonl')
-    callbacks = [ProgressCallback(local_run, drive_run, swan, {'run': run}), mirror]
+    callbacks = [ProgressCallback(local_run, drive_run, swan, {'run': run})]
+    if mmr_cfg:
+        callbacks.append(MmrRecoveryCheckpoints(cfg.get('retained_checkpoint_steps', ())))
+    callbacks.append(mirror)
+    milestone_worker = None
+    if cfg.get('retained_checkpoint_steps'):
+        if not extending or not mmr_cfg or not merge_adapter:
+            raise RuntimeError('Retained MMR milestones require a full-state continuation and model exports')
+        from experiments.qfft_v93.milestones import start_worker
+        milestone_worker = start_worker(cfg, identity, model_path, drive_run, source)
     comparison = None
     if comparison_ids is not None or cfg.get('measure_gpu'):
         from experiments.qfft_v93.grpo_telemetry import ComparisonTelemetry
@@ -461,15 +596,32 @@ def main() -> None:
                 return control
 
         callbacks.append(PauseAfterSave())
-    with Grader(workers=cfg.get('reward_workers', 8), timeout=cfg.get('reward_timeout', 30)) as grader:
-        reward = FinalAnswerReward(tok, grader, journal, last_box_fallback=cfg.get('last_box_fallback', False))
+    grading = nullcontext() if mmr_cfg else Grader(workers=cfg.get('reward_workers', 8),
+                                                   timeout=cfg.get('reward_timeout', 30))
+    with grading as grader:
+        if mmr_cfg:
+            reward = MmrReward(tok, cfg, JinaEmbeddings(mmr_cfg))
+            trainer_class = MmrDRGRPOTrainer
+            trainer_kwargs = {'prompt_limit': cfg['max_prompt_tokens'], 'scheduler_steps': mmr_cfg['scheduler_steps']}
+        else:
+            reward = FinalAnswerReward(tok, grader, journal, last_box_fallback=cfg.get('last_box_fallback', False))
+            trainer_class = GRPOTrainer
+            trainer_kwargs = {}
         # Strings keep GRPOConfig JSON-serializable; TRL maps them to torch dtypes.
         args.model_init_kwargs = {**(args.model_init_kwargs or {}),
                                   'dtype': 'float32' if a.smoke else 'bfloat16', 'attn_implementation': 'sdpa'}
-        trainer = GRPOTrainer(model=str(model_path), reward_funcs=[reward], args=args, train_dataset=dataset,
-                              processing_class=tok, peft_config=peft_config,
-                              callbacks=callbacks)
-        if cfg.get('log_rollout_diagnostics'):
+        trainer = trainer_class(model=str(model_path), reward_funcs=[reward], args=args, train_dataset=dataset,
+                                processing_class=tok, peft_config=peft_config, callbacks=callbacks, **trainer_kwargs)
+        if mmr_cfg:
+            reward.eos.update(trainer.eos_token_ids)
+        if mmr_cfg and reward.exclude_masked_completions:
+            reward.diagnostics = RolloutDiagnostics(
+                trainer, mmr_dir=drive_run / 'rollout_diagnostics', identity={
+                    'run': run, 'run_identity_sha256': sha256_json(identity),
+                    'embedding_revision': mmr_cfg['embedding_revision'], 'code_bundle': identity['code_bundle'],
+                },
+            )
+        elif cfg.get('log_rollout_diagnostics'):
             if not args.use_vllm or args.vllm_mode != 'colocate':
                 raise ValueError('Rollout diagnostics require colocated vLLM')
             diagnostic_file = 'rollout_diagnostics.jsonl'
@@ -483,13 +635,22 @@ def main() -> None:
             if comparison is not None:
                 comparison.attach(trainer)
                 comparison.start()
-            trainer.train(resume_from_checkpoint=resume)
+            if mmr_cfg and resume and read_state(resume)['global_step'] == cfg['max_steps']:
+                from transformers import TrainerState
+
+                # Recover an interrupted final export without another optimizer update.
+                trainer._load_from_checkpoint(resume)
+                trainer.state = TrainerState.load_from_json(Path(resume) / 'trainer_state.json')
+                if not mirror.has_full_mirror(trainer.state.global_step):
+                    mirror.on_save(args, trainer.state, trainer.control)
+            else:
+                trainer.train(resume_from_checkpoint=resume)
         finally:
             beat.stop()
             if comparison is not None:
                 comparison.close()
             journal.close()
-            if reward.diagnostics:
+            if getattr(reward, 'diagnostics', None) and reward.diagnostics.journal is not None:
                 reward.diagnostics.journal.close()
         if a.pause_after is not None:
             if trainer.state.global_step != a.pause_after:
@@ -497,6 +658,14 @@ def main() -> None:
             swan.finish()
             log(f'{run}: paused after step {a.pause_after}; full Drive mirror confirmed')
             return
+        if mmr_cfg and trainer.state.global_step != cfg['max_steps']:
+            raise RuntimeError(f'{run}: expected to finish at step {cfg["max_steps"]}, got {trainer.state.global_step}')
+        if cfg.get('verify_final_checkpoint'):
+            checkpoint = local_run / f'checkpoint-{trainer.state.global_step}'
+            if read_state(checkpoint)['global_step'] != trainer.state.global_step:
+                raise RuntimeError(f'{run}: local checkpoint has the wrong step')
+            reload_mmr_checkpoint(trainer, checkpoint)
+            log(f'{run}: reloaded full local {checkpoint.name}')
         adapter_local = local_run / 'adapter'
         trainer.save_model(str(adapter_local))
         tok.save_pretrained(str(adapter_local))
@@ -506,12 +675,21 @@ def main() -> None:
     drive_io.upload_tree(adapter_local, drive_run / 'adapter', watch_path=str(local_root()))
     summary = {'steps': trainer.state.global_step, 'resumed_from': resume, 'adapter': str(drive_run / 'adapter'),
                'wall_hours_this_session': round((time.monotonic() - started) / 3600, 3), 'completed': now_iso()}
+    if cfg.get('verify_final_checkpoint'):
+        summary['local_checkpoint_reload_verified'] = True
     if extending:
         summary['extension'] = identity['extension']
+    if milestone_worker:
+        from experiments.qfft_v93.milestones import wait_worker
+        log('Waiting for all retained milestone model exports ...')
+        summary['milestones'] = wait_worker(*milestone_worker)
+    elif mmr_cfg and merge_adapter:
+        from experiments.qfft_v93.merge_lora import merge
+        merge(model_path, adapter_local, drive_run / 'merged', smoke=a.smoke)
     write_json(drive_run / 'GRPO_COMPLETE.json', summary)
     write_json(drive_run / 'status.json', {'state': 'complete', **summary})
     swan.finish()
-    if merge_adapter:
+    if merge_adapter and not mmr_cfg:
         from experiments.qfft_v93.merge_lora import merge
         merge(model_path, adapter_local, drive_run / 'merged', smoke=a.smoke)
     shutil.rmtree(local_run, ignore_errors=True)

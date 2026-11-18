@@ -163,9 +163,14 @@ def latest_warm_start_weights(drive_dir: Path):
 class CheckpointMirror(TrainerCallback):
     def __init__(self, local_dir: Path, drive_dir: Path, every: int = 1, keep: int = 2,
                  watch_path: str = '/content', min_free_gib: float = 24, mirror_final: bool = False,
-                 mirror_optimizer_state: bool = False):
+                 mirror_optimizer_state: bool = False, retain_steps=()):
         self.local_dir, self.mirror_dir = Path(local_dir), Path(drive_dir) / 'ckpt_mirror'
         self.every, self.keep = max(1, every), max(1, keep)
+        self.retain_steps = frozenset(retain_steps)
+        if any(type(step) is not int or step <= 0 for step in self.retain_steps):
+            raise ValueError('Retained checkpoint steps must be positive integers')
+        if self.retain_steps and not mirror_optimizer_state:
+            raise ValueError('Retained milestones require full optimizer-state mirrors')
         self.mirror_final = mirror_final  # the final model export is the deliverable, not the last ckpt
         self.mirror_optimizer_state = mirror_optimizer_state
         self.watch_path, self.min_free = watch_path, int(min_free_gib * GIB)
@@ -185,8 +190,13 @@ class CheckpointMirror(TrainerCallback):
             if self.mirror_optimizer_state and not self.has_full_mirror(int(_STEP.fullmatch(newest.name)[1])):
                 raise RuntimeError(f'Insufficient local disk; retaining {newest.name} without a confirmed full mirror')
             for p in older:
+                step_number = int(_STEP.fullmatch(p.name)[1])
+                if step_number in self.retain_steps and not self.has_full_mirror(step_number):
+                    continue
                 log(f'Freeing local disk before saving step {step}: removing {p.name}')
                 shutil.rmtree(p, ignore_errors=True)
+            if free_bytes(self.local_dir) < need:
+                raise RuntimeError('Insufficient local disk; unmirrored validation checkpoints remain protected')
 
     def on_step_end(self, args, state, control, **kwargs):
         if control.should_save:
@@ -236,6 +246,8 @@ class CheckpointMirror(TrainerCallback):
         with self.lock:
             local = _checkpoints(self.local_dir, SAVED_MARK)
             keep = {local[-1][1]} if local else set()
+            # A failed upload must not erase an odd validation step such as 175 on the next save.
+            keep.update(path for step, path in local if step in self.retain_steps)
             if self._busy is not None:
                 keep.add(self._busy)
             for _, p in local:
@@ -281,7 +293,9 @@ class CheckpointMirror(TrainerCallback):
             full, light = [], []
             for _, path in mirrors:
                 (full if _resumable(path, MIRROR_MARK) else light).append(path)
-            for old in full[:-self.keep] + light[:-self.keep]:
+            removable = [old for old in full[:-self.keep]
+                         if int(_STEP.fullmatch(old.name)[1]) not in self.retain_steps]
+            for old in removable + light[:-self.keep]:
                 drive_io.purge(old)
             for partial in self.mirror_dir.glob('*.partial'):
                 if partial.name != dst.name + '.partial':

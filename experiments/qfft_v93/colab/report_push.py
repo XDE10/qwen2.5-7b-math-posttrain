@@ -136,6 +136,14 @@ class Reporter:
                 path = self.root / dev_suite / name
                 if path.is_file():
                     _put(latest / dev_suite / name, _tail_text(path, FILE_CAP))
+        for suite in ('r1_mmr_dr50_eval', 'r1_mmr_dr150_eval'):
+            for name in ('results.md', 'results.json', 'per_problem_pairs.jsonl'):
+                path = self.root / suite / name
+                if path.is_file():
+                    text = _tail_text(path, FILE_CAP)
+                    _put(latest / suite / name, text)
+                    if path.stat().st_mtime >= self.info.get('started_ts', 0):
+                        _put(session / suite / name, text)
         for name in ('results.md', 'results.json'):
             if (evals / name).is_file():
                 _put(latest / 'evals' / name, _tail_text(evals / name, FILE_CAP))

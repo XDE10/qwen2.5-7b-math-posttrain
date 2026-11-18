@@ -196,6 +196,38 @@ def test_holdout_scoring_rejects_missing_or_duplicate_draws(tmp_path):
         score_one(None, tmp_path, rows, rescore=False)
 
 
+def test_known_scoring_recovery_is_bound_to_the_saved_generation(tmp_path):
+    from experiments.qfft_v93.common import read_jsonl, sha256_text
+    from experiments.qfft_v93.score import score_one
+
+    class Grader:
+        def grade_many(self, items):
+            return [{'status': 'wrong', 'pred': '216112050', 'how': 'last_box'}
+                    if text == r'\boxed{216112050}' else
+                    {'status': 'timeout', 'how': 'comparison_timeout'} for text, _ in items]
+
+    original = r'\boxed{2 \cdot (11!!)^2}'
+    raw = {'sample_id': 'aime25/25', 'draw': 0, 'text': original, 'tokens': 12, 'finish_reason': 'stop'}
+    raw_path = tmp_path / 'raw.jsonl'
+    write_jsonl(raw_path, [raw])
+    initial_bytes = raw_path.read_bytes()
+    protocol = {'n': 1, 'model': 'run:r1', 'benchmark': 'aime25'}
+    write_json(tmp_path / 'identity.json', {'protocol': protocol})
+    rows = {'aime25/25': {'answer': '113'}}
+    recovery = {**protocol, 'sample_id': 'aime25/25', 'draw': 0,
+                'original_text_sha256': sha256_text(original), 'reference_answer': '113',
+                'normalized_answer': '216112050'}
+    summary = score_one(Grader(), tmp_path, rows, rescore=False, require_gradable=True, recovery=recovery)
+    assert summary['exact_numeric_recoveries'] == [{'sample_id': 'aime25/25', 'draw': 0, 'status': 'wrong'}]
+    scored, = read_jsonl(tmp_path / 'scored.jsonl')
+    assert scored['pred'] == '216112050' and scored['exact_numeric_recovery']
+    assert raw_path.read_bytes() == initial_bytes
+
+    write_jsonl(raw_path, [{**raw, 'text': original + ' changed'}])
+    with pytest.raises(RuntimeError, match='1 unscorable generations'):
+        score_one(Grader(), tmp_path, rows, rescore=False, require_gradable=True, recovery=recovery)
+
+
 def test_remote_full_upload_stops_before_publication_on_verification_failure(tmp_path, monkeypatch):
     from experiments.qfft_v93 import drive_io
 
