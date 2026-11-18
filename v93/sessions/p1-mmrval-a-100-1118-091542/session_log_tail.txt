@@ -1,0 +1,7 @@
+P1_SESSION=p1-mmrval-a-100-1118-091542 gpu=G4 auto_release=0
+/tmp/ipykernel_2336/252621428.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle c7bcd9df7b7e (git f593e55e3ec1+dirty); stages: ['shell']
+[11-18 01:17:31] Reports: https://github.com/XDE10/qwen2.5-7b-math-posttrain.git branch colab-reports, every 30 min and at the end
+[11-18 01:17:32] ===== STAGE shell =====
+[11-18 01:17:32] shell stage: nothing to run
