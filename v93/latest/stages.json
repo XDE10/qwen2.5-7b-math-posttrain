@@ -1,12 +1,21 @@
 {
  "grpo__grpo_qfft_r1_mmr_dr150": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr150",
-  "state": "failed",
-  "error": "RuntimeError: grpo_grpo_qfft_r1_mmr_dr150 failed with exit code -15; see /content/mydrive/runs/project1/v93/logs/20261118-035652_grpo_grpo_qfft_r1_mmr_dr150.log",
-  "at": "2026-11-18T05:51:52.511010",
-  "started": "2026-11-18T03:52:06.176018",
+  "state": "complete",
+  "hours": 1.279,
+  "finished": "2026-11-18T11:04:45.914457",
+  "started": "2026-11-18T09:47:58.295445",
   "code": "c7bcd9df7b7e",
   "host": "p1-mmr150-auto-1118-115121@520ffb1aa45e"
+ },
+ "grpo__grpo_qfft_r1_mmr_dr500": {
+  "stage": "grpo:grpo_qfft_r1_mmr_dr500",
+  "state": "running",
+  "started": "2026-11-18T14:32:51.945791",
+  "code": "7236d5e30d80",
+  "host": "p1-mmr500-c-1118-223056@2fc5d2929aac",
+  "heartbeat": "2026-11-18T15:03:08.489600",
+  "heartbeat_ts": 1795014188.489614
  },
  "r1-mmr-dr100-eval": {
   "stage": "r1-mmr-dr100-eval",

@@ -1,0 +1,7 @@
+{
+  "steps": 150,
+  "resumed_from": "/content/p1/runs/grpo_qfft_r1_mmr_dr150_v93/checkpoint-146",
+  "adapter": "/content/mydrive_z/runs/project1/v93/runs/grpo_qfft_r1_mmr_dr150_v93/adapter",
+  "wall_hours_this_session": 1.203,
+  "completed": "2026-11-18T19:01:00+08:00"
+}
