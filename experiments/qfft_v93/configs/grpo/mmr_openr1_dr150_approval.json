@@ -1,0 +1,12 @@
+{
+  "run_names": ["grpo_qfft_r1_mmr_dr150_v93"],
+  "approved_training_files": ["rl_openr1_46k_decontaminated/mmr_dr150_frozen_train.jsonl"],
+  "files": {
+    "rl_openr1_46k_decontaminated/mmr_dr150_frozen_train.jsonl": {
+      "sha256": "6f8a22f1c3133109ed295764720bb64f053b36629be443fb09bfcac2fc66a7f7",
+      "rows": 1200,
+      "source_training_approved": null
+    }
+  },
+  "authorization": "2026-11-16 user authorized local preparation and resolution of the confirmed review findings. Preserve the existing 400 prompts byte for byte, remove 7 leaked suffixes, replace 14 unusable rows in the appended 800 from the original OpenR1 seed continuation, and do not add a QFFT overlap filter. Local preparation only. See data/rl_openr1_46k_decontaminated/mmr_dr150_frozen_manifest.json."
+}

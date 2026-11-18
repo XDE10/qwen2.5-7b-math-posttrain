@@ -1,0 +1,36 @@
+{
+  "base": "grpo_qfft_r1_mmr_dr150.json",
+  "run_name": "grpo_qfft_r1_mmr_dr500_v93",
+  "pool": {
+    "approval_manifest": "grpo/mmr_openr1_dr500_4000_approval.json"
+  },
+  "max_steps": 500,
+  "extend_from": {
+    "config": "grpo/grpo_qfft_r1_mmr_dr150.json",
+    "code_bundle": "c7bcd9df7b7e",
+    "approval_sha256": "a5bdcb5837eaee9d48e5b1ee06e7b8dd91b2f7384c279c3d094b44cf9bb8fd90",
+    "data_mode": "append_frozen_prefix"
+  },
+  "retained_checkpoint_steps": [
+    150,
+    175,
+    200,
+    225,
+    250,
+    275,
+    300,
+    325,
+    350,
+    375,
+    400,
+    425,
+    450,
+    475,
+    500
+  ],
+  "note": "2026-11-18 user authorized continuation from full step 150 to global step 500, preserving the original 1200-question byte prefix and appending 2800 quality-reviewed OpenR1 questions in the original seed stream. Preserve complete checkpoints and standalone models at 150,200,...,500. The original 500-step scheduler and every other training hyperparameter remain unchanged. On 2026-11-18 user additionally requested frozen development evaluation and checkpoint retention every 25 global steps; optimizer and rollout settings stay unchanged.",
+  "save_steps": 25,
+  "validation": {
+    "config": "grpo/mmr_validation25.json"
+  }
+}

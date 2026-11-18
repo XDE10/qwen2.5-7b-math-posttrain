@@ -12,7 +12,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from experiments.qfft_v93.common import drive_layout, log, now_iso, read_json, read_jsonl, write_json, write_jsonl
+from experiments.qfft_v93.common import (drive_layout, log, now_iso, read_json, read_jsonl, sha256_text, write_json,
+                                        write_jsonl)
 from experiments.qfft_v93.grading import GRADER_VERSION, Grader
 from experiments.qfft_v93.metrics import (bootstrap_ci, budget_curve, paired_bootstrap, reflection_count, summarize,
                                           tail_repetition)
@@ -20,13 +21,15 @@ from experiments.qfft_v93.metrics import (bootstrap_ci, budget_curve, paired_boo
 COMPETITION = ('aime24', 'aime25', 'amc23')
 
 
-def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool, require_gradable: bool = False) -> dict | None:
+def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool, require_gradable: bool = False,
+              recovery: dict | None = None) -> dict | None:
     raw_path = out_dir / 'raw.jsonl'
     if not raw_path.exists():
         return None
     raw_rows = read_jsonl(raw_path)
     raw = {(r['sample_id'], r['draw']): r for r in raw_rows}
     id_path = out_dir / 'identity.json'
+    protocol = {}
     if id_path.is_file():
         protocol = read_json(id_path)['protocol']
         if protocol.get('limit'):
@@ -40,15 +43,33 @@ def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool, require_
     if scored_path.exists() and not rescore:
         previous = {(r['sample_id'], r['draw']): r for r in read_jsonl(scored_path)
                     if r.get('grader') == GRADER_VERSION and r['status'] in ('correct', 'wrong', 'no_answer')}
+    # Recheck the binding before reusing a verdict cached by the recovery path.
+    recovery_key = (recovery['sample_id'], recovery['draw']) if recovery else None
+    if previous.get(recovery_key, {}).get('exact_numeric_recovery'):
+        del previous[recovery_key]
     todo = [k for k in raw if k not in previous and k[0] in rows]
     results = grader.grade_many([(raw[k]['text'], rows[k[0]]['answer']) for k in todo]) if todo else []
+    # A previously verified exact simplification of a single saved final answer.
     for key, grade in zip(todo, results):
         r = raw[key]
+        recovered = False
+        if (key == recovery_key and grade['status'] == 'timeout' and grade.get('how') == 'comparison_timeout'
+                and protocol.get('model') == recovery['model'] and protocol.get('benchmark') == recovery['benchmark']
+                and sha256_text(r['text']) == recovery['original_text_sha256']
+                and rows[key[0]]['answer'] == recovery['reference_answer']):
+            answer = recovery['normalized_answer']
+            normalized, = grader.grade_many([(r'\boxed{' + answer + '}', rows[key[0]]['answer'])])
+            if normalized['status'] in ('correct', 'wrong'):
+                grade = normalized
+                recovered = True
+                log(f"{out_dir}: exact numeric recovery for {key[0]} draw {key[1]}: {grade['status']}")
         previous[key] = {'sample_id': key[0], 'draw': key[1], 'status': grade['status'],
                          'correct': grade['status'] == 'correct', 'pred': grade.get('pred'), 'how': grade.get('how'),
                          'tokens': r['tokens'], 'finish_reason': r['finish_reason'],
                          'tail_repetition': tail_repetition(r['text']), 'reflections': reflection_count(r['text']),
                          'grader': GRADER_VERSION}
+        if recovered:
+            previous[key]['exact_numeric_recovery'] = True
     records = [previous[key] for key in sorted(raw) if key in previous and key[0] in rows]
     write_jsonl(scored_path, records)
     if require_gradable:
@@ -65,6 +86,9 @@ def score_one(grader: Grader, out_dir: Path, rows: dict, rescore: bool, require_
             majority[sid] = bool(cluster) and group[cluster[0]]['correct']
     summary = summarize(records, rows, majority or None)
     summary['budget_curve_no_forcing'] = budget_curve(records)
+    if recoveries := [{'sample_id': row['sample_id'], 'draw': row['draw'], 'status': row['status']}
+                      for row in records if row.get('exact_numeric_recovery')]:
+        summary['exact_numeric_recoveries'] = recoveries
     summary.update(grader=GRADER_VERSION, scored=now_iso(), benchmark_problems=len(rows))
     write_json(out_dir / 'summary.json', summary)
     return summary
@@ -98,10 +122,17 @@ def main() -> None:
     p.add_argument('--benchmarks', help='Comma-separated list of benchmark filenames without .jsonl')
     p.add_argument('--tags', help='Comma list; default: every folder under evals-root')
     p.add_argument('--compare', action='append', default=[], help='A:B paired comparison (repeatable)')
+    p.add_argument('--per-problem', action='store_true', help='Export matched per-question scores for --compare')
     p.add_argument('--rescore', action='store_true')
     p.add_argument('--require-gradable', action='store_true', help='Refuse a score containing verifier failures')
+    p.add_argument('--known-recovery', type=Path, help='Exact numeric recovery for a specific saved generation')
     p.add_argument('--workers', type=int)
     a = p.parse_args()
+    if a.per_problem and not a.compare:
+        p.error('--per-problem requires --compare')
+    recovery = read_json(a.known_recovery) if a.known_recovery else None
+    if recovery and recovery['grader'] != GRADER_VERSION:
+        p.error(f'Known recovery requires grader {recovery["grader"]}')
     layout = drive_layout()
     evals = Path(a.evals_root) if a.evals_root else layout.evals
     report_dir = Path(a.report_dir) if a.report_dir else evals
@@ -120,12 +151,15 @@ def main() -> None:
         for tag in tags:
             table[tag] = {}
             for name, rows in benchmarks.items():
-                summary = score_one(grader, evals / tag / name, rows, a.rescore, a.require_gradable)
+                matching_recovery = None
+                if recovery and (tag, name) == (recovery['tag'], recovery['benchmark']):
+                    matching_recovery = recovery
+                summary = score_one(grader, evals / tag / name, rows, a.rescore, a.require_gradable, matching_recovery)
                 if summary:
                     table[tag][name] = summary
                     log(f"{tag}/{name}: mean@n={summary['mean_at_n']:.3f} CI={summary['mean_at_n_ci95']} "
                         f"tokens={summary['mean_tokens']:.0f} trunc={summary['truncation_rate']:.3f}")
-    comparisons = []
+    comparisons, per_problem = [], []
     for pair in a.compare:
         left, right = pair.split(':')
         for name in order + (['competition'] if set(COMPETITION) <= benchmarks.keys() else []):
@@ -141,6 +175,10 @@ def main() -> None:
                 rp = table.get(right, {}).get(name, {}).get('per_problem_acc', {})
                 common = sorted(lp) if lp.keys() == rp.keys() else []
                 la, ra = [lp[s] for s in common], [rp[s] for s in common]
+                if a.per_problem:
+                    per_problem.extend({'left': left, 'right': right, 'benchmark': name, 'sample_id': sid,
+                                        'left_pct': lp[sid] * 100, 'right_pct': rp[sid] * 100,
+                                        'diff_pp': (lp[sid] - rp[sid]) * 100} for sid in common)
             if la and len(la) == len(ra):
                 comparisons.append({'left': left, 'right': right, 'benchmark': name, **paired_bootstrap(la, ra)})
     lines = ['# v93 results (mean@n %, ±95% CI half-width / mean output tokens)', '',
@@ -161,6 +199,8 @@ def main() -> None:
             for tag, sm in table.items()}
     write_json(report_dir / 'results.json', {'grader': GRADER_VERSION, 'updated': now_iso(), 'results': slim,
                                             'comparisons': comparisons})
+    if a.per_problem:
+        write_jsonl(report_dir / 'per_problem_pairs.jsonl', per_problem)
     log('Wrote', report_dir / 'results.md')
 
 

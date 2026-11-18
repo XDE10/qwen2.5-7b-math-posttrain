@@ -1,0 +1,2 @@
+onnxruntime==1.32.0
+flatbuffers==25.12.19

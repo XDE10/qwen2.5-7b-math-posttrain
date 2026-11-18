@@ -17,6 +17,8 @@ Stages (all idempotent; re-running resumes or skips completed work):
     r1-grpo-dev[:step30]        paired development evaluation of R1 and the 16K run
     r1-competition-2026         evaluate R1 and the two step-10 adapters on the frozen competition set
     r1-fura50-eval              score the fixed 50-step LoRA run against R1 on the competition suite
+    r1-mmr-dr50-eval            score MMR step 50 against R1 on the full v93 suite
+    r1-mmr-dr150-eval           score MMR step 150 against R1 on the full v93 suite
     score[:<tags>]              re-score saved generations and rebuild results.md
     analyze:<tags>[:<grpo_runs>] figures into Drive runs/project1/v93/figures
     status                      print stage markers, run progress, eval completeness and results.md
@@ -43,6 +45,7 @@ import sys
 import tarfile
 import threading
 import time
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
@@ -331,6 +334,21 @@ class Context:
     def py_module(self, env_name: str, module: str, *args) -> list:
         return [self.python(env_name), '-m', module, *args]
 
+    def mmr_module(self, module: str, *args) -> list:
+        # Reuse the restored RL environment. The ONNX add-on stays outside its snapshot.
+        command = self.py_module('rl', module, *args)
+        req = self.pkg / 'envs/rl_mmr.txt'
+        tag = hashlib.sha256(req.read_bytes() + sys.version.encode()).hexdigest()[:12]
+        target = LOCAL / 'venvs' / f'rl-mmr-extra-{tag}'
+        python_path = os.pathsep.join((self.env['PYTHONPATH'], str(target)))
+        env = dict(self.env, PYTHONPATH=python_path)
+        probe = [command[0], '-c', 'import onnxruntime, flatbuffers; assert onnxruntime.__version__ == "1.32.0"']
+        if subprocess.run(probe, env=env, capture_output=True).returncode:
+            subprocess.run([sys.executable, '-m', 'pip', 'install', '--target', str(target),
+                            '--upgrade', '--no-deps', '-r', str(req)], env=self.env, check=True)
+            subprocess.run(probe, env=env, check=True)
+        return ['env', f'PYTHONPATH={python_path}', *command]
+
 
 # ZeRO-2 CPU offload keeps fp32 master weights, both Adam moments and fp32 gradients of the 7.6B
 # parameters in host memory: 16 bytes x 7.62e9 = 122 GB, before the Python process and data.
@@ -551,7 +569,15 @@ def _dispatch(ctx: Context, stage: str) -> None:
         elif operation:
             raise ValueError(f'Unknown GRPO operation: {operation}')
         gpu_banner()
-        ctx.run(ctx.py_module('rl', m + 'grpo', '--config', f'grpo/{config}.json', *extra), f'grpo_{config}')
+        arguments = (m + 'grpo', '--config', f'grpo/{config}.json', *extra)
+        mmr_configs = ('grpo_qfft_r1_mmr_dr50', 'grpo_qfft_r1_mmr_dr150', 'grpo_qfft_r1_mmr_dr150_smoke2',
+                       'grpo_qfft_r1_mmr_dr500')
+        command = ctx.mmr_module(*arguments) if config in mmr_configs else ctx.py_module('rl', *arguments)
+        ctx.run(command, f'grpo_{config}')
+    elif kind == 'mmr-validation':
+        from experiments.qfft_v93.validation import evaluate
+        gpu_banner()
+        evaluate(ctx, int(rest))
     elif kind == 'r1-is-diagnostic' and not rest:
         gpu_banner()
         ctx.run(ctx.py_module('rl', m + 'grpo_is_diagnostic', 'capture'), 'r1_is_diagnostic')
@@ -598,12 +624,16 @@ def _dispatch(ctx: Context, stage: str) -> None:
                               '--evals-root', str(out), '--tags', ','.join(cfg['models']),
                               '--compare', 'token_mask:sequence_mask', '--compare', 'token_mask:r1',
                               '--compare', 'sequence_mask:r1'), f'score_{name}')
-    elif kind == 'r1-fura50-eval' and not rest:
-        from experiments.qfft_v93.common import drive_layout, load_config, read_json, sha256_file
+    elif kind in ('r1-fura50-eval', 'r1-mmr-dr50-eval', 'r1-mmr-dr150-eval') and not rest:
+        from experiments.qfft_v93.common import drive_layout, load_config, read_json, read_jsonl, sha256_file
         from experiments.qfft_v93.formats import SYSTEM_PROMPT
         from experiments.qfft_v93.models import drive_path, max_model_len
-        from experiments.qfft_v93.score import COMPETITION
-        cfg = load_config('grpo/grpo_qfft_r1_fura_lora50.json')
+        mmr = kind.startswith('r1-mmr-')
+        config = {'r1-mmr-dr50-eval': 'grpo_qfft_r1_mmr_dr50',
+                  'r1-mmr-dr150-eval': 'grpo_qfft_r1_mmr_dr150',
+                  'r1-fura50-eval': 'grpo_qfft_r1_fura_lora50'}[kind]
+        suite_name = 'full' if mmr else 'competition'
+        cfg = load_config(f'grpo/{config}.json')
         run = cfg['run_name']
         model = f'run:{run}/merged'
         layout = drive_layout(DRIVE)
@@ -614,7 +644,7 @@ def _dispatch(ctx: Context, stage: str) -> None:
         tag, baseline = f'{run}_merged', baseline_model.removeprefix('run:')
         baseline_identity = read_json(drive_path(baseline_model, layout) / 'p1_model_identity.json')
         evaluation = load_config('pipeline.json')['eval']
-        suite = evaluation['suites']['competition']
+        suite = evaluation['suites'][suite_name]
         for benchmark, spec in suite.items():
             base_eval = layout.evals / baseline / benchmark
             status = read_json(base_eval / 'generation_status.json')
@@ -631,16 +661,25 @@ def _dispatch(ctx: Context, stage: str) -> None:
             if read_json(base_eval / 'identity.json')['protocol'] != expected:
                 raise RuntimeError(f'{baseline}/{benchmark}: reference generation protocol differs')
         gpu_banner()
-        ctx.run(ctx.py_module('infer', m + 'generate', '--model', model, '--tag', tag,
-                              '--suite', 'competition'), f'gen_{tag}')
-        report_dir = layout.evals.parent / 'r1_fura50_eval'
-        ctx.run(ctx.py_module('infer', m + 'score', '--benchmarks', ','.join(COMPETITION),
+        ctx.run(ctx.py_module('infer', m + 'generate', '--model', model, '--tag', tag, '--suite', suite_name),
+                f'gen_{tag}')
+        report_dir = layout.evals.parent / kind.replace('-', '_')
+        details = ['--per-problem'] if mmr else []
+        if kind == 'r1-mmr-dr150-eval':
+            details += ['--known-recovery',
+                        str(PROJECT / 'experiments/qfft_v93/configs/grpo/r1_mmr_dr150_scoring_recovery.json')]
+        ctx.run(ctx.py_module('infer', m + 'score', '--benchmarks', ','.join(suite),
                               '--tags', f'{tag},{baseline}', '--require-gradable',
-                              '--report-dir', str(report_dir),
-                              '--compare', f'{tag}:{baseline}'), f'score_{tag}')
+                              '--report-dir', str(report_dir), '--compare', f'{tag}:{baseline}', *details),
+                f'score_{tag}')
         pairs = read_json(report_dir / 'results.json')['comparisons']
         if not any(row['benchmark'] == 'competition' and row['problems'] == 100 for row in pairs):
             raise RuntimeError(f'{run}: missing the 100-problem paired comparison')
+        if mmr:
+            counts = {row['benchmark']: row['problems'] for row in pairs if row['benchmark'] != 'competition'}
+            row_counts = Counter(row['benchmark'] for row in read_jsonl(report_dir / 'per_problem_pairs.jsonl'))
+            if counts.keys() != suite.keys() or row_counts != counts:
+                raise RuntimeError(f'{run}: incomplete full-suite paired results')
     elif kind == 'score':
         args = ['--tags', rest] if rest else []
         ctx.run(ctx.py_module('score', m + 'score', *args), 'score')

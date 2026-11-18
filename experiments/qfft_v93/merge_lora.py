@@ -9,10 +9,10 @@ import shutil
 from pathlib import Path
 
 from experiments.qfft_v93 import drive_io
-from experiments.qfft_v93.common import local_root, log, now_iso, read_json, write_json
+from experiments.qfft_v93.common import local_root, log, now_iso, read_json, sha256_file, write_json
 
 
-def merge(base: Path, adapter: Path, out: Path, smoke: bool = False) -> Path:
+def merge(base: Path, adapter: Path, out: Path, smoke: bool = False, *, provenance=None) -> Path:
     import torch
     from peft import PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -28,7 +28,12 @@ def merge(base: Path, adapter: Path, out: Path, smoke: bool = False) -> Path:
     write_json(staging / 'p1_model_identity.json', {
         'merged': now_iso(), 'base': str(base), 'adapter': str(adapter),
         'base_identity': read_json(base_identity) if base_identity.exists() else None})
-    drive_io.upload_tree(staging, out, watch_path=str(local_root()))
+    if provenance is not None:
+        write_json(staging / 'p1_export_manifest.json', {
+            'provenance': provenance, 'files': {
+                p.name: {'bytes': p.stat().st_size, 'sha256': sha256_file(p)}
+                for p in sorted(staging.iterdir()) if p.is_file()}})
+    drive_io.upload_tree(staging, out, watch_path=str(local_root()), verify_full=provenance is not None)
     shutil.rmtree(staging, ignore_errors=True)
     log(f'Merged weights -> {out}')
     return Path(out)

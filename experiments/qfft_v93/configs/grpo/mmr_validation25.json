@@ -1,0 +1,16 @@
+{
+  "authorization": "2026-11-18 user requested independent development validation every 25 global optimizer steps and retention of validation checkpoints.",
+  "run": "grpo_qfft_r1_mmr_dr500_v93",
+  "source_run": "grpo_qfft_r1_mmr_dr150_v93",
+  "every_steps": 25,
+  "first_step": 150,
+  "final_step": 500,
+  "backfill_steps": [100],
+  "dev_config": "grpo/r1_dev.json",
+  "suite": "r1_grpo_dev",
+  "benchmark": "r1_grpo_dev",
+  "selection_metric": "mean_at_n",
+  "tie_break": "earliest_step",
+  "baseline": "run:qfft_r1_16k_b8_restart_v93",
+  "note": "Reuse the existing 249-question mean@2 development protocol, native 32768 context, unchanged prompts, seeds, sampling and final-box grader. Development-best and fixed final-500 are reported separately. Missing historical exact checkpoints are not reconstructed. Full benchmark test scores do not enter checkpoint selection."
+}

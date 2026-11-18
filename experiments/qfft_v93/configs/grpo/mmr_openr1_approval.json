@@ -1,0 +1,12 @@
+{
+  "run_names": ["grpo_qfft_r1_mmr_dr50_v93"],
+  "approved_training_files": ["rl_openr1_46k_decontaminated/mmr_dr50_train.jsonl"],
+  "files": {
+    "rl_openr1_46k_decontaminated/mmr_dr50_train.jsonl": {
+      "sha256": "52914cf8106fbcd009e1e8fec11e8e0b8785cd21ab85aff4c5ead3208af9a89e",
+      "rows": 400,
+      "source_training_approved": null
+    }
+  },
+  "authorization": "User authorized freezing the existing 400-prompt seed-2025 draw on 2026-11-15, with changes restricted to six confirmed defective slots. Five prompts were repaired and one was replaced in original seed order. All other slots and the source file are unchanged. See data/rl_openr1_46k_decontaminated/mmr_dr50_manifest.json for ordered IDs, provenance and protected-set checks."
+}

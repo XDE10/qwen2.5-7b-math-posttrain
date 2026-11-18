@@ -20,7 +20,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 
 - 数据：1000 题（s1K-1.1 的 974 题 + v57 的 6 题替换 + v93 的 20 题替换：与 MATH-500 同题的 `s1k11/row/0918`，以及 19 道 DS 轨迹始终超出 32K 窗口的题），两位教师：s1K-1.1 的 R1 轨迹与自建 DeepSeek-V4.1-Flash 轨迹；准入为"正常结束 + 思考与回答非空 + SFT 编码 ≤ 32768"，按时间顺序取第一次可用尝试，不按对错过滤，不截断。例外：那 19 道替换题是看了 Flash 输出才选定的（对预注册规则的偏离，报告结果时必须写明，见 [history.md](docs/status/history.md) v93-P8）。由 `experiments/qfft_v93/data_build.py` 与 `teacher.py` 在本地生成 `data/qfft1000_v93/`。
 - 训练：全参 SFT 与 QFFT（官方 `qwen_qfft` 格式：只训 response、无 chat 标记、无 EOS），LR 1e-5、6 epoch、cosine、warmup 10%、wd 1e-4、AdamW(0.9, 0.999)（与 QFFT 官方 yaml 相同），有效 batch 16、32K 窗口、DeepSpeed ZeRO-2 + CPU AdamW offload、Liger；矩阵为教师 × 格式 2×2。
-- RL：在 QFFT 最终权重上做 LoRA-GRPO（r32、LR 1e-5、150 步、8 题 × 8 采样、`dapo` 损失、β=0、ε_high 0.28、截断掩码、最终段 0/1 奖励）。R1 题池包含 920 条已批准题与用户另行授权的 637 条 E0 难题，范围见 [R1 题池批准清单](experiments/qfft_v93/configs/grpo/r1_pool_approval.json)。
+- RL：当前为 R1 QFFT 第 750 步权重上的单 G4 MMR-DR-GRPO，每题 6 条独立作答、8 题/步、16K completion、LoRA r64/alpha128/dropout0.05、LR 1e-6、β=0.04；原 500 步 cosine 调度、warmup50。截断作答不参与 MMR/组均值。原 150 步训练继续，用户授权从完整 150 步续到全局 500；冻结 OpenR1 4000 题，前 1200 题字节不变。旧 DAPO 与 E0 题池属于历史。配置和边界见 [MMR 记录](docs/status/mmr_dr500_validation_20261118.md)。
 - 评测：所有模型同一组 prompt token、原生 RoPE、`max_model_len 32768`、temperature 0.6、top_p 0.95；AIME24/25 各 16 次、AMC23 8 次、MATH-500 4 次、GSM8K 1 次；只判最终段最后一个 `\boxed{}`（`experiments/qfft_v93/grading.py`），主指标不用 LLM 复核。
 - 调度：Colab CLI（Linux/WSL2）`experiments/qfft_v93/colab/pipeline.sh <阶段>`；Drive 持久目录为 `projects/project1/v93`、`models`、`runs/project1/v93`。评测支持断点续跑，训练续跑需要完整检查点。
 - 环境：项目与 Colab CLI 都在 WSL2 Ubuntu：`/home/xde10/projects/qwen2.5-7b-math-posttrain`（Windows 下为 `\\wsl.localhost\Ubuntu\home\xde10\projects\qwen2.5-7b-math-posttrain`），交互 shell 是 **zsh**；给用户的命令要兼容 zsh，仓库脚本都是 bash，用 `bash 脚本` 运行；新终端先 `source ~/.proxy_env.sh`（GitHub、Colab CLI、rclone 走代理）。Colab VM 里（`colab console`）是 **bash**。旧的 Windows 目录 `D:/Users/Mr.Z/Desktop/项目一_7B数学后训练` 与 `D:/anaconda3/envs/genai-test/python.exe` 只是旧位置。用户自己操作 Colab（不给我登录）。GPU 默认先 G4（RTX PRO 6000 Blackwell 96GB，约 8.71 计算单元/小时）后 H100 80GB（约 18.05）；G4 high-RAM 规格冒烟实测主机内存 177 GiB、48 CPU、本地盘 236 GiB。
@@ -29,7 +29,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - 冒烟（阶段 1）结束时打印 `P1 SMOKE SUMMARY` 一段（也在 Drive `runs/project1/v93/smoke/latest.txt`，并推到 `colab-reports` 分支的 `v93/latest_smoke_summary.txt`）。2026-11-09 已在 G4 跑通（41 分钟）：32K 最坏长度全参 142 s/步、显存 28.9 GiB、主机 RSS 145.3 GiB / 177 GiB，GRPO 476 s/步、66.6 GiB。
 - 23 道缺口题（DeepSeek 在 high/max 下的轨迹一直跑出 32K 窗口）：预注册方案是先用 `reasoning_effort=low` 追加尝试、仍缺的成对剔除。实际（2026-11-10）：4 题补齐；剩下 19 题用户决定保留 1000 题、不做成对剔除，改为用已批准的 OpenR1 原题替换。不用 R1 补 DS，不训练只缺一边的数据。预览构建（`--allow-gaps`）不能上传，阶段 `d` 会拒收。
 - DS 思考段里关于隐藏参数 "oververbosity 5" 的句子由 `data_build.py` 的 `META` 删除，原文留在每行 `teacher_detail.meta_edits`。
-- **进度（2026-11-14）**：R1 QFFT 在竞赛 100 题相对底座提升 7.56 个百分点。16K LoRA-GRPO 已完成跨 VM 恢复与 30 步试点，竞赛综合相对原始 R1 为 −1.50 个百分点。另在 59 道竞赛留出题上完成两种 IS 掩码第 10 步的对照，`token_mask` 相对 `sequence_mask` 为 +0.21 个百分点，平均输出缩短 16.8%。正式 150 步暂缓。实测见 [当前状态](docs/status/current_status.md)、[v93 实验总结](docs/status/v93_experiment_summary.md) 与 `colab-reports`。
+- **进度（2026-11-18）**：MMR 第 100 步五项评测完成，GSM8K 相对 R1 +1.0614 pp、95% CI [+0.1516,+2.0470]；竞赛综合 −0.25 pp、CI [−2.3125,+1.75]。249 题 mean@2 开发集补评为 −0.4016 pp、CI [−3.2129,+2.4096]。后续每 25 步验证，保留完整断点、合并模型、开发集最佳及固定 500 步结果。训练未完成，不预先宣称 RL 稳定提分。[当前状态](docs/status/current_status.md) · [参数与实测](docs/status/mmr_dr500_validation_20261118.md)。
 
 ## 仓库约定（必须遵守）
 
@@ -87,7 +87,7 @@ Qwen2.5-7B-Instruct 的数学后训练项目：SFT 取得实测提升 → GRPO �
 - 根目录曾有的 4810 条 RL 候选文件是旧候选；E0 每题 4 次 rollout 后获批的 920 条在 Drive `runs/project1/rl_approved_v8_n4`。不把该通过率当新 SFT 模型的通过率。
 - 637 题是 E0 四次全错的条件探针，不是独立最终测试。
 - v93 起评测与 RL 奖励都用 `experiments/qfft_v93/grading.py`（只判最终段最后一个框）；`src/training/math_reward_v2.py` 与 strict-v3 仅用于复现 v93 之前的历史数字。答案等价不是逐步证明正确，解析失败、超时、判分异常单列，不算答错。
-- 不按评测结果挑 checkpoint：v93 预注册"用最后一个 epoch / 最后一步"；旧 2048 预算、旧 8K+256 收尾预算的成绩不能直接充当 v93 基线。
+- 不按测试集成绩挑 checkpoint。SFT 保持最后一个 epoch；用户于 2026-11-18 明确授权 RL 每 25 步用冻结的 249 题开发集 mean@2 选择最佳（同分取较早步），并独立保留、报告固定 500 步。此次选择规则修订须在报告中注明。旧 2048 预算、旧 8K+256 收尾成绩不能直接充当 v93 基线。
 - v93 评测口径是原生 RoPE、`max_model_len 32768`、`max_tokens = 32768 − prompt`（Qwen2.5-Math 用 4096）；v26 的 32768 生成 + 40960 上下文 + YaRN factor 4 只属于历史结果。
 
 ## 历史与工作方式
