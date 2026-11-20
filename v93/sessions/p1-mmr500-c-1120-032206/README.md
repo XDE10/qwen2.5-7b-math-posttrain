@@ -7,5 +7,5 @@
 - git_head: bf1dce9ff11e+dirty
 - started: 2026-11-19T19:23:09
 - started_ts: 1795116189.690454
-- updated: 2026-11-20T01:36:22
-- result: running
+- updated: 2026-11-20T02:05:28
+- result: FAILED grpo:grpo_qfft_r1_mmr_dr500:resume: RuntimeError: grpo_grpo_qfft_r1_mmr_dr500 failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261119-192602_grpo_grpo_qfft_r1_mmr_dr500.log

@@ -1,2 +1,2 @@
 p1-mmr500-c-1120-032206
-running
+FAILED grpo:grpo_qfft_r1_mmr_dr500:resume: RuntimeError: grpo_grpo_qfft_r1_mmr_dr500 failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261119-192602_grpo_grpo_qfft_r1_mmr_dr500.log
