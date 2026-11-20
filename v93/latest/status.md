@@ -1,12 +1,12 @@
-# v93 status (2026-11-20T22:05:23, session p1-mmr500-c-1121-032910)
+# v93 status (2026-11-20T22:36:35, session p1-mmr500-c-1121-032910)
 
 ```
 stage grpo:grpo_qfft_r1_mmr_dr150                   complete  1.279 
-stage grpo:grpo_qfft_r1_mmr_dr500                   running   on p1-mmr500-c-1121-032910@1311c0c79824, heartbeat 4 min ago 
+stage grpo:grpo_qfft_r1_mmr_dr500                   running   on p1-mmr500-c-1121-032910@1311c0c79824, heartbeat 5 min ago 
 stage r1-mmr-dr100-eval                             complete  3.51 
 stage r1-mmr-dr80-eval                              complete  1.576 
 run grpo_qfft_r1_mmr_dr150_v93   complete step 150/ updated 2026-11-18T19:01:00+08:00
-run grpo_qfft_r1_mmr_dr500_v93   training step 298/500 updated 2026-11-21T05:54:08+08:00
+run grpo_qfft_r1_mmr_dr500_v93   training step 300/500 updated 2026-11-21T06:26:58+08:00
 eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime24     480/480 complete=True
 eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/aime25     480/480 complete=True
 eval grpo_qfft_r1_mmr_dr100_eval_v93_merged/amc23      320/320 complete=True
