@@ -11,11 +11,11 @@
  "grpo__grpo_qfft_r1_mmr_dr500": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr500",
   "state": "running",
-  "started": "2026-11-20T14:41:20.904320",
+  "started": "2026-11-20T16:58:26.406465",
   "code": "7236d5e30d80",
-  "host": "p1-mmr500-c-1120-223825@576a3479fb47",
-  "heartbeat": "2026-11-20T15:41:36.094358",
-  "heartbeat_ts": 1795189296.0943687
+  "host": "p1-mmr500-c-1121-005643@02c6b5ac67ee",
+  "heartbeat": "2026-11-20T17:28:35.988670",
+  "heartbeat_ts": 1795195715.9886832
  },
  "r1-mmr-dr100-eval": {
   "stage": "r1-mmr-dr100-eval",
