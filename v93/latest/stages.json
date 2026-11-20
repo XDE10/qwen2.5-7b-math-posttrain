@@ -10,12 +10,12 @@
  },
  "grpo__grpo_qfft_r1_mmr_dr500": {
   "stage": "grpo:grpo_qfft_r1_mmr_dr500",
-  "state": "failed",
-  "error": "RuntimeError: grpo_grpo_qfft_r1_mmr_dr500 failed with exit code 1; see /content/mydrive/runs/project1/v93/logs/20261120-165949_grpo_grpo_qfft_r1_mmr_dr500.log",
-  "at": "2026-11-20T19:11:46.604286",
-  "started": "2026-11-20T16:58:26.406465",
+  "state": "running",
+  "started": "2026-11-20T19:30:54.501320",
   "code": "7236d5e30d80",
-  "host": "p1-mmr500-c-1121-005643@02c6b5ac67ee"
+  "host": "p1-mmr500-c-1121-032910@1311c0c79824",
+  "heartbeat": "2026-11-20T20:01:02.054262",
+  "heartbeat_ts": 1795204862.054276
  },
  "r1-mmr-dr100-eval": {
   "stage": "r1-mmr-dr100-eval",
