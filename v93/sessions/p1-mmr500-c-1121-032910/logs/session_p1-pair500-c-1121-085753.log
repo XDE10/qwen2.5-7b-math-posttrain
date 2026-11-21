@@ -1,0 +1,7 @@
+P1_SESSION=p1-pair500-c-1121-085753 gpu=G4 auto_release=0
+/tmp/ipykernel_4195/4002715433.py:147: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.
+  _tar.extractall(_code)
+code bundle 7236d5e30d80 (git bf1dce9ff11e+dirty); stages: ['shell']
+[11-21 00:59:20] ===== STAGE shell =====
+[11-21 00:59:20] shell stage: nothing to run
+P1_RESULT=OK
