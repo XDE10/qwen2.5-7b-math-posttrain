@@ -1,6 +1,7 @@
-# v93 entry points keep their native line endings on every checkout, whatever core.autocrlf says:
-# the bash scripts run inside WSL/Linux and fail with CRLF; cmd.exe batch files expect CRLF.
-experiments/qfft_v93/**/*.sh text eol=lf
-experiments/qfft_v93/**/*.cmd text eol=crlf
-# the mock harness: shell and Python scripts (some without an extension) that run under bash in WSL/Linux
-tests/v93_harness/** text eol=lf
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.toml text eol=lf

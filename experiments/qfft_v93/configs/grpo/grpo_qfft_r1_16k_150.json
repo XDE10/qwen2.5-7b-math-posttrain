@@ -1,7 +1,0 @@
-{
-  "base": "grpo_qfft_r1_16k_pilot.json",
-  "run_name": "grpo_qfft_r1_16k_150_v93",
-  "max_steps": 150,
-  "save_steps": 10,
-  "note": "Formal 16K run from R1 QFFT step 750, with the pilot's training recipe and a fresh optimizer."
-}

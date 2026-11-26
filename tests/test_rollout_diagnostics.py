@@ -1,0 +1,119 @@
+from types import SimpleNamespace
+
+import pytest
+
+from math_posttrain.common import JsonlAppender, read_jsonl
+from math_posttrain.grading import grade_text
+from math_posttrain.grpo import FinalAnswerReward, RolloutDiagnostics
+from math_posttrain.rollout_diagnostics import compare
+
+
+class LocalGrader:
+    def grade_many(self, rows, strict):
+        return [grade_text(text, reference, strict=strict) for text, reference in rows]
+
+
+def test_retry_grader_failure_before_returning_rewards(tmp_path):
+    from unittest.mock import Mock
+
+    grader = Mock()
+    with JsonlAppender(tmp_path / 'reward.jsonl') as journal:
+        reward = FinalAnswerReward(None, grader, journal)
+        grader.grade_many.side_effect = [
+            [{'status': 'timeout'}, {'status': 'wrong'}], [{'status': 'correct'}],
+            [{'status': 'error'}, {'status': 'correct'}], [{'status': 'timeout'}],
+        ]
+        assert reward([], ['a', 'b'], reference_answer=['1', '2']) == [1., 0.]
+        with pytest.raises(RuntimeError, match='timeout'):
+            reward([], ['a', 'b'], reference_answer=['1', '2'])
+
+
+def test_math_verify_inner_timeout_is_distinct_from_wrong(monkeypatch):
+    from math_posttrain import grading
+    from sympy import Integer
+
+    mv = grading._math_verify()
+    from math_verify import grader
+    from math_verify.errors import TimeoutException
+
+    def timed_out(*args):
+        raise TimeoutException('forced comparison timeout')
+
+    monkeypatch.setattr(mv, 'parse', lambda *args, **kwargs: [Integer(3)])
+    monkeypatch.setattr(grading, '_parse_gold', lambda *args: [Integer(2)])
+    monkeypatch.setattr(grader, 'sympy_expr_eq', timed_out)
+    assert grade_text('<|im_start|>answer\n\\boxed{3}', '2', strict=True)['status'] == 'timeout'
+
+
+def test_capture_stop_reasons_and_compare_without_changing_strict_reward(tmp_path):
+    texts = [r'The answer is \boxed{42}<|im_end|>', r'The answer is \boxed{41}',
+             '<|im_start|>answer\n' + r'\boxed{42}', '<|im_start|>answer\n42']
+    ids = [[1, 9], [2, 3], [4, 5], [6, 9]]
+    outputs = [
+        SimpleNamespace(token_ids=seq, text=text, finish_reason=finish, stop_reason=stop)
+        for seq, text, finish, stop in zip(
+            ids, texts, ['stop', 'stop', 'length', 'stop'], [None, '\n\nProblem:', None, None], strict=True
+        )
+    ]
+    llm = SimpleNamespace(generate=lambda: [SimpleNamespace(outputs=outputs)])
+    trainer = SimpleNamespace(accelerator=SimpleNamespace(num_processes=1), eos_token_ids=[9],
+                              _tokenizer=SimpleNamespace(pad_token_id=0), vllm_generation=SimpleNamespace(llm=llm))
+    tokenizer = SimpleNamespace(batch_decode=lambda *args, **kwargs: texts)
+    path = tmp_path / 'diagnostics.jsonl'
+    with JsonlAppender(tmp_path / 'reward.jsonl') as journal, JsonlAppender(path) as diagnostics:
+        reward = FinalAnswerReward(tokenizer, LocalGrader(), journal)
+        reward.diagnostics = RolloutDiagnostics(trainer, diagnostics)
+        assert llm.generate()[0].outputs is outputs
+        assert reward([], [], completion_ids=ids, sample_id=['q1'] * 4, reference_answer=['42'] * 4) == [0., 0., 1., 0.]
+    rows = read_jsonl(path)
+    assert rows[0]['text'] == texts[0] and rows[0]['reward_text'] == r'The answer is \boxed{42}'
+    assert rows[1]['stop_reason'] == '\n\nProblem:' and rows[1]['trl_clipped'] and not rows[1]['truncated']
+    assert rows[2]['truncated']
+    counts = compare(rows, LocalGrader())
+    assert counts['last_box_fallback / non_length / correct'] == 1
+    assert counts['last_box_fallback / non_length / wrong'] == 1
+    assert counts['strict / non_length / no_answer / missing_box'] == 1
+
+
+def test_r1_reward_fallback_only_without_final_segment_tag(tmp_path):
+    texts = [
+        r'\boxed{41} then \boxed{42} then \boxed{43',
+        r'\boxed{42} then \boxed{41}',
+        r'\boxed{42}' + '\n<|im_start|>answer\n42',
+        r'\boxed{42}' + '\n</think>',
+        'Final answer: 42',
+        '<|im_start|>answer\n' + r'\boxed{42}',
+    ]
+    tokenizer = SimpleNamespace(batch_decode=lambda *args, **kwargs: texts)
+    ids = [[i, 9] for i in range(len(texts))]
+    path = tmp_path / 'reward.jsonl'
+    with JsonlAppender(path) as journal:
+        reward = FinalAnswerReward(tokenizer, LocalGrader(), journal, last_box_fallback=True)
+        assert reward([], [], completion_ids=ids, reference_answer=['42'] * len(texts)) == [1., 0., 0., 0., 0., 1.]
+    assert read_jsonl(path)[0]['counts'] == {'correct': 2, 'wrong': 1, 'no_answer': 3}
+
+
+def test_length_comparison_counts_groups_after_mask(tmp_path):
+    sample_ids = ['medium'] * 2 + ['hard'] * 2
+    token_ids = [[1, 9], [2, 9], [3, 9], [4, 8]]
+    grades = [{'status': status} for status in ('correct', 'wrong', 'wrong', 'correct')]
+    outputs = [
+        SimpleNamespace(token_ids=ids, text='', finish_reason='stop', stop_reason=None) for ids in token_ids
+    ]
+    outputs[-1].stop_reason = '\n\nProblem:'
+    llm = SimpleNamespace(generate=lambda: [SimpleNamespace(outputs=outputs)])
+    trainer = SimpleNamespace(accelerator=SimpleNamespace(num_processes=1), eos_token_ids=[9],
+                              _tokenizer=SimpleNamespace(pad_token_id=0), num_generations=2,
+                              vllm_generation=SimpleNamespace(llm=llm))
+    with JsonlAppender(tmp_path / 'diagnostics.jsonl') as journal:
+        diagnostics = RolloutDiagnostics(trainer, journal, ['medium', 'hard', 'medium2', 'hard2'])
+        llm.generate()
+        blank = [''] * 4
+        metrics = diagnostics.record(0, 1, sample_ids, token_ids, blank, blank, blank, grades, grades)
+        assert metrics['mixed_unmasked_reward_groups'] == 1
+        assert metrics['groups_with_reward_signal'] == 2
+        assert metrics['length_stop_frac'] == 0
+        assert metrics['loss_masked_frac'] == 0.25
+        llm.generate()
+        with pytest.raises(RuntimeError, match='Unexpected prompt groups'):
+            diagnostics.record(1, 2, sample_ids, token_ids, blank, blank, blank, grades, grades)

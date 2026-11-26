@@ -1,5 +1,0 @@
-{
-  "base": "_defaults.json",
-  "run_name": "grpo_qfft_ds_v93",
-  "init_model": "run:qfft_ds_v93"
-}

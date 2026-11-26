@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# Fake apt-get for tests: records the call and succeeds.
-echo "apt-get $*" >> "${MOCK_ROOT:-/tmp}/apt_calls.log"
-exit 0

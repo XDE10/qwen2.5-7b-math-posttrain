@@ -1,6 +1,0 @@
-{
-  "base": "smoke_grpo_qfft_r1_16k_b8.json",
-  "run_name": "diagnose_grpo_qfft_r1_8k_v93",
-  "log_rollout_diagnostics": true,
-  "note": "Two-step R1 GRPO replay at 8192 tokens with the original strict reward and private per-rollout diagnostics."
-}

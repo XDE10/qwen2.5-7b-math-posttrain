@@ -1,7 +1,0 @@
-{
-  "base": "qfft_ds.json",
-  "run_name": "smoke_peak_v93",
-  "save_steps": 2,
-  "mirror_every_saves": 1000,
-  "note": "GPU smoke (stage smoke-train): the real recipe and model on 32 rows that each fill the 32,768-token window (smoke_data.py, built from public s1K-1.1 traces), 2 optimizer steps, one local 122 GB save, no Drive mirror, no export. Reports the worst-case s/step, peak GPU memory and host RSS."
-}

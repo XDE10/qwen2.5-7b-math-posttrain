@@ -1,6 +1,0 @@
-{
-  "base": "grpo_qfft_r1_16k_pilot.json",
-  "run_name": "grpo_qfft_r1_16k_tokenmask10_v93",
-  "vllm_importance_sampling_mode": "token_mask",
-  "note": "Ten-step comparison from the original R1 QFFT weights. Change only the vLLM importance sampling mode."
-}

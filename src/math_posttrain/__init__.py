@@ -1,0 +1,5 @@
+"""Qwen2.5-7B-Instruct mathematical reasoning post-training pipeline (SFT / QFFT / LoRA-GRPO)."""
+from __future__ import annotations
+
+__all__ = ["__version__"]
+__version__ = "1.0.0"

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-case "$1" in
-  version) echo "Version: ${STUB_COLAB_VERSION:-0.7.5}" ;;
-  sessions) echo "No active sessions." ;;
-  *) echo "stub colab: $*" ;;
-esac

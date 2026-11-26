@@ -1,7 +1,0 @@
-{
-  "base": "smoke_grpo_qfft_r1_fallback_8k.json",
-  "run_name": "smoke_grpo_qfft_r1_resume_8k_v93",
-  "mirror_optimizer_state": true,
-  "log_rollout_diagnostics": false,
-  "note": "Two-step R1 GRPO checkpoint test across separate VMs, with the same 8K rollout and reward as the fallback smoke."
-}

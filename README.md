@@ -1,105 +1,108 @@
-# 项目一：7B 数学后训练
+# Qwen2.5-7B-Instruct 数学推理后训练（QFFT / SFT + LoRA-GRPO）
 
-Qwen2.5-7B-Instruct 的数学后训练项目，包含全参 SFT、QFFT、LoRA-GRPO 与双教师轨迹比较。当前自训 R1 QFFT 在竞赛 100 题上由 **26.06% 提升至 33.63%**，增益 **+7.56 个百分点**，配对 95% CI **[+3.88, +11.44]**。已完成 16K LoRA-GRPO 短跑、跨 VM 恢复与独立留出评测。现有短跑尚未证实准确率进一步提升。
+单卡 96 GB GPU（RTX PRO 6000 / H100）上完成的 `Qwen2.5-7B-Instruct` 数学推理后训练工程与系统性实证研究，覆盖 **1,000 题去污长链数据构建、全参 QFFT / SFT（DeepSpeed ZeRO-2 CPU Offload + Liger）、单卡 LoRA-GRPO / MMR-DR-GRPO（TRL + 同卡 vLLM）、统一 32K 评测协议与按题配对统计检验**。
 
-- **当前状态**：[docs/status/current_status.md](docs/status/current_status.md)
-- **v93 实验总结与公开配方调研**：[实验总结](docs/status/v93_experiment_summary.md)、[调研提示词](docs/operations/v93_public_rl_research_prompt.md)
-- **协作约定与阅读入口**：[AGENTS.md](AGENTS.md)
-- **逐版本历史（v1…v93）**：[docs/status/history.md](docs/status/history.md)
-- **WSL2 启动与恢复**：[v93 运行手册](experiments/qfft_v93/README.md)、[凭据文件模板](docs/operations/credential_templates/README.md)
-- **v93 方案与面试材料**：[docs/blueprints/三周冲刺方案_v93.md](docs/blueprints/三周冲刺方案_v93.md)、[docs/interview/面试追问与参考答案.md](docs/interview/面试追问与参考答案.md)
+---
 
-## 当前主线从哪开始读（v93）
+## 核心实测结果（统一 32K 原生口径，`mean@n`）
 
-1. [experiments/qfft_v93/README.md](experiments/qfft_v93/README.md)：实验矩阵、本地数据步骤、Colab 一键阶段、断点续跑、评测口径。
-2. [configs/pipeline.json](experiments/qfft_v93/configs/pipeline.json)、[configs/train/_defaults.json](experiments/qfft_v93/configs/train/_defaults.json)、[configs/grpo/_defaults.json](experiments/qfft_v93/configs/grpo/_defaults.json)：模型 revision、评测口径、全参与 GRPO 配方。
-3. [formats.py](experiments/qfft_v93/formats.py) 与 [grading.py](experiments/qfft_v93/grading.py)：唯一的 prompt/response 模板与最终段判分。
-4. 一键入口：[colab/pipeline.sh](experiments/qfft_v93/colab/pipeline.sh)（按阶段）与 [colab/launch.sh](experiments/qfft_v93/colab/launch.sh)（单次 VM），需要 Linux/WSL2 上的 Colab CLI（按 google-colab-cli 0.7.5 核对过）。
+所有模型采用完全一致的 prompt token、原生 RoPE（无 YaRN）、`temperature=0.6`、`top_p=0.95`、`Math-Verify 0.9.0` 最终段末框判分（无 LLM 复核）；每模型共生成 4,599 条（AIME24/25 各 ×16、AMC23 ×8、MATH-500 ×4、GSM8K ×1）。
 
-v93 数据在 `data/qfft1000_v93/`（`r1/`、`ds/`、可选 `ds_verified/` 各 1000 条，含 `manifest.json` 与 `teacher_report.md`），评测集在 `data/benchmarks_v93/`（固定 revision 与 SHA-256），均由本地脚本生成、git 忽略。
+| 模型 | AIME24 (×16) | AIME25 (×16) | AMC23 (×8) | **竞赛 100 题** | MATH-500 (×4) | GSM8K (×1) | 备注 |
+|---|---:|---:|---:|---:|---:|---:|---|
+| `Qwen2.5-7B-Instruct`（原始底座） | 11.25% | 7.71% | 50.94% | **26.06%** | 76.80% | 91.58% | 固定 revision `a09a354` |
+| `lwl-uestc/QFFT-S1-7B`（公开 QFFT 锚点） | 20.83% | 16.04% | 61.25% | **35.56%** | 81.10% | 92.27% | 同口径重测 |
+| `PJiNH/QFFT-repro-S1.1-SFT-7B`（公开 SFT） | 18.75% | 16.88% | 61.25% | **35.19%** | 81.70% | 92.34% | 输出长约 2× |
+| `Qwen2.5-Math-7B-Instruct`（4K 原生） | 12.29% | 11.46% | 55.63% | **29.38%** | 83.40% | 95.30% | 数学专用参考 |
+| 自训 `Flash QFFT`（DS-V4.1-Flash） | 5.00% | 3.96% | 41.56% | **19.31%** | 67.00% | 88.70% | 截断率 44.6%（负结果） |
+| **自训 `R1 QFFT-750`（主线最终模型）** | **18.54%** | **14.79%** | **59.06%** | **33.63%** | **80.50%** | **91.43%** | **比底座 +7.56 pp `[+3.88, +11.44]`** |
+| **自训 `R1 + MMR-DR-GRPO 50 步`** | **18.75%** | **16.25%** | **60.00%** | **34.50%** | **80.35%** | **92.42%** | 比 QFFT +0.88 pp `[−1.38, +3.31]` |
+| 自训 `R1 + MMR-DR-GRPO 250 步`（4/5 项） | 未完成 | 16.25% | 56.25% | — | 80.85% | 92.12% | AMC23 回落 −2.81 pp |
 
-v26（LoRA、8K 窗口、静态 YaRN、并发 4 评测）保留为历史：[configs/project1_aimo_sft_v26.json](configs/project1_aimo_sft_v26.json)、[experiments/aimo_sft_v26/](experiments/aimo_sft_v26/)、[tools/aimo/start_aimo_sft_v28.py](tools/aimo/start_aimo_sft_v28.py)，数据在 `data/aimo_sft_v26/`。
+### 核心结论速览
+1. **全参 QFFT 复现取得统计显著提升**：仅用 1,000 条去污 R1 长链轨迹做单卡全参 QFFT，竞赛 100 题由 `26.06% → 33.63%`（**`+7.56 pp`，95% CI `[+3.88, +11.44]`**），MATH-500 由 `76.80% → 80.50%`，同口径逼近官方 `QFFT-S1-7B`（差值 `−1.94 pp`，CI 跨零），同时保持简单题短推理（GSM8K 均长 476 token vs SFT 2,191 token）。
+2. **RL 阶段诚实结论与核心诊断**：
+   - 旧 50 步 `MMR-DR-GRPO` 在全部 5 项上最均衡（竞赛 `34.50%`、GSM8K `92.42%`、AIME24/25 的 `maj@16` 分别提升 `+6.7 / +10.0 pp`），但相对 `R1 QFFT-750` 的配对 95% CI 跨零，不宣称额外显著涨分；
+   - `token_mask` 相比 `sequence_mask` 在 2026 独立竞赛 59 题上精度持平（`+0.21 pp`），**平均输出显著缩短 16.8%（−1,743.5 token）**；
+   - 完整定位了新版 MMR-DR-GRPO 跑至 311 步仍难提分的根因：**`dr_grpo` 固定 16K 分母稀释梯度 + LoRA 极小 LR `1e-6` + `beta=0.04` 使 KL 全程钉死在 `0.0022–0.0031`**，叠加离线奖励重放发现复合奖励导致**全对组 145/181 条正确作答拿到负优势、全错组 20/60 条错误作答拿到正优势**。
 
-## 目标目录结构（到二级）
+详细分析见 [results/eval_summary.md](results/eval_summary.md) 与 [docs/experiment_report.md](docs/experiment_report.md)。
+
+---
+
+## 目录结构
 
 ```text
-项目一_7B数学后训练/
-├── README.md  AGENTS.md  .gitignore  pyproject.toml
-├── configs/                # v26 工程配置（历史；v93 配置在 experiments/qfft_v93/configs/）
-├── experiments/qfft_v93/   # 现行：1000 题双教师 × SFT/QFFT 全参 × LoRA-GRPO × 评测 × Colab 一键调度
-├── experiments/aimo_sft_v26/   # 历史：AIMO LoRA SFT 实验包
-├── scripts/
-│   ├── training/           # train_project1_sft.py / train_project1_rl.py
-│   └── evaluation/         # evaluate_approved_math.py + 两个 Math-Verify worker
-├── src/
-│   ├── data/  evaluation/  losses/  training/   # 16 个现行库模块
-├── tests/
-│   ├── data/  evaluation/  losses/  training/  qfft/   # 25 个现行测试
-├── tools/
-│   ├── aimo/  evaluation/  qfft/  review/  verification/   # 23 个现行工具
-├── data/                   # 本地数据，git 忽略（仅 README 入库）
-│   ├── aimo_sft_v26/  math/  portable_release/  tokenizers/  math_manifest.json
-├── artifacts/              # 造数/评测原始证据，git 忽略（仅 README 入库）
-├── reports/
-│   ├── current/  runs/     # 现行 7 个报告目录，git 忽略（仅 README 入库）
-├── docs/
-│   ├── status/  blueprints/  migration/  metadata/  operations/
-├── archive/                # 只读历史快照：configs/ data/ docs/ experiments/ mapping/ reports/ scripts/ src/ tests/ tools/
-└── .pilot_deps/            # 数学验证器纯 Python 依赖，git 忽略
+qwen2.5-7b-math-posttrain/
+├── README.md
+├── pyproject.toml                   # 标准打包配置、可选依赖与 `math-posttrain` CLI
+├── configs/                         # 固定模型 revision、DeepSpeed 与正式 SFT/GRPO 配置
+│   ├── pipeline.json
+│   ├── deepspeed_zero2_offload.json
+│   ├── decontam_review.json
+│   ├── scoring_recovery.json
+│   ├── train/                       # QFFT / SFT 全参配置
+│   └── grpo/                        # DAPO / MMR-DR-GRPO 配置与审批清单
+├── requirements/                    # 分环境锁定清单（train / eval / rl / rl_mmr）
+├── src/math_posttrain/              # 主包（数据、模板、判分、指标、训练、RL、评测与可选 Colab 调度）
+├── scripts/                         # 一键数据准备、评测与可选 Colab 启动脚本
+├── results/                         # 完整评测汇总表与可审计的配对结果 JSON
+├── docs/                            # 实验复盘报告、复现指南与脱敏凭据模板
+└── tests/                           # 覆盖模板、判分、去污、断点和 GRPO/MMR 的核心测试
 ```
 
-pytest 配置在根目录 `pyproject.toml` 的 `[tool.pytest.ini_options]`（`testpaths = ["tests"]`、`--strict-markers`）；原 `pytest.ini` 已并入并删除。
+---
 
-## 目录职责
+## 快速开始（Clone 即跑）
 
-| 路径 | 职责 | 备注 |
-|---|---|---|
-| `configs/` | v26 训练/评测配置 | 只有 `project1_aimo_sft_v26.json`；历史 20 个配置在 `archive/configs/` |
-| `experiments/qfft_v93/` | 现行主线 | 数据构建与 API 补齐、全参 SFT/QFFT、生成/判分/图表、LoRA-GRPO、Colab 调度；见其 README |
-| `experiments/aimo_sft_v26/` | 历史 AIMO SFT 实验代码 | 被 v93 取代，保留可追溯 |
-| `scripts/training/`、`scripts/evaluation/` | 6 个命令行入口与评分 worker | 早期 project1 入口，配套 smoke 配置已归档 |
-| `src/data/`、`src/evaluation/`、`src/losses/`、`src/training/` | 16 个现行库模块 | 批准检查、答案验证、损失参考、HF SFT/GRPO 入口 |
-| `tests/` | 25 个现行测试 | 分组：`data` 5、`evaluation` 4、`losses` 1、`training` 3、`qfft` 12 |
-| `tools/aimo/`、`tools/evaluation/`、`tools/qfft/`、`tools/review/`、`tools/verification/` | 23 个现行工具 | AIMO 启动、MATH-500 评测、QFFT 造数与只读监控、审查包、迁移校验 |
-| `data/` | 本地数据（原始/发布/tokenizer） | 大体积，不进 git |
-| `artifacts/` | 造数与评测的请求/响应/候选/复核证据（约 1.7 GB） | 不进 git |
-| `reports/` | 现行报告：`current/`（审查材料）、`runs/`（造数/复现运行） | 不进 git（仅索引 README） |
-| `docs/` | 状态、方案、交接、迁移、元数据、运维手册 | 见 [docs/README.md](docs/README.md) |
-| `archive/` | 被取代的历史脚本/测试/配置/报告（只读，不保证可运行） | 见 [archive/README.md](archive/README.md) |
-| `.pilot_deps/` | `math_verify 0.9.0` 等纯 Python 运行时依赖 | git 忽略 |
-
-## 数据与仓库边界
-
-`.gitignore` 约定（2026-11-08）：**大体积数据、证据与报告只在本地，不入库**。
-
-- 不入 git：`data/`（`data/README.md` 例外）、`artifacts/`（`artifacts/README.md` 例外）、`reports/`（`reports/README.md` 例外）、`archive/data/`、`archive/reports/`、`.pilot_deps/`、`*.zip`、`.pytest_tmp/`。
-- 入库的是：代码（`src/ experiments/ scripts/ tools/ tests/`）、配置、文档、`archive/` 中的代码/测试/配置快照、各目录 README。
-- 本地数据规模：`data/aimo_sft_v26` 约 31 MB、`data/math` 约 27 MB、`data/portable_release` 约 22 MB、`data/tokenizers` 约 51 MB；`artifacts/` 约 1.7 GB、`reports/` 约 168 MB、`archive/data/` 与 `archive/reports/` 为历史数据/报告。
-- 数据准入以对应 manifest 的 `approved_training_files` / `approved_evaluation_files` 和逐行授权为准；候选、隔离、存疑数据不能靠手改批准字段或哈希进入训练。
-- 训练/评测/最终测试用途不同：最终测试不能变成生成种子或选模依据；dev 用于调参与选 checkpoint。
-
-## 测试
-
-在仓库根目录用 `genai-test` 解释器运行：
+### 1. 安装并自检（无需 GPU）
 
 ```bash
-D:/anaconda3/envs/genai-test/python.exe -m pytest -q
+git clone https://github.com/XDE10/qwen2.5-7b-math-posttrain.git
+cd qwen2.5-7b-math-posttrain
+
+pip install -e ".[dev,data]"
+math-posttrain doctor
+pytest -q
 ```
 
-- 配置在根目录 `pyproject.toml` 的 `[tool.pytest.ini_options]`（`testpaths = ["tests"]`，`--strict-markers`）；原 `pytest.ini` 已并入并删除。
-- 重构前基线（含已归档的旧测试）：`12 failed, 583 passed, 2 skipped`，原始输出见 [docs/migration/pytest_baseline_before_restructure.txt](docs/migration/pytest_baseline_before_restructure.txt)；12 个失败全部属于已归档范围。
-- 重构后只保留 25 个现行测试文件（172 个用例），2026-11-08 重构收尾实测：**172 passed / 0 failed**（约 23s），输出见 [docs/migration/pytest_after_restructure.txt](docs/migration/pytest_after_restructure.txt)。
+### 2. 下载 5 套固定版本数学评测集
 
-## archive 与历史
+```bash
+math-posttrain fetch-benchmarks --sources
+```
 
-`archive/` 保存被取代的脚本、测试、配置、实验、报告和交接材料。归档是只读历史快照，内部相对路径可能已变。
+### 3. 单卡全参 QFFT 训练
 
-- 找回原路径：`archive/mapping/restructure_v2_mapping.json`（570 条 `from` / `to` / `tracked`）。
-- 归档结构、检索示例与「不删除任何文件」原则：[archive/README.md](archive/README.md)。
-- 重构动机、决策规则、统计与 pytest 基线：[docs/migration/重构记录_20261108_v2.md](docs/migration/重构记录_20261108_v2.md)。
+```bash
+# 安装训练依赖（保留系统匹配 CUDA 的 PyTorch）
+pip install -r requirements/train.txt
 
-## 文档维护
+torchrun --standalone --nnodes=1 --nproc_per_node=1 \
+  -m math_posttrain.train_sft \
+  --config train/qfft_r1_16k_b8.json \
+  --data data/qfft1000_v93/r1/train.jsonl
+```
 
-- 新状态写 `docs/status/current_status.md`；新历史条目写 `docs/status/history.md`；`AGENTS.md` 只保留长期约定。
-- 移动/重命名文件时同步 `docs/metadata/migration_manifest.json`，并跑 `python tools/verification/verify_migration.py`。
-- 文档中引用的路径必须真实存在；引用归档文件时写明 `archive/` 前缀。
+### 4. 单卡 LoRA-GRPO 训练
+
+```bash
+pip install -r requirements/rl.txt -r requirements/rl_mmr.txt
+
+# 离线检查配置与题池
+math-posttrain train-grpo --config grpo/grpo_mmr_dr50.json --check
+# 启动训练
+math-posttrain train-grpo --config grpo/grpo_mmr_dr50.json
+```
+
+### 5. 统一 32K vLLM 评测与配对打分
+
+```bash
+pip install -r requirements/eval.txt
+
+bash scripts/run_eval.sh base base full
+# 两个模型配对对比：
+math-posttrain score --tags qfft_r1,base --compare qfft_r1:base --per-problem
+```
+
+完整环境拆分、断点续跑与可选 Colab 调度说明见 [docs/reproducibility.md](docs/reproducibility.md)。
