@@ -4,6 +4,27 @@
 
 ---
 
+## 公开模型权重（Hugging Face）
+
+训练成品已发布至 Hugging Face Hub（可直接用 `transformers` / `peft` / `vLLM` 一键拉取，无需本地留存权重）：
+
+| 模型 | Hugging Face 仓库 | 形式与体积 | 竞赛 100 题 | 说明 |
+|---|---|---|---:|---|
+| **`R1 QFFT-750`（主线最终模型）** | [`XDE10/Qwen2.5-7B-Math-QFFT-R1`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1) | 全量 bf16（14.18 GiB） | **33.63%** | 相比底座 `+7.56 pp` 统计显著（rev `2afcc63`） |
+| **`MMR-50` LoRA Adapter** | [`XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA) | LoRA Adapter（616 MiB） | **34.50%** | 挂载于主模型之上，5/5 评测最均衡 RL 节点（rev `ec6c8a5`） |
+
+```python
+# 一键推理示例（vLLM / Transformers 均可直接加载主模型；PEFT 自动拉取主模型加载 LoRA）
+from peft import AutoPeftModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model = AutoModelForCausalLM.from_pretrained("XDE10/Qwen2.5-7B-Math-QFFT-R1", torch_dtype="bfloat16", device_map="auto")
+# 或叠加 MMR-50 LoRA Adapter：
+# model = AutoPeftModelForCausalLM.from_pretrained("XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA", torch_dtype="bfloat16", device_map="auto")
+```
+
+---
+
 ## 核心实测结果（统一 32K 原生口径，`mean@n`）
 
 所有模型采用完全一致的 prompt token、原生 RoPE（无 YaRN）、`temperature=0.6`、`top_p=0.95`、`Math-Verify 0.9.0` 最终段末框判分（无 LLM 复核）；每模型共生成 4,599 条（AIME24/25 各 ×16、AMC23 ×8、MATH-500 ×4、GSM8K ×1）。

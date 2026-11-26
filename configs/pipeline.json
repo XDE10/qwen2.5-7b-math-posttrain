@@ -30,6 +30,11 @@
       "repo": "simplescaling/s1.1-7B", "revision": "ff0270ab653ee96811d034acba1a880e48612cc1",
       "drive_dir": "s1.1-7B--ff0270ab653e", "max_model_len": 32768,
       "role": "optional anchor; trained with the s1 think/answer roles, prompted here with the plain template"
+    },
+    "qfft_r1_published": {
+      "repo": "XDE10/Qwen2.5-7B-Math-QFFT-R1", "revision": "2afcc6360893fd8955aa15c61145f7f391c64a85",
+      "drive_dir": "Qwen2.5-7B-Math-QFFT-R1--2afcc6360893", "max_model_len": 32768,
+      "role": "published self-trained R1 QFFT-750 full-parameter checkpoint (+7.56 pp Comp100 vs base)"
     }
   },
   "eval": {
