@@ -1,12 +1,12 @@
 {
   "method": "normalized 13-gram candidates + difflib ratio >= 0.6 against data/benchmarks (pinned MATH-500, AIME24, AIME25, AMC23, GSM8K)",
   "reviewed": "2026-11-08, all 17 pairs flagged for s1K-1.1@96c411f read side by side",
-  "summary": "4 duplicates (3 exact MATH-500 copies already replaced in v57, 1 near-duplicate replaced in v93); 13 template-level similarities kept; GSM8K: no flags",
+  "summary": "4 duplicates (3 exact MATH-500 copies and 1 near-duplicate excluded); 13 template-level similarities kept; GSM8K: no flags",
   "pairs": [
-    {"bench_id": "math500/test/00080", "train_id": "s1k11/row/0068", "bench_key": "eca092c39de966a0", "decision": "duplicate", "reason": "Exact copy; replaced by v57 (romescape-topup)."},
-    {"bench_id": "math500/test/00103", "train_id": "s1k11/row/0157", "bench_key": "b35f0d62a74dd0b9", "decision": "duplicate", "reason": "Exact copy; replaced by v57 (romescape-topup)."},
-    {"bench_id": "math500/test/00285", "train_id": "s1k11/row/0104", "bench_key": "aabe59e650e8922b", "decision": "duplicate", "reason": "Exact copy; replaced by v57 (romescape-topup)."},
-    {"bench_id": "math500/test/00126", "train_id": "s1k11/row/0918", "bench_key": "e7671312ba45b99f", "decision": "duplicate", "reason": "AIME 2002 I #12 asks a+b for the same z_2002; its trace derives the MATH-500 answer 1+274i. Replaced in v93."},
+    {"bench_id": "math500/test/00080", "train_id": "s1k11/row/0068", "bench_key": "eca092c39de966a0", "decision": "duplicate", "reason": "Exact copy of MATH-500 problem; excluded from training."},
+    {"bench_id": "math500/test/00103", "train_id": "s1k11/row/0157", "bench_key": "b35f0d62a74dd0b9", "decision": "duplicate", "reason": "Exact copy of MATH-500 problem; excluded from training."},
+    {"bench_id": "math500/test/00285", "train_id": "s1k11/row/0104", "bench_key": "aabe59e650e8922b", "decision": "duplicate", "reason": "Exact copy of MATH-500 problem; excluded from training."},
+    {"bench_id": "math500/test/00126", "train_id": "s1k11/row/0918", "bench_key": "e7671312ba45b99f", "decision": "duplicate", "reason": "AIME 2002 I #12 asks a+b for the same z_2002; its trace derives the MATH-500 answer 1+274i. Excluded from training."},
     {"bench_id": "math500/test/00425", "train_id": "s1k11/row/0817", "bench_key": "1662e53e1aa0c63f", "decision": "not_duplicate", "reason": "Shared 'express in terms of a, b, c and circumradius R' phrasing; different quantity (centroid/orthocenter midpoint vs P on circumcircle)."},
     {"bench_id": "aime24/24", "train_id": "s1k11/row/0050", "bench_key": "4ecd405e77036e80", "decision": "not_duplicate", "reason": "Only the 'm/n relatively prime, find m+n' ending is shared; different logarithm problem."},
     {"bench_id": "aime24/24", "train_id": "s1k11/row/0303", "bench_key": "4ecd405e77036e80", "decision": "not_duplicate", "reason": "Both are 3-variable systems with an m/n ending; different equations and target."},

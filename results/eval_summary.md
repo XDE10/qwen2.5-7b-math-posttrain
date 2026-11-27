@@ -4,7 +4,7 @@
 - **生成口径**：vLLM 0.33.0、bf16、原生 RoPE（无 YaRN）、`max_model_len=32768`（`Qwen2.5-Math-7B-Instruct` 保持原生 4096）、`temperature=0.6`、`top_p=0.95`、逐题逐次固定种子
 - **采样次数（4,599 条/模型）**：AIME24 ×16、AIME25 ×16、AMC23 ×8、MATH-500 ×4、GSM8K ×1
 - **主指标**：按题等权 `mean@n`；差值 95% 置信区间为按题配对 bootstrap（10,000 次重采样，seed 0）
-- **判分器**：`v93-final-segment-last-box/math-verify-0.9.0-timeout-status`（仅判最终段最后一个 `\boxed{}`，不使用 LLM 复核）
+- **判分器**：`final-segment-last-box/math-verify-0.9.0`（仅判最终段最后一个 `\boxed{}`，不使用 LLM 复核）
 
 ---
 

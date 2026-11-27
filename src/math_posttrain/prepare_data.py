@@ -12,6 +12,7 @@ import argparse
 import ast
 import io
 import json
+import os
 import urllib.request
 from pathlib import Path
 
@@ -65,8 +66,9 @@ OPENR1_RL_REPO = 'Elliott/Openr1-Math-46k-8192'
 
 
 def download_pinned(spec: dict) -> bytes:
+    endpoint = os.environ.get('HF_ENDPOINT', 'https://huggingface.co').rstrip('/')
     prefix = '' if spec.get('kind') == 'model' else 'datasets/'
-    url = f"https://huggingface.co/{prefix}{spec['repo']}/resolve/{spec['revision']}/{spec['file']}"
+    url = f"{endpoint}/{prefix}{spec['repo']}/resolve/{spec['revision']}/{spec['file']}"
     with urllib.request.urlopen(url, timeout=300) as response:
         data = response.read()
     digest = sha256_bytes(data)

@@ -1,42 +1,53 @@
-# Qwen2.5-7B-Instruct 数学推理后训练（QFFT / SFT + LoRA-GRPO）
+**English** | [简体中文](README.zh-CN.md)
 
-单卡 GPU 上完成的 `Qwen2.5-7B-Instruct` 数学推理后训练极简工程与实证研究，覆盖 **公开去污数据构建、单卡全参 QFFT/SFT（DeepSpeed ZeRO-2 Offload + Liger）、单卡 LoRA-GRPO / MMR-DR-GRPO（TRL + 同卡 vLLM）、统一 32K 评测与按题配对统计检验**。
+# Qwen2.5-7B-Instruct Math Reasoning Post-Training (QFFT / SFT + LoRA-GRPO)
+
+Minimalist, zero-hardcoding single-GPU mathematical reasoning post-training pipeline and empirical study for `Qwen2.5-7B-Instruct`, covering **decontaminated public dataset preparation, single-GPU full-parameter QFFT/SFT (DeepSpeed ZeRO-2 CPU Offload + Liger), single-GPU LoRA-GRPO / MMR-DR-GRPO (TRL + colocated vLLM), unified 32K evaluation, and per-problem paired bootstrap testing**.
+
+> **For AI coding & deployment agents**: read [`AGENTS.md`](AGENTS.md) first for environment setup matrices, verification commands, deployment playbooks, and repository guardrails.
 
 ---
 
-## 公开模型权重（Hugging Face）
+## Published Models (Hugging Face)
 
-训练成品已发布至 Hugging Face Hub，可直接通过 `transformers` / `peft` / `vLLM` 或本仓库一键拉取运行：
+Trained weights are hosted on Hugging Face Hub and load directly via `transformers`, `peft`, `vLLM`, or the `math-posttrain` CLI:
 
-| 模型 | Hugging Face 仓库 | 形式与体积 | 竞赛 100 题 | 说明 |
+| Model | Hugging Face Repository | Format / Size | Comp100 (`mean@n`) | Highlights |
 |---|---|---|---:|---|
-| **`R1 QFFT-750`（主线最终模型）** | [`XDE10/Qwen2.5-7B-Math-QFFT-R1`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1) | 全量 bf16（14.18 GiB） | **33.63%** | 比底座 `+7.56 pp` 统计显著（rev `2afcc63`） |
-| **`MMR-50` LoRA Adapter** | [`XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA) | LoRA Adapter（616 MiB） | **34.50%** | 挂载于主模型之上，5/5 评测最均衡 RL 节点（rev `ec6c8a5`） |
+| **`R1 QFFT-750` (Primary)** | [`XDE10/Qwen2.5-7B-Math-QFFT-R1`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1) | Full bf16 (14.18 GiB) | **33.63%** | `+7.56 pp` `[+3.88, +11.44]` vs base (`rev: 2afcc63`) |
+| **`MMR-50` LoRA Adapter** | [`XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA) | LoRA Adapter (616 MiB) | **34.50%** | Best balanced 5/5 RL checkpoint on `qfft_r1` (`rev: ec6c8a5`) |
 
 ---
 
-## 核心实测结果（统一 32K 原生口径，`mean@n`）
+## Key Benchmark Results (Unified 32K Native RoPE, `mean@n`)
 
-所有模型采用完全一致的 prompt token、原生 32K RoPE（无 YaRN）、`temperature=0.6`、`top_p=0.95`、`Math-Verify 0.9.0` 最终段末框判分（无 LLM 复核；每模型 4,599 条：AIME24/25 各 ×16、AMC23 ×8、MATH-500 ×4、GSM8K ×1）。
+All models share identical prompt tokens, native 32K RoPE (no YaRN), `temperature=0.6`, `top_p=0.95`, deterministic per-(problem, draw) seeds, and `Math-Verify 0.9.0` final-segment last-`\boxed{}` grading (no LLM judge; 4,599 generations per model: AIME24 ×16, AIME25 ×16, AMC23 ×8, MATH-500 ×4, GSM8K ×1):
 
-| 模型 | AIME24 (×16) | AIME25 (×16) | AMC23 (×8) | **竞赛 100 题** | MATH-500 (×4) | GSM8K (×1) | 备注 |
+| Model | AIME24 (×16) | AIME25 (×16) | AMC23 (×8) | **Comp100** | MATH-500 (×4) | GSM8K (×1) | Notes |
 |---|---:|---:|---:|---:|---:|---:|---|
-| `Qwen2.5-7B-Instruct`（原始底座） | 11.25% | 7.71% | 50.94% | **26.06%** | 76.80% | 91.58% | 固定 revision `a09a354` |
-| `lwl-uestc/QFFT-S1-7B`（公开 QFFT 锚点） | 20.83% | 16.04% | 61.25% | **35.56%** | 81.10% | 92.27% | 同口径重测 |
-| `PJiNH/QFFT-repro-S1.1-SFT-7B`（公开 SFT） | 18.75% | 16.88% | 61.25% | **35.19%** | 81.70% | 92.34% | 输出长约 2× |
-| `Qwen2.5-Math-7B-Instruct`（4K 原生） | 12.29% | 11.46% | 55.63% | **29.38%** | 83.40% | 95.30% | 数学专用参考 |
-| **自训 `R1 QFFT-750`（主线模型）** | **18.54%** | **14.79%** | **59.06%** | **33.63%** | **80.50%** | **91.43%** | **`+7.56 pp` `[+3.88, +11.44]`** |
-| **自训 `R1 + MMR-DR-GRPO 50 步`** | **18.75%** | **16.25%** | **60.00%** | **34.50%** | **80.35%** | **92.42%** | 比 QFFT `+0.88 pp` `[−1.38, +3.31]` |
+| `Qwen/Qwen2.5-7B-Instruct` (`base`) | 11.25% | 7.71% | 50.94% | **26.06%** | 76.80% | 91.58% | Pinned rev `a09a354` |
+| `lwl-uestc/QFFT-S1-7B` (`qfft_official`) | 20.83% | 16.04% | 61.25% | **35.56%** | 81.10% | 92.27% | Re-evaluated under same protocol |
+| `PJiNH/QFFT-repro-S1.1-SFT-7B` (`sft_repro`) | 18.75% | 16.88% | 61.25% | **35.19%** | 81.70% | 92.34% | ~2× longer output (GSM8K 2,191 tok) |
+| `Qwen/Qwen2.5-Math-7B-Instruct` (`qwen_math`, 4K) | 12.29% | 11.46% | 55.63% | **29.38%** | 83.40% | 95.30% | Math-specialized 4K reference |
+| **`R1 QFFT-750` (Primary)** | **18.54%** | **14.79%** | **59.06%** | **33.63%** | **80.50%** | **91.43%** | **`+7.56 pp` `[+3.88, +11.44]` vs base** |
+| **`R1 + MMR-DR-GRPO 50 steps`** | **18.75%** | **16.25%** | **60.00%** | **34.50%** | **80.35%** | **92.42%** | `+0.88 pp` `[−1.38, +3.31]` vs QFFT |
 
-详细评测对照与 RL 失败归因分析见 [results/eval_summary.md](results/eval_summary.md) 与 [docs/experiment_report.md](docs/experiment_report.md)。
+### Key Takeaways
+- **Statistically significant QFFT gain with concise easy-problem reasoning**: Full-parameter QFFT on 1,000 decontaminated DeepSeek-R1 trajectories lifts Comp100 by **`+7.56 pp` (`[+3.88, +11.44]`)** and MATH-500 from `76.80% → 80.50%`, matching the official QFFT anchor within `−1.94 pp` (CI crosses 0) while keeping GSM8K responses concise (`476` tokens vs `2,191` tokens for SFT).
+- **Honest RL findings & root-cause diagnostics**:
+  - `MMR-50` is the most balanced complete 5-benchmark RL checkpoint (`34.50%` Comp100, `92.42%` GSM8K, `maj@16` +6.7 / +10.0 pp on AIME24/25), though its paired 95% CI vs QFFT crosses zero (`[−1.38, +3.31]`);
+  - Switching colocated vLLM importance sampling from `sequence_mask` to `token_mask` keeps accuracy unchanged (`+0.21 pp`) on a 59-problem 2026 competition holdout while **shortening outputs by 16.8% (−1,743.5 tokens)**;
+  - Detailed telemetry and offline rollout replay explain why extending MMR-DR-GRPO to 311 steps stalled (16K `dr_grpo` denominator dilution + tiny `1e-6` LoRA LR + `beta=0.04` pinning KL at `0.0022–0.0031`, compounded by MMR/cosine reward inversion giving negative advantages to 145/181 correct responses in all-correct groups).
+
+See [`results/eval_summary.md`](results/eval_summary.md) and [`docs/experiment_report.md`](docs/experiment_report.md) for full tables and technical analysis.
 
 ---
 
-## 快速开始（Clone 即一键运行）
+## Quick Start (Clone & Run)
 
-> 所有路径均通过环境变量可配（默认读取 `./data/`，输出写入 `./outputs/`），零硬编码路径，不依赖 Colab 或 Google Drive。
+> All paths are configurable via environment variables (defaulting to `./data/` and `./outputs/`), with zero hardcoded local paths or cloud-specific coupling. Set `HF_ENDPOINT` if using a Hugging Face mirror.
 
-### 1. 安装并自检（无需 GPU）
+### 1. Install & Self-Check (No GPU Required)
 
 ```bash
 git clone https://github.com/XDE10/qwen2.5-7b-math-posttrain.git
@@ -47,72 +58,75 @@ math-posttrain doctor
 pytest -q
 ```
 
-### 2. 一键推理（直接调用已发布的 Hugging Face 模型）
+### 2. One-Click Inference (Published Hugging Face Weights)
 
 ```bash
 pip install -e ".[infer]"
 
-# 使用主线 R1 QFFT-750 模型推理
+# Primary R1 QFFT-750 checkpoint
 math-posttrain infer --prompt "Find all real values of x such that x^2 - 5x + 6 = 0."
 
-# 叠加 MMR-50 LoRA Adapter 推理
+# With companion MMR-50 LoRA adapter
 math-posttrain infer --adapter mmr50_lora --prompt "Find the remainder when 2^100 is divided by 7."
 ```
 
-### 3. 一键评测（自动下载 5 套固定 revision 评测集 + vLLM 生成 + Math-Verify 评分）
+### 3. One-Click Evaluation (Auto-Fetch Benchmarks + vLLM 32K + Math-Verify)
 
 ```bash
 pip install -r requirements/eval.txt && pip install -e . --no-deps
 
-# 评测已发布的主模型（支持注册表别名 / 任意 HF repo ID / 本地路径）
+# Evaluate published checkpoint (accepts registry alias, any HF repo ID, or local path)
 bash scripts/run_eval.sh qfft_r1 qfft_r1 full
 
-# 无 GPU 时可用 fake 引擎 5 秒跑通完整评测与打分闭环：
+# Zero-GPU end-to-end smoke check (5 seconds using built-in fake engine):
 bash scripts/run_eval.sh base smoke_demo smoke --engine fake
 
-# 对两个评测标签做按题配对 bootstrap 统计检验：
+# Paired per-problem bootstrap comparison between two evaluated tags:
 math-posttrain score --tags qfft_r1,base --compare qfft_r1:base --per-problem
 ```
 
-### 4. 一键训练（自动从 Hugging Face 拉取公开数据并执行 13-gram 去污）
+### 4. One-Click Single-GPU Training (Auto-Fetch & 13-Gram Decontaminate Data)
 
 ```bash
-# 4a. 单卡全参 QFFT（保留系统匹配 CUDA 的 PyTorch，推荐 ≥80 GB 显存 + ≥128 GB 内存）
+# 4a. Full-parameter QFFT (keep CUDA-matched PyTorch installed; >=80 GB VRAM + >=128 GB RAM)
 pip install -r requirements/train.txt && pip install -e . --no-deps
-bash scripts/run_train_qfft.sh                       # 默认 configs/train/qfft_r1.json
+bash scripts/run_train_qfft.sh                       # default: configs/train/qfft_r1.json
 
-# 4b. 单卡 LoRA-GRPO / MMR-DR-GRPO（默认直接从 HF 公开的 qfft_r1 启动）
+# 4b. LoRA-GRPO / MMR-DR-GRPO (initializes from published Hugging Face qfft_r1 by default)
 pip install -r requirements/rl.txt && pip install -e . --no-deps
-bash scripts/run_train_grpo.sh                       # 默认 configs/grpo/mmr_dr50.json
-bash scripts/run_train_grpo.sh grpo/dapo_16k.json    # 或 DAPO-GRPO 配置
+bash scripts/run_train_grpo.sh                       # default: configs/grpo/mmr_dr50.json
+bash scripts/run_train_grpo.sh grpo/dapo_16k.json    # or DAPO-GRPO config
 ```
 
 ---
 
-## 极简目录结构
+## Repository Structure
 
 ```text
 qwen2.5-7b-math-posttrain/
-├── README.md
-├── pyproject.toml                 # 打包定义、可选依赖与 `math-posttrain` CLI
+├── AGENTS.md                      # Machine-readable guide for AI coding & deployment agents
+├── README.md                      # English documentation
+├── README.zh-CN.md                # Simplified Chinese documentation
+├── pyproject.toml                 # Packaging metadata, optional extras, `math-posttrain` CLI
 ├── configs/
-│   ├── eval.json                  # 固定 revision 模型注册表与统一 32K 评测套件
-│   ├── deepspeed_zero2.json       # 单卡 7B 全参 ZeRO-2 CPU Offload 配置
-│   ├── decontam_review.json       # s1K-1.1 与 5 套评测集去污人工复核清单
-│   ├── train/                     # 全参 QFFT / SFT 配置（qfft_r1.json, sft_r1.json）
-│   └── grpo/                      # LoRA-GRPO 配置（mmr_dr50.json, dapo_16k.json）
-├── requirements/                  # 分阶段锁定依赖（train.txt, eval.txt, rl.txt）
-├── scripts/                       # 一键评测与训练脚本（自动准备缺失数据）
-├── src/math_posttrain/            # 核心源码（无 Colab/Drive 耦合）
-├── results/eval_summary.md        # 完整评测汇总、统计检验与长度对照
-├── docs/experiment_report.md      # 技术复盘与 RL 深度根因诊断报告
-└── tests/                         # 覆盖核心链路与 MMR 算法的高速单测
+│   ├── eval.json                  # Pinned HF model registry & unified 32K evaluation suites
+│   ├── deepspeed_zero2.json       # Single-GPU 7B ZeRO-2 CPU Offload config
+│   ├── decontam_review.json       # Reviewed 13-gram decontamination decisions for s1K-1.1
+│   ├── train/                     # Full-parameter QFFT / SFT configs (`qfft_r1.json`, `sft_r1.json`)
+│   └── grpo/                      # LoRA-GRPO configs (`mmr_dr50.json`, `dapo_16k.json`)
+├── requirements/                  # Stage-isolated dependency files (`train.txt`, `eval.txt`, `rl.txt`)
+├── scripts/                       # One-click evaluation & training entrypoints
+├── src/math_posttrain/            # Core Python package
+├── results/eval_summary.md        # Complete benchmark results, paired CIs, and length stats
+├── docs/experiment_report.md      # Technical report & RL failure-mode post-mortem
+└── tests/                         # Fast unit & zero-GPU end-to-end test suite
 ```
 
-### 可选环境变量覆盖
+### Environment Variables
 
-| 变量 | 默认值 | 用途 |
+| Variable | Default | Purpose |
 |---|---|---|
-| `MATH_POSTTRAIN_DATA_DIR` | `./data` | 评测集与训练集存放目录 |
-| `MATH_POSTTRAIN_OUTPUT_DIR` | `./outputs` | 训练权重与评测结果输出目录 |
-| `MATH_POSTTRAIN_CONFIG_DIR` | `./configs` | 自定义配置目录 |
+| `MATH_POSTTRAIN_DATA_DIR` | `./data` | Directory for downloaded benchmarks and prepared datasets |
+| `MATH_POSTTRAIN_OUTPUT_DIR` | `./outputs` | Directory for training checkpoints, exports, and eval reports |
+| `MATH_POSTTRAIN_CONFIG_DIR` | `./configs` | Custom configuration directory |
+| `HF_ENDPOINT` | `https://huggingface.co` | Optional Hugging Face Hub mirror endpoint |

@@ -1,6 +1,6 @@
-r"""Final-answer grading for v93 evaluation, data reports and RL rewards.
+r"""Final-answer grading for mathematical reasoning evaluation and RL rewards.
 
-Policy (replaces the frozen strict-v3 path for all v93 numbers):
+Policy:
 
 1. Only the final answer segment is graded: text after the last ``<|im_start|>answer`` or ``</think>``;
    the whole output when neither exists (plain Instruct models). Boxes written while still thinking are
@@ -16,12 +16,9 @@ from __future__ import annotations
 import multiprocessing as mp
 import os
 import re
-import sys
 from collections import Counter
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-GRADER_VERSION = 'v93-final-segment-last-box/math-verify-0.9.0-timeout-status'
+GRADER_VERSION = 'final-segment-last-box/math-verify-0.9.0'
 _BOX = re.compile(r'\\(?:boxed|fbox)\s*\{')
 
 
