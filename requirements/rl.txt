@@ -1,5 +1,4 @@
-# GRPO venv (uv). trl 1.17.1 supports vllm>=0.22,<0.33; vllm 0.32.0 pins torch==2.13.0 and
-# transformers>=5.16.1,<5.20.0.
+# Single-GPU LoRA-GRPO / MMR-DR-GRPO environment (TRL + colocated vLLM + CPU ONNX embeddings)
 vllm==0.32.0
 transformers==5.19.0
 trl==1.17.1
@@ -7,5 +6,6 @@ peft==0.21.2
 accelerate>=1.11.0
 datasets>=4.7.0
 math-verify[antlr4_13_2]==0.9.0
-swanlab==0.10.4
+onnxruntime==1.32.0
+flatbuffers==25.12.19
 psutil

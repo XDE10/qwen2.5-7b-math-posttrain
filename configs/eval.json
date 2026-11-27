@@ -1,0 +1,71 @@
+{
+  "models": {
+    "base": {
+      "repo": "Qwen/Qwen2.5-7B-Instruct",
+      "revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+      "max_model_len": 32768,
+      "role": "Base instruction model (initialization for QFFT/SFT)"
+    },
+    "qfft_r1": {
+      "repo": "XDE10/Qwen2.5-7B-Math-QFFT-R1",
+      "revision": "2afcc6360893fd8955aa15c61145f7f391c64a85",
+      "max_model_len": 32768,
+      "role": "Published self-trained R1 QFFT-750 full-parameter checkpoint (+7.56 pp Comp100 vs base)"
+    },
+    "mmr50_lora": {
+      "repo": "XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA",
+      "revision": "ec6c8a52e07e1d8f479a415301707b65ed60ff17",
+      "base_model": "qfft_r1",
+      "max_model_len": 32768,
+      "role": "Published 50-step MMR-DR-GRPO LoRA adapter on top of qfft_r1"
+    },
+    "qfft_official": {
+      "repo": "lwl-uestc/QFFT-S1-7B",
+      "revision": "ecb7ff937689a86e59bec5e2d0125f1764cd85c6",
+      "max_model_len": 32768,
+      "role": "Public QFFT reference checkpoint"
+    },
+    "sft_repro": {
+      "repo": "PJiNH/QFFT-repro-S1.1-SFT-7B",
+      "revision": "47277850077799b7b416611b76ca201231ff270d",
+      "max_model_len": 32768,
+      "role": "Public SFT reference checkpoint"
+    },
+    "qwen_math": {
+      "repo": "Qwen/Qwen2.5-Math-7B-Instruct",
+      "revision": "ef9926d75ab1d54532f6a30dd5e760355eb9aa4d",
+      "max_model_len": 4096,
+      "role": "Math-specialized 4K reference model"
+    }
+  },
+  "eval": {
+    "temperature": 0.6,
+    "top_p": 0.95,
+    "seed": 42,
+    "max_model_len": 32768,
+    "suites": {
+      "full": {
+        "math500": {"n": 4},
+        "aime24": {"n": 16},
+        "aime25": {"n": 16},
+        "amc23": {"n": 8},
+        "gsm8k": {"n": 1}
+      },
+      "competition": {
+        "aime24": {"n": 16},
+        "aime25": {"n": 16},
+        "amc23": {"n": 8}
+      },
+      "quick": {
+        "math500": {"n": 1},
+        "aime24": {"n": 4},
+        "aime25": {"n": 4},
+        "amc23": {"n": 2}
+      },
+      "smoke": {
+        "math500": {"n": 1, "limit": 8, "max_tokens": 2048},
+        "aime24": {"n": 2, "limit": 4, "max_tokens": 2048}
+      }
+    }
+  }
+}

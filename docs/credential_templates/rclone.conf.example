@@ -1,5 +1,0 @@
-[mydrive]
-type = drive
-scope = drive
-token = {"access_token":"<WRITTEN_BY_RCLONE_CONFIG>","token_type":"Bearer","refresh_token":"<WRITTEN_BY_RCLONE_CONFIG>","expiry":"<WRITTEN_BY_RCLONE_CONFIG>"}
-team_drive =

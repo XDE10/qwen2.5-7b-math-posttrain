@@ -8,11 +8,9 @@ dist/
 *.egg-info/
 .eggs/
 .pytest_cache/
-.pytest_tmp/
 .mypy_cache/
 .ruff_cache/
 .coverage
-htmlcov/
 
 # Virtual environments & env files
 .env
@@ -27,25 +25,12 @@ env/
 .DS_Store
 Thumbs.db
 *:Zone.Identifier
-*Zone.Identifier*
 
-# Local runtime artifacts, datasets, caches, checkpoints, and logs (never commit)
+# Runtime datasets, checkpoints, outputs, caches, and logs (never commit)
 /data/
-/artifacts/
 /outputs/
-/reports/
 /.cache/
 *.log
-*.zip
-*.tar
-*.tgz
 *.safetensors
 *.pt
 *.bin
-
-# Credentials (never commit)
-*credentials*
-!docs/credential_templates/**
-deepseek.json
-swanlab.json
-rclone*.conf

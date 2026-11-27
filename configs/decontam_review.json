@@ -1,5 +1,5 @@
 {
-  "method": "normalized 13-gram candidates + difflib ratio >= 0.6 against data/benchmarks_v93 (pinned MATH-500, AIME24, AIME25, AMC23, GSM8K)",
+  "method": "normalized 13-gram candidates + difflib ratio >= 0.6 against data/benchmarks (pinned MATH-500, AIME24, AIME25, AMC23, GSM8K)",
   "reviewed": "2026-11-08, all 17 pairs flagged for s1K-1.1@96c411f read side by side",
   "summary": "4 duplicates (3 exact MATH-500 copies already replaced in v57, 1 near-duplicate replaced in v93); 13 template-level similarities kept; GSM8K: no flags",
   "pairs": [

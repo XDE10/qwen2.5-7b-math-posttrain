@@ -64,4 +64,4 @@
 - **DEV249 开发留出（249 题 ×2 = 498 条）**：
   - `R1 QFFT-750` `81.93%` → `MMR-100` `81.53%` → `MMR-150` `82.53%` → `MMR-200` `82.13%` → `MMR-250` `84.54%` (`+2.61 pp`, p=0.057) → `MMR-300` `81.93%`；`Binary-20` `81.93%`。
 
-完整原始 JSON 证据见同目录 [`mmr_dr50_results.json`](mmr_dr50_results.json) 与 [`mmr_dr250_4of5_results.json`](mmr_dr250_4of5_results.json)。
+公开可复现权重见 Hugging Face：[`XDE10/Qwen2.5-7B-Math-QFFT-R1`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1) 与 [`XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA`](https://huggingface.co/XDE10/Qwen2.5-7B-Math-QFFT-R1-MMR50-LoRA)。

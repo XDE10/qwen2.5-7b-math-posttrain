@@ -1,7 +1,0 @@
-{
-  "base": "_defaults.json",
-  "run_name": "qfft_r1_v93",
-  "format": "qfft",
-  "teacher": "r1",
-  "data": "qfft1000_v93/r1/train.jsonl"
-}

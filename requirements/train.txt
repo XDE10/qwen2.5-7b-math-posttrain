@@ -1,7 +1,7 @@
-# Training env = Colab's preinstalled torch/transformers/accelerate (kept as-is, matching the system CUDA
-# toolkit that DeepSpeed's CPU-Adam JIT build uses) + these extras. Versions verified on PyPI 2026-11-08.
+# Single-GPU full-parameter QFFT / SFT training extras (keep CUDA-matched torch installed first)
 deepspeed==0.19.9
 liger-kernel==0.8.5
-swanlab==0.10.4
-psutil
+accelerate>=1.11.0
+transformers>=5.16.1,<5.21.0
 ninja
+psutil

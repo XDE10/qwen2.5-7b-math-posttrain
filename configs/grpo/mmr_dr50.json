@@ -1,0 +1,46 @@
+{
+  "run_name": "grpo_mmr_dr50",
+  "init_model": "qfft_r1",
+  "pool_file": "train/rl_pool.jsonl",
+  "mmr_dr_grpo": {
+    "scheduler_steps": 500,
+    "embedding_model": "jinaai/jina-embeddings-v2-small-en",
+    "embedding_revision": "44e7d1d6caec8c883c2d4b207588504d519788d0",
+    "embedding_max_length": 3584,
+    "exclude_masked_completions": false
+  },
+  "lora": {
+    "r": 64,
+    "alpha": 128,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "optim": "adamw_torch",
+  "learning_rate": 1e-06,
+  "lr_scheduler_type": "cosine_with_min_lr",
+  "lr_scheduler_kwargs": {"min_lr_rate": 0.1},
+  "warmup_steps": 50,
+  "max_steps": 50,
+  "save_steps": 25,
+  "save_total_limit": 2,
+  "num_generations": 6,
+  "per_device_train_batch_size": 2,
+  "gradient_accumulation_steps": 24,
+  "max_prompt_tokens": 512,
+  "max_completion_length": 16384,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "loss_type": "dr_grpo",
+  "beta": 0.04,
+  "epsilon": 0.2,
+  "epsilon_high": null,
+  "scale_rewards": "none",
+  "mask_truncated_completions": true,
+  "vllm_importance_sampling_mode": "token_mask",
+  "merge_adapter": true,
+  "seed": 2025,
+  "vllm": {
+    "gpu_memory_utilization": 0.35,
+    "enable_sleep_mode": true
+  }
+}

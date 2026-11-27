@@ -1,17 +1,4 @@
-"""Single source of truth for the v93 prompt, the s1/QFFT response layout and SFT/QFFT encodings.
-
-Response layout (both teachers, both training formats)::
-
-    <reasoning.strip()> "\\n<|im_start|>answer\\n" <final_answer.strip()>
-
-This is byte-identical to the official QFFT S1 data (lwl-uestc/S1_QFFT@4a1b8ad, 1000/1000 rows
-reproduce from s1K-1.1 with this join). The two training formats differ only in what surrounds it:
-
-* SFT : Qwen chat prompt (system + user question) -> response + <|im_end|>; loss on the response only.
-* QFFT: the response alone, no chat markup, no EOS (official `qwen_qfft` template); loss on every token.
-
-Evaluation and RL always use the same chat prompt as SFT, for every model.
-"""
+"""Single source of truth for the Qwen2.5 math prompt, response layout, and SFT/QFFT encodings."""
 from __future__ import annotations
 
 SYSTEM_PROMPT = r'Please reason step by step, and put your final answer within \boxed{}.'
@@ -65,7 +52,7 @@ def prompt_ids(tokenizer, question: str) -> list:
     ids = token_ids(tokenizer.apply_chat_template(messages(question), tokenize=True,
                                                   add_generation_prompt=True, return_dict=False))
     if tokenizer.decode(ids, skip_special_tokens=False) != render_prompt(question):
-        raise ValueError('Chat template output differs from the frozen v93 prompt; check the tokenizer')
+        raise ValueError('Chat template output differs from the expected Qwen2.5 prompt; check the tokenizer')
     return ids
 
 

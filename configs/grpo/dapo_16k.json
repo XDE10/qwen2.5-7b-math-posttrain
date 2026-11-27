@@ -1,0 +1,38 @@
+{
+  "run_name": "grpo_dapo_16k",
+  "init_model": "qfft_r1",
+  "pool_file": "train/rl_pool.jsonl",
+  "lora": {
+    "r": 32,
+    "alpha": 64,
+    "dropout": 0.0,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "learning_rate": 1e-05,
+  "lr_scheduler_type": "constant_with_warmup",
+  "warmup_steps": 5,
+  "max_steps": 30,
+  "save_steps": 10,
+  "save_total_limit": 2,
+  "num_generations": 8,
+  "per_device_train_batch_size": 2,
+  "gradient_accumulation_steps": 16,
+  "max_prompt_tokens": 2048,
+  "max_completion_length": 16384,
+  "temperature": 0.6,
+  "top_p": 0.95,
+  "loss_type": "dapo",
+  "beta": 0.0,
+  "epsilon": 0.2,
+  "epsilon_high": 0.28,
+  "scale_rewards": "none",
+  "mask_truncated_completions": true,
+  "last_box_fallback": true,
+  "vllm_importance_sampling_mode": "token_mask",
+  "merge_adapter": true,
+  "seed": 42,
+  "vllm": {
+    "gpu_memory_utilization": 0.35,
+    "enable_sleep_mode": true
+  }
+}
